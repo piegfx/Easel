@@ -23,13 +23,24 @@ public class EaselGame : IDisposable
         Window.Run();
         Device = Window.PieWindow.CreateGraphicsDevice();
 
+        Input.Initialize(Window.PieWindow);
+        
+        Initialize();
+        
         while (!Window.PieWindow.ShouldClose)
         {
-            Window.PieWindow.ProcessEvents();
-            
+            Input.Update(Window.PieWindow);
+            Update();
+            Draw();
             Device.Present(VSync ? 1 : 0);
         }
     }
+
+    protected virtual void Initialize() { }
+
+    protected virtual void Update() { }
+
+    protected virtual void Draw() { }
 
     public void Dispose()
     {

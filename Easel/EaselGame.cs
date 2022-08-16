@@ -16,6 +16,7 @@ public class EaselGame : IDisposable
     {
         Window = new GameWindow(settings);
         VSync = settings.VSync;
+        Instance = this;
     }
 
     public void Run()
@@ -47,4 +48,6 @@ public class EaselGame : IDisposable
         Device.Dispose();
         Window.Dispose();
     }
+
+    internal static EaselGame Instance;
 }

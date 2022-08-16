@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Pie.Windowing;
 
 namespace Easel;
@@ -18,6 +19,8 @@ public static class Input
     public static bool KeyDown(Keys key) => _keysPressed.Contains(key);
 
     public static bool KeyPressed(Keys key) => _newKeys.Contains(key);
+    
+    public static Vector2 MousePosition { get; private set; }
 
     internal static void Initialize(Window window)
     {
@@ -29,7 +32,8 @@ public static class Input
     {
         _newKeys.Clear();
         
-        window.ProcessEvents();
+        InputState state = window.ProcessEvents();
+        MousePosition = state.MousePosition;
     }
 
     private static void WindowOnKeyDown(Keys key)

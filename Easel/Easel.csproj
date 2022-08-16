@@ -7,8 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
+      <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
       <ProjectReference Include="..\Pie\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\Pie\Pie\Pie.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="StbImageSharp" Version="2.27.11" />
     </ItemGroup>
 
 </Project>

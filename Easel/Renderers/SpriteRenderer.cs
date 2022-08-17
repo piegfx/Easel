@@ -80,9 +80,8 @@ void main()
 
         _vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, _vertices);
         _indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, _indices);
-
-        Size windowSize = EaselGame.Instance.Window.Size;
-        _projection = Matrix4x4.CreateOrthographicOffCenter(0, windowSize.Width, windowSize.Height, 0, -1, 1);
+        
+        CreateOrthoMatrix(EaselGame.Instance.Window.Size);
         _projViewModel = new ProjViewModel()
         {
             ProjView = _projection,
@@ -97,6 +96,13 @@ void main()
             new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
 
         _rasterizerState = device.CreateRasterizerState(direction: CullDirection.CounterClockwise);
+
+        EaselGame.Instance.Window.PieWindow.Resize += CreateOrthoMatrix;
+    }
+
+    private static void CreateOrthoMatrix(Size size)
+    {
+        _projection = Matrix4x4.CreateOrthographicOffCenter(0, size.Width, size.Height, 0, -1, 1);
     }
 
     public static void Begin(Matrix4x4? transform = null)

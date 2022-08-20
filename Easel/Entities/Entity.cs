@@ -9,7 +9,7 @@ public class Entity : IDisposable
 {
     public EaselGame Game => EaselGame.Instance;
 
-    public GraphicsDevice GraphicsDevice => EaselGame.Device;
+    public GraphicsDevice GraphicsDevice => EaselGame.Graphics;
     
     public string Name { get; internal set; }
 
@@ -54,8 +54,8 @@ public class Entity : IDisposable
 
     public virtual void Dispose()
     {
-        foreach (Component component in _components)
-            component?.Dispose();
+        for (int i = 0; i < _componentCount; i++)
+            _components[i].Dispose();
     }
 
     public void AddComponent(Component component)

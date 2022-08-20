@@ -16,14 +16,9 @@ public class Bitmap
 
     public Bitmap(string path)
     {
-        ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path));
+        ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;
         Size = new Size(result.Width, result.Height);
-        Format = result.Comp switch
-        {
-            ColorComponents.RedGreenBlue => PixelFormat.RGB8,
-            ColorComponents.RedGreenBlueAlpha => PixelFormat.RGBA8,
-            _ => throw new NotSupportedException("The given image uses an unsupported pixel format.")
-        };
+        Format = PixelFormat.R8G8B8A8_UNorm;
     }
 }

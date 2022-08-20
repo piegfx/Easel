@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Easel.Entities;
 using Pie;
+using Pie.Audio;
 
 namespace Easel.Scenes;
 
@@ -20,7 +21,9 @@ public abstract class Scene : IDisposable
     
     protected EaselGame Game => EaselGame.Instance;
 
-    protected GraphicsDevice GraphicsDevice => EaselGame.Device;
+    protected GraphicsDevice GraphicsDevice => EaselGame.Graphics;
+
+    protected AudioDevice AudioDevice => EaselGame.Audio;
 
     protected Scene(int initialCapacity = 128)
     {
@@ -42,7 +45,11 @@ public abstract class Scene : IDisposable
             _entities[i].Draw();
     }
 
-    public virtual void Dispose() { }
+    public virtual void Dispose()
+    {
+        for (int i = 0; i < _entityCount; i++)
+            _entities[i].Dispose();
+    }
 
     public void AddEntity(string name, Entity entity)
     {

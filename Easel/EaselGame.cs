@@ -2,6 +2,7 @@
 using System.Drawing;
 using Easel.Scenes;
 using Pie;
+using Pie.Audio;
 
 namespace Easel;
 
@@ -9,8 +10,13 @@ public class EaselGame : IDisposable
 {
     public readonly GameWindow Window;
 
-    internal static GraphicsDevice Device;
-    public GraphicsDevice GraphicsDevice => Device;
+    internal static GraphicsDevice Graphics;
+    
+    public GraphicsDevice GraphicsDevice => Graphics;
+
+    internal static AudioDevice Audio;
+
+    public AudioDevice AudioDevice => Audio;
 
     public bool VSync;
 
@@ -26,7 +32,7 @@ public class EaselGame : IDisposable
     {
         Window.Run();
         Window.PieWindow.Resize += PieWindowOnResize;
-        Device = Window.PieWindow.CreateGraphicsDevice();
+        Graphics = Window.PieWindow.CreateGraphicsDevice();
 
         Input.Initialize(Window.PieWindow);
         Time.Initialize();
@@ -39,7 +45,7 @@ public class EaselGame : IDisposable
             Time.Update();
             Update();
             Draw();
-            Device.Present(VSync ? 1 : 0);
+            Graphics.Present(VSync ? 1 : 0);
         }
     }
 
@@ -60,13 +66,13 @@ public class EaselGame : IDisposable
 
     public void Dispose()
     {
-        Device.Dispose();
+        Graphics.Dispose();
         Window.Dispose();
     }
     
     private void PieWindowOnResize(Size size)
     {
-        Device.ResizeSwapchain(size);
+        Graphics.ResizeSwapchain(size);
     }
 
     internal static EaselGame Instance;

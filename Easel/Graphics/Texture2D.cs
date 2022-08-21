@@ -4,12 +4,12 @@ using Pie;
 
 namespace Easel.Graphics;
 
-public class Texture2D : Texture
+public class Texture2D : TextureObject
 {
     public Texture2D(string path, bool autoDispose = true) : base(autoDispose)
     {
         Bitmap bitmap = new Bitmap(path);
-        GraphicsDevice device = EaselGame.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics;
         PieTexture = device.CreateTexture(bitmap.Size.Width, bitmap.Size.Height, bitmap.Format, bitmap.Data);
     }
 }

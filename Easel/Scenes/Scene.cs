@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Easel.Entities;
+using Easel.Renderers;
+using Easel.Utilities;
 using Pie;
 using Pie.Audio;
 
@@ -21,14 +24,18 @@ public abstract class Scene : IDisposable
     
     protected EaselGame Game => EaselGame.Instance;
 
-    protected GraphicsDevice GraphicsDevice => EaselGame.Graphics;
+    protected GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
 
-    protected AudioDevice AudioDevice => EaselGame.Audio;
+    protected AudioDevice AudioDevice => EaselGame.Instance.Audio;
 
     protected Scene(int initialCapacity = 128)
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
+
+        Size size = EaselGame.Instance.Window.Size;
+        Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
+        AddEntity("Main Camera", camera);
     }
 
     protected internal virtual void Initialize() { }
@@ -41,8 +48,12 @@ public abstract class Scene : IDisposable
 
     protected internal virtual void Draw()
     {
+        ForwardRenderer.ClearAll();
+        
         for (int i = 0; i < _entityCount; i++)
             _entities[i].Draw();
+        
+        ForwardRenderer.Render();
     }
 
     public virtual void Dispose()
@@ -61,6 +72,19 @@ public abstract class Scene : IDisposable
             Array.Resize(ref _entities, _entities.Length << 1);
         _entities[count] = entity;
         _entityPointers.Add(name, count);
+    }
+
+    public void RemoveEntity(string name)
+    {
+        int location = _entityPointers[name];
+        _entities[location].Dispose();
+        _entities[location] = null;
+        GC.Collect();
+        _entities[location] = _entities[_entityCount];
+        _entities[_entityCount] = null;
+        _entityPointers.Remove(name);
+        _entityPointers.Add(name, location);
+        _entityCount--;
     }
 
     public Entity GetEntity(string name)

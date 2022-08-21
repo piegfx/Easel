@@ -7,6 +7,8 @@ public static class SceneManager
     private static Scene _activeScene;
     private static Scene _switchScene;
 
+    public static Scene ActiveScene => _activeScene;
+
     internal static void InitializeScene(Scene scene)
     {
         _activeScene = scene;

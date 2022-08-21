@@ -1,12 +1,20 @@
 ﻿using System;
+using Easel.Scenes;
+using Pie;
 
 namespace Easel.Entities.Components;
 
 public abstract class Component : IDisposable
 {
-    public Entity Entity { get; internal set; }
+    protected EaselGame Game => EaselGame.Instance;
 
-    public Transform Transform => Entity.Transform;
+    protected GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
+    
+    protected Scene ActiveScene => SceneManager.ActiveScene;
+    
+    protected internal Entity Entity { get; internal set; }
+
+    protected Transform Transform => Entity.Transform;
 
     protected internal virtual void Initialize() { }
 

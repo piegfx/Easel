@@ -3,18 +3,21 @@ using System.Drawing;
 using Easel.Scenes;
 using Pie;
 using Pie.Audio;
+using Pie.Windowing;
 
 namespace Easel;
 
 public class EaselGame : IDisposable
 {
-    public readonly GameWindow Window;
+    private GameSettings _settings;
+    
+    public Window Window { get; private set; }
 
-    internal static GraphicsDevice Graphics;
+    internal GraphicsDevice Graphics;
     
     public GraphicsDevice GraphicsDevice => Graphics;
 
-    internal static AudioDevice Audio;
+    internal AudioDevice Audio;
 
     public AudioDevice AudioDevice => Audio;
 
@@ -22,7 +25,7 @@ public class EaselGame : IDisposable
 
     public EaselGame(GameSettings settings, Scene scene)
     {
-        Window = new GameWindow(settings);
+        _settings = settings;
         VSync = settings.VSync;
         Instance = this;
         SceneManager.InitializeScene(scene);
@@ -30,18 +33,33 @@ public class EaselGame : IDisposable
 
     public void Run()
     {
-        Window.Run();
-        Window.PieWindow.Resize += PieWindowOnResize;
-        Graphics = Window.PieWindow.CreateGraphicsDevice();
+        WindowSettings settings = new WindowSettings()
+        {
+            Size = _settings.Size,
+            Title = _settings.Title,
+            Resizable = _settings.Resizable,
+            EventDriven = false
+        };
 
-        Input.Initialize(Window.PieWindow);
+        GraphicsDeviceCreationFlags flags = GraphicsDeviceCreationFlags.None;
+        
+#if DEBUG
+        flags |= GraphicsDeviceCreationFlags.Debug;
+#endif
+        
+        Window = Window.CreateWithGraphicsDevice(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform(),
+            out Graphics, flags);
+        
+        Window.Resize += PieWindowOnResize;
+
+        Input.Initialize(Window);
         Time.Initialize();
         
         Initialize();
-        
-        while (!Window.PieWindow.ShouldClose)
+
+        while (!Window.ShouldClose)
         {
-            Input.Update(Window.PieWindow);
+            Input.Update(Window);
             Time.Update();
             Update();
             Draw();
@@ -75,5 +93,5 @@ public class EaselGame : IDisposable
         Graphics.ResizeSwapchain(size);
     }
 
-    internal static EaselGame Instance;
+    public static EaselGame Instance;
 }

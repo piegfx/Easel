@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
+using Easel.Graphics;
 using Pie;
 using Pie.ShaderCompiler;
 using Pie.Utils;
-using Texture = Easel.Graphics.Texture;
 
 namespace Easel.Renderers;
 
@@ -76,7 +76,7 @@ void main()
 
     static SpriteRenderer()
     {
-        GraphicsDevice device = EaselGame.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics;
 
         _vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, _vertices);
         _indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, _indices);
@@ -97,7 +97,7 @@ void main()
 
         _rasterizerState = device.CreateRasterizerState(direction: CullDirection.CounterClockwise);
 
-        EaselGame.Instance.Window.PieWindow.Resize += CreateOrthoMatrix;
+        EaselGame.Instance.Window.Resize += CreateOrthoMatrix;
     }
 
     private static void CreateOrthoMatrix(Size size)
@@ -118,7 +118,7 @@ void main()
         _projViewModel.ProjView = _projection * (transform ?? Matrix4x4.Identity);
     }
 
-    public static void Draw(Texture texture, Vector2 position)
+    public static void Draw(TextureObject texture, Vector2 position)
     {
         if (!_begin)
         {
@@ -126,7 +126,7 @@ void main()
                 "No SpriteRenderer session is active. You must call Begin() before you can call Draw().");
         }
 
-        GraphicsDevice device = EaselGame.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics;
         
         _projViewModel.Model = Matrix4x4.CreateScale(texture.Size.Width, texture.Size.Height, 1) *
                                Matrix4x4.CreateTranslation(new Vector3(position, 0));

@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Easel.Entities.Components;
+using Easel.Scenes;
 using Pie;
 
 namespace Easel.Entities;
 
 public class Entity : IDisposable
 {
-    public EaselGame Game => EaselGame.Instance;
+    protected EaselGame Game => EaselGame.Instance;
 
-    public GraphicsDevice GraphicsDevice => EaselGame.Graphics;
+    protected GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
+
+    protected Scene ActiveScene => SceneManager.ActiveScene;
     
     public string Name { get; internal set; }
 

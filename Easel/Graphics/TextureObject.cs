@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Drawing;
-using PieTexture = Pie.Texture;
+using Pie;
 
 namespace Easel.Graphics;
 
-public abstract class Texture : IDisposable
+// TODO: Think of a better name that isn't Texture.
+public abstract class TextureObject : IDisposable
 {
     public bool IsDisposed { get; protected set; }
     
-    public PieTexture PieTexture { get; protected set; }
+    public Texture PieTexture { get; protected set; }
 
     public Size Size => PieTexture.Size;
 
-    public Texture(bool autoDispose)
+    public TextureObject(bool autoDispose)
     {
         // TODO: Auto disposing
     }

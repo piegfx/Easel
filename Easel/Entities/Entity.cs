@@ -13,8 +13,10 @@ public class Entity : IDisposable
     protected GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
 
     protected Scene ActiveScene => SceneManager.ActiveScene;
-    
+
     public string Name { get; internal set; }
+
+    public bool Enabled;
 
     public Transform Transform;
 
@@ -31,6 +33,7 @@ public class Entity : IDisposable
     public Entity(Transform transform, int initialCapacity = 16)
     {
         Transform = transform;
+        Enabled = true;
         _components = new Component[initialCapacity];
         _componentPointers = new Dictionary<Type, int>(initialCapacity);
     }

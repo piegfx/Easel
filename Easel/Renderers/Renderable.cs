@@ -1,3 +1,4 @@
+using System.Numerics;
 using Easel.Graphics;
 using Pie;
 
@@ -10,11 +11,14 @@ public struct Renderable
     public uint IndicesLength;
     public TextureObject Texture;
 
-    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, TextureObject texture)
+    public Matrix4x4 ModelMatrix;
+
+    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, TextureObject texture, Matrix4x4 modelMatrix)
     {
         VertexBuffer = vertexBuffer;
         IndexBuffer = indexBuffer;
         IndicesLength = indicesLength;
         Texture = texture;
+        ModelMatrix = modelMatrix;
     }
 }

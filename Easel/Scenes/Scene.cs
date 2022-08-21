@@ -43,16 +43,24 @@ public abstract class Scene : IDisposable
     protected internal virtual void Update()
     {
         for (int i = 0; i < _entityCount; i++)
-            _entities[i].Update();
+        {
+            ref Entity entity = ref _entities[i];
+            if (entity.Enabled)
+                entity.Update();
+        }
     }
 
     protected internal virtual void Draw()
     {
         ForwardRenderer.ClearAll();
-        
+
         for (int i = 0; i < _entityCount; i++)
-            _entities[i].Draw();
-        
+        {
+            ref Entity entity = ref _entities[i];
+            if (entity.Enabled)
+                entity.Draw();
+        }
+
         ForwardRenderer.Render();
     }
 

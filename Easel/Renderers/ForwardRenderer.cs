@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using Easel.Entities;
 using Pie;
 using Pie.ShaderCompiler;
 
@@ -47,6 +50,9 @@ void main()
     private static Shader _tempShader;
     private static InputLayout _tempInputLayout;
 
+    private static GraphicsBuffer _projViewModelBuffer;
+    private static ProjViewModel _projViewModel;
+
     private static List<Renderable> _translucents;
 
     private static List<Renderable> _opaques;
@@ -62,6 +68,13 @@ void main()
         _tempInputLayout = device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Vec3),
             new InputLayoutDescription("aTexCoords", AttributeType.Vec2),
             new InputLayoutDescription("aNormals", AttributeType.Vec3));
+
+        _projViewModel = new ProjViewModel()
+        {
+            ProjView = Matrix4x4.Identity,
+            Model = Matrix4x4.Identity
+        };
+        _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel);
     }
 
     public static void DrawTranslucent(Renderable renderable)
@@ -84,6 +97,27 @@ void main()
     {
         GraphicsDevice device = EaselGame.Instance.Graphics;
         
-        
+        Camera main = Camera.Main;
+        _projViewModel.ProjView = main.ProjectionMatrix * main.ViewMatrix;
+
+        foreach (Renderable renderable in _opaques)
+        {
+            _projViewModel.Model = renderable.ModelMatrix;
+            _projViewModelBuffer.Update(0, _projViewModel);
+            
+            device.SetShader(_tempShader);
+            device.SetUniformBuffer(0, _projViewModelBuffer);
+            device.SetTexture(1, renderable.Texture.PieTexture);
+            device.SetVertexBuffer(renderable.VertexBuffer, _tempInputLayout);
+            device.SetIndexBuffer(renderable.IndexBuffer);
+            device.Draw(renderable.IndicesLength);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ProjViewModel
+    {
+        public Matrix4x4 ProjView;
+        public Matrix4x4 Model;
     }
 }

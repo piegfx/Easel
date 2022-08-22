@@ -16,6 +16,8 @@ public class Entity : IDisposable
 
     public string Name { get; internal set; }
 
+    public string Tag;
+
     public bool Enabled;
 
     public Transform Transform;

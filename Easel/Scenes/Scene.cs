@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Easel.Entities;
 using Easel.Renderers;
 using Easel.Utilities;
@@ -32,21 +33,24 @@ public abstract class Scene : IDisposable
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
-
-        Size size = EaselGame.Instance.Window.Size;
-        Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
-        AddEntity("Main Camera", camera);
     }
 
-    protected internal virtual void Initialize() { }
+    protected internal virtual void Initialize()
+    {
+        Size size = EaselGame.Instance.Window.Size;
+        Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
+        camera.Tag = Tags.MainCamera;
+        AddEntity("Main Camera", camera);
+    }
 
     protected internal virtual void Update()
     {
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
-            if (entity.Enabled)
-                entity.Update();
+            if (entity == null || !entity.Enabled)
+                return;
+            entity.Update();
         }
     }
 
@@ -57,8 +61,9 @@ public abstract class Scene : IDisposable
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
-            if (entity.Enabled)
-                entity.Draw();
+            if (!entity.Enabled)
+                return;
+            entity.Draw();
         }
 
         ForwardRenderer.Render();
@@ -88,11 +93,15 @@ public abstract class Scene : IDisposable
         _entities[location].Dispose();
         _entities[location] = null;
         GC.Collect();
+        _entityCount--;
+        _entityPointers.Remove(name);
+        if (location == _entityCount)
+            return;
+
+        _entityPointers.Remove(_entities[_entityCount].Name);
         _entities[location] = _entities[_entityCount];
         _entities[_entityCount] = null;
-        _entityPointers.Remove(name);
-        _entityPointers.Add(name, location);
-        _entityCount--;
+        _entityPointers.Add(_entities[location].Name, location);
     }
 
     public Entity GetEntity(string name)
@@ -104,4 +113,17 @@ public abstract class Scene : IDisposable
     }
 
     public T GetEntity<T>(string name) where T : Entity => (T) GetEntity(name);
+
+    public Entity[] GetEntitiesWithTag(string tag)
+    {
+        List<Entity> entities = new List<Entity>();
+        for (int i = 0; i < _entityCount; i++)
+        {
+            ref Entity entity = ref _entities[i];
+            if (entity.Tag == tag)
+                entities.Add(entity);
+        }
+
+        return entities.ToArray();
+    }
 }

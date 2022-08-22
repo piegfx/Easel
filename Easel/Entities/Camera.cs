@@ -69,5 +69,5 @@ public class Camera : Entity
         ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far);
     }
 
-    public static Camera Main => SceneManager.ActiveScene.GetEntity<Camera>("Main Camera");
+    public static Camera Main => (Camera) SceneManager.ActiveScene.GetEntitiesWithTag(Tags.MainCamera)[0];
 }

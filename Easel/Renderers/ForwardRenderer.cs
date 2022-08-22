@@ -38,7 +38,7 @@ void main()
 layout (location = 0) in vec2 frag_texCoords;
 layout (location = 1) in vec3 frag_normals;
 
-layout (location = 0) out out_color;
+layout (location = 0) out vec4 out_color;
 
 layout (binding = 1) uniform sampler2D uTexture;
 

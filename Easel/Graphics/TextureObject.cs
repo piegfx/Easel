@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Easel.Scenes;
 using Pie;
 
 namespace Easel.Graphics;
@@ -15,7 +16,8 @@ public abstract class TextureObject : IDisposable
 
     public TextureObject(bool autoDispose)
     {
-        // TODO: Auto disposing
+        if (autoDispose)
+            SceneManager.ActiveScene.GarbageCollections.Add(this);
     }
 
     public virtual void Dispose()

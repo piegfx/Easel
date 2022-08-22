@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Easel.Entities;
+using Easel.Interfaces;
 using Easel.Renderers;
 using Easel.Utilities;
 using Pie;
@@ -21,7 +22,19 @@ public abstract class Scene : IDisposable
     // index to the entity which gets returned instead.
     public Dictionary<string, int> _entityPointers;
 
+    /// <summary>
+    /// Contains a list of disposable objects that will be automatically disposed when the scene is disposed. Engine
+    /// objects, such as textures, will be automatically added to this list on creation (unless you tell them not to).
+    /// Pie objects, such as graphics buffers, however, will not, so it is recommended that you add them to this list
+    /// so you don't need to remember to delete them later.
+    /// </summary>
+    /// <remarks>It's recommended you don't clear this list unless you remember to manually clean objects later. You
+    /// also don't need to add entities to this list, they are automatically disposed separately.</remarks>
+    public List<IDisposable> GarbageCollections;
+
     private int _entityCount;
+
+    private int _unnamedEntityId;
     
     protected EaselGame Game => EaselGame.Instance;
 
@@ -33,6 +46,7 @@ public abstract class Scene : IDisposable
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
+        GarbageCollections = new List<IDisposable>();
     }
 
     protected internal virtual void Initialize()
@@ -87,6 +101,12 @@ public abstract class Scene : IDisposable
         _entityPointers.Add(name, count);
     }
 
+    public void AddEntity(Entity entity)
+    {
+        entity.Name = _unnamedEntityId++.ToString();
+        AddEntity(entity.Name, entity);
+    }
+
     public void RemoveEntity(string name)
     {
         int location = _entityPointers[name];
@@ -103,6 +123,8 @@ public abstract class Scene : IDisposable
         _entities[_entityCount] = null;
         _entityPointers.Add(_entities[location].Name, location);
     }
+
+    public void RemoveEntity(Entity entity) => RemoveEntity(entity.Name);
 
     public Entity GetEntity(string name)
     {

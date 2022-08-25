@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Easel.Entities;
 using Pie;
 using Pie.ShaderCompiler;
+using Pie.Utils;
 
 namespace Easel.Renderers;
 
@@ -14,10 +15,10 @@ public static class ForwardRenderer
 
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoords;
-layout (location = 2) in vec3 aNormals;
+//layout (location = 2) in vec3 aNormals;
 
 layout (location = 0) out vec2 frag_texCoords;
-layout (location = 1) out vec3 frag_normals;
+//layout (location = 1) out vec3 frag_normals;
 
 layout (binding = 0) uniform ProjViewModel
 {
@@ -29,14 +30,14 @@ void main()
 {
     gl_Position = uProjView * uModel * vec4(aPosition, 1.0);
     frag_texCoords = aTexCoords;
-    frag_normals = aNormals;
+    //frag_normals = aNormals;
 }";
 
     private const string TempFragment = @"
 #version 450
 
 layout (location = 0) in vec2 frag_texCoords;
-layout (location = 1) in vec3 frag_normals;
+//layout (location = 1) in vec3 frag_normals;
 
 layout (location = 0) out vec4 out_color;
 
@@ -57,17 +58,19 @@ void main()
 
     private static List<Renderable> _opaques;
 
+    private static RasterizerState _rasterizerState;
+
     static ForwardRenderer()
     {
         _translucents = new List<Renderable>();
         _opaques = new List<Renderable>();
         
-        GraphicsDevice device = EaselGame.Instance.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         _tempShader = device.CreateCrossPlatformShader(new ShaderAttachment(ShaderStage.Vertex, TempVertex),
             new ShaderAttachment(ShaderStage.Fragment, TempFragment));
-        _tempInputLayout = device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Vec3),
-            new InputLayoutDescription("aTexCoords", AttributeType.Vec2),
-            new InputLayoutDescription("aNormals", AttributeType.Vec3));
+        _tempInputLayout = device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
+            new InputLayoutDescription("aPosition", AttributeType.Vec3),
+            new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
 
         _projViewModel = new ProjViewModel()
         {
@@ -75,6 +78,8 @@ void main()
             Model = Matrix4x4.Identity
         };
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel);
+
+        _rasterizerState = device.CreateRasterizerState();
     }
 
     public static void DrawTranslucent(Renderable renderable)
@@ -95,10 +100,10 @@ void main()
 
     public static void Render()
     {
-        GraphicsDevice device = EaselGame.Instance.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         
         Camera main = Camera.Main;
-        _projViewModel.ProjView = main.ProjectionMatrix * main.ViewMatrix;
+        _projViewModel.ProjView = main.ViewMatrix * main.ProjectionMatrix;
 
         foreach (Renderable renderable in _opaques)
         {
@@ -110,6 +115,7 @@ void main()
             device.SetTexture(1, renderable.Texture.PieTexture);
             device.SetVertexBuffer(renderable.VertexBuffer, _tempInputLayout);
             device.SetIndexBuffer(renderable.IndexBuffer);
+            device.SetRasterizerState(_rasterizerState);
             device.Draw(renderable.IndicesLength);
         }
     }

@@ -76,7 +76,7 @@ void main()
 
     static SpriteRenderer()
     {
-        GraphicsDevice device = EaselGame.Instance.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
 
         _vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, _vertices);
         _indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, _indices);
@@ -126,7 +126,7 @@ void main()
                 "No SpriteRenderer session is active. You must call Begin() before you can call Draw().");
         }
 
-        GraphicsDevice device = EaselGame.Instance.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         
         _projViewModel.Model = Matrix4x4.CreateScale(texture.Size.Width, texture.Size.Height, 1) *
                                Matrix4x4.CreateTranslation(new Vector3(position, 0));

@@ -9,7 +9,7 @@ public class Texture2D : TextureObject
     public Texture2D(string path, bool autoDispose = true) : base(autoDispose)
     {
         Bitmap bitmap = new Bitmap(path);
-        GraphicsDevice device = EaselGame.Instance.Graphics;
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         PieTexture = device.CreateTexture(bitmap.Size.Width, bitmap.Size.Height, bitmap.Format, bitmap.Data);
     }
 }

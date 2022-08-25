@@ -28,4 +28,7 @@ public sealed class Transform
     public Vector3 Up => Vector3.Transform(Vector3.UnitY, Rotation);
 
     public Vector3 Down => Vector3.Transform(-Vector3.UnitY, Rotation);
+
+    public Matrix4x4 ModelMatrix => Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateFromQuaternion(Rotation) *
+                                    Matrix4x4.CreateTranslation(Position);
 }

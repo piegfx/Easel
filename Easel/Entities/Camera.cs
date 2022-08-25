@@ -62,11 +62,32 @@ public class Camera : Entity
         _aspectRatio = aspectRatio;
         _near = near;
         _far = far;
+        GenerateProjectionMatrix();
+    }
+
+    protected internal override void Initialize()
+    {
+        base.Initialize();
+        
+        Graphics.ViewportResized += GraphicsOnViewportResized;
+    }
+
+    private void GraphicsOnViewportResized(Rectangle viewport)
+    {
+        _aspectRatio = viewport.Width / (float) viewport.Height;
+        GenerateProjectionMatrix();
     }
 
     private void GenerateProjectionMatrix()
     {
         ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far);
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        Graphics.ViewportResized -= GraphicsOnViewportResized;
     }
 
     public static Camera Main => (Camera) SceneManager.ActiveScene.GetEntitiesWithTag(Tags.MainCamera)[0];

@@ -7,19 +7,19 @@ public static class Time
 {
     private static double _deltaTime;
     
-    private static Stopwatch _stopwatch;
+    internal static Stopwatch InternalStopwatch;
 
     public static float DeltaTime => (float) _deltaTime;
 
     internal static void Initialize()
     {
-        _stopwatch = Stopwatch.StartNew();
+        InternalStopwatch = Stopwatch.StartNew();
     }
 
     internal static void Update()
     { 
-        _deltaTime = (float) _stopwatch.Elapsed.TotalSeconds;
-        _stopwatch.Restart();
+        _deltaTime = (float) InternalStopwatch.Elapsed.TotalSeconds;
+        InternalStopwatch.Restart();
 
         //double time = window.Time;
         //double time = _stopwatch.Elapsed.TotalSeconds;

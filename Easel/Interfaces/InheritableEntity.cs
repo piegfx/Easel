@@ -1,4 +1,5 @@
 using Easel.Entities;
+using Easel.Graphics;
 using Easel.Scenes;
 using Pie;
 using Pie.Audio;
@@ -10,7 +11,7 @@ public abstract class InheritableEntity
 {
     protected abstract EaselGame Game { get; }
     
-    protected abstract GraphicsDevice GraphicsDevice { get; }
+    protected abstract EaselGraphics Graphics { get; }
     
     protected abstract Scene ActiveScene { get; }
     

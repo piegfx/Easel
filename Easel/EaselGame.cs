@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using Easel.Graphics;
 using Easel.Scenes;
 using Pie;
 using Pie.Audio;
@@ -10,12 +12,13 @@ namespace Easel;
 public class EaselGame : IDisposable
 {
     private GameSettings _settings;
+    private double _targetFrameTime;
     
     public Window Window { get; private set; }
 
-    internal GraphicsDevice Graphics;
-    
-    public GraphicsDevice GraphicsDevice => Graphics;
+    internal EaselGraphics GraphicsInternal;
+
+    public EaselGraphics Graphics => GraphicsInternal;
 
     internal AudioDevice Audio;
 
@@ -23,12 +26,26 @@ public class EaselGame : IDisposable
 
     public bool VSync;
 
+    public int TargetFps
+    {
+        get => _targetFrameTime == 0 ? 0 : (int) (1d / _targetFrameTime);
+        set
+        {
+            if (value == 0)
+                _targetFrameTime = 0;
+            else
+                _targetFrameTime = 1d / value;
+        }
+    }
+
     public EaselGame(GameSettings settings, Scene scene)
     {
         _settings = settings;
         VSync = settings.VSync;
         Instance = this;
         SceneManager.InitializeScene(scene);
+
+        TargetFps = settings.TargetFps;
     }
 
     public void Run()
@@ -47,23 +64,29 @@ public class EaselGame : IDisposable
         flags |= GraphicsDeviceCreationFlags.Debug;
 #endif
         
-        Window = Window.CreateWithGraphicsDevice(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform(),
-            out Graphics, flags);
-        
-        Window.Resize += PieWindowOnResize;
+        Window = Window.CreateWindow(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform());
+        GraphicsInternal = new EaselGraphics(Window);
 
         Input.Initialize(Window);
         Time.Initialize();
         
         Initialize();
 
+        SpinWait sw = new SpinWait();
+
         while (!Window.ShouldClose)
         {
+            if ((!VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+            {
+                sw.SpinOnce();
+                continue;
+            }
+            sw.Reset();
             Input.Update(Window);
             Time.Update();
             Update();
             Draw();
-            Graphics.Present(VSync ? 1 : 0);
+            Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }
     }
 
@@ -86,11 +109,6 @@ public class EaselGame : IDisposable
     {
         Graphics.Dispose();
         Window.Dispose();
-    }
-    
-    private void PieWindowOnResize(Size size)
-    {
-        Graphics.ResizeSwapchain(size);
     }
 
     public static EaselGame Instance;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Easel.Entities.Components;
+using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Scenes;
 using Pie;
@@ -12,7 +13,7 @@ public class Entity : InheritableEntity, IDisposable
 {
     protected override EaselGame Game => EaselGame.Instance;
 
-    protected override GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
+    protected override EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
 
     protected override Scene ActiveScene => SceneManager.ActiveScene;
 

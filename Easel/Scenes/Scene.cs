@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Easel.Entities;
+using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Renderers;
 using Easel.Utilities;
@@ -38,7 +39,7 @@ public abstract class Scene : IDisposable
     
     protected EaselGame Game => EaselGame.Instance;
 
-    protected GraphicsDevice GraphicsDevice => EaselGame.Instance.Graphics;
+    protected EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
 
     protected AudioDevice AudioDevice => EaselGame.Instance.Audio;
 
@@ -87,6 +88,9 @@ public abstract class Scene : IDisposable
     {
         for (int i = 0; i < _entityCount; i++)
             _entities[i].Dispose();
+        
+        foreach (IDisposable disposable in GarbageCollections)
+            disposable.Dispose();
     }
 
     public void AddEntity(string name, Entity entity)

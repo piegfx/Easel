@@ -14,6 +14,8 @@ public struct GameSettings
 
     public bool VSync;
 
+    public int TargetFps;
+
     public GraphicsApi? Api;
 
     public GameSettings()
@@ -24,6 +26,7 @@ public struct GameSettings
         Title = name == null ? "Easel Window" : name + " - Easel";
         Resizable = false;
         VSync = true;
+        TargetFps = 0;
         Api = null;
     }
 }

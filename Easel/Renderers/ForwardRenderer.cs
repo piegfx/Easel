@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
+using Easel.Graphics;
 using Pie;
 using Pie.ShaderCompiler;
 using Pie.Utils;
@@ -10,15 +11,13 @@ namespace Easel.Renderers;
 
 public static class ForwardRenderer
 {
-    private const string TempVertex = @"
+    public const string TempVertex = @"
 #version 450
 
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoords;
-//layout (location = 2) in vec3 aNormals;
 
 layout (location = 0) out vec2 frag_texCoords;
-//layout (location = 1) out vec3 frag_normals;
 
 layout (binding = 0) uniform ProjViewModel
 {
@@ -30,14 +29,12 @@ void main()
 {
     gl_Position = uProjView * uModel * vec4(aPosition, 1.0);
     frag_texCoords = aTexCoords;
-    //frag_normals = aNormals;
 }";
 
-    private const string TempFragment = @"
+    public const string TempFragment = @"
 #version 450
 
 layout (location = 0) in vec2 frag_texCoords;
-//layout (location = 1) in vec3 frag_normals;
 
 layout (location = 0) out vec4 out_color;
 
@@ -48,8 +45,7 @@ void main()
     out_color = texture(uTexture, frag_texCoords);
 }";
 
-    private static Shader _tempShader;
-    private static InputLayout _tempInputLayout;
+    private static EffectLayout _effectLayout;
 
     private static GraphicsBuffer _projViewModelBuffer;
     private static ProjViewModel _projViewModel;
@@ -66,20 +62,17 @@ void main()
         _opaques = new List<Renderable>();
         
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
-        _tempShader = device.CreateCrossPlatformShader(new ShaderAttachment(ShaderStage.Vertex, TempVertex),
-            new ShaderAttachment(ShaderStage.Fragment, TempFragment));
-        _tempInputLayout = device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
-            new InputLayoutDescription("aPosition", AttributeType.Vec3),
-            new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
 
         _projViewModel = new ProjViewModel()
         {
             ProjView = Matrix4x4.Identity,
             Model = Matrix4x4.Identity
         };
-        _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel);
+        _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
 
         _rasterizerState = device.CreateRasterizerState();
+
+        _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.StandardUnlit);
     }
 
     public static void DrawTranslucent(Renderable renderable)
@@ -110,10 +103,10 @@ void main()
             _projViewModel.Model = renderable.ModelMatrix;
             _projViewModelBuffer.Update(0, _projViewModel);
             
-            device.SetShader(_tempShader);
+            device.SetShader(_effectLayout.Effect.PieShader);
             device.SetUniformBuffer(0, _projViewModelBuffer);
             device.SetTexture(1, renderable.Texture.PieTexture);
-            device.SetVertexBuffer(renderable.VertexBuffer, _tempInputLayout);
+            device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);
             device.SetRasterizerState(_rasterizerState);
             device.Draw(renderable.IndicesLength);

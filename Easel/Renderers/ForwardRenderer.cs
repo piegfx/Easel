@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -102,13 +103,13 @@ void main()
         {
             _projViewModel.Model = renderable.ModelMatrix;
             _projViewModelBuffer.Update(0, _projViewModel);
-            
+
             device.SetShader(_effectLayout.Effect.PieShader);
+            device.SetRasterizerState(_rasterizerState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
             device.SetTexture(1, renderable.Texture.PieTexture);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);
-            device.SetRasterizerState(_rasterizerState);
             device.Draw(renderable.IndicesLength);
         }
     }

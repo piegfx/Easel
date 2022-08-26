@@ -43,11 +43,14 @@ public abstract class Scene : IDisposable
 
     protected AudioDevice AudioDevice => EaselGame.Instance.Audio;
 
+    public readonly World World;
+
     protected Scene(int initialCapacity = 128)
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
         GarbageCollections = new List<IDisposable>();
+        World = new World();
     }
 
     protected internal virtual void Initialize()
@@ -73,11 +76,13 @@ public abstract class Scene : IDisposable
     {
         ForwardRenderer.ClearAll();
 
+        Graphics.Clear(World.ClearColor);
+        
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
             if (!entity.Enabled)
-                return;
+                break;
             entity.Draw();
         }
 
@@ -111,12 +116,13 @@ public abstract class Scene : IDisposable
         AddEntity(entity.Name, entity);
     }
 
+    
     public void RemoveEntity(string name)
     {
         int location = _entityPointers[name];
         _entities[location].Dispose();
         _entities[location] = null;
-        GC.Collect();
+        //GC.Collect();
         _entityCount--;
         _entityPointers.Remove(name);
         if (location == _entityCount)

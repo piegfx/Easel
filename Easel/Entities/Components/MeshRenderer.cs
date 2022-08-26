@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Primitives;
@@ -41,5 +42,13 @@ public class MeshRenderer : Component
 
         _renderable.ModelMatrix = Transform.ModelMatrix;
         ForwardRenderer.DrawOpaque(_renderable);
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        
+        _indexBuffer.Dispose();
+        _vertexBuffer.Dispose();
     }
 }

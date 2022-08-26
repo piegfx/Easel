@@ -4,10 +4,19 @@ using Easel.Scenes;
 
 namespace Easel.Entities;
 
+/// <summary>
+/// A perspective camera used for 3D scenes.
+/// </summary>
 public class Camera : Entity
 {
+    /// <summary>
+    /// The projection matrix of this camera.
+    /// </summary>
     public Matrix4x4 ProjectionMatrix { get; private set; }
 
+    /// <summary>
+    /// Calculates and returns the view matrix of this camera.
+    /// </summary>
     public Matrix4x4 ViewMatrix =>
         Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
 
@@ -16,6 +25,9 @@ public class Camera : Entity
     private float _near;
     private float _far;
 
+    /// <summary>
+    /// Get or set the field of view (FOV), in radians, of this camera.
+    /// </summary>
     public float FieldOfView
     {
         get => _fov;
@@ -26,6 +38,9 @@ public class Camera : Entity
         }
     }
 
+    /// <summary>
+    /// Get or set the aspect ratio (typically width / height) of this camera. You won't normally need to set this value.
+    /// </summary>
     public float AspectRatio
     {
         get => _aspectRatio;
@@ -36,6 +51,9 @@ public class Camera : Entity
         }
     }
 
+    /// <summary>
+    /// The near plane distance of this camera.
+    /// </summary>
     public float NearPlane
     {
         get => _near;
@@ -46,6 +64,9 @@ public class Camera : Entity
         }
     }
 
+    /// <summary>
+    /// The far plane distance of this camera.
+    /// </summary>
     public float FarPlane
     {
         get => _far;
@@ -56,6 +77,14 @@ public class Camera : Entity
         }
     }
 
+    /// <summary>
+    /// Create a new camera for use in 3D scenes.
+    /// </summary>
+    /// <param name="fov">The field of view, in radians, of this camera.</param>
+    /// <param name="aspectRatio">The aspect ratio of this camera (typically width / height).</param>
+    /// <param name="near">The near plane distance of this camera.</param>
+    /// <param name="far">The far plane distance of this camera.</param>
+    /// <remarks>Multiple cameras are not currently supported.</remarks>
     public Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000f)
     {
         _fov = fov;
@@ -90,5 +119,9 @@ public class Camera : Entity
         Graphics.ViewportResized -= GraphicsOnViewportResized;
     }
 
+    /// <summary>
+    /// Get the main camera for the current scene. This is the first camera in the scene with the
+    /// <see cref="Tags.MainCamera"/> tag.
+    /// </summary>
     public static Camera Main => (Camera) SceneManager.ActiveScene.GetEntitiesWithTag(Tags.MainCamera)[0];
 }

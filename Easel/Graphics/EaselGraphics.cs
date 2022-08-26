@@ -11,6 +11,9 @@ namespace Easel.Graphics;
 /// </summary>
 public class EaselGraphics : IDisposable
 {
+    /// <summary>
+    /// Is invoked when the <see cref="Viewport"/> is resized.
+    /// </summary>
     public event OnViewportResized ViewportResized;
     
     /// <summary>
@@ -18,6 +21,9 @@ public class EaselGraphics : IDisposable
     /// </summary>
     public readonly GraphicsDevice PieGraphics;
 
+    /// <summary>
+    /// Get or set the graphics viewport. If set, <see cref="ViewportResized"/> is invoked.
+    /// </summary>
     public Rectangle Viewport
     {
         get => PieGraphics.Viewport;
@@ -28,13 +34,17 @@ public class EaselGraphics : IDisposable
         }
     }
 
-    public EaselGraphics(Window window)
+    internal EaselGraphics(Window window)
     {
         PieGraphics = window.CreateGraphicsDevice(GraphicsDeviceCreationFlags.Debug);
         
         window.Resize += WindowOnResize;
     }
 
+    /// <summary>
+    /// Clear the current render target, clearing color, depth, and stencil.
+    /// </summary>
+    /// <param name="color">The color to clear with.</param>
     public void Clear(Color color)
     {
         PieGraphics.Clear(color, ClearFlags.Depth | ClearFlags.Stencil);

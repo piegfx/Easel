@@ -8,6 +8,9 @@ using Pie.Utils;
 
 namespace Easel.Entities.Components;
 
+/// <summary>
+/// The bog-standard 3D mesh renderer for an entity.
+/// </summary>
 public class MeshRenderer : Component
 {
     private GraphicsBuffer _vertexBuffer;
@@ -19,8 +22,14 @@ public class MeshRenderer : Component
     private uint[] _indices;
     private Texture2D _texture;
 
+    /// <summary>
+    /// Create a new <see cref="MeshRenderer"/> instance with the given <see cref="IPrimitive"/> and <see cref="Texture2D"/>
+    /// </summary>
+    /// <param name="primitive">The <see cref="IPrimitive"/> mesh.</param>
+    /// <param name="texture">The <see cref="Texture2D"/> to apply to the mesh.</param>
     public MeshRenderer(IPrimitive primitive, Texture2D texture)
     {
+        // TODO: Add materials.
         _vertices = primitive.Vertices;
         _indices = primitive.Indices;
         _texture = texture;

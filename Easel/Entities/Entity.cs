@@ -9,6 +9,12 @@ using Pie.Audio;
 
 namespace Easel.Entities;
 
+/// <summary>
+/// An entity, sometimes known as a game object, is the base object in the Entity-Component (EC) system. (Note, this is
+/// <b>NOT</b> an ECS, which is very different). These entities can both have components added to them, such as
+/// <see cref="MeshRenderer"/>, and can be inherited from, such as <see cref="Camera"/>. Most of the time, you will be
+/// adding components to the entity instead of inheriting, but the choice is yours.
+/// </summary>
 public class Entity : InheritableEntity, IDisposable
 {
     protected override EaselGame Game => EaselGame.Instance;
@@ -17,14 +23,27 @@ public class Entity : InheritableEntity, IDisposable
 
     protected override Scene ActiveScene => SceneManager.ActiveScene;
 
-    protected override AudioDevice AudioDevice => EaselGame.Instance.Audio;
+    protected override AudioDevice Audio => EaselGame.Instance.AudioInternal;
 
+    /// <summary>
+    /// The name of this entity as it is currently stored in the scene.
+    /// </summary>
     public string Name { get; internal set; }
 
+    /// <summary>
+    /// The tag, if any, of this entity.
+    /// </summary>
     public string Tag;
 
+    /// <summary>
+    /// If <see langword="false"/>, the entity will not be updated nor drawn, however will still exist in the scene.
+    /// </summary>
     public bool Enabled;
 
+    /// <summary>
+    /// This entity's <see cref="Easel.Entities.Transform"/>. Unlike other engines, a transform is required for each
+    /// entity, and is not a component.
+    /// </summary>
     public Transform Transform;
 
     private Component[] _components;
@@ -35,8 +54,19 @@ public class Entity : InheritableEntity, IDisposable
 
     private bool _hasInitialized;
 
+    /// <summary>
+    /// Create a new <see cref="Entity"/> with the default <see cref="Entities.Transform"/>.
+    /// </summary>
+    /// <param name="initialCapacity">The starting capacity of the <see cref="Component"/> array. This array doubles
+    /// in size if you exceed its size.</param>
     public Entity(int initialCapacity = 16) : this(new Transform(), initialCapacity) { }
 
+    /// <summary>
+    /// Create a new <see cref="Entity"/>.
+    /// </summary>
+    /// <param name="transform">The starting <see cref="Entities.Transform"/> of this entity.</param>
+    /// <param name="initialCapacity">The starting capacity of the <see cref="Component"/> array. This array doubles
+    /// in size if you exceed its size.</param>
     public Entity(Transform transform, int initialCapacity = 16)
     {
         Transform = transform;
@@ -65,12 +95,23 @@ public class Entity : InheritableEntity, IDisposable
             _components[i].Draw();
     }
 
+    /// <summary>
+    /// Dispose of this entity and the components inside it.
+    /// </summary>
     public virtual void Dispose()
     {
         for (int i = 0; i < _componentCount; i++)
             _components[i].Dispose();
     }
 
+    /// <summary>
+    /// Add a new component to this entity.
+    /// </summary>
+    /// <param name="component">The component to add.</param>
+    /// <exception cref="EaselException">Thrown if the entity already contains this component's type. Entities
+    /// cannot have more than one component with the same type.</exception>
+    /// <remarks>If the entity has not been added to the scene, the component will not be initialized until it is
+    /// added to the scene. Otherwise, the component is initialized when it is added.</remarks>
     public void AddComponent(Component component)
     {
         Type type = component.GetType();

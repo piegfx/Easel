@@ -3,6 +3,9 @@ using Pie.Utils;
 
 namespace Easel.Primitives;
 
+/// <summary>
+/// A cube primitive, containing 6 sides, texture coordinates, and normals.
+/// </summary>
 public struct Cube : IPrimitive
 {
     public VertexPositionTextureNormal[] Vertices => new[]

@@ -10,8 +10,15 @@ using Pie.Utils;
 
 namespace Easel.Renderers;
 
+/// <summary>
+/// Forward rendering is the "traditional" way to render objects. It has its advantages, but also has many disadvantages
+/// compared to deferred rendering. As such, deferred rendering is usually preferred for most rendering tasks.
+/// </summary>
 public static class ForwardRenderer
 {
+    /// <summary>
+    /// TEMPORARY: The vertex shader for the <see cref="ForwardRenderer"/>. This will be moved to an embedded resource.
+    /// </summary>
     public const string TempVertex = @"
 #version 450
 
@@ -32,6 +39,10 @@ void main()
     frag_texCoords = aTexCoords;
 }";
 
+    /// <summary>
+    /// TEMPORARY: The fragment/pixel shader for the <see cref="ForwardRenderer"/>. This will be moved to an embedded
+    /// resource.
+    /// </summary>
     public const string TempFragment = @"
 #version 450
 
@@ -76,22 +87,37 @@ void main()
         _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.StandardUnlit);
     }
 
+    /// <summary>
+    /// Draw a translucent object. These objects are drawn back-to-front to allow transparency to work.
+    /// </summary>
+    /// <param name="renderable">The renderable object.</param>
     public static void DrawTranslucent(Renderable renderable)
     {
         _translucents.Add(renderable);
     }
 
+    /// <summary>
+    /// Draw an opaque object. These objects are draw front-to-back so the GPU won't process fragments that are covered
+    /// by other fragments.
+    /// </summary>
+    /// <param name="renderable"></param>
     public static void DrawOpaque(Renderable renderable)
     {
         _opaques.Add(renderable);
     }
 
+    /// <summary>
+    /// Clear all draw lists and prepare the renderer for a new frame.
+    /// </summary>
     public static void ClearAll()
     {
         _translucents.Clear();
         _opaques.Clear();
     }
 
+    /// <summary>
+    /// Render all draw lists and perform post-processing.
+    /// </summary>
     public static void Render()
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;

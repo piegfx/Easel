@@ -40,6 +40,11 @@ public static class SceneManager
         _activeScene?.Draw();
     }
 
+    /// <summary>
+    /// Set the scene that will be transitioned to.
+    /// </summary>
+    /// <param name="scene">The scene to use.</param>
+    /// <remarks>Transitioning occurs at the start of the update cycle.</remarks>
     public static void SetScene(Scene scene)
     {
         _switchScene = scene;

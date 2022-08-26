@@ -8,6 +8,9 @@ using Pie.Utils;
 
 namespace Easel.Renderers;
 
+/// <summary>
+/// Efficiently batches and renders 2D sprites.
+/// </summary>
 public static class SpriteRenderer
 {
     // Basic sprite renderer
@@ -40,6 +43,9 @@ public static class SpriteRenderer
 
     private static bool _begin;
 
+    /// <summary>
+    /// TEMPORARY: The vertex shader of the sprite renderer. This will be moved to an embedded resource.
+    /// </summary>
     public const string SpriteVertex = @"
 #version 450
 
@@ -60,6 +66,9 @@ void main()
     frag_texCoords = aTexCoords;
 }";
 
+    /// <summary>
+    /// TEMPORARY: The fragment shader of the sprite renderer. This will be moved to an embedded resource.
+    /// </summary>
     public const string SpriteFragment = @"
 #version 450
 
@@ -105,6 +114,11 @@ void main()
         _projection = Matrix4x4.CreateOrthographicOffCenter(0, size.Width, size.Height, 0, -1, 1);
     }
 
+    /// <summary>
+    /// Begin a new SpriteRenderer session for drawing.
+    /// </summary>
+    /// <param name="transform">The transform matrix to apply, if any.</param>
+    /// <exception cref="EaselException">Thrown if a session is already active.</exception>
     public static void Begin(Matrix4x4? transform = null)
     {
         if (_begin)
@@ -118,6 +132,12 @@ void main()
         _projViewModel.ProjView = _projection * (transform ?? Matrix4x4.Identity);
     }
 
+    /// <summary>
+    /// Draw a texture at the given position.
+    /// </summary>
+    /// <param name="texture">The <see cref="TextureObject"/> to draw.</param>
+    /// <param name="position">The position, in pixels, to draw at. (0, 0) = top left</param>
+    /// <exception cref="EaselException">Thrown if no session is active.</exception>
     public static void Draw(TextureObject texture, Vector2 position)
     {
         if (!_begin)
@@ -141,6 +161,10 @@ void main()
         device.Draw((uint) _indices.Length);
     }
 
+    /// <summary>
+    /// End a session and flush remaining draw lists to the GPU.
+    /// </summary>
+    /// <exception cref="EaselException">Thrown if there is no active session.</exception>
     public static void End()
     {
         if (!_begin)

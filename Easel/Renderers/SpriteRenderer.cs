@@ -104,7 +104,7 @@ void main()
         _inputLayout = device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Vec3),
             new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
 
-        _rasterizerState = device.CreateRasterizerState(direction: CullDirection.CounterClockwise);
+        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
         EaselGame.Instance.Window.Resize += CreateOrthoMatrix;
     }

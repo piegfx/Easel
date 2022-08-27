@@ -82,7 +82,7 @@ void main()
         };
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
 
-        _rasterizerState = device.CreateRasterizerState();
+        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
 
         _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.StandardUnlit);
     }

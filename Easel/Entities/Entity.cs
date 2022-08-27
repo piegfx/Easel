@@ -128,7 +128,20 @@ public class Entity : InheritableEntity, IDisposable
         _components[count] = component;
         _componentPointers.Add(type, count);
     }
-    
+
+    /// <summary>
+    /// Get the component with the given type on this entity.
+    /// </summary>
+    /// <typeparam name="T">The type of component to get.</typeparam>
+    /// <returns>The found component. If not found, returns null.</returns>
+    public T GetComponent<T>() where T : Component
+    {
+        if (!_componentPointers.TryGetValue(typeof(T), out int ptr))
+            return null;
+
+        return (T) _components[ptr];
+    }
+
     protected override void AddEntity(string name, Entity entity) => SceneManager.ActiveScene.AddEntity(name, entity);
 
     protected override void AddEntity(Entity entity) => SceneManager.ActiveScene.AddEntity(entity);

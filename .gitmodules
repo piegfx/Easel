@@ -1,3 +1,6 @@
 [submodule "Pie"]
 	path = Pie
 	url = https://github.com/IsometricSoftware/Pie
+[submodule "BulletSharpPInvoke"]
+	path = BulletSharpPInvoke
+	url = https://github.com/AndresTraks/BulletSharpPInvoke

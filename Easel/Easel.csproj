@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj" />
       <ProjectReference Include="..\Pie\Pie.Audio\Pie.Audio.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
@@ -16,6 +17,12 @@
 
     <ItemGroup>
       <PackageReference Include="StbImageSharp" Version="2.27.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="libbulletc.so">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

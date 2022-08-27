@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading;
 using Easel.Graphics;
 using Easel.Scenes;
+using Easel.Utilities;
 using Pie;
 using Pie.Audio;
 using Pie.Windowing;
@@ -21,6 +22,8 @@ public class EaselGame : IDisposable
 {
     private GameSettings _settings;
     private double _targetFrameTime;
+
+    public event OnPhysicsUpdate PhysicsUpdate;
     
     /// <summary>
     /// The underlying game window. Access this to change its size, title, and subscribe to various events.
@@ -104,6 +107,8 @@ public class EaselGame : IDisposable
         Window = Window.CreateWindow(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform());
         GraphicsInternal = new EaselGraphics(Window);
 
+        AudioInternal = new AudioDevice(256);
+
         Input.Initialize(Window);
         Time.Initialize();
         
@@ -142,6 +147,8 @@ public class EaselGame : IDisposable
     protected virtual void Update()
     {
         SceneManager.Update();
+        Physics.Update();
+        PhysicsUpdate?.Invoke();
     }
 
     /// <summary>
@@ -183,4 +190,6 @@ public class EaselGame : IDisposable
     /// <remarks>Currently you can set this value. <b>Do not do this</b> unless you have a reason to, as it will screw
     /// up many other parts of the engine and it will likely stop working.</remarks>
     public static EaselGame Instance;
+
+    public delegate void OnPhysicsUpdate();
 }

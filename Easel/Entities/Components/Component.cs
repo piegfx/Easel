@@ -49,6 +49,13 @@ public abstract class Component : InheritableEntity, IDisposable
     /// </summary>
     public virtual void Dispose() { }
 
+    /// <summary>
+    /// Get the component with the given type on the current entity.
+    /// </summary>
+    /// <typeparam name="T">The type of component to get.</typeparam>
+    /// <returns>The found component. If not found, returns null.</returns>
+    protected T GetComponent<T>() where T : Component => Entity.GetComponent<T>();
+
     protected override void AddEntity(string name, Entity entity) => SceneManager.ActiveScene.AddEntity(name, entity);
 
     protected override void AddEntity(Entity entity) => SceneManager.ActiveScene.AddEntity(entity);

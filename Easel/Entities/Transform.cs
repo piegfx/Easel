@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Easel.Entities;
 
@@ -6,7 +7,7 @@ namespace Easel.Entities;
 /// Describes position, rotation, and scale, and provides some helper functions and properties for determining things such
 /// as the forward vector and model matrix. Typically used in entities, however can be used anywhere.
 /// </summary>
-public sealed class Transform
+public sealed class Transform : IEquatable<Transform>, ICloneable
 {
     /// <summary>
     /// The position of this transform. (Default: Zero)
@@ -68,4 +69,41 @@ public sealed class Transform
     /// </summary>
     public Matrix4x4 ModelMatrix => Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateFromQuaternion(Rotation) *
                                     Matrix4x4.CreateTranslation(Position);
+
+    public bool Equals(Transform other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Position.Equals(other.Position) && Rotation.Equals(other.Rotation) && Scale.Equals(other.Scale);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return ReferenceEquals(this, obj) || obj is Transform other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Position, Rotation, Scale);
+    }
+
+    public object Clone()
+    {
+        return new Transform()
+        {
+            Position = Position,
+            Rotation = Rotation,
+            Scale = Scale
+        };
+    }
+
+    public static bool operator ==(Transform left, Transform right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Transform left, Transform right)
+    {
+        return !Equals(left, right);
+    }
 }

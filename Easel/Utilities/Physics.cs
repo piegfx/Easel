@@ -38,6 +38,7 @@ public static class Physics
         using RigidBodyConstructionInfo info =
             new RigidBodyConstructionInfo(0, new DefaultMotionState(startTransform), shape);
         RigidBody rb = new RigidBody(info);
+        rb.CollisionFlags |= CollisionFlags.StaticObject | CollisionFlags.CustomMaterialCallback;
         World.AddRigidBody(rb);
         return rb;
     }
@@ -47,7 +48,7 @@ public static class Physics
         GhostObject obj = new PairCachingGhostObject();
         obj.CollisionShape = shape;
         obj.WorldTransform = startTransform;
-        obj.CollisionFlags |= CollisionFlags.NoContactResponse | CollisionFlags.CustomMaterialCallback;
+        obj.CollisionFlags |= CollisionFlags.NoContactResponse;
         World.AddCollisionObject(obj);
         return obj;
     }

@@ -37,6 +37,27 @@ public static class Input
     /// Get the current mouse position relative to the window (top left = 0, 0)
     /// </summary>
     public static Vector2 MousePosition { get; private set; }
+    
+    /// <summary>
+    /// Returns the number of pixels the mouse has moved since the last frame.
+    /// </summary>
+    public static Vector2 DeltaMousePosition { get; private set; }
+
+    private static MouseState _currentMouseState;
+    private static bool _mouseStateChanged;
+
+    /// <summary>
+    /// Get or set the mouse state for the current game window.
+    /// </summary>
+    public static MouseState MouseState
+    {
+        get => _currentMouseState;
+        set
+        {
+            _currentMouseState = value;
+            _mouseStateChanged = true;
+        }
+    }
 
     internal static void Initialize(Window window)
     {
@@ -49,7 +70,14 @@ public static class Input
         _newKeys.Clear();
         
         InputState state = window.ProcessEvents();
+        DeltaMousePosition = state.MousePosition - MousePosition;
         MousePosition = state.MousePosition;
+
+        if (_mouseStateChanged)
+        {
+            window.MouseState = _currentMouseState;
+            _mouseStateChanged = false;
+        }
     }
 
     private static void WindowOnKeyDown(Keys key)

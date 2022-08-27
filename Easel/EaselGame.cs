@@ -107,7 +107,7 @@ public class EaselGame : IDisposable
         Window = Window.CreateWindow(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform());
         GraphicsInternal = new EaselGraphics(Window);
 
-        AudioInternal = new AudioDevice(256);
+        AudioInternal = new AudioDevice(2048);
 
         Input.Initialize(Window);
         Time.Initialize();

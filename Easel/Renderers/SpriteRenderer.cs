@@ -40,6 +40,7 @@ public static class SpriteRenderer
     private static Shader _shader;
     private static InputLayout _inputLayout;
     private static RasterizerState _rasterizerState;
+    private static DepthState _depthState;
 
     private static bool _begin;
 
@@ -105,6 +106,7 @@ void main()
             new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
 
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
+        _depthState = device.CreateDepthState(DepthStateDescription.Disabled);
 
         EaselGame.Instance.Window.Resize += CreateOrthoMatrix;
     }
@@ -150,12 +152,14 @@ void main()
         
         _projViewModel.Model = Matrix4x4.CreateScale(texture.Size.Width, texture.Size.Height, 1) *
                                Matrix4x4.CreateTranslation(new Vector3(position, 0));
-        _projViewModelBuffer.Update(0, _projViewModel);
+        device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
         
         device.SetShader(_shader);
         device.SetUniformBuffer(0, _projViewModelBuffer);
         device.SetTexture(1, texture.PieTexture);
         device.SetRasterizerState(_rasterizerState);
+        device.SetDepthState(_depthState);
+        device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetVertexBuffer(_vertexBuffer, _inputLayout);
         device.SetIndexBuffer(_indexBuffer);
         device.Draw((uint) _indices.Length);

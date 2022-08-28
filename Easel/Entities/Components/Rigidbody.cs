@@ -27,7 +27,7 @@ public class Rigidbody : Component
         get => _rb.Friction;
         set => _rb.Friction = value;
     }
-    
+
     public Rigidbody(float mass, CollisionShape shape)
     {
         _iMass = mass;
@@ -43,11 +43,15 @@ public class Rigidbody : Component
 
         Console.WriteLine(_iShape.LocalScaling);
         _iShape.LocalScaling = Transform.Scale;
-        
+
         if (_iMass == 0)
             _rb = Physics.AddStaticBody(_iShape, transform);
         else
             _rb = Physics.AddRigidBody(_iMass, _iShape, transform);
+        
+        //_rb.Restitution = 0.9f;
+        //_rb.CcdMotionThreshold = 0.00005f;
+        //_rb.CcdSweptSphereRadius = 0.5f;
         
         Game.PhysicsUpdate += PhysicsUpdate;
     }

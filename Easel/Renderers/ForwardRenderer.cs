@@ -67,6 +67,7 @@ void main()
     private static List<Renderable> _opaques;
 
     private static RasterizerState _rasterizerState;
+    private static DepthState _depthState;
 
     static ForwardRenderer()
     {
@@ -83,6 +84,7 @@ void main()
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
 
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
+        _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
 
         _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.StandardUnlit);
     }
@@ -128,12 +130,14 @@ void main()
         foreach (Renderable renderable in _opaques)
         {
             _projViewModel.Model = renderable.ModelMatrix;
-            _projViewModelBuffer.Update(0, _projViewModel);
+            device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
 
             device.SetShader(_effectLayout.Effect.PieShader);
             device.SetRasterizerState(_rasterizerState);
+            device.SetDepthState(_depthState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
             device.SetTexture(1, renderable.Texture.PieTexture);
+            device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);
             device.Draw(renderable.IndicesLength);

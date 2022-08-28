@@ -98,14 +98,14 @@ public class EaselGame : IDisposable
             EventDriven = false
         };
 
-        GraphicsDeviceCreationFlags flags = GraphicsDeviceCreationFlags.None;
+        GraphicsDeviceOptions options = new GraphicsDeviceOptions();
         
 #if DEBUG
-        flags |= GraphicsDeviceCreationFlags.Debug;
+        options.Debug = true;
 #endif
         
         Window = Window.CreateWindow(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform());
-        GraphicsInternal = new EaselGraphics(Window);
+        GraphicsInternal = new EaselGraphics(Window, options);
 
         AudioInternal = new AudioDevice(256);
 

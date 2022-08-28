@@ -34,9 +34,9 @@ public class EaselGraphics : IDisposable
         }
     }
 
-    internal EaselGraphics(Window window)
+    internal EaselGraphics(Window window, GraphicsDeviceOptions options)
     {
-        PieGraphics = window.CreateGraphicsDevice(GraphicsDeviceCreationFlags.Debug);
+        PieGraphics = window.CreateGraphicsDevice(options);
         
         window.Resize += WindowOnResize;
     }

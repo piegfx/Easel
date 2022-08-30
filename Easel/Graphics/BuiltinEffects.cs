@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Easel.Renderers;
+using Easel.Utilities;
 using Pie;
 using Pie.Utils;
 
@@ -27,6 +28,8 @@ public static class BuiltinEffects
     
     private static Dictionary<string, Lazy<EffectLayout>> _effects;
 
+    private const string Assembly = "Easel.Graphics.Shaders.";
+
     static BuiltinEffects()
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
@@ -34,10 +37,7 @@ public static class BuiltinEffects
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
         _effects.Add("Forward/StandardUnlit",
             new Lazy<EffectLayout>(() =>
-                new EffectLayout(new Effect(ForwardRenderer.TempVertex, ForwardRenderer.TempFragment),
-                    device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
-                        new InputLayoutDescription("aPosition", AttributeType.Vec3),
-                        new InputLayoutDescription("aTexCoords", AttributeType.Vec2)))));
+                new EffectLayout(new Effect(Assembly + "Forward.StandardUnlit.vert",Assembly + "Forward.StandardUnlit.frag"), device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes, new InputLayoutDescription("aPosition", AttributeType.Vec3), new InputLayoutDescription("aTexCoords", AttributeType.Vec2)))));
     }
 
     /// <summary>

@@ -31,6 +31,10 @@
     <ItemGroup>
       <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.frag" />
       <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.vert" />
+      <None Remove="Graphics\Shaders\Forward\StandardUnlit.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\Forward\StandardUnlit.frag" />
+      <None Remove="Graphics\Shaders\Forward\StandardUnlit.vert" />
+      <EmbeddedResource Include="Graphics\Shaders\Forward\StandardUnlit.vert" />
     </ItemGroup>
 
 </Project>

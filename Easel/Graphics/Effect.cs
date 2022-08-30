@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Easel.Utilities;
 using Pie;
 using Pie.ShaderCompiler;
 
@@ -23,7 +24,7 @@ public class Effect : IDisposable
     /// <param name="loadType">The <see cref="EffectLoadType"/> that both shaders will be loaded with</param>
     /// <exception cref="NotImplementedException"></exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public Effect(string vertex, string fragment, EffectLoadType loadType = EffectLoadType.String)
+    public Effect(string vertex, string fragment, EffectLoadType loadType = EffectLoadType.EmbeddedResource)
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         switch (loadType)
@@ -36,7 +37,8 @@ public class Effect : IDisposable
                 fragment = File.ReadAllText(fragment);
                 break;
             case EffectLoadType.EmbeddedResource:
-                throw new NotImplementedException();
+                vertex = Utils.LoadEmbeddedString(vertex);
+                fragment = Utils.LoadEmbeddedString(fragment);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);

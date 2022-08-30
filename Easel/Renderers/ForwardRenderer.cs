@@ -16,52 +16,6 @@ namespace Easel.Renderers;
 /// </summary>
 public static class ForwardRenderer
 {
-    /// <summary>
-    /// TEMPORARY: The vertex shader for the <see cref="ForwardRenderer"/>. This will be moved to an embedded resource.
-    /// </summary>
-    public const string TempVertex = @"
-#version 450
-
-layout (location = 0) in vec3 aPosition;
-layout (location = 1) in vec2 aTexCoords;
-
-layout (location = 0) out vec2 frag_texCoords;
-
-layout (binding = 0) uniform ProjViewModel
-{
-    mat4 uProjView;
-    mat4 uModel;
-};
-
-layout (binding = 1) uniform TilingAmount
-{
-    vec2 uTiling;
-};
-
-void main()
-{
-    gl_Position = uProjView * uModel * vec4(aPosition, 1.0);
-    frag_texCoords = aTexCoords * uTiling;
-}";
-
-    /// <summary>
-    /// TEMPORARY: The fragment/pixel shader for the <see cref="ForwardRenderer"/>. This will be moved to an embedded
-    /// resource.
-    /// </summary>
-    public const string TempFragment = @"
-#version 450
-
-layout (location = 0) in vec2 frag_texCoords;
-
-layout (location = 0) out vec4 out_color;
-
-layout (binding = 2) uniform sampler2D uTexture;
-
-void main()
-{
-    out_color = texture(uTexture, frag_texCoords);
-}";
-
     private static EffectLayout _effectLayout;
 
     private static GraphicsBuffer _projViewModelBuffer;

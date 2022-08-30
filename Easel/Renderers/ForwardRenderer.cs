@@ -33,10 +33,15 @@ layout (binding = 0) uniform ProjViewModel
     mat4 uModel;
 };
 
+layout (binding = 1) uniform TilingAmount
+{
+    vec2 uTiling;
+};
+
 void main()
 {
     gl_Position = uProjView * uModel * vec4(aPosition, 1.0);
-    frag_texCoords = aTexCoords;
+    frag_texCoords = aTexCoords * uTiling;
 }";
 
     /// <summary>
@@ -50,7 +55,7 @@ layout (location = 0) in vec2 frag_texCoords;
 
 layout (location = 0) out vec4 out_color;
 
-layout (binding = 1) uniform sampler2D uTexture;
+layout (binding = 2) uniform sampler2D uTexture;
 
 void main()
 {
@@ -61,6 +66,8 @@ void main()
 
     private static GraphicsBuffer _projViewModelBuffer;
     private static ProjViewModel _projViewModel;
+
+    private static GraphicsBuffer _tilingBuffer;
 
     private static List<Renderable> _translucents;
 
@@ -82,6 +89,8 @@ void main()
             Model = Matrix4x4.Identity
         };
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
+
+        _tilingBuffer = device.CreateBuffer(BufferType.UniformBuffer, Vector4.One, true);
 
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
@@ -131,12 +140,14 @@ void main()
         {
             _projViewModel.Model = renderable.ModelMatrix;
             device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
+            device.UpdateBuffer(_tilingBuffer, 0, renderable.TilingAmount);
 
             device.SetShader(_effectLayout.Effect.PieShader);
             device.SetRasterizerState(_rasterizerState);
             device.SetDepthState(_depthState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
-            device.SetTexture(1, renderable.Texture.PieTexture);
+            device.SetUniformBuffer(1, _tilingBuffer);
+            device.SetTexture(2, renderable.Texture.PieTexture);
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);

@@ -34,6 +34,9 @@ public struct Renderable
     /// </summary>
     public Matrix4x4 ModelMatrix;
 
+    // TODO: Materials
+    public Vector2 TilingAmount;
+
     /// <summary>
     /// Create a new renderable object.
     /// </summary>
@@ -42,12 +45,13 @@ public struct Renderable
     /// <param name="indicesLength">The number of indices in the <see cref="IndexBuffer"/>.</param>
     /// <param name="texture">The texture of this renderable.</param>
     /// <param name="modelMatrix">The model matrix for this renderable.</param>
-    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, TextureObject texture, Matrix4x4 modelMatrix)
+    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, TextureObject texture, Matrix4x4 modelMatrix, Vector2 tilingAmount)
     {
         VertexBuffer = vertexBuffer;
         IndexBuffer = indexBuffer;
         IndicesLength = indicesLength;
         Texture = texture;
         ModelMatrix = modelMatrix;
+        TilingAmount = tilingAmount;
     }
 }

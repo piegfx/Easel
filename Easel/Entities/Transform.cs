@@ -37,12 +37,12 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// <summary>
     /// The forward vector of this transform.
     /// </summary>
-    public Vector3 Forward => Vector3.Transform(Vector3.UnitZ, Rotation);
+    public Vector3 Forward => Vector3.Transform(-Vector3.UnitZ, Rotation);
 
     /// <summary>
     /// The backward vector of this transform.
     /// </summary>
-    public Vector3 Backward => Vector3.Transform(-Vector3.UnitZ, Rotation);
+    public Vector3 Backward => Vector3.Transform(Vector3.UnitZ, Rotation);
 
     /// <summary>
     /// The right vector of this transform.
@@ -67,7 +67,8 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// <summary>
     /// Calculates and returns the model matrix for this transform.
     /// </summary>
-    public Matrix4x4 ModelMatrix => Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateFromQuaternion(Rotation) *
+    public Matrix4x4 ModelMatrix => Matrix4x4.CreateScale(Scale) *
+                                    Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
                                     Matrix4x4.CreateTranslation(Position);
 
     public bool Equals(Transform other)

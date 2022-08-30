@@ -52,8 +52,6 @@ public class Rigidbody : Component
         //_rb.Restitution = 0.9f;
         //_rb.CcdMotionThreshold = 0.00005f;
         //_rb.CcdSweptSphereRadius = 0.5f;
-        
-        Game.PhysicsUpdate += PhysicsUpdate;
     }
 
     protected internal override void Update()
@@ -65,7 +63,7 @@ public class Rigidbody : Component
         _rb.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
     }
     
-    private void PhysicsUpdate()
+    protected internal override void PhysicsUpdate()
     {
         if (Transform != _lastTransform)
             _rb.Activate();

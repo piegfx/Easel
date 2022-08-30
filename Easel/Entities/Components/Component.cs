@@ -38,6 +38,8 @@ public abstract class Component : InheritableEntity, IDisposable
     /// </summary>
     protected internal virtual void Update() { }
 
+    protected internal virtual void PhysicsUpdate() { }
+
     /// <summary>
     /// Called once per frame during draw.
     /// </summary>

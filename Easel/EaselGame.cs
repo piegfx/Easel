@@ -23,8 +23,6 @@ public class EaselGame : IDisposable
     private GameSettings _settings;
     private double _targetFrameTime;
 
-    public event OnPhysicsUpdate PhysicsUpdate;
-    
     /// <summary>
     /// The underlying game window. Access this to change its size, title, and subscribe to various events.
     /// </summary>
@@ -148,7 +146,7 @@ public class EaselGame : IDisposable
     {
         SceneManager.Update();
         Physics.Update();
-        PhysicsUpdate?.Invoke();
+        SceneManager.PhysicsUpdate();
     }
 
     /// <summary>
@@ -190,6 +188,4 @@ public class EaselGame : IDisposable
     /// <remarks>Currently you can set this value. <b>Do not do this</b> unless you have a reason to, as it will screw
     /// up many other parts of the engine and it will likely stop working.</remarks>
     public static EaselGame Instance;
-
-    public delegate void OnPhysicsUpdate();
 }

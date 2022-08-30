@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
 using Easel.Graphics;
+using Easel.Utilities;
 using Pie;
 using Pie.ShaderCompiler;
 using Pie.Utils;
@@ -32,18 +34,23 @@ public static class SpriteRenderer
         1u, 2u, 3u
     };
 
-    public const uint MaxSprites = 512;
-    public const uint VertexSizeInBytes = SpriteVertex.SizeInBytes * 4;
-    public const uint IndicesSizeInBytes = 6 * sizeof(uint);
+    private const uint NumVertices = 4;
+    private const uint NumIndices = 6;
 
-    private static Sprite[] _sprites;
+    public const uint MaxSprites = 512;
+    private const uint VertexSizeInBytes = NumVertices * SpriteVertex.SizeInBytes;
+    private const uint IndicesSizeInBytes = NumIndices * sizeof(uint);
+
+    private static SpriteVertex[] _verticesCache;
+    private static uint[] _indicesCache;
+
+    private static List<Sprite> _sprites;
     private static uint _spriteCount;
     private static uint _drawCount;
 
     private static GraphicsBuffer _vertexBuffer;
     private static GraphicsBuffer _indexBuffer;
-
-    private static Matrix4x4 _projection;
+    
     private static GraphicsBuffer _projViewBuffer;
 
     private static Shader _shader;
@@ -61,22 +68,28 @@ public static class SpriteRenderer
     static SpriteRenderer()
     {
         _device = EaselGame.Instance.GraphicsInternal.PieGraphics;
-        
-        _sprites = new Sprite[MaxSprites];
+
+        _verticesCache = new SpriteVertex[NumVertices];
+        _indicesCache = new uint[NumIndices];
+        _sprites = new List<Sprite>();
 
         _vertexBuffer = _device.CreateBuffer<SpriteVertex>(BufferType.VertexBuffer, MaxSprites * VertexSizeInBytes, null, true);
         _indexBuffer = _device.CreateBuffer<uint>(BufferType.IndexBuffer, MaxSprites * IndicesSizeInBytes, null, true);
-
-        _projection = Matrix4x4.CreateOrthographicOffCenter(0, 1280, 720, 0, -1, 1);
-        _projViewBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _projection, true);
+        
+        _projViewBuffer = _device.CreateBuffer(BufferType.UniformBuffer, Matrix4x4.Identity, true);
 
         _shader = _device.CreateCrossPlatformShader(
-            new ShaderAttachment(ShaderStage.Vertex, File.ReadAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Graphics/Shaders/SpriteRenderer/Sprite.vert"))),
+            new ShaderAttachment(ShaderStage.Vertex, Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert")),
             new ShaderAttachment(ShaderStage.Fragment,
-                File.ReadAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Graphics/Shaders/SpriteRenderer/Sprite.frag"))));
+                Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag")));
 
-        _layout = _device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Vec2),
-            new InputLayoutDescription("aTexCoords", AttributeType.Vec2));
+        _layout = _device.CreateInputLayout(
+            new InputLayoutDescription("aPosition", AttributeType.Vec2),
+            new InputLayoutDescription("aTexCoords", AttributeType.Vec2),
+            new InputLayoutDescription("aTint", AttributeType.Vec4),
+            new InputLayoutDescription("aRotation", AttributeType.Float),
+            new InputLayoutDescription("aOrigin", AttributeType.Vec2),
+            new InputLayoutDescription("aScale", AttributeType.Vec2));
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
@@ -89,14 +102,22 @@ public static class SpriteRenderer
             throw new EaselException("SpriteRenderer session is already active.");
         _begun = true;
 
-        _device.UpdateBuffer(_projViewBuffer, 0, transform ?? Matrix4x4.Identity * _projection);
+        Rectangle viewport = EaselGame.Instance.GraphicsInternal.Viewport;
+        Matrix4x4 projection = Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
+        _device.UpdateBuffer(_projViewBuffer, 0, transform ?? Matrix4x4.Identity * projection);
+    }
+
+    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
+    {
+        if (!_begun)
+            throw new EaselException("No current active sprite renderer session.");
+        _sprites.Add(new Sprite(texture, position, source, tint, rotation, origin, scale, flip));
+        _spriteCount++;
     }
 
     public static void Draw(TextureObject texture, Vector2 position)
     {
-        if (!_begun)
-            throw new EaselException("No current active sprite renderer session.");
-        _sprites[_spriteCount++] = new Sprite(position, texture);
+        Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
     }
 
     public static void End()
@@ -112,41 +133,90 @@ public static class SpriteRenderer
 
         _spriteCount = 0;
         
+        _sprites.Clear();
+        
         Flush();
     }
 
     private static void DrawSprite(Sprite sprite)
     {
+        // TODO: Remove maximum sprites and implement buffer resizing
+        if (sprite.Texture != _currentTexture || _drawCount >= MaxSprites)
+            Flush();
         _currentTexture = sprite.Texture;
 
-        int width = sprite.Texture.Size.Width;
-        int height = sprite.Texture.Size.Height;
+        Rectangle source = sprite.Source ?? new Rectangle(Point.Empty, sprite.Texture.Size);
+
+        int rectX = source.X;
+        int rectY = source.Y;
+        int rectWidth = source.Width;
+        int rectHeight = source.Height;
+        
+        float width = sprite.Texture.Size.Width;
+        float height = sprite.Texture.Size.Height;
         float posX = sprite.Position.X;
         float posY = sprite.Position.Y;
-        
-        SpriteVertex[] vertices = new SpriteVertex[]
+
+        float texX = rectX / width;
+        float texY = rectY / height;
+        float texW = rectWidth / width;
+        float texH = rectHeight / height;
+
+        switch (sprite.Flip)
         {
-            new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(1, 1)),
-            new SpriteVertex(new Vector2(posX + width, posY), new Vector2(1, 0)),
-            new SpriteVertex(new Vector2(posX, posY), new Vector2(0, 0)),
-            new SpriteVertex(new Vector2(posX, posY + height), new Vector2(0, 1))
-        };
+            case SpriteFlip.None:
+                break;
+            case SpriteFlip.FlipX:
+                texW = -texW;
+                texX = texW - texX;
+                break;
+            case SpriteFlip.FlipY:
+                texH = -texH;
+                texY = texH - texY;
+                break;
+            case SpriteFlip.FlipXY:
+                texW = -texW;
+                texX = texW - texX;
+                texH = -texH;
+                texY = texH - texY;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        width = rectWidth * sprite.Scale.X;
+        height = rectHeight * sprite.Scale.Y;
+
+        Vector4 tint = sprite.Tint.Normalize();
+        float rotation = sprite.Rotation;
+        Vector2 origin = sprite.Origin;
+        Vector2 scale = sprite.Scale;
+
+        _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(texX + texW, texY + texH), tint, rotation, origin, scale);
+        _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(texX + texW, texY), tint, rotation, origin, scale);
+        _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(texX, texY), tint, rotation, origin, scale);
+        _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(texX, texY + texH), tint, rotation, origin, scale);
 
         uint dc = _drawCount * 4;
-        uint[] indices = new uint[]
-        {
-            0u + dc, 1u + dc, 3u + dc,
-            1u + dc, 2u + dc, 3u + dc
-        };
+        _indicesCache[0] = 0u + dc;
+        _indicesCache[1] = 1u + dc;
+        _indicesCache[2] = 3u + dc;
+        _indicesCache[3] = 1u + dc;
+        _indicesCache[4] = 2u + dc;
+        _indicesCache[5] = 3u + dc;
         
-        _device.UpdateBuffer(_vertexBuffer, _drawCount * VertexSizeInBytes, vertices);
-        _device.UpdateBuffer(_indexBuffer, _drawCount * IndicesSizeInBytes, indices);
+        // TODO: Implement array
+        _device.UpdateBuffer(_vertexBuffer, _drawCount * VertexSizeInBytes, _verticesCache);
+        _device.UpdateBuffer(_indexBuffer, _drawCount * IndicesSizeInBytes, _indicesCache);
 
         _drawCount++;
     }
 
     private static void Flush()
     {
+        if (_drawCount == 0)
+            return;
+        
         _device.SetShader(_shader);
         _device.SetRasterizerState(_rasterizerState);
         _device.SetDepthState(_depthState);
@@ -156,20 +226,32 @@ public static class SpriteRenderer
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
         _device.SetIndexBuffer(_indexBuffer);
-        _device.Draw(6 * _drawCount);
+        _device.Draw(NumIndices * _drawCount);
 
         _drawCount = 0;
     }
 
     private struct Sprite
     {
-        public Vector2 Position;
         public TextureObject Texture;
+        public Vector2 Position;
+        public Rectangle? Source;
+        public Color Tint;
+        public float Rotation;
+        public Vector2 Origin;
+        public Vector2 Scale;
+        public SpriteFlip Flip;
 
-        public Sprite(Vector2 position, TextureObject texture)
+        public Sprite(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip)
         {
-            Position = position;
             Texture = texture;
+            Position = position;
+            Source = source;
+            Tint = tint;
+            Rotation = rotation;
+            Origin = origin;
+            Scale = scale;
+            Flip = flip;
         }
     }
 
@@ -177,13 +259,29 @@ public static class SpriteRenderer
     {
         public Vector2 Position;
         public Vector2 TexCoord;
+        public Vector4 Tint;
+        public float Rotation;
+        public Vector2 Origin;
+        public Vector2 Scale;
 
-        public SpriteVertex(Vector2 position, Vector2 texCoord)
+        public SpriteVertex(Vector2 position, Vector2 texCoord, Vector4 tint, float rotation, Vector2 origin, Vector2 scale)
         {
             Position = position;
             TexCoord = texCoord;
+            Tint = tint;
+            Rotation = rotation;
+            Origin = origin;
+            Scale = scale;
         }
 
-        public const uint SizeInBytes = 16;
+        public const uint SizeInBytes = 52;
     }
+}
+
+public enum SpriteFlip
+{
+    None,
+    FlipX,
+    FlipY,
+    FlipXY
 }

@@ -26,12 +26,11 @@
       <None Update="libbulletc.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Graphics\Shaders\SpriteRenderer\Sprite.frag">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Graphics\Shaders\SpriteRenderer\Sprite.vert">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.vert" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
-using System.Drawing;
+
 using System.Numerics;
+using Easel.Math;
 using Easel.Scenes;
 
 namespace Easel.Entities;

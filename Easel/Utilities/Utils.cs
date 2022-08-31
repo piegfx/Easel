@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
@@ -22,16 +21,6 @@ public static class Utils
     public static float NextFloat(this Random random, float min, float max)
     {
         return EaselMath.Lerp(min, max, random.NextSingle());
-    }
-
-    /// <summary>
-    /// Normalize the given color to a Vector4 value.
-    /// </summary>
-    /// <param name="color">The color to normalize.</param>
-    /// <returns>The normalized color.</returns>
-    public static Vector4 Normalize(this Color color)
-    {
-        return new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
     }
 
     /// <summary>

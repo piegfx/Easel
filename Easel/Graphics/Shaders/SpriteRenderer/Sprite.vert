@@ -23,6 +23,7 @@ void main()
     vec2 vertexPos = aPosition - (aOrigin * aScale);
     mat2 rot = mat2(vec2(cosRot, sinRot), vec2(-sinRot, cosRot));
     vertexPos = rot * vertexPos;
+    //vertexPos += aPosition;
     
     gl_Position = uProjView * vec4(vertexPos, 0.0, 1.0);
     frag_texCoords = aTexCoords;

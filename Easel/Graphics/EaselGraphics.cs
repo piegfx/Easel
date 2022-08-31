@@ -1,7 +1,8 @@
 using System;
-using System.Drawing;
+using Easel.Math;
 using Pie;
 using Pie.Windowing;
+using Color = Easel.Math.Color;
 
 namespace Easel.Graphics;
 
@@ -26,10 +27,10 @@ public class EaselGraphics : IDisposable
     /// </summary>
     public Rectangle Viewport
     {
-        get => PieGraphics.Viewport;
+        get => (Rectangle) PieGraphics.Viewport;
         set
         {
-            PieGraphics.Viewport = value;
+            PieGraphics.Viewport = (System.Drawing.Rectangle) value;
             ViewportResized?.Invoke(value);
         }
     }
@@ -47,7 +48,7 @@ public class EaselGraphics : IDisposable
     /// <param name="color">The color to clear with.</param>
     public void Clear(Color color)
     {
-        PieGraphics.Clear(color, ClearFlags.Depth | ClearFlags.Stencil);
+        PieGraphics.Clear((System.Drawing.Color) color, ClearFlags.Depth | ClearFlags.Stencil);
     }
     
     public void Dispose()
@@ -55,10 +56,10 @@ public class EaselGraphics : IDisposable
         PieGraphics?.Dispose();
     }
     
-    private void WindowOnResize(Size size)
+    private void WindowOnResize(System.Drawing.Size size)
     {
         PieGraphics.ResizeSwapchain(size);
-        Viewport = new Rectangle(Point.Empty, size);
+        Viewport = new Rectangle(Point.Zero, (Size) size);
     }
 
     public delegate void OnViewportResized(Rectangle viewport);

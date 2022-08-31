@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\Pie.Audio\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Extensions.ImGui", "Easel.Extensions.ImGui\Easel.Extensions.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{256A2222-A3F2-4678-B39A-98625AE3B274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256A2222-A3F2-4678-B39A-98625AE3B274}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256A2222-A3F2-4678-B39A-98625AE3B274}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256A2222-A3F2-4678-B39A-98625AE3B274}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

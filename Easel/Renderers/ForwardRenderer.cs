@@ -49,7 +49,7 @@ public static class ForwardRenderer
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
 
-        _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.StandardUnlit);
+        _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.Standard);
     }
 
     /// <summary>

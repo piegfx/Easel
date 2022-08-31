@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
 using Easel.Graphics;
+using Easel.Math;
 using Easel.Utilities;
 using Pie;
 using Pie.ShaderCompiler;
 using Pie.Utils;
+using Color = Easel.Math.Color;
 
 namespace Easel.Renderers;
 
@@ -107,17 +108,49 @@ public static class SpriteRenderer
         _device.UpdateBuffer(_projViewBuffer, 0, transform ?? Matrix4x4.Identity * projection);
     }
 
+    public static void Draw(TextureObject texture, Rectangle destination, Color tint)
+    {
+        Draw(texture, (Vector2) destination.Location, null, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
+    }
+
+    public static void Draw(TextureObject texture, Rectangle destination, Rectangle? source, Color tint)
+    {
+        Draw(texture, (Vector2) destination.Location, source, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
+    }
+
+    public static void Draw(TextureObject texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
+        Vector2 origin, SpriteFlip flip = SpriteFlip.None)
+    {
+        Draw(texture, (Vector2) destination.Location, source, tint, rotation, origin, (Vector2) destination.Size / (Vector2) texture.Size, flip);
+    }
+    
+    public static void Draw(TextureObject texture, Vector2 position)
+    {
+        Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
+    }
+
+    public static void Draw(TextureObject texture, Vector2 position, Color tint)
+    {
+        Draw(texture, position, null, tint, 0, Vector2.Zero, Vector2.One);
+    }
+    
+    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint)
+    {
+        Draw(texture, position, source, tint, 0, Vector2.Zero, Vector2.One);
+    }
+
+    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation,
+        Vector2 origin, float scale, SpriteFlip flip = SpriteFlip.None)
+    {
+        Draw(texture, position, source, tint, rotation, origin, new Vector2(scale), flip);
+    }
+
     public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
         _sprites.Add(new Sprite(texture, position, source, tint, rotation, origin, scale, flip));
         _spriteCount++;
-    }
-
-    public static void Draw(TextureObject texture, Vector2 position)
-    {
-        Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
     }
 
     public static void End()
@@ -145,7 +178,7 @@ public static class SpriteRenderer
             Flush();
         _currentTexture = sprite.Texture;
 
-        Rectangle source = sprite.Source ?? new Rectangle(Point.Empty, sprite.Texture.Size);
+        Rectangle source = sprite.Source ?? new Rectangle(Point.Zero, sprite.Texture.Size);
 
         int rectX = source.X;
         int rectY = source.Y;
@@ -187,7 +220,7 @@ public static class SpriteRenderer
         width = rectWidth * sprite.Scale.X;
         height = rectHeight * sprite.Scale.Y;
 
-        Vector4 tint = sprite.Tint.Normalize();
+        Color tint = sprite.Tint;
         float rotation = sprite.Rotation;
         Vector2 origin = sprite.Origin;
         Vector2 scale = sprite.Scale;
@@ -255,16 +288,16 @@ public static class SpriteRenderer
         }
     }
 
-    private struct SpriteVertex
+    public struct SpriteVertex
     {
         public Vector2 Position;
         public Vector2 TexCoord;
-        public Vector4 Tint;
+        public Color Tint;
         public float Rotation;
         public Vector2 Origin;
         public Vector2 Scale;
 
-        public SpriteVertex(Vector2 position, Vector2 texCoord, Vector4 tint, float rotation, Vector2 origin, Vector2 scale)
+        public SpriteVertex(Vector2 position, Vector2 texCoord, Color tint, float rotation, Vector2 origin, Vector2 scale)
         {
             Position = position;
             TexCoord = texCoord;

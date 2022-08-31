@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Easel.Entities;
 using Easel.Graphics;
 using Easel.Interfaces;
+using Easel.Math;
 using Easel.Renderers;
 using Easel.Utilities;
 using Pie;
@@ -79,7 +79,7 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-        Size size = EaselGame.Instance.Window.Size;
+        Size size = (Size) EaselGame.Instance.Window.Size;
         Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
         camera.Tag = Tags.MainCamera;
         AddEntity("Main Camera", camera);

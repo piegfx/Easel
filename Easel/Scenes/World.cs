@@ -1,4 +1,4 @@
-using System.Drawing;
+using Easel.Math;
 
 namespace Easel.Scenes;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using Easel.Math;
 using Easel.Scenes;
 using Pie;
 
@@ -24,7 +24,7 @@ public abstract class TextureObject : IDisposable
     /// <summary>
     /// The size (resolution), in pixels of the texture.
     /// </summary>
-    public Size Size => PieTexture.Size;
+    public Size Size => (Size) PieTexture.Size;
 
     protected TextureObject(bool autoDispose)
     {

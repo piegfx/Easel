@@ -20,10 +20,9 @@ public static class BuiltinEffects
     public static class Forward
     {
         /// <summary>
-        /// Similar to Standard (todo), but does not apply any lighting to the object. Regardless of location, the object
-        /// will always be fully lit.
+        /// The standard shader.
         /// </summary>
-        public const string StandardUnlit = "Forward/StandardUnlit";
+        public const string Standard = "Forward/Standard";
     }
     
     private static Dictionary<string, Lazy<EffectLayout>> _effects;
@@ -35,9 +34,13 @@ public static class BuiltinEffects
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
-        _effects.Add("Forward/StandardUnlit",
+        _effects.Add("Forward/Standard",
             new Lazy<EffectLayout>(() =>
-                new EffectLayout(new Effect(Assembly + "Forward.StandardUnlit.vert",Assembly + "Forward.StandardUnlit.frag"), device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes, new InputLayoutDescription("aPosition", AttributeType.Vec3), new InputLayoutDescription("aTexCoords", AttributeType.Vec2)))));
+                new EffectLayout(
+                    new Effect(Assembly + "Forward.Standard.vert", Assembly + "Forward.Standard.frag"),
+                    device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
+                        new InputLayoutDescription("aPosition", AttributeType.Vec3),
+                        new InputLayoutDescription("aTexCoords", AttributeType.Vec2)))));
     }
 
     /// <summary>

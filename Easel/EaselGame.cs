@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Drawing;
 using System.Threading;
 using Easel.Graphics;
 using Easel.Scenes;
@@ -90,7 +89,7 @@ public class EaselGame : IDisposable
     {
         WindowSettings settings = new WindowSettings()
         {
-            Size = _settings.Size,
+            Size = (System.Drawing.Size) _settings.Size,
             Title = _settings.Title,
             Resizable = _settings.Resizable,
             EventDriven = false

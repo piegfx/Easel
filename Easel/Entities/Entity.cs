@@ -26,6 +26,11 @@ public class Entity : InheritableEntity, IDisposable
     protected override AudioDevice Audio => EaselGame.Instance.AudioInternal;
 
     /// <summary>
+    /// The parent of this entity, if any.
+    /// </summary>
+    public Entity Parent;
+
+    /// <summary>
     /// The name of this entity as it is currently stored in the scene.
     /// </summary>
     public string Name { get; internal set; }

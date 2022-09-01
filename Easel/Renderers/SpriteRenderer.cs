@@ -187,6 +187,9 @@ public static class SpriteRenderer
         
         float width = sprite.Texture.Size.Width;
         float height = sprite.Texture.Size.Height;
+        
+        sprite.Position -= sprite.Origin;
+        sprite.Origin += sprite.Position;
         float posX = sprite.Position.X;
         float posY = sprite.Position.Y;
 

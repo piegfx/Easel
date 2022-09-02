@@ -59,6 +59,7 @@ public static class SpriteRenderer
     private static RasterizerState _rasterizerState;
     private static DepthState _depthState;
     private static BlendState _blendState;
+    private static SamplerState _samplerState;
 
     private static GraphicsDevice _device;
 
@@ -95,6 +96,7 @@ public static class SpriteRenderer
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
         _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
+        _samplerState = _device.CreateSamplerState(SamplerStateDescription.LinearRepeat);
     }
 
     public static void Begin(Matrix4x4? transform = null)
@@ -258,7 +260,7 @@ public static class SpriteRenderer
         _device.SetDepthState(_depthState);
         _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
-        _device.SetTexture(1, _currentTexture.PieTexture);
+        _device.SetTexture(1, _currentTexture.PieTexture, _samplerState);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
         _device.SetIndexBuffer(_indexBuffer);

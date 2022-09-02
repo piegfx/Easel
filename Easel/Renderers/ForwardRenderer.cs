@@ -29,6 +29,7 @@ public static class ForwardRenderer
 
     private static RasterizerState _rasterizerState;
     private static DepthState _depthState;
+    private static SamplerState _samplerState;
 
     static ForwardRenderer()
     {
@@ -48,6 +49,7 @@ public static class ForwardRenderer
 
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
+        _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
 
         _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.Standard);
     }
@@ -101,7 +103,7 @@ public static class ForwardRenderer
             device.SetDepthState(_depthState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
             device.SetUniformBuffer(1, _tilingBuffer);
-            device.SetTexture(2, renderable.Texture.PieTexture);
+            device.SetTexture(2, renderable.Texture.PieTexture, _samplerState);
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);

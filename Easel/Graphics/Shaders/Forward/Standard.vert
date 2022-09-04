@@ -1,5 +1,7 @@
 #version 450
 
+#include "Easel.Graphics.Shaders.Forward.Material.glsl"
+
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoords;
 layout (location = 2) in vec3 aNormals;

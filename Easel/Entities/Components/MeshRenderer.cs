@@ -20,31 +20,20 @@ public class MeshRenderer : Component
 
     private VertexPositionTextureNormal[] _vertices;
     private uint[] _indices;
-    private Texture2D _texture;
 
-    private Vector2 _tilingAmount;
-    public Vector2 TilingAmount
-    {
-        get => _tilingAmount;
-        set
-        {
-            _tilingAmount = value;
-            _renderable.TilingAmount = value;
-        }
-    }
+    public readonly Material Material;
 
     /// <summary>
     /// Create a new <see cref="MeshRenderer"/> instance with the given <see cref="IPrimitive"/> and <see cref="Texture2D"/>
     /// </summary>
     /// <param name="primitive">The <see cref="IPrimitive"/> mesh.</param>
     /// <param name="texture">The <see cref="Texture2D"/> to apply to the mesh.</param>
-    public MeshRenderer(IPrimitive primitive, Texture2D texture, Vector2? tilingAmount = null)
+    public MeshRenderer(IPrimitive primitive, Material material)
     {
         // TODO: Add materials.
         _vertices = primitive.Vertices;
         _indices = primitive.Indices;
-        _texture = texture;
-        _tilingAmount = tilingAmount ?? Vector2.One;
+        Material = material;
     }
 
     protected internal override void Initialize()
@@ -54,7 +43,7 @@ public class MeshRenderer : Component
         _vertexBuffer = Graphics.PieGraphics.CreateBuffer(BufferType.VertexBuffer, _vertices);
         _indexBuffer = Graphics.PieGraphics.CreateBuffer(BufferType.IndexBuffer, _indices);
 
-        _renderable = new Renderable(_vertexBuffer, _indexBuffer, (uint) _indices.Length, _texture, Matrix4x4.Identity, _tilingAmount);
+        _renderable = new Renderable(_vertexBuffer, _indexBuffer, (uint) _indices.Length, Matrix4x4.Identity, Material);
     }
 
     protected internal override void Draw()

@@ -33,6 +33,10 @@
       <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.vert" />
       <EmbeddedResource Include="Graphics\Shaders\Forward\Standard.frag" />
       <EmbeddedResource Include="Graphics\Shaders\Forward\Standard.vert" />
+      <None Remove="Graphics\Shaders\Forward\Lighting.glsl" />
+      <EmbeddedResource Include="Graphics\Shaders\Forward\Lighting.glsl" />
+      <None Remove="Graphics\Shaders\Forward\Material.glsl" />
+      <EmbeddedResource Include="Graphics\Shaders\Forward\Material.glsl" />
     </ItemGroup>
 
 </Project>

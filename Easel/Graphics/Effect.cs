@@ -44,6 +44,13 @@ public class Effect : IDisposable
                 throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
         }
 
+        vertex = PreProcess(vertex);
+        fragment = PreProcess(fragment);
+
+        string[] fragLines = vertex.Split('\n');
+        for (int i = 0; i < fragLines.Length; i++)
+            Console.WriteLine(i + 1 + ": " + fragLines[i]);
+
         PieShader = device.CreateCrossPlatformShader(
             new ShaderAttachment(ShaderStage.Vertex, vertex),
             new ShaderAttachment(ShaderStage.Fragment, fragment));
@@ -52,6 +59,26 @@ public class Effect : IDisposable
     public void Dispose()
     {
         PieShader.Dispose();
+    }
+
+    private static string PreProcess(string shader)
+    {
+        string[] splitText = shader.Split('\n');
+
+        bool hasIncluded = false;
+
+        for (int i = 0; i < splitText.Length; i++)
+        {
+            string line = splitText[i];
+
+            if (line.StartsWith("#include"))
+            {
+                shader = shader.Replace(line, Utils.LoadEmbeddedString(line[("#include ".Length)..].Trim('"')));
+                hasIncluded = true;
+            }
+        }
+
+        return hasIncluded ? PreProcess(shader) : shader;
     }
 }
 

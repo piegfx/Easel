@@ -1,3 +1,5 @@
+using System.Numerics;
+using Easel.Graphics.Lighting;
 using Easel.Math;
 
 namespace Easel.Scenes;
@@ -7,5 +9,14 @@ namespace Easel.Scenes;
 /// </summary>
 public class World
 {
-    public Color ClearColor { get; set; } = Color.CornflowerBlue;
+    public Color ClearColor;
+
+    public DirectionalLight Sun;
+
+    public World()
+    {
+        ClearColor = Color.Black;
+        Sun = new DirectionalLight(new Vector3(0, 1, 1), new Color(20, 20, 20, 255), new Color(180, 180, 180, 255),
+            new Color(255, 255, 255, 255));
+    }
 }

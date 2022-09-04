@@ -101,7 +101,12 @@ public class EaselGame : IDisposable
         options.Debug = true;
 #endif
         
-        Window = Window.CreateWindow(settings, _settings.Api ?? GraphicsDevice.GetBestApiForPlatform());
+        string? apistr = Environment.GetEnvironmentVariable("EASEL_FORCE_API");
+        GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
+        if (apistr != null)
+            api = Enum.Parse<GraphicsApi>(apistr);
+        
+        Window = Window.CreateWindow(settings, api);
         GraphicsInternal = new EaselGraphics(Window, options);
 
         AudioInternal = new AudioDevice(256);

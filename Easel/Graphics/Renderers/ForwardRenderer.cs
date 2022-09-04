@@ -4,6 +4,8 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
 using Easel.Graphics;
+using Easel.Graphics.Structs;
+using Easel.Scenes;
 using Pie;
 using Pie.ShaderCompiler;
 using Pie.Utils;
@@ -21,7 +23,8 @@ public static class ForwardRenderer
     private static GraphicsBuffer _projViewModelBuffer;
     private static ProjViewModel _projViewModel;
 
-    private static GraphicsBuffer _tilingBuffer;
+    private static CameraInfo _cameraInfo;
+    private static GraphicsBuffer _cameraBuffer;
 
     private static List<Renderable> _translucents;
 
@@ -45,7 +48,8 @@ public static class ForwardRenderer
         };
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
 
-        _tilingBuffer = device.CreateBuffer(BufferType.UniformBuffer, Vector4.One, true);
+        _cameraInfo = new CameraInfo();
+        _cameraBuffer = device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
 
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
@@ -92,18 +96,24 @@ public static class ForwardRenderer
         Camera main = Camera.Main;
         _projViewModel.ProjView = main.ViewMatrix * main.ProjectionMatrix;
 
+        _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
+        _cameraInfo.CameraPos = new Vector4(Camera.Main.Transform.Position, 1);
+
         foreach (Renderable renderable in _opaques)
         {
             _projViewModel.Model = renderable.ModelMatrix;
             device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
-            device.UpdateBuffer(_tilingBuffer, 0, renderable.TilingAmount);
+
+            _cameraInfo.Material = renderable.Material.ShaderMaterial;
+            device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
 
             device.SetShader(_effectLayout.Effect.PieShader);
             device.SetRasterizerState(_rasterizerState);
             device.SetDepthState(_depthState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
-            device.SetUniformBuffer(1, _tilingBuffer);
-            device.SetTexture(2, renderable.Texture.PieTexture, _samplerState);
+            device.SetUniformBuffer(1, _cameraBuffer);
+            device.SetTexture(2, renderable.Material.Albedo.PieTexture, _samplerState);
+            device.SetTexture(3, renderable.Material.Specular.PieTexture, _samplerState);
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);
@@ -116,5 +126,13 @@ public static class ForwardRenderer
     {
         public Matrix4x4 ProjView;
         public Matrix4x4 Model;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct CameraInfo
+    {
+        public ShaderMaterial Material;
+        public ShaderDirectionalLight Sun;
+        public Vector4 CameraPos;
     }
 }

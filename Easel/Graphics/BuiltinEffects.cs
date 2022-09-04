@@ -38,9 +38,9 @@ public static class BuiltinEffects
             new Lazy<EffectLayout>(() =>
                 new EffectLayout(
                     new Effect(Assembly + "Forward.Standard.vert", Assembly + "Forward.Standard.frag"),
-                    device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
-                        new InputLayoutDescription("aPosition", AttributeType.Vec3),
-                        new InputLayoutDescription("aTexCoords", AttributeType.Vec2)))));
+                    device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Vec3),
+                        new InputLayoutDescription("aTexCoords", AttributeType.Vec2),
+                        new InputLayoutDescription("aNormals", AttributeType.Vec3)))));
     }
 
     /// <summary>

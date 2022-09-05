@@ -24,7 +24,7 @@ void main()
     vec3 norm = normalize(frag_normal);
     vec3 viewDir = normalize(uCameraPos.xyz - frag_position);
     
-    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords, norm, viewDir);
+    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords * uMaterial.tiling.xy, norm, viewDir);
     //vec4 result = texture(uAlbedo, frag_texCoords);
     out_color = result * uMaterial.color;
 }

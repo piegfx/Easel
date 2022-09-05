@@ -4,8 +4,8 @@
 struct Material
 {
     vec4 color;
-    //vec4 tiling;
-    int shininess;
+    vec4 tiling;
+    vec4 shininess;
 };
 
 #endif

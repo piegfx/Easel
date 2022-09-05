@@ -19,8 +19,8 @@ public class Material
     public ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
         Color = Color,
-        Specular = Shininess,
-        //Tiling = new Vector4(Tiling, 0, 0)
+        Specular = new Vector4(Shininess),
+        Tiling = new Vector4(Tiling, 0, 0)
     };
 
     public Material(Texture2D texture) : this(texture, texture, Color.White, 32) { }
@@ -35,6 +35,6 @@ public class Material
         Specular = specular;
         Color = color;
         Shininess = shininess;
-        Tiling = new Vector2(0);
+        Tiling = new Vector2(1);
     }
 }

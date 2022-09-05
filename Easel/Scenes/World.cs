@@ -16,7 +16,7 @@ public class World
     public World()
     {
         ClearColor = Color.Black;
-        Sun = new DirectionalLight(new Vector3(0, 1, 1), new Color(20, 20, 20, 255), new Color(180, 180, 180, 255),
+        Sun = new DirectionalLight(new Vector3(0.4f, -0.25f, 1), new Color(20, 20, 20, 255), new Color(180, 180, 180, 255),
             new Color(255, 255, 255, 255));
     }
 }

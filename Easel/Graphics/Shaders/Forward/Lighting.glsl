@@ -1,7 +1,6 @@
 #ifndef LIGHTING
 #define LIGHTING
 
-#include "Easel.Graphics.Shaders.Forward.Lighting.glsl"
 #include "Easel.Graphics.Shaders.Forward.Material.glsl"
 
 struct DirectionalLight
@@ -19,7 +18,7 @@ vec4 CalculateDirectional(DirectionalLight light, Material material, sampler2D a
     float diff = max(dot(normal, lightDir), 0.0);
     
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess.x);
     
     vec4 tex = texture(albedo, texCoord);
     

@@ -8,6 +8,6 @@ namespace Easel.Graphics.Structs;
 public struct ShaderMaterial
 {
     public Color Color;
-    //public Vector4 Tiling;
-    public int Specular;
+    public Vector4 Tiling;
+    public Vector4 Specular;
 }

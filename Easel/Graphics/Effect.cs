@@ -77,7 +77,7 @@ public class Effect : IDisposable
                 hasIncluded = true;
             }
         }
-
+        
         return hasIncluded ? PreProcess(shader) : shader;
     }
 }

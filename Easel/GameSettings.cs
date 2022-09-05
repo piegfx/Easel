@@ -48,6 +48,12 @@ public struct GameSettings
     public GraphicsApi? Api;
 
     /// <summary>
+    /// If enabled, Easel will not error if it tries to load items that do not exist, such as textures, instead
+    /// displaying a default "missing" object.
+    /// </summary>
+    public bool AllowMissing;
+
+    /// <summary>
     /// Create the default game settings.
     /// </summary>
     public GameSettings()
@@ -60,5 +66,6 @@ public struct GameSettings
         VSync = true;
         TargetFps = 0;
         Api = null;
+        AllowMissing = false;
     }
 }

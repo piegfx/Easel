@@ -30,9 +30,48 @@ public class Bitmap
 
     public Bitmap(string path)
     {
+        if (EaselGame.Instance.AllowMissing && !File.Exists(path))
+        {
+            Data = GetMissingBitmap(128, 128);
+            Size = new Size(128, 128);
+            Format = PixelFormat.R8G8B8A8_UNorm;
+            Logging.Error($"Failed to find path \"{path}\".");
+            return;
+        }
+        else if (!File.Exists(path))
+            Logging.Critical($"Failed to find path \"{path}\".");
+
         ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;
         Size = new Size(result.Width, result.Height);
         Format = PixelFormat.R8G8B8A8_UNorm;
+    }
+
+    public Bitmap(int width, int height, byte[] data)
+    {
+        Size = new Size(width, height);
+        Data = data;
+    }
+    
+    internal static byte[] GetMissingBitmap(int width, int height)
+    {
+        byte[] data = new byte[width * height * 4];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int pos = (y * width + x) * 4;
+                if ((x < width / 2 && y < height / 2) || (x > width / 2 && y > height / 2))
+                {
+                    data[pos] = 255;
+                    data[pos + 1] = 0;
+                    data[pos + 2] = 255;
+                }
+
+                data[pos + 3] = 255;
+            }
+        }
+
+        return data;
     }
 }

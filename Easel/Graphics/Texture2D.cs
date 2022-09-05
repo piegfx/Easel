@@ -33,4 +33,16 @@ public class Texture2D : TextureObject
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         PieTexture = device.CreateTexture(bitmap.Size.Width, bitmap.Size.Height, bitmap.Format, bitmap.Data, mipmap);
     }
+
+    public Texture2D(int width, int height, byte[] data, PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool mipmap = true, bool autoDispose = true) : base(autoDispose)
+    {
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
+        PieTexture = device.CreateTexture(width, height, format, data, mipmap);
+    }
+
+    public static readonly Texture2D Blank = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);
+
+    public static readonly Texture2D Void = new Texture2D(1, 1, new byte[] { 0, 0, 0, 255 }, autoDispose: false);
+
+    public static readonly Texture2D Missing = new Texture2D(128, 128, Bitmap.GetMissingBitmap(128, 128), autoDispose: false);
 }

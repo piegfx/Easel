@@ -40,8 +40,7 @@ public class Rigidbody : Component
 
         Matrix4x4 transform = Matrix4x4.CreateFromQuaternion(Transform.Rotation) *
                               Matrix4x4.CreateTranslation(Transform.Position);
-
-        Console.WriteLine(_iShape.LocalScaling);
+        
         _iShape.LocalScaling = Transform.Scale;
 
         if (_iMass == 0)

@@ -112,8 +112,8 @@ public static class ForwardRenderer
             device.SetDepthState(_depthState);
             device.SetUniformBuffer(0, _projViewModelBuffer);
             device.SetUniformBuffer(1, _cameraBuffer);
-            device.SetTexture(2, renderable.Material.Albedo.PieTexture, _samplerState);
-            device.SetTexture(3, renderable.Material.Specular.PieTexture, _samplerState);
+            device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+            device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);

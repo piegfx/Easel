@@ -38,5 +38,6 @@ public abstract class TextureObject : IDisposable
             return;
         IsDisposed = true;
         PieTexture.Dispose();
+        Logging.Log("Texture disposed.");
     }
 }

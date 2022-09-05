@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 using Easel.Utilities;
 using Pie;
 using Pie.ShaderCompiler;
@@ -11,6 +13,9 @@ namespace Easel.Graphics;
 /// </summary>
 public class Effect : IDisposable
 {
+    private static bool _displayEffects;
+    private static bool _hasCheckedForDisplayEffects;
+    
     /// <summary>
     /// The native Pie <see cref="Shader"/> object.
     /// </summary>
@@ -47,9 +52,25 @@ public class Effect : IDisposable
         vertex = PreProcess(vertex);
         fragment = PreProcess(fragment);
 
-        string[] fragLines = vertex.Split('\n');
-        for (int i = 0; i < fragLines.Length; i++)
-            Console.WriteLine(i + 1 + ": " + fragLines[i]);
+#if DEBUG
+        if (!_hasCheckedForDisplayEffects)
+        {
+            _hasCheckedForDisplayEffects = true;
+            Logging.Log($"Checking for {EnvVars.PrintEffects}...");
+            string? pr = Environment.GetEnvironmentVariable(EnvVars.PrintEffects);
+            if (pr is "1")
+            {
+                _displayEffects = true;
+                Logging.Info($"{EnvVars.PrintEffects} is enabled. Effects will be printed to console.");
+            }
+        }
+
+        if (_displayEffects)
+        {
+            LogShader(ShaderStage.Vertex, vertex);
+            LogShader(ShaderStage.Fragment, fragment);
+        }
+#endif
 
         PieShader = device.CreateCrossPlatformShader(
             new ShaderAttachment(ShaderStage.Vertex, vertex),
@@ -59,6 +80,7 @@ public class Effect : IDisposable
     public void Dispose()
     {
         PieShader.Dispose();
+        Logging.Log("Effect disposed.");
     }
 
     private static string PreProcess(string shader)
@@ -73,12 +95,22 @@ public class Effect : IDisposable
 
             if (line.StartsWith("#include"))
             {
-                shader = shader.Replace(line, Utils.LoadEmbeddedString(line[("#include ".Length)..].Trim('"')));
+                shader = shader.Replace(line, Utils.LoadEmbeddedString(line[("#include ".Length)..].Trim().Trim('"')));
                 hasIncluded = true;
             }
         }
         
         return hasIncluded ? PreProcess(shader) : shader;
+    }
+
+    [Conditional("DEBUG")]
+    private void LogShader(ShaderStage stage, string shader)
+    {
+        string[] shaderLines = shader.Split('\n');
+        StringBuilder builder = new StringBuilder($"{stage} shader:\n");
+        for (int i = 0; i < shaderLines.Length; i++)
+            builder.AppendLine(i + 1 + ": " + shaderLines[i]);
+        Logging.Log(builder.ToString());
     }
 }
 

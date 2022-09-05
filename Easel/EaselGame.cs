@@ -46,6 +46,8 @@ public class EaselGame : IDisposable
     /// </summary>
     public bool VSync;
 
+    public bool AllowMissing;
+
     private ConcurrentBag<Action> _actions;
 
     /// <summary>
@@ -73,8 +75,10 @@ public class EaselGame : IDisposable
     /// them.</remarks>
     public EaselGame(GameSettings settings, Scene scene)
     {
+        Logging.Log("New EaselGame created!");
         _settings = settings;
         VSync = settings.VSync;
+        AllowMissing = settings.AllowMissing;
         Instance = this;
         SceneManager.InitializeScene(scene);
 
@@ -87,6 +91,7 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Run()
     {
+        Logging.Log("Hello World! Welcome to Easel. Setting up...");
         WindowSettings settings = new WindowSettings()
         {
             Size = (System.Drawing.Size) _settings.Size,
@@ -98,22 +103,38 @@ public class EaselGame : IDisposable
         GraphicsDeviceOptions options = new GraphicsDeviceOptions();
         
 #if DEBUG
+        Logging.Info("Graphics debugging enabled.");
         options.Debug = true;
 #endif
         
-        string? apistr = Environment.GetEnvironmentVariable("EASEL_FORCE_API");
+        Logging.Log($"Checking for {EnvVars.ForceApi}...");
+        string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);
         GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
         if (apistr != null)
-            api = Enum.Parse<GraphicsApi>(apistr);
+        {
+            Logging.Log($"{EnvVars.ForceApi} environment variable set. Attempting to use \"{apistr}\".");
+            if (!Enum.TryParse(apistr, true, out GraphicsApi potApi))
+                Logging.Warn($"Could not parse API \"{apistr}\", reverting back to default API.");
+            else
+                api = potApi;
+        }
         
+        Logging.Info($"Using {api.ToFriendlyString()} graphics API.");
+
+        Logging.Log("Creating window...");
         Window = Window.CreateWindow(settings, api);
+        Logging.Log("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
 
+        Logging.Log("Creating audio device...");
         AudioInternal = new AudioDevice(256);
 
+        Logging.Log("Initializing time...");
         Input.Initialize(Window);
+        Logging.Log("Initializing input...");
         Time.Initialize();
         
+        Logging.Log("Initializing your application...");
         Initialize();
 
         SpinWait sw = new SpinWait();
@@ -173,6 +194,7 @@ public class EaselGame : IDisposable
     {
         Graphics.Dispose();
         Window.Dispose();
+        Logging.Log("EaselGame disposed.");
     }
 
     /// <summary>

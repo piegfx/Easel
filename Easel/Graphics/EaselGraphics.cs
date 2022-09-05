@@ -37,9 +37,34 @@ public class EaselGraphics : IDisposable
 
     internal EaselGraphics(Window window, GraphicsDeviceOptions options)
     {
+        Pie.Logging.DebugLog += PieDebug;
         PieGraphics = window.CreateGraphicsDevice(options);
-        
+
         window.Resize += WindowOnResize;
+    }
+
+    private void PieDebug(LogType logtype, string message)
+    {
+        switch (logtype)
+        {
+            case LogType.Debug:
+                Logging.Log(message);
+                break;
+            case LogType.Info:
+                Logging.Info(message);
+                break;
+            case LogType.Warning:
+                Logging.Warn(message);
+                break;
+            case LogType.Error:
+                Logging.Error(message);
+                break;
+            case LogType.Critical:
+                Logging.Critical(message);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(logtype), logtype, null);
+        }
     }
 
     /// <summary>
@@ -54,6 +79,7 @@ public class EaselGraphics : IDisposable
     public void Dispose()
     {
         PieGraphics?.Dispose();
+        Logging.Log("Graphics disposed.");
     }
     
     private void WindowOnResize(System.Drawing.Size size)

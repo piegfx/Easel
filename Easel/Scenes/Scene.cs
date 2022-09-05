@@ -137,11 +137,15 @@ public abstract class Scene : IDisposable
     /// </summary>
     public virtual void Dispose()
     {
+        Logging.Log("Disposing entities...");
         for (int i = 0; i < _entityCount; i++)
             _entities[i].Dispose();
         
+        Logging.Log("Collecting garbage...");
         foreach (IDisposable disposable in GarbageCollections)
             disposable.Dispose();
+        
+        Logging.Log("Scene disposed.");
     }
 
     /// <summary>

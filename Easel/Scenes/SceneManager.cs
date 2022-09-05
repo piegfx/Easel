@@ -16,7 +16,11 @@ public static class SceneManager
 
     internal static void Initialize()
     {
-        _activeScene?.Initialize();
+        Logging.Log("Initializing SceneManager...");
+        if (_activeScene == null)
+            Logging.Info("Scene was null, will not use a scene by default.");
+        else
+            _activeScene.Initialize();
         _switchScene = null;
     }
 

@@ -52,7 +52,7 @@ public static class BuiltinEffects
     {
         Lazy<EffectLayout> value = _effects[name];
         if (!value.IsValueCreated)
-            Console.WriteLine($"Effect \"{name}\" is used for first time: Creating...");
+            Logging.Info($"Effect \"{name}\" is used for first time: Creating...");
         return value.Value;
     }
 }

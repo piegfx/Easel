@@ -79,6 +79,8 @@ public class EaselGame : IDisposable
         _settings = settings;
         VSync = settings.VSync;
         AllowMissing = settings.AllowMissing;
+        if (AllowMissing)
+            Logging.Info("Missing content support is enabled.");
         Instance = this;
         SceneManager.InitializeScene(scene);
 
@@ -150,6 +152,8 @@ public class EaselGame : IDisposable
             Input.Update(Window);
             Time.Update();
             Update();
+            // TODO: Fix pie
+            GraphicsInternal.SetRenderTarget(null);
             Draw();
             Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }

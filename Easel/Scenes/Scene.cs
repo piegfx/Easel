@@ -119,8 +119,6 @@ public abstract class Scene : IDisposable
     {
         ForwardRenderer.ClearAll();
 
-        Graphics.Clear(World.ClearColor);
-        
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
@@ -129,7 +127,14 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
 
-        ForwardRenderer.Render();
+        Graphics.PieGraphics.Clear((System.Drawing.Color) World.ClearColor);
+        foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
+        {
+            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
+            Camera camera = (Camera) entity;
+            Graphics.Viewport = camera.Viewport ?? new Rectangle(Point.Zero, (Size) EaselGame.Instance.Window.Size);
+            ForwardRenderer.Render(camera);
+        }
     }
 
     /// <summary>

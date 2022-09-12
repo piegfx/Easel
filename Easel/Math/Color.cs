@@ -41,6 +41,10 @@ public struct Color
         B = b / 255f;
         A = a;
     }
+    
+    public Color(Color @base, float alpha) : this(@base.R, @base.G, @base.B, alpha) { }
+    
+    public Color(Color @base, byte alpha) : this(@base.Rb, @base.Gb, @base.Bb, alpha) { }
 
     public Color(uint rgbaColor) : 
         this((byte) (rgbaColor >> 24), (byte) ((rgbaColor & 0xFF0000) >> 16), (byte) ((rgbaColor & 0xFF00) >> 8), (byte) (rgbaColor & 0xFF)) { }

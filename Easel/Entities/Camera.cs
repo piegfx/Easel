@@ -10,6 +10,8 @@ namespace Easel.Entities;
 /// </summary>
 public class Camera : Entity
 {
+    public Rectangle? Viewport;
+    
     /// <summary>
     /// The projection matrix of this camera.
     /// </summary>

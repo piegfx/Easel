@@ -89,15 +89,14 @@ public static class ForwardRenderer
     /// <summary>
     /// Render all draw lists and perform post-processing.
     /// </summary>
-    public static void Render()
+    public static void Render(Camera camera)
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         
-        Camera main = Camera.Main;
-        _projViewModel.ProjView = main.ViewMatrix * main.ProjectionMatrix;
+        _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
 
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
-        _cameraInfo.CameraPos = new Vector4(Camera.Main.Transform.Position, 1);
+        _cameraInfo.CameraPos = new Vector4(camera.Transform.Position, 1);
 
         foreach (Renderable renderable in _opaques)
         {

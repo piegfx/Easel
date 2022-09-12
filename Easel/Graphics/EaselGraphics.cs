@@ -75,6 +75,11 @@ public class EaselGraphics : IDisposable
     {
         PieGraphics.Clear((System.Drawing.Color) color, ClearFlags.Depth | ClearFlags.Stencil);
     }
+
+    public void SetRenderTarget(RenderTarget target)
+    {
+        PieGraphics.SetFramebuffer(target?.PieBuffer);
+    }
     
     public void Dispose()
     {

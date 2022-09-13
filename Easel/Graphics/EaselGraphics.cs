@@ -12,6 +12,8 @@ namespace Easel.Graphics;
 /// </summary>
 public class EaselGraphics : IDisposable
 {
+    private Rectangle _viewport;
+    
     /// <summary>
     /// Is invoked when the <see cref="Viewport"/> is resized.
     /// </summary>
@@ -27,11 +29,13 @@ public class EaselGraphics : IDisposable
     /// </summary>
     public Rectangle Viewport
     {
-        get => (Rectangle) PieGraphics.Viewport;
+        get => _viewport;
         set
         {
-            PieGraphics.Viewport = (System.Drawing.Rectangle) value;
-            ViewportResized?.Invoke(value);
+            Size winSize = (Size) EaselGame.Instance.Window.Size;
+            _viewport = new Rectangle(value.X, value.Y, value.Width, value.Height);
+            PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
+            ViewportResized?.Invoke(_viewport);
         }
     }
 
@@ -79,6 +83,7 @@ public class EaselGraphics : IDisposable
     public void SetRenderTarget(RenderTarget target)
     {
         PieGraphics.SetFramebuffer(target?.PieBuffer);
+        Viewport = new Rectangle(Point.Zero, target?.Size ?? (Size) EaselGame.Instance.Window.Size);
     }
     
     public void Dispose()

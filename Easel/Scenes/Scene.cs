@@ -132,6 +132,7 @@ public abstract class Scene : IDisposable
         {
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
             Camera camera = (Camera) entity;
+            // TODO: Update to handle render targets instead of using window size.
             Graphics.Viewport = camera.Viewport ?? new Rectangle(Point.Zero, (Size) EaselGame.Instance.Window.Size);
             ForwardRenderer.Render(camera);
         }

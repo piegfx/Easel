@@ -107,7 +107,7 @@ public static class SpriteRenderer
 
         Rectangle viewport = EaselGame.Instance.GraphicsInternal.Viewport;
         Matrix4x4 projection = Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
-        _device.UpdateBuffer(_projViewBuffer, 0, transform ?? Matrix4x4.Identity * projection);
+        _device.UpdateBuffer(_projViewBuffer, 0, (transform ?? Matrix4x4.Identity) * projection);
     }
 
     public static void Draw(TextureObject texture, Rectangle destination, Color tint)
@@ -190,8 +190,8 @@ public static class SpriteRenderer
         float width = sprite.Texture.Size.Width;
         float height = sprite.Texture.Size.Height;
         
-        sprite.Position -= sprite.Origin;
-        sprite.Origin += sprite.Position;
+        sprite.Position -= sprite.Origin * sprite.Scale;
+        sprite.Origin += sprite.Position / sprite.Scale;
         float posX = sprite.Position.X;
         float posY = sprite.Position.Y;
 
@@ -199,6 +199,12 @@ public static class SpriteRenderer
         float texY = rectY / height;
         float texW = rectWidth / width;
         float texH = rectHeight / height;
+
+        bool isRenderTarget = _currentTexture is RenderTarget;
+        if (isRenderTarget && sprite.Flip != SpriteFlip.FlipY)
+            sprite.Flip = SpriteFlip.FlipY;
+        else if (isRenderTarget && sprite.Flip == SpriteFlip.FlipY)
+            sprite.Flip = SpriteFlip.None;
 
         switch (sprite.Flip)
         {

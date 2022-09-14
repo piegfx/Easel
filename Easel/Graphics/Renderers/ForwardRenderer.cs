@@ -1,16 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
-using Easel.Graphics;
 using Easel.Graphics.Structs;
 using Easel.Scenes;
 using Pie;
-using Pie.ShaderCompiler;
-using Pie.Utils;
 
-namespace Easel.Renderers;
+namespace Easel.Graphics.Renderers;
 
 /// <summary>
 /// Forward rendering is the "traditional" way to render objects. It has its advantages, but also has many disadvantages

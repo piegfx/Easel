@@ -1,46 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
-using System.Reflection;
-using Easel.Graphics;
 using Easel.Math;
 using Easel.Utilities;
 using Pie;
 using Pie.ShaderCompiler;
-using Pie.Utils;
 using Color = Easel.Math.Color;
 
-namespace Easel.Renderers;
+namespace Easel.Graphics.Renderers;
 
 /// <summary>
 /// Efficiently batches and renders 2D sprites.
 /// </summary>
 public static class SpriteRenderer
 {
-    // Basic sprite renderer
-    // TODO: Make a proper sprite batcher once pie is ready
-    
-    private static VertexPositionTexture[] _vertices = new[]
-    {
-        new VertexPositionTexture(new Vector3(1, 1, 0), new Vector2(1, 1)),
-        new VertexPositionTexture(new Vector3(1, 0, 0), new Vector2(1, 0)),
-        new VertexPositionTexture(new Vector3(0, 0, 0), new Vector2(0, 0)),
-        new VertexPositionTexture(new Vector3(0, 1, 0), new Vector2(0, 1))
-    };
-
-    private static uint[] _indices = new[]
-    {
-        0u, 1u, 3u,
-        1u, 2u, 3u
-    };
-
     private const uint NumVertices = 4;
     private const uint NumIndices = 6;
 
     public const uint MaxSprites = 512;
     private const uint VertexSizeInBytes = NumVertices * SpriteVertex.SizeInBytes;
     private const uint IndicesSizeInBytes = NumIndices * sizeof(uint);
+
+    private static SpriteVertex[] _vertices;
+
+    private static uint[] _indices;
 
     private static SpriteVertex[] _verticesCache;
     private static uint[] _indicesCache;
@@ -71,6 +54,9 @@ public static class SpriteRenderer
     {
         _device = EaselGame.Instance.GraphicsInternal.PieGraphics;
 
+        _vertices = new SpriteVertex[MaxSprites * NumVertices];
+        _indices = new uint[MaxSprites * NumIndices];
+        
         _verticesCache = new SpriteVertex[NumVertices];
         _indicesCache = new uint[NumIndices];
         _sprites = new List<Sprite>();
@@ -99,15 +85,17 @@ public static class SpriteRenderer
         _samplerState = _device.CreateSamplerState(SamplerStateDescription.LinearRepeat);
     }
 
-    public static void Begin(Matrix4x4? transform = null)
+    public static void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null)
     {
         if (_begun)
             throw new EaselException("SpriteRenderer session is already active.");
         _begun = true;
 
         Rectangle viewport = EaselGame.Instance.GraphicsInternal.Viewport;
-        Matrix4x4 projection = Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
-        _device.UpdateBuffer(_projViewBuffer, 0, (transform ?? Matrix4x4.Identity) * projection);
+        projection ??= Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
+        transform ??= Matrix4x4.Identity;
+        
+        _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
     }
 
     public static void Draw(TextureObject texture, Rectangle destination, Color tint)
@@ -178,6 +166,8 @@ public static class SpriteRenderer
         // TODO: Remove maximum sprites and implement buffer resizing
         if (sprite.Texture != _currentTexture || _drawCount >= MaxSprites)
             Flush();
+        if (EaselGame.Instance.AllowMissing)
+            sprite.Texture ??= Texture2D.Missing;
         _currentTexture = sprite.Texture;
 
         Rectangle source = sprite.Source ?? new Rectangle(Point.Zero, sprite.Texture.Size);
@@ -249,9 +239,8 @@ public static class SpriteRenderer
         _indicesCache[4] = 2u + dc;
         _indicesCache[5] = 3u + dc;
         
-        // TODO: Implement array
-        _device.UpdateBuffer(_vertexBuffer, _drawCount * VertexSizeInBytes, _verticesCache);
-        _device.UpdateBuffer(_indexBuffer, _drawCount * IndicesSizeInBytes, _indicesCache);
+        Array.Copy(_verticesCache, 0, _vertices, _drawCount * NumVertices, NumVertices);
+        Array.Copy(_indicesCache, 0, _indices, _drawCount * NumIndices, NumIndices);
 
         _drawCount++;
     }
@@ -260,6 +249,9 @@ public static class SpriteRenderer
     {
         if (_drawCount == 0)
             return;
+        
+        _device.UpdateBuffer(_vertexBuffer, 0, _vertices);
+        _device.UpdateBuffer(_indexBuffer, 0, _indices);
         
         _device.SetShader(_shader);
         _device.SetRasterizerState(_rasterizerState);
@@ -279,11 +271,11 @@ public static class SpriteRenderer
     {
         public TextureObject Texture;
         public Vector2 Position;
-        public Rectangle? Source;
-        public Color Tint;
-        public float Rotation;
+        public readonly Rectangle? Source;
+        public readonly Color Tint;
+        public readonly float Rotation;
         public Vector2 Origin;
-        public Vector2 Scale;
+        public readonly Vector2 Scale;
         public SpriteFlip Flip;
 
         public Sprite(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip)

@@ -1,8 +1,8 @@
 using System;
 using System.Numerics;
 using Easel.Graphics;
+using Easel.Graphics.Renderers;
 using Easel.Primitives;
-using Easel.Renderers;
 using Pie;
 using Pie.Utils;
 

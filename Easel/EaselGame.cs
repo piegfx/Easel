@@ -94,12 +94,18 @@ public class EaselGame : IDisposable
     public void Run()
     {
         Logging.Log("Hello World! Welcome to Easel. Setting up...");
+
+        _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource("Easel.EaselLogo.png"));
+        
+        Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height, _settings.Icon.Data);
+
         WindowSettings settings = new WindowSettings()
         {
             Size = (System.Drawing.Size) _settings.Size,
             Title = _settings.Title,
-            Resizable = _settings.Resizable,
-            EventDriven = false
+            Border = _settings.Border,
+            EventDriven = false,
+            Icons = new []{ icon }
         };
 
         GraphicsDeviceOptions options = new GraphicsDeviceOptions();
@@ -120,6 +126,13 @@ public class EaselGame : IDisposable
             else
                 api = potApi;
         }
+        
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
+            settings.Title += " - Easel";
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
+            settings.Title += " - " + api.ToFriendlyString();
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
+            settings.Title += " - 0 FPS";
         
         Logging.Info($"Using {api.ToFriendlyString()} graphics API.");
 

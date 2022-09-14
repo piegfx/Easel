@@ -37,6 +37,8 @@
       <EmbeddedResource Include="Graphics\Shaders\Forward\Lighting.glsl" />
       <None Remove="Graphics\Shaders\Forward\Material.glsl" />
       <EmbeddedResource Include="Graphics\Shaders\Forward\Material.glsl" />
+      <None Remove="EaselLogo.png" />
+      <EmbeddedResource Include="EaselLogo.png" />
     </ItemGroup>
 
 </Project>

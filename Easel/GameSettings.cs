@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Easel.Math;
+using Easel.Utilities;
 using Pie;
+using Pie.Windowing;
 
 namespace Easel;
 
@@ -20,9 +22,9 @@ public struct GameSettings
     public string Title;
 
     /// <summary>
-    /// Whether or not the window will be resizable. (Default: <see langword="false" />)
+    /// The initial border of the window. (Default: <see cref="WindowBorder.Fixed"/>)
     /// </summary>
-    public bool Resizable;
+    public WindowBorder Border;
 
     /// <summary>
     /// Whether or not the game will synchronize to the vertical refresh rate. (Default: <see langword="true" />)
@@ -49,23 +51,34 @@ public struct GameSettings
 
     /// <summary>
     /// If enabled, Easel will not error if it tries to load items that do not exist, such as textures, instead
-    /// displaying a default "missing" object.
+    /// displaying a default "missing" object. (Default: <see langword="false" />
     /// </summary>
     public bool AllowMissing;
 
+    /// <summary>
+    /// The window icon, if any. (Default: <see langword="null" />)
+    /// </summary>
+    public Bitmap Icon;
+
+    /// <summary>
+    /// The title bar flags, if any (Default: <see cref="Easel.TitleBarFlags.ShowEasel"/>)
+    /// </summary>
+    public TitleBarFlags TitleBarFlags;
+    
     /// <summary>
     /// Create the default game settings.
     /// </summary>
     public GameSettings()
     {
         Size = new Size(1280, 720);
-
-        string? name = Assembly.GetEntryAssembly()?.GetName().Name;
-        Title = name == null ? "Easel Window" : name + " - Easel";
-        Resizable = false;
+        
+        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
+        Border = WindowBorder.Fixed;
         VSync = true;
         TargetFps = 0;
         Api = null;
         AllowMissing = false;
+        Icon = null;
+        TitleBarFlags = TitleBarFlags.ShowEasel;
     }
 }

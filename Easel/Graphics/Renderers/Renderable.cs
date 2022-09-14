@@ -1,8 +1,7 @@
 using System.Numerics;
-using Easel.Graphics;
 using Pie;
 
-namespace Easel.Renderers;
+namespace Easel.Graphics.Renderers;
 
 /// <summary>
 /// Represents a renderable object that can be used in various renderers.

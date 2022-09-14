@@ -22,6 +22,27 @@ public static class Utils
     {
         return EaselMath.Lerp(min, max, random.NextSingle());
     }
+    
+    public static Vector3 ToEulerAngles(this Quaternion quat)
+    {
+        // Convert our values to euler angles.
+        // https://math.stackexchange.com/questions/2975109/how-to-convert-euler-angles-to-quaternions-and-get-the-same-euler-angles-back-fr
+
+        float yaw = MathF.Asin(EaselMath.Clamp(2f * (quat.W * quat.Y - quat.Z * quat.X), -1f, 1f));
+        
+        float pitch = MathF.Atan2(2f * (quat.W * quat.X + quat.Y * quat.Z),
+            1f - 2f * (quat.X * quat.X + quat.Y * quat.Y));
+
+        float roll = MathF.Atan2(2f * (quat.W * quat.Z + quat.X * quat.Y),
+            1f - 2f * (quat.Y * quat.Y + quat.Z * quat.Z));
+
+        return new Vector3(yaw, pitch, roll);
+    }
+
+    public static Vector2 ToVector2(this Vector3 vector3)
+    {
+        return new Vector2(vector3.X, vector3.Y);
+    }
 
     /// <summary>
     /// Load an embedded resource with the given name.

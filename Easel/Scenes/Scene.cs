@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Easel.Entities;
 using Easel.Graphics;
+using Easel.Graphics.Renderers;
 using Easel.Interfaces;
 using Easel.Math;
-using Easel.Renderers;
 using Easel.Utilities;
 using Pie;
 using Pie.Audio;
@@ -118,6 +118,7 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         ForwardRenderer.ClearAll();
+        SpriteRenderer.Begin();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -136,6 +137,7 @@ public abstract class Scene : IDisposable
             Graphics.Viewport = camera.Viewport ?? new Rectangle(Point.Zero, (Size) EaselGame.Instance.Window.Size);
             ForwardRenderer.Render(camera);
         }
+        SpriteRenderer.End();
     }
 
     /// <summary>

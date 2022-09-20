@@ -112,7 +112,7 @@ public static class ForwardRenderer
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
             device.SetIndexBuffer(renderable.IndexBuffer);
-            device.Draw(renderable.IndicesLength);
+            device.DrawIndexed(renderable.IndicesLength);
         }
     }
 

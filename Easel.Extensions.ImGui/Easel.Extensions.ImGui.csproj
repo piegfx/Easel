@@ -7,4 +7,9 @@
         <RootNamespace>Easel.Extensions.Imgui</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pie\Pie.Windowing\Pie.Windowing.csproj" />
+      <ProjectReference Include="..\Pie\Pie\Pie.csproj" />
+    </ItemGroup>
+
 </Project>

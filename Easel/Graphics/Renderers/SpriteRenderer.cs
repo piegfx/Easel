@@ -262,7 +262,7 @@ public static class SpriteRenderer
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
         _device.SetIndexBuffer(_indexBuffer);
-        _device.Draw(NumIndices * _drawCount);
+        _device.DrawIndexed(NumIndices * _drawCount);
 
         _drawCount = 0;
     }

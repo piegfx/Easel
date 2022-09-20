@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj" />
       <ProjectReference Include="..\Pie\Pie.Audio\Pie.Audio.csproj" />
+      <ProjectReference Include="..\Pie\Pie.Freetype\Pie.Freetype.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
       <ProjectReference Include="..\Pie\Pie.Windowing\Pie.Windowing.csproj" />

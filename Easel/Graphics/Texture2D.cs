@@ -13,10 +13,9 @@ public class Texture2D : TextureObject
     /// Create a new <see cref="Texture2D"/> from the given path.
     /// </summary>
     /// <param name="path">The path to load from.</param>
-    /// <param name="mipmap">Whether or not this texture should generate mipmaps on creation.</param>
     /// <param name="autoDispose">If <see langword="true"/>, this <see cref="Texture2D"/> will be automatically disposed
     /// on scene change.</param>
-    public Texture2D(string path, bool mipmap = true, bool autoDispose = true) : this(new Bitmap(path), mipmap, autoDispose)
+    public Texture2D(string path, bool autoDispose = true) : this(new Bitmap(path), autoDispose)
     {
         
     }
@@ -25,20 +24,19 @@ public class Texture2D : TextureObject
     /// Create a new <see cref="Texture2D"/> from the given <see cref="Bitmap"/>. Useful for doing threaded loading.
     /// </summary>
     /// <param name="bitmap">The <see cref="Bitmap"/> to load from.</param>
-    /// <param name="mipmap">Whether or not this texture should generate mipmaps on creation.</param>
     /// <param name="autoDispose">If <see langword="true"/>, this <see cref="Texture2D"/> will be automatically disposed
     /// on scene change.</param>
-    public Texture2D(Bitmap bitmap, bool mipmap = true, bool autoDispose = true) : this(bitmap.Size.Width,
-        bitmap.Size.Height, bitmap.Data, bitmap.Format, mipmap, autoDispose)
+    public Texture2D(Bitmap bitmap, bool autoDispose = true) : this(bitmap.Size.Width,
+        bitmap.Size.Height, bitmap.Data, bitmap.Format, autoDispose)
     {
         
     }
 
-    public Texture2D(int width, int height, byte[] data, PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool mipmap = true, bool autoDispose = true) : base(autoDispose)
+    public Texture2D(int width, int height, byte[] data, PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool autoDispose = true) : base(autoDispose)
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         TextureDescription description =
-            new TextureDescription(TextureType.Texture2D, width, height, format, mipmap, 1, TextureUsage.ShaderResource);
+            new TextureDescription(TextureType.Texture2D, width, height, format, true, 1, TextureUsage.ShaderResource);
         PieTexture = device.CreateTexture(description, data);
     }
 

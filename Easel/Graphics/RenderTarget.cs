@@ -3,10 +3,10 @@ using Pie;
 
 namespace Easel.Graphics;
 
-public class RenderTarget : TextureObject
+public class RenderTarget : Texture
 {
     public Framebuffer PieBuffer;
-    private Texture _depth;
+    private Pie.Texture _depth;
     
     public RenderTarget(Size size, bool autoDispose = true) : base(autoDispose)
     {

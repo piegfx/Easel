@@ -1,4 +1,5 @@
 
+using System;
 using System.Numerics;
 using Easel.Math;
 using Easel.Scenes;
@@ -27,6 +28,23 @@ public class Camera : Entity
     private float _aspectRatio;
     private float _near;
     private float _far;
+    private CameraType _cameraType;
+
+    /// <summary>
+    /// The type of camera this is, a projection (typically for 3D), or an orthographic (typically for 2D) camera.
+    /// </summary>
+    /// <remarks>Certain camera properties will have no effect depending on which mode is selected.</remarks>
+    public CameraType CameraType
+    {
+        get => _cameraType;
+        set
+        {
+            _cameraType = value;
+            GenerateProjectionMatrix();
+        }
+    }
+    
+    #region Perspective
 
     /// <summary>
     /// Get or set the field of view (FOV), in radians, of this camera.
@@ -79,6 +97,30 @@ public class Camera : Entity
             GenerateProjectionMatrix();
         }
     }
+    
+    #endregion
+
+    #region Orthographic
+
+    private Vector2 _orthoSize;
+    
+    /// <summary>
+    /// The size of the orthographic matrix, in normalized 0-1 coordinates. (1, 1) will be the size of the current
+    /// viewport. (0.5, 0.5) will be half the size of the current viewport, and all objects will be twice the size.
+    /// Use this for camera zoom functionality.
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 OrthoSize
+    {
+        get => _orthoSize;
+        set
+        {
+            _orthoSize = value;
+            GenerateProjectionMatrix();
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// Create a new camera for use in 3D scenes.
@@ -94,6 +136,8 @@ public class Camera : Entity
         _aspectRatio = aspectRatio;
         _near = near;
         _far = far;
+        CameraType = CameraType.Perspective;
+        _orthoSize = Vector2.One;
         GenerateProjectionMatrix();
     }
 
@@ -112,7 +156,12 @@ public class Camera : Entity
 
     private void GenerateProjectionMatrix()
     {
-        ProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far);
+        ProjectionMatrix = CameraType switch
+        {
+            CameraType.Perspective => Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far),
+            CameraType.Orthographic => Matrix4x4.CreateOrthographicOffCenter(0, Graphics.Viewport.Width * _orthoSize.X, Graphics.Viewport.Height * _orthoSize.Y, 0, -1, 1),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     public override void Dispose()
@@ -127,4 +176,10 @@ public class Camera : Entity
     /// <see cref="Tags.MainCamera"/> tag.
     /// </summary>
     public static Camera Main => (Camera) SceneManager.ActiveScene.GetEntitiesWithTag(Tags.MainCamera)[0];
+}
+
+public enum CameraType
+{
+    Perspective,
+    Orthographic
 }

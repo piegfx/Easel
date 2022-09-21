@@ -7,7 +7,7 @@ namespace Easel.Graphics;
 /// <summary>
 /// <see cref="Texture2D"/>s are used to texture most 3D meshes, and 2D sprites.
 /// </summary>
-public class Texture2D : TextureObject
+public class Texture2D : Texture
 {
     /// <summary>
     /// Create a new <see cref="Texture2D"/> from the given path.

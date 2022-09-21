@@ -164,6 +164,7 @@ public class EaselGame : IDisposable
             sw.Reset();
             Input.Update(Window);
             Time.Update();
+            Metrics.Update();
             Update();
             // TODO: Fix pie
             GraphicsInternal.SetRenderTarget(null);

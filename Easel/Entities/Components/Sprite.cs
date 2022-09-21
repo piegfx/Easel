@@ -8,7 +8,7 @@ namespace Easel.Entities.Components;
 
 public class Sprite : Component
 {
-    public TextureObject Texture;
+    public Texture Texture;
 
     public Rectangle? SourceRectangle;
 
@@ -18,7 +18,7 @@ public class Sprite : Component
 
     public SpriteFlip Flip;
 
-    public Sprite(TextureObject texture)
+    public Sprite(Texture texture)
     {
         Texture = texture;
         SourceRectangle = null;

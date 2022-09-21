@@ -118,7 +118,7 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         ForwardRenderer.ClearAll();
-        SpriteRenderer.Begin();
+        SpriteRenderer.Begin(Camera.Main.ViewMatrix, Camera.Main.ProjectionMatrix);
 
         for (int i = 0; i < _entityCount; i++)
         {

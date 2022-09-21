@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Easel.Math;
 using Easel.Utilities;
 using Pie;
@@ -48,7 +49,7 @@ public static class SpriteRenderer
 
     private static bool _begun;
 
-    private static TextureObject _currentTexture;
+    private static Texture _currentTexture;
 
     static SpriteRenderer()
     {
@@ -98,44 +99,44 @@ public static class SpriteRenderer
         _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
     }
 
-    public static void Draw(TextureObject texture, Rectangle destination, Color tint)
+    public static void Draw(Texture texture, Rectangle destination, Color tint)
     {
         Draw(texture, (Vector2) destination.Location, null, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
     }
 
-    public static void Draw(TextureObject texture, Rectangle destination, Rectangle? source, Color tint)
+    public static void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint)
     {
         Draw(texture, (Vector2) destination.Location, source, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
     }
 
-    public static void Draw(TextureObject texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
+    public static void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
         Vector2 origin, SpriteFlip flip = SpriteFlip.None)
     {
         Draw(texture, (Vector2) destination.Location, source, tint, rotation, origin, (Vector2) destination.Size / (Vector2) texture.Size, flip);
     }
     
-    public static void Draw(TextureObject texture, Vector2 position)
+    public static void Draw(Texture texture, Vector2 position)
     {
         Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
     }
 
-    public static void Draw(TextureObject texture, Vector2 position, Color tint)
+    public static void Draw(Texture texture, Vector2 position, Color tint)
     {
         Draw(texture, position, null, tint, 0, Vector2.Zero, Vector2.One);
     }
     
-    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint)
+    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint)
     {
         Draw(texture, position, source, tint, 0, Vector2.Zero, Vector2.One);
     }
 
-    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation,
+    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation,
         Vector2 origin, float scale, SpriteFlip flip = SpriteFlip.None)
     {
         Draw(texture, position, source, tint, rotation, origin, new Vector2(scale), flip);
     }
 
-    public static void Draw(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
+    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
@@ -269,7 +270,7 @@ public static class SpriteRenderer
 
     private struct Sprite
     {
-        public TextureObject Texture;
+        public Texture Texture;
         public Vector2 Position;
         public readonly Rectangle? Source;
         public readonly Color Tint;
@@ -278,7 +279,7 @@ public static class SpriteRenderer
         public readonly Vector2 Scale;
         public SpriteFlip Flip;
 
-        public Sprite(TextureObject texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip)
+        public Sprite(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip)
         {
             Texture = texture;
             Position = position;
@@ -291,6 +292,7 @@ public static class SpriteRenderer
         }
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct SpriteVertex
     {
         public Vector2 Position;

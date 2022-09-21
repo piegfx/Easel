@@ -6,9 +6,9 @@ namespace Easel.Graphics;
 
 public class Material
 {
-    public TextureObject Albedo;
+    public Texture Albedo;
 
-    public TextureObject Specular;
+    public Texture Specular;
 
     public Color Color;
 
@@ -23,13 +23,13 @@ public class Material
         Tiling = new Vector4(Tiling, 0, 0)
     };
 
-    public Material(TextureObject texture) : this(texture, texture, Color.White, 32) { }
+    public Material(Texture texture) : this(texture, texture, Color.White, 32) { }
     
-    public Material(TextureObject texture, Color color) : this(texture, texture, color, 32) { }
+    public Material(Texture texture, Color color) : this(texture, texture, color, 32) { }
     
-    public Material(TextureObject texture, Color color, int shininess) : this(texture, texture, color, shininess) { }
+    public Material(Texture texture, Color color, int shininess) : this(texture, texture, color, shininess) { }
 
-    public Material(TextureObject albedo, TextureObject specular, Color color, int shininess)
+    public Material(Texture albedo, Texture specular, Color color, int shininess)
     {
         Albedo = albedo;
         Specular = specular;

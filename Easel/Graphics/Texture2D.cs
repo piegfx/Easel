@@ -40,6 +40,12 @@ public class Texture2D : Texture
         PieTexture = device.CreateTexture(description, data);
     }
 
+    public void SetData(int x, int y, int width, int height, byte[] data)
+    {
+        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
+        device.UpdateTexture(PieTexture, x, y, (uint) width, (uint) height, data);
+    }
+
     public static readonly Texture2D Blank = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);
 
     public static readonly Texture2D Void = new Texture2D(1, 1, new byte[] { 0, 0, 0, 255 }, autoDispose: false);

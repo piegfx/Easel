@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Pie.Audio;
 
@@ -16,6 +17,7 @@ public class WavPlayer : IAudioPlayer
 
     public void Play(AudioDevice device, int channel, float volume, float pitch, bool loop, Priority priority)
     {
+        Console.WriteLine(device.FindFreeChannelIfAvailable());
         device.Play(channel, _buffer, volume, pitch, loop, priority);
     }
 

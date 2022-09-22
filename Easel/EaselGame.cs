@@ -167,7 +167,7 @@ public class EaselGame : IDisposable
             Metrics.Update();
             Update();
             // TODO: Fix pie
-            GraphicsInternal.SetRenderTarget(null);
+            //GraphicsInternal.SetRenderTarget(null);
             Draw();
             Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }

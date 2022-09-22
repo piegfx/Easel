@@ -32,11 +32,13 @@ public class Sound : IDisposable
         }
     }
 
-    public void Play()
+    public int Play(int channel = -1, float volume = 1, float pitch = 1, bool loop = false, Priority priority = Priority.Low)
     {
         // TODO: Volume and stuff
         AudioDevice device = EaselGame.Instance.AudioInternal;
-        Player.Play(device, device.FindChannel(), 1, 1, false, Priority.Song);
+        channel = channel < 0 ? device.FindChannel() : channel;
+        Player.Play(device, channel, volume, pitch, loop, priority);
+        return channel;
     }
 
     public void Dispose()

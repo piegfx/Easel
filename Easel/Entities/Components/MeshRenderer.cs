@@ -50,7 +50,7 @@ public class MeshRenderer : Component
     {
         base.Draw();
 
-        _renderable.ModelMatrix = Transform.ModelMatrix * (Entity.Parent?.Transform.ModelMatrix ?? Matrix4x4.Identity);
+        _renderable.ModelMatrix = Transform.TransformMatrix * (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
         ForwardRenderer.DrawOpaque(_renderable);
     }
 

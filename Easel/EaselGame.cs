@@ -144,9 +144,9 @@ public class EaselGame : IDisposable
         Logging.Log("Creating audio device...");
         AudioInternal = new AudioDevice(256);
 
-        Logging.Log("Initializing time...");
-        Input.Initialize(Window);
         Logging.Log("Initializing input...");
+        Input.Initialize(Window);
+        Logging.Log("Initializing time...");
         Time.Initialize();
         
         Logging.Log("Initializing your application...");

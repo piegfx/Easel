@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Easel.Utilities;
 
 namespace Easel.Entities;
 
@@ -23,6 +24,15 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// The scale of this transform. (Default: One)
     /// </summary>
     public Vector3 Scale;
+
+    /// <summary>
+    /// The Sprite (Z) rotation of this transform. This is helpful when dealing with 2D objects.
+    /// </summary>
+    public float SpriteRotation
+    {
+        get => Rotation.ToEulerAngles().Z;
+        set => Rotation = Quaternion.CreateFromYawPitchRoll(0, 0, value);
+    }
 
     /// <summary>
     /// Create a new default transform.
@@ -65,9 +75,9 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     public Vector3 Down => Vector3.Transform(-Vector3.UnitY, Rotation);
 
     /// <summary>
-    /// Calculates and returns the model matrix for this transform.
+    /// Calculates and returns the matrix for this transform.
     /// </summary>
-    public Matrix4x4 ModelMatrix => Matrix4x4.CreateScale(Scale) *
+    public Matrix4x4 TransformMatrix => Matrix4x4.CreateScale(Scale) *
                                     Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
                                     Matrix4x4.CreateTranslation(Position);
 

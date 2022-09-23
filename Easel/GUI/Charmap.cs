@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Easel.Graphics;
 using Easel.Math;
 using Pie.Freetype;
@@ -10,12 +11,19 @@ public class Charmap : IDisposable
 {
     public readonly Texture2D Texture;
 
-    public readonly Dictionary<char, Character> Characters;
+    private readonly Dictionary<char, Character> _characters;
 
     public Charmap(Texture2D texture, Dictionary<char, Character> characters)
     {
         Texture = texture;
-        Characters = characters;
+        _characters = characters;
+    }
+
+    public Character GetCharacter(char c)
+    {
+        if (!_characters.TryGetValue(c, out Character character))
+            character = _characters['?'];
+        return character;
     }
 
     public struct Character

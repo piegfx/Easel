@@ -34,7 +34,7 @@ public class Font : IDisposable
         int largestChar = 0;
         foreach (char c in text)
         {
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             if (chr.Source.Height > largestChar)
                 largestChar = chr.Bearing.Y;
         }
@@ -50,7 +50,7 @@ public class Font : IDisposable
                     continue;
             }
             
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
             SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, Color.White);
@@ -73,7 +73,7 @@ public class Font : IDisposable
         int largestChar = 0;
         foreach (char c in text)
         {
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             if (chr.Source.Height > largestChar)
                 largestChar = chr.Bearing.Y;
         }
@@ -101,7 +101,7 @@ public class Font : IDisposable
                                 continue;
                         }
 
-                        Charmap.Character chr = charmap.Characters[c];
+                        Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
                         SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor);
@@ -132,7 +132,7 @@ public class Font : IDisposable
         int largestChar = 0;
         foreach (char c in text)
         {
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             if (chr.Source.Height > largestChar)
                 largestChar = chr.Bearing.Y;
         }
@@ -150,7 +150,7 @@ public class Font : IDisposable
                     continue;
             }
             
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             pos += chr.Advance;
             if (pos + chr.Source.Width > measuredSize.Width)
                 measuredSize.Width = pos + chr.Source.Width;
@@ -171,7 +171,7 @@ public class Font : IDisposable
         int largestChar = 0;
         foreach (char c in text)
         {
-            Charmap.Character chr = charmap.Characters[c];
+            Charmap.Character chr = charmap.GetCharacter(c);
             if (chr.Source.Height > largestChar)
                 largestChar = chr.Bearing.Y;
         }
@@ -194,7 +194,7 @@ public class Font : IDisposable
                         continue;
                 }
             
-                Charmap.Character chr = charmap.Characters[c];
+                Charmap.Character chr = charmap.GetCharacter(c);
                 pos += chr.Advance;
                 if (pos + chr.Source.Width > measuredSize.Width)
                     measuredSize.Width = pos + chr.Source.Width;

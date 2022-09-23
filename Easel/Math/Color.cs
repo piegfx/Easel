@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Numerics;
 using System.Reflection;
 
 namespace Easel.Math;
@@ -117,6 +118,11 @@ public struct Color
     public static explicit operator System.Drawing.Color(Color color)
     {
         return System.Drawing.Color.FromArgb(color.Ab, color.Rb, color.Gb, color.Bb);
+    }
+
+    public static explicit operator Vector4(Color color)
+    {
+        return new Vector4(color.R, color.G, color.B, color.A);
     }
 
     public override string ToString()

@@ -23,9 +23,11 @@ public static class BBCodeParser
                     instructions.Add(new TextInstruction(tempText));
                     tempText = "";
                     inBrackets = true;
+                    bracketsText += '[';
                     break;
                 case ']' when inBrackets:
                     inBrackets = false;
+                    bracketsText += ']';
                     instructions.Add(ParseTag(bracketsText));
                     bracketsText = "";
                     break;
@@ -40,20 +42,24 @@ public static class BBCodeParser
             }
         }
         
-        instructions.Add(new TextInstruction(tempText));
+        if (tempText.Length > 0)
+            instructions.Add(new TextInstruction(tempText));
+        if (bracketsText.Length > 0)
+            instructions.Add(new TextInstruction(bracketsText));
 
         return instructions.ToArray();
     }
 
     private static BBCodeInstruction ParseTag(string tag)
     {
-        bool exiting = tag.StartsWith("/");
+        string trimTag = tag.Trim('[', ']');
+        bool exiting = trimTag.StartsWith("/");
         int startPos = exiting ? 1 : 0;
         string tagObject = "";
         
-        for (int c = startPos; c < tag.Length; c++)
+        for (int c = startPos; c < trimTag.Length; c++)
         {
-            char chr = tag[c];
+            char chr = trimTag[c];
             switch (chr)
             {
                 case '=':
@@ -79,10 +85,10 @@ public static class BBCodeParser
             case "color":
                 if (exiting)
                     return new ColorInstruction(Color.Transparent, true);
-                string colorText = tag[startPos..];
+                string colorText = trimTag[startPos..];
                 return new ColorInstruction(Color.FromString(colorText), false);
         }
 
-        return null;
+        return new TextInstruction(tag);
     }
 }

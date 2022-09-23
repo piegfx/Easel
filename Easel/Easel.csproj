@@ -41,6 +41,8 @@
       <EmbeddedResource Include="Graphics\Shaders\Forward\Material.glsl" />
       <None Remove="EaselLogo.png" />
       <EmbeddedResource Include="EaselLogo.png" />
+      <None Remove="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
     </ItemGroup>
 
 </Project>

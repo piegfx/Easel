@@ -2,14 +2,19 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
         <RootNamespace>Easel.Extensions.Imgui</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Easel\Easel.csproj" />
       <ProjectReference Include="..\Pie\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\Pie\Pie\Pie.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ImGui.NET" Version="1.87.3" />
     </ItemGroup>
 
 </Project>

@@ -68,7 +68,7 @@ public static class BBCodeParser
         
         END: ;
 
-        switch (tagObject)
+        switch (tagObject.ToLower())
         {
             case "b":
                 return new BBCodeInstruction(InstructionType.Bold, exiting);
@@ -79,9 +79,8 @@ public static class BBCodeParser
             case "color":
                 if (exiting)
                     return new ColorInstruction(Color.Transparent, true);
-                int hexValue = int.Parse(tag[startPos..].TrimStart('#'), NumberStyles.HexNumber);
-                Color color = new Color(((uint) hexValue << 8) | 255);
-                return new ColorInstruction(color, false);
+                string colorText = tag[startPos..];
+                return new ColorInstruction(Color.FromString(colorText), false);
         }
 
         return null;

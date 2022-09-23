@@ -120,6 +120,91 @@ public class Font : IDisposable
         }
     }
 
+    public Size MeasureString(uint size, string text)
+    {
+        if (!_charmaps.TryGetValue(size, out Charmap charmap))
+        {
+            Face.Size = (int) size;
+            charmap = FontHelper.GenerateCharmapInRange(Face, (char) 0, (char) 127);
+            _charmaps.Add(size, charmap);
+        }
+
+        int largestChar = 0;
+        foreach (char c in text)
+        {
+            Charmap.Character chr = charmap.Characters[c];
+            if (chr.Source.Height > largestChar)
+                largestChar = chr.Bearing.Y;
+        }
+
+        int pos = 0;
+        Size measuredSize = new Size(0, largestChar);
+        
+        foreach (char c in text)
+        {
+            switch (c)
+            {
+                case '\n':
+                    measuredSize.Height += (int) size;
+                    pos = 0;
+                    continue;
+            }
+            
+            Charmap.Character chr = charmap.Characters[c];
+            pos += chr.Advance;
+            if (pos + chr.Source.Width > measuredSize.Width)
+                measuredSize.Width = pos + chr.Source.Width;
+        }
+
+        return measuredSize;
+    }
+
+    public Size MeasureStringBBCode(uint size, string text)
+    {
+        if (!_charmaps.TryGetValue(size, out Charmap charmap))
+        {
+            Face.Size = (int) size;
+            charmap = FontHelper.GenerateCharmapInRange(Face, (char) 0, (char) 127);
+            _charmaps.Add(size, charmap);
+        }
+
+        int largestChar = 0;
+        foreach (char c in text)
+        {
+            Charmap.Character chr = charmap.Characters[c];
+            if (chr.Source.Height > largestChar)
+                largestChar = chr.Bearing.Y;
+        }
+
+        int pos = 0;
+        Size measuredSize = new Size(0, largestChar);
+
+        foreach (BBCodeInstruction instruction in BBCodeParser.Parse(text))
+        {
+            if (instruction is not { InstructionType: InstructionType.Text })
+                continue;
+            
+            foreach (char c in ((TextInstruction) instruction).Text)
+            {
+                switch (c)
+                {
+                    case '\n':
+                        measuredSize.Height += (int) size;
+                        pos = 0;
+                        continue;
+                }
+            
+                Charmap.Character chr = charmap.Characters[c];
+                pos += chr.Advance;
+                if (pos + chr.Source.Width > measuredSize.Width)
+                    measuredSize.Width = pos + chr.Source.Width;
+            }
+        }
+        
+        return measuredSize;
+    }
+    
+
     public void Dispose()
     {
         foreach ((_, Charmap charmap) in _charmaps)

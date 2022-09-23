@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+
 namespace Easel.Math;
 
 public struct Color
@@ -48,6 +53,66 @@ public struct Color
 
     public Color(uint rgbaColor) : 
         this((byte) (rgbaColor >> 24), (byte) ((rgbaColor & 0xFF0000) >> 16), (byte) ((rgbaColor & 0xFF00) >> 8), (byte) (rgbaColor & 0xFF)) { }
+
+    public static Color FromString(string text)
+    {
+        if (text.StartsWith("#") || text.StartsWith("0x"))
+        {
+            text = text
+                .TrimStart('#')
+                .TrimStart('0', 'x');
+
+            if (!uint.TryParse(text, NumberStyles.HexNumber, null, out uint result))
+                return Transparent;
+            if (result <= 0xFFFFFF)
+            {
+                result <<= 8;
+                result |= 255;
+            }
+
+            return new Color(result);
+        }
+        
+        if (text.StartsWith("rgb(") && text.EndsWith(')'))
+        {
+            try
+            {
+                text = text["rgb(".Length..^1];
+                string[] colors = text.Split(",");
+                byte r = byte.Parse(colors[0]);
+                byte g = byte.Parse(colors[1]);
+                byte b = byte.Parse(colors[2]);
+                return new Color(r, g, b, 255);
+            }
+            catch (Exception)
+            {
+                return Transparent;
+            }
+        }
+        
+        if (text.StartsWith("rgba(") && text.EndsWith(')'))
+        {
+            try
+            {
+                text = text["rgba(".Length..^1];
+                string[] colors = text.Split(",");
+                byte r = byte.Parse(colors[0]);
+                byte g = byte.Parse(colors[1]);
+                byte b = byte.Parse(colors[2]);
+                byte a = byte.Parse(colors[3]);
+                return new Color(r, g, b, a);
+            }
+            catch (Exception)
+            {
+                return Transparent;
+            }
+        }
+
+        FieldInfo info = typeof(Color).GetField(text, BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Public);
+        if (info == null)
+            return Transparent;
+        return (Color) (info.GetValue(null) ?? Transparent);
+    }
     
     public static explicit operator System.Drawing.Color(Color color)
     {

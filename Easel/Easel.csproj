@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Silk.NET.Assimp" Version="2.16.0" />
       <PackageReference Include="StbImageSharp" Version="2.27.11" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>

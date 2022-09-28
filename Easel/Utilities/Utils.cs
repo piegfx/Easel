@@ -3,6 +3,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using Easel.Math;
 
 namespace Easel.Utilities;
 

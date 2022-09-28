@@ -79,14 +79,15 @@ public static class SpriteRenderer
         _roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
 
         _layout = _device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", AttributeType.Vec2),
-            new InputLayoutDescription("aTexCoords", AttributeType.Vec2),
-            new InputLayoutDescription("aTint", AttributeType.Vec4),
+            SpriteVertex.SizeInBytes, 
+            new InputLayoutDescription("aPosition", AttributeType.Float2),
+            new InputLayoutDescription("aTexCoords", AttributeType.Float2),
+            new InputLayoutDescription("aTint", AttributeType.Float4),
             new InputLayoutDescription("aRotation", AttributeType.Float),
-            new InputLayoutDescription("aOrigin", AttributeType.Vec2),
-            new InputLayoutDescription("aScale", AttributeType.Vec2),
-            new InputLayoutDescription("aMeta1", AttributeType.Vec4),
-            new InputLayoutDescription("aMeta2", AttributeType.Vec4));
+            new InputLayoutDescription("aOrigin", AttributeType.Float2),
+            new InputLayoutDescription("aScale", AttributeType.Float2),
+            new InputLayoutDescription("aMeta1", AttributeType.Float4),
+            new InputLayoutDescription("aMeta2", AttributeType.Float4));
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
@@ -152,13 +153,19 @@ public static class SpriteRenderer
         _sprites.Add(new Sprite(texture, texture.Size, position, source, tint, rotation, origin, scale, flip, SpriteType.Bitmap, 0, 0, Color.Transparent));
         _spriteCount++;
     }
+
+    public static void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color,
+        Color borderColor, float rotation, Vector2 origin)
+    {
+        DrawRoundedRect(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
+    }
     
-    public static void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color, Color borderColor,
-        float rotation, Vector2 origin)
+    public static void DrawRoundedRect(Texture2D texture, Vector2 position, Size size, int borderWidth, float radius, 
+        Color color, Color borderColor, float rotation, Vector2 origin)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
-        _sprites.Add(new Sprite(null, size, position, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius, borderWidth, borderColor));
+        _sprites.Add(new Sprite(texture, size, position, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius, borderWidth, borderColor));
         _spriteCount++;
     }
 
@@ -291,8 +298,7 @@ public static class SpriteRenderer
         _device.SetDepthState(_depthState);
         _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
-        if (_currentTexture != null)
-            _device.SetTexture(1, _currentTexture.PieTexture, _samplerState);
+        _device.SetTexture(1, _currentTexture?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
         _device.SetIndexBuffer(_indexBuffer);

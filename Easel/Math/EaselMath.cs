@@ -1,6 +1,6 @@
 using System;
 
-namespace Easel.Utilities;
+namespace Easel.Math;
 
 /// <summary>
 /// Provides helpful math functions useful in game development, such as linear interpolation and clamping.

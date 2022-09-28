@@ -47,7 +47,7 @@ public static class ForwardRenderer
         _cameraInfo = new CameraInfo();
         _cameraBuffer = device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
 
-        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
+        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
 

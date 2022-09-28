@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Pie;
 
@@ -6,7 +7,7 @@ namespace Easel.Graphics.Renderers;
 /// <summary>
 /// Represents a renderable object that can be used in various renderers.
 /// </summary>
-public struct Renderable
+public struct Renderable : IDisposable
 {
     /// <summary>
     /// The vertex buffer of this renderable.
@@ -39,7 +40,7 @@ public struct Renderable
     /// <param name="vertexBuffer">The vertex buffer of this renderable.</param>
     /// <param name="indexBuffer">The index buffer of this renderable.</param>
     /// <param name="indicesLength">The number of indices in the <see cref="IndexBuffer"/>.</param>
-    /// <param name="texture">The texture of this renderable.</param>
+    /// <param name="material">The material of this renderable.</param>
     /// <param name="modelMatrix">The model matrix for this renderable.</param>
     public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Matrix4x4 modelMatrix, Material material)
     {
@@ -48,5 +49,11 @@ public struct Renderable
         IndicesLength = indicesLength;
         ModelMatrix = modelMatrix;
         Material = material;
+    }
+
+    public void Dispose()
+    {
+        VertexBuffer.Dispose();
+        IndexBuffer.Dispose();
     }
 }

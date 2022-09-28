@@ -21,9 +21,6 @@ namespace Easel.Entities.Components;
 /// </summary>
 public class MeshRenderer : Component
 {
-    private GraphicsBuffer _vertexBuffer;
-    private GraphicsBuffer _indexBuffer;
-    
     private Mesh[] _meshes;
     private Renderable[] _renderables;
 
@@ -42,6 +39,10 @@ public class MeshRenderer : Component
         _meshes[0] = new Mesh(primitive.Vertices, primitive.Indices, material);
     }
 
+    /// <summary>
+    /// Create a new <see cref="MeshRenderer"/> instance from the given path.
+    /// </summary>
+    /// <param name="path">The path to load.</param>
     public unsafe MeshRenderer(string path)
     {
         Logging.Log("Importing model with assimp...");
@@ -93,8 +94,10 @@ public class MeshRenderer : Component
         Silk.NET.Assimp.Material* material = scene->MMaterials[mesh->MMaterialIndex];
         //textures.AddRange(LoadTextures(material, TextureType.Diffuse));
         //textures.AddRange(LoadTextures(material, TextureType.Specular));
-        
-        Material mat = new Material(LoadTextures(material, TextureType.Diffuse)[0], LoadTextures(material, TextureType.Specular)[0], Color.White, 32);
+
+        Texture2D[] diffuses = LoadTextures(material, TextureType.Diffuse);
+        Texture2D[] speculars = LoadTextures(material, TextureType.Specular);
+        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing, speculars.Length > 0 ? speculars[0] : Texture2D.Void, Color.White, 32);
         return new Mesh(vertices.ToArray(), indices.ToArray(), mat);
     }
 
@@ -158,8 +161,8 @@ public class MeshRenderer : Component
     {
         base.Dispose();
         
-        _indexBuffer.Dispose();
-        _vertexBuffer.Dispose();
+        for (int i = 0; i < _renderables.Length; i++)
+            _renderables[i].Dispose();
     }
     
     public struct Mesh

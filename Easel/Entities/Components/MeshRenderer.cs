@@ -49,7 +49,7 @@ public class MeshRenderer : Component
         if (_assimp == null)
             _assimp = Assimp.GetApi();
         Scene* scene = _assimp.ImportFile(path,
-            (uint) PostProcessSteps.Triangulate);
+            (uint) PostProcessSteps.Triangulate | (uint) PostProcessSteps.FlipWindingOrder | (uint) PostProcessSteps.JoinIdenticalVertices);
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 || scene->MRootNode == null)
             Logging.Critical("Scene failed to import: " + _assimp.GetErrorStringS());
 

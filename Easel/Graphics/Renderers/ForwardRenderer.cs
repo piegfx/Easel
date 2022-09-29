@@ -47,7 +47,7 @@ public static class ForwardRenderer
         _cameraInfo = new CameraInfo();
         _cameraBuffer = device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
 
-        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
+        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
 
@@ -111,7 +111,7 @@ public static class ForwardRenderer
             device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
             device.SetPrimitiveType(PrimitiveType.TriangleList);
             device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
-            device.SetIndexBuffer(renderable.IndexBuffer);
+            device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
             device.DrawIndexed(renderable.IndicesLength);
         }
     }

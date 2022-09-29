@@ -9,6 +9,7 @@ using Pie;
 using Pie.ShaderCompiler;
 using Pie.Windowing;
 using Texture = Pie.Texture;
+using SRect = System.Drawing.Rectangle;
 
 namespace Easel.Extensions.Imgui;
 
@@ -21,11 +22,16 @@ public class ImGuiRenderer : IDisposable
 
     private GraphicsBuffer _vertexBuffer;
     private GraphicsBuffer _indexBuffer;
+    private GraphicsBuffer _uniformBuffer;
 
     private uint _vboSize;
     private uint _eboSize;
 
     private Shader _shader;
+    private DepthState _depthState;
+    private RasterizerState _rasterizerState;
+    private SamplerState _samplerState;
+    private BlendState _blendState;
 
     private Texture _fontTexture;
 
@@ -33,7 +39,7 @@ public class ImGuiRenderer : IDisposable
 
     private readonly List<char> _pressedChars;
 
-    private Keys[] _keysList;
+    private Key[] _keysList;
 
     private uint _stride;
     private InputLayout _inputLayout;
@@ -53,7 +59,7 @@ public class ImGuiRenderer : IDisposable
         EaselGame.Instance.Window.TextInput += PressChar;
 
         _pressedChars = new List<char>();
-        _keysList = Enum.GetValues<Keys>();
+        _keysList = Enum.GetValues<Key>();
 
         _context = ImGui.CreateContext();
         ImGui.SetCurrentContext(_context);
@@ -83,7 +89,8 @@ public class ImGuiRenderer : IDisposable
 
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         _vertexBuffer = device.CreateBuffer<ImDrawVert>(BufferType.VertexBuffer, _vboSize, null, true);
-        _indexBuffer = device.CreateBuffer<uint>(BufferType.IndexBuffer, _eboSize, null, true);
+        _indexBuffer = device.CreateBuffer<ushort>(BufferType.IndexBuffer, _eboSize, null, true);
+        _uniformBuffer = device.CreateBuffer(BufferType.UniformBuffer, Matrix4x4.Identity, true);
 
         RecreateFontDeviceTexture();
         
@@ -99,7 +106,7 @@ layout (location = 1) out vec2 frag_texCoords;
 layout (binding = 0) uniform ProjMatrix
 {
     mat4 uProjection;
-}
+};
 
 void main()
 {
@@ -125,11 +132,18 @@ void main()
         _shader = device.CreateCrossPlatformShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
             new ShaderAttachment(ShaderStage.Fragment, fragmentSource));
 
+        _depthState = device.CreateDepthState(DepthStateDescription.Disabled);
+        RasterizerStateDescription stateDesc = RasterizerStateDescription.CullNone;
+        stateDesc.ScissorTest = true;
+        _rasterizerState = device.CreateRasterizerState(stateDesc);
+        _samplerState = device.CreateSamplerState(SamplerStateDescription.LinearClamp);
+        _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
+
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
         // TODO: Byte attribute types.
         _inputLayout = device.CreateInputLayout(_stride, new InputLayoutDescription("aPosition", AttributeType.Float2),
             new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-            new InputLayoutDescription("aColor", AttributeType.Byte4));
+            new InputLayoutDescription("aColor", AttributeType.NByte4));
     }
 
     private void RecreateFontDeviceTexture()
@@ -156,7 +170,7 @@ void main()
         }
     }
 
-    private void Update()
+    public void Update()
     {
         if (_frameBegun)
             ImGui.Render();
@@ -179,14 +193,16 @@ void main()
     private void UpdateImGuiInput()
     {
         ImGuiIOPtr io = ImGui.GetIO();
-        
-        //io.MouseDown[0] = Input
+
+        io.MouseDown[0] = Input.MouseButtonDown(MouseButton.Left);
+        io.MouseDown[1] = Input.MouseButtonDown(MouseButton.Right);
+        io.MouseDown[2] = Input.MouseButtonDown(MouseButton.Middle);
 
         io.MousePos = Input.MousePosition / Scale;
 
-        foreach (Keys key in _keysList)
+        foreach (Key key in _keysList)
         {
-            // This code is terrible, needs to be changed to Input.KeysDown list instead so we're not iterating through
+            // This code is terrible, needs to be changed to Input.KeyDown list instead so we're not iterating through
             // *every* key.
             if ((int) key > 0)
                 io.KeysDown[(int) key] = Input.KeyDown(key);
@@ -197,10 +213,10 @@ void main()
             io.AddInputCharacter(c);
         _pressedChars.Clear();
 
-        io.KeyCtrl = Input.KeyDown(Keys.LeftControl) || Input.KeyDown(Keys.RightControl);
-        io.KeyAlt = Input.KeyDown(Keys.LeftAlt) || Input.KeyDown(Keys.RightAlt);
-        io.KeyShift = Input.KeyDown(Keys.LeftShift) || Input.KeyDown(Keys.RightShift);
-        io.KeySuper = Input.KeyDown(Keys.LeftSuper) || Input.KeyDown(Keys.RightSuper);
+        io.KeyCtrl = Input.KeyDown(Key.LeftControl) || Input.KeyDown(Key.RightControl);
+        io.KeyAlt = Input.KeyDown(Key.LeftAlt) || Input.KeyDown(Key.RightAlt);
+        io.KeyShift = Input.KeyDown(Key.LeftShift) || Input.KeyDown(Key.RightShift);
+        io.KeySuper = Input.KeyDown(Key.LeftSuper) || Input.KeyDown(Key.RightSuper);
     }
 
     private void PressChar(char chr)
@@ -211,33 +227,30 @@ void main()
     private static void SetKeyMappings()
     {
         ImGuiIOPtr io = ImGui.GetIO();
-        io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
-        io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
-        io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
-        io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up;
-        io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down;
-        io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp;
-        io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown;
-        io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home;
-        io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End;
-        io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete;
-        io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Backspace;
-        io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter;
-        io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape;
-        io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A;
-        io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C;
-        io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V;
-        io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X;
-        io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y;
-        io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z;
+        io.KeyMap[(int)ImGuiKey.Tab] = (int)Key.Tab;
+        io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Key.Left;
+        io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Key.Right;
+        io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Key.Up;
+        io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Key.Down;
+        io.KeyMap[(int)ImGuiKey.PageUp] = (int)Key.PageUp;
+        io.KeyMap[(int)ImGuiKey.PageDown] = (int)Key.PageDown;
+        io.KeyMap[(int)ImGuiKey.Home] = (int)Key.Home;
+        io.KeyMap[(int)ImGuiKey.End] = (int)Key.End;
+        io.KeyMap[(int)ImGuiKey.Delete] = (int)Key.Delete;
+        io.KeyMap[(int)ImGuiKey.Backspace] = (int)Key.Backspace;
+        io.KeyMap[(int)ImGuiKey.Enter] = (int)Key.Enter;
+        io.KeyMap[(int)ImGuiKey.Escape] = (int)Key.Escape;
+        io.KeyMap[(int)ImGuiKey.A] = (int)Key.A;
+        io.KeyMap[(int)ImGuiKey.C] = (int)Key.C;
+        io.KeyMap[(int)ImGuiKey.V] = (int)Key.V;
+        io.KeyMap[(int)ImGuiKey.X] = (int)Key.X;
+        io.KeyMap[(int)ImGuiKey.Y] = (int)Key.Y;
+        io.KeyMap[(int)ImGuiKey.Z] = (int)Key.Z;
     }
 
     private unsafe void RenderImDrawData(ImDrawDataPtr drawData)
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
-        
-        uint vertexOffsetInVertices = 0;
-        uint indexOffsetInElements = 0;
 
         if (drawData.CmdListsCount == 0)
             return;
@@ -258,28 +271,65 @@ void main()
             _indexBuffer = device.CreateBuffer<ushort>(BufferType.IndexBuffer, _eboSize, null, true);
         }
 
-        for (int i = 0; i < drawData.CmdListsCount; i++)
+        ImGuiIOPtr io = ImGui.GetIO();
+
+        SRect scissor = device.Scissor;
+
+        Matrix4x4 mvp = Matrix4x4.CreateOrthographicOffCenter(0.0f, io.DisplaySize.X, io.DisplaySize.Y, 0.0f, -1, 1);
+        device.UpdateBuffer(_uniformBuffer, 0, mvp);
+        
+        drawData.ScaleClipRects(io.DisplayFramebufferScale);
+        
+        device.SetShader(_shader);
+        device.SetRasterizerState(_rasterizerState);
+        device.SetDepthState(_depthState);
+        device.SetBlendState(_blendState);
+        device.SetUniformBuffer(0, _uniformBuffer);
+
+        for (int n = 0; n < drawData.CmdListsCount; n++)
         {
-            ImDrawListPtr cmdList = drawData.CmdListsRange[i];
+            ImDrawListPtr cmdList = drawData.CmdListsRange[n];
             
-            // TODO: Device.UpdateBuffer() with intptr
             ReadOnlySpan<ImDrawVert> vData =
                 new ReadOnlySpan<ImDrawVert>(cmdList.VtxBuffer.Data.ToPointer(), cmdList.VtxBuffer.Size);
-            device.UpdateBuffer(_vertexBuffer, vertexOffsetInVertices, vData.ToArray());
-
+            device.UpdateBuffer(_vertexBuffer, 0, vData.ToArray());
+            
             ReadOnlySpan<ushort> iData =
                 new ReadOnlySpan<ushort>(cmdList.IdxBuffer.Data.ToPointer(), cmdList.IdxBuffer.Size);
-            device.UpdateBuffer(_indexBuffer, indexOffsetInElements, iData.ToArray());
-
-            vertexOffsetInVertices += (uint) cmdList.VtxBuffer.Size;
-            indexOffsetInElements += (uint) cmdList.IdxBuffer.Size;
+            device.UpdateBuffer(_indexBuffer, 0, iData.ToArray());
+            
+            for (int cmdI = 0; cmdI < cmdList.CmdBuffer.Size; cmdI++)
+            {
+                ImDrawCmdPtr pcmd = cmdList.CmdBuffer[cmdI];
+                if (pcmd.UserCallback != IntPtr.Zero)
+                    throw new NotImplementedException();
+                
+                device.SetTexture(1, _fontTexture, _samplerState);
+                
+                Vector4 clipRect = pcmd.ClipRect;
+                device.Scissor = new SRect((int) clipRect.X, _windowHeight - (int) clipRect.W, 
+                    (int) (clipRect.Z - clipRect.X), (int) (clipRect.W - clipRect.Y));
+                
+                device.SetVertexBuffer(_vertexBuffer, _inputLayout);
+                device.SetIndexBuffer(_indexBuffer, IndexType.UShort);
+                device.SetPrimitiveType(PrimitiveType.TriangleList);
+                device.DrawIndexed(pcmd.ElemCount, (int) pcmd.IdxOffset * sizeof(ushort), (int) pcmd.VtxOffset);
+            }
         }
-        
-        
+
+        device.Scissor = device.Viewport;
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        _vertexBuffer.Dispose();
+        _indexBuffer.Dispose();
+        _uniformBuffer.Dispose();
+        _shader.Dispose();
+        _depthState.Dispose();
+        _rasterizerState.Dispose();
+        _samplerState.Dispose();
+        _fontTexture.Dispose();
+        _inputLayout.Dispose();
     }
 }

@@ -301,7 +301,7 @@ public static class SpriteRenderer
         _device.SetTexture(1, _currentTexture?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
-        _device.SetIndexBuffer(_indexBuffer);
+        _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
         _device.DrawIndexed(NumIndices * _drawCount);
 
         _drawCount = 0;

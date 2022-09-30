@@ -141,16 +141,18 @@ void main()
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
         // TODO: Byte attribute types.
-        _inputLayout = device.CreateInputLayout(_stride, new InputLayoutDescription("aPosition", AttributeType.Float2),
+        _inputLayout = device.CreateInputLayout(_stride, 
+            new InputLayoutDescription("aPosition", AttributeType.Float2),
             new InputLayoutDescription("aTexCoords", AttributeType.Float2),
             new InputLayoutDescription("aColor", AttributeType.NByte4));
     }
 
-    private void RecreateFontDeviceTexture()
+    public void RecreateFontDeviceTexture()
     {
         ImGuiIOPtr io = ImGui.GetIO();
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height);
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
+        _fontTexture?.Dispose();
         _fontTexture =
             device.CreateTexture(
                 new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, true, 1,

@@ -153,7 +153,7 @@ public class MeshRenderer : Component
             
             renderable.ModelMatrix = Transform.TransformMatrix *
                                       (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
-            ForwardRenderer.DrawOpaque(renderable);
+            Graphics.Renderer.DrawOpaque(renderable);
         }
     }
 

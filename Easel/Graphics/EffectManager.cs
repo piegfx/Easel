@@ -11,7 +11,7 @@ namespace Easel.Graphics;
 /// initialized, they are only created when used, saving unnecessary memory usage. However, currently, once initialized,
 /// they remain created until the program is exited. (This may change.)
 /// </summary>
-public static class BuiltinEffects
+public class EffectManager
 {
     /// <summary>
     /// Contains all the shaders that can be used for Forward rendering.
@@ -24,19 +24,17 @@ public static class BuiltinEffects
         public const string Standard = "Forward/Standard";
     }
     
-    private static Dictionary<string, Lazy<EffectLayout>> _effects;
+    private Dictionary<string, Lazy<EffectLayout>> _effects;
 
     private const string Assembly = "Easel.Graphics.Shaders.";
 
-    static BuiltinEffects()
+    internal EffectManager(GraphicsDevice device)
     {
-        GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
-        
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
         _effects.Add("Forward/Standard",
             new Lazy<EffectLayout>(() =>
                 new EffectLayout(
-                    new Effect(Assembly + "Forward.Standard.vert", Assembly + "Forward.Standard.frag"),
+                    new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag"),
                     device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes, 
                         new InputLayoutDescription("aPosition", AttributeType.Float3),
                         new InputLayoutDescription("aTexCoords", AttributeType.Float2),
@@ -48,7 +46,7 @@ public static class BuiltinEffects
     /// </summary>
     /// <param name="name">The name of the <see cref="EffectLayout"/>.</param>
     /// <returns>The <see cref="EffectLayout"/>.</returns>
-    public static EffectLayout GetEffectLayout(string name)
+    public EffectLayout GetEffectLayout(string name)
     {
         Lazy<EffectLayout> value = _effects[name];
         if (!value.IsValueCreated)

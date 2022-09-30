@@ -1,4 +1,5 @@
 using System;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie;
 using Pie.Windowing;
@@ -24,6 +25,12 @@ public class EaselGraphics : IDisposable
     /// </summary>
     public readonly GraphicsDevice PieGraphics;
 
+    public I3DRenderer Renderer;
+
+    public SpriteRenderer SpriteRenderer;
+
+    public EffectManager EffectManager;
+
     /// <summary>
     /// Get or set the graphics viewport. If set, <see cref="ViewportResized"/> is invoked.
     /// </summary>
@@ -45,6 +52,14 @@ public class EaselGraphics : IDisposable
         PieGraphics = window.CreateGraphicsDevice(options);
 
         window.Resize += WindowOnResize;
+    }
+
+    internal void Initialize()
+    {
+        EffectManager = new EffectManager(PieGraphics);
+        
+        Renderer = new ForwardRenderer(PieGraphics, EffectManager);
+        SpriteRenderer = new SpriteRenderer(PieGraphics);
     }
 
     private void PieDebug(LogType logtype, string message)

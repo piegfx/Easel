@@ -1,3 +1,4 @@
+using System;
 using Pie;
 
 namespace Easel.Graphics;
@@ -5,7 +6,7 @@ namespace Easel.Graphics;
 /// <summary>
 /// Represents a combined <see cref="Graphics.Effect"/> and <see cref="InputLayout"/>.
 /// </summary>
-public class EffectLayout
+public class EffectLayout : IDisposable
 {
     /// <summary>
     /// The <see cref="Effect"/> of this effect layout.
@@ -26,5 +27,11 @@ public class EffectLayout
     {
         Effect = effect;
         Layout = layout;
+    }
+
+    public void Dispose()
+    {
+        Effect.Dispose();
+        Layout.Dispose();
     }
 }

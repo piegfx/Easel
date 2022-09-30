@@ -140,6 +140,7 @@ public class EaselGame : IDisposable
         Window = Window.CreateWindow(settings, api);
         Logging.Log("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
+        GraphicsInternal.Initialize();
 
         Logging.Log("Creating audio device...");
         AudioInternal = new AudioDevice(256);
@@ -167,7 +168,7 @@ public class EaselGame : IDisposable
             Metrics.Update();
             Update();
             // TODO: Fix pie
-            //GraphicsInternal.SetRenderTarget(null);
+            GraphicsInternal.SetRenderTarget(null);
             Draw();
             Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }

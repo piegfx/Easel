@@ -31,7 +31,7 @@ public class Sprite : Component
     {
         base.Draw();
 
-        SpriteRenderer.Draw(Texture, Transform.Position.ToVector2(), SourceRectangle, Tint,
+        Graphics.SpriteRenderer.Draw(Texture, Transform.Position.ToVector2(), SourceRectangle, Tint,
             Transform.Rotation.ToEulerAngles().Z, Origin, Transform.Scale.ToVector2(), Flip);
     }
 }

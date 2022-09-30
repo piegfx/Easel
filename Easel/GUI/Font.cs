@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.GUI.BBCode;
 using Easel.Math;
@@ -14,11 +15,14 @@ public class Font : IDisposable
 
     private Dictionary<uint, Charmap> _charmaps;
 
+    private EaselGraphics _graphics;
+
     public Font(string path)
     {
         Face = FontHelper.FreeType.CreateFace(path, 0);
 
         _charmaps = new Dictionary<uint, Charmap>();
+        _graphics = EaselGame.Instance.GraphicsInternal;
     }
 
     public void Draw(uint size, string text, Vector2 position)
@@ -53,7 +57,7 @@ public class Font : IDisposable
             Charmap.Character chr = charmap.GetCharacter(c);
             Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, Color.White);
+            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, Color.White);
             pos.X += chr.Advance;
         }
     }
@@ -104,7 +108,7 @@ public class Font : IDisposable
                         Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor);
+                        _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor);
                         pos.X += chr.Advance;
                     }
 

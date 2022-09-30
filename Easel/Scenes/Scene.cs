@@ -117,8 +117,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-        ForwardRenderer.ClearAll();
-        SpriteRenderer.Begin(Camera.Main.ViewMatrix, Camera.Main.ProjectionMatrix);
+        Graphics.Renderer.ClearAll();
+        Graphics.SpriteRenderer.Begin(Camera.Main.ViewMatrix, Camera.Main.ProjectionMatrix);
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -129,15 +129,16 @@ public abstract class Scene : IDisposable
         }
 
         Graphics.PieGraphics.Clear((System.Drawing.Color) World.ClearColor);
+        Rectangle viewport = Graphics.Viewport;
         foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
         {
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
             Camera camera = (Camera) entity;
             // TODO: Update to handle render targets instead of using window size.
-            Graphics.Viewport = camera.Viewport ?? new Rectangle(Point.Zero, (Size) EaselGame.Instance.Window.Size);
-            ForwardRenderer.Render(camera);
+            Graphics.Viewport = camera.Viewport ?? viewport;
+            Graphics.Renderer.Render(camera);
         }
-        SpriteRenderer.End();
+        Graphics.SpriteRenderer.End();
     }
 
     /// <summary>

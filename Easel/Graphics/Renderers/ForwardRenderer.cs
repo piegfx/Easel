@@ -12,30 +12,32 @@ namespace Easel.Graphics.Renderers;
 /// Forward rendering is the "traditional" way to render objects. It has its advantages, but also has many disadvantages
 /// compared to deferred rendering. As such, deferred rendering is usually preferred for most rendering tasks.
 /// </summary>
-public static class ForwardRenderer
+public sealed class ForwardRenderer : I3DRenderer
 {
-    private static EffectLayout _effectLayout;
+    private GraphicsDevice _device;
+    
+    private EffectLayout _effectLayout;
 
-    private static GraphicsBuffer _projViewModelBuffer;
-    private static ProjViewModel _projViewModel;
+    private GraphicsBuffer _projViewModelBuffer;
+    private ProjViewModel _projViewModel;
 
-    private static CameraInfo _cameraInfo;
-    private static GraphicsBuffer _cameraBuffer;
+    private CameraInfo _cameraInfo;
+    private GraphicsBuffer _cameraBuffer;
 
-    private static List<Renderable> _translucents;
+    private List<Renderable> _translucents;
 
-    private static List<Renderable> _opaques;
+    private List<Renderable> _opaques;
 
-    private static RasterizerState _rasterizerState;
-    private static DepthState _depthState;
-    private static SamplerState _samplerState;
+    private RasterizerState _rasterizerState;
+    private DepthState _depthState;
+    private SamplerState _samplerState;
 
-    static ForwardRenderer()
+    public ForwardRenderer(GraphicsDevice device, EffectManager manager)
     {
+        _device = device;
+        
         _translucents = new List<Renderable>();
         _opaques = new List<Renderable>();
-        
-        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
 
         _projViewModel = new ProjViewModel()
         {
@@ -51,44 +53,31 @@ public static class ForwardRenderer
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
 
-        _effectLayout = BuiltinEffects.GetEffectLayout(BuiltinEffects.Forward.Standard);
+        _effectLayout = manager.GetEffectLayout(EffectManager.Forward.Standard);
     }
 
-    /// <summary>
-    /// Draw a translucent object. These objects are drawn back-to-front to allow transparency to work.
-    /// </summary>
-    /// <param name="renderable">The renderable object.</param>
-    public static void DrawTranslucent(Renderable renderable)
+    /// <inheritdoc />
+    public void DrawTranslucent(Renderable renderable)
     {
         _translucents.Add(renderable);
     }
 
-    /// <summary>
-    /// Draw an opaque object. These objects are draw front-to-back so the GPU won't process fragments that are covered
-    /// by other fragments.
-    /// </summary>
-    /// <param name="renderable"></param>
-    public static void DrawOpaque(Renderable renderable)
+    /// <inheritdoc />
+    public void DrawOpaque(Renderable renderable)
     {
         _opaques.Add(renderable);
     }
 
-    /// <summary>
-    /// Clear all draw lists and prepare the renderer for a new frame.
-    /// </summary>
-    public static void ClearAll()
+    /// <inheritdoc />
+    public void ClearAll()
     {
         _translucents.Clear();
         _opaques.Clear();
     }
 
-    /// <summary>
-    /// Render all draw lists and perform post-processing.
-    /// </summary>
-    public static void Render(Camera camera)
+    /// <inheritdoc />
+    public void Render(Camera camera)
     {
-        GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
-        
         _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
 
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
@@ -97,22 +86,22 @@ public static class ForwardRenderer
         foreach (Renderable renderable in _opaques)
         {
             _projViewModel.Model = renderable.ModelMatrix;
-            device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
+            _device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
 
             _cameraInfo.Material = renderable.Material.ShaderMaterial;
-            device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
+            _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
 
-            device.SetShader(_effectLayout.Effect.PieShader);
-            device.SetRasterizerState(_rasterizerState);
-            device.SetDepthState(_depthState);
-            device.SetUniformBuffer(0, _projViewModelBuffer);
-            device.SetUniformBuffer(1, _cameraBuffer);
-            device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-            device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-            device.SetPrimitiveType(PrimitiveType.TriangleList);
-            device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
-            device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
-            device.DrawIndexed(renderable.IndicesLength);
+            _device.SetShader(_effectLayout.Effect.PieShader);
+            _device.SetRasterizerState(_rasterizerState);
+            _device.SetDepthState(_depthState);
+            _device.SetUniformBuffer(0, _projViewModelBuffer);
+            _device.SetUniformBuffer(1, _cameraBuffer);
+            _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+            _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+            _device.SetPrimitiveType(PrimitiveType.TriangleList);
+            _device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
+            _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
+            _device.DrawIndexed(renderable.IndicesLength);
         }
     }
 
@@ -129,5 +118,15 @@ public static class ForwardRenderer
         public ShaderMaterial Material;
         public ShaderDirectionalLight Sun;
         public Vector4 CameraPos;
+    }
+
+    public void Dispose()
+    {
+        _effectLayout.Dispose();
+        _projViewModelBuffer.Dispose();
+        _cameraBuffer.Dispose();
+        _rasterizerState.Dispose();
+        _depthState.Dispose();
+        _samplerState.Dispose();
     }
 }

@@ -14,7 +14,7 @@ namespace Easel.Graphics.Renderers;
 /// <summary>
 /// Efficiently batches and renders 2D sprites.
 /// </summary>
-public static class SpriteRenderer
+public sealed class SpriteRenderer : IDisposable
 {
     private const uint NumVertices = 4;
     private const uint NumIndices = 6;
@@ -23,41 +23,41 @@ public static class SpriteRenderer
     private const uint VertexSizeInBytes = NumVertices * SpriteVertex.SizeInBytes;
     private const uint IndicesSizeInBytes = NumIndices * sizeof(uint);
 
-    private static SpriteVertex[] _vertices;
+    private SpriteVertex[] _vertices;
 
-    private static uint[] _indices;
+    private uint[] _indices;
 
-    private static SpriteVertex[] _verticesCache;
-    private static uint[] _indicesCache;
+    private SpriteVertex[] _verticesCache;
+    private uint[] _indicesCache;
 
-    private static List<Sprite> _sprites;
-    private static uint _spriteCount;
-    private static uint _drawCount;
+    private List<Sprite> _sprites;
+    private uint _spriteCount;
+    private uint _drawCount;
 
-    private static GraphicsBuffer _vertexBuffer;
-    private static GraphicsBuffer _indexBuffer;
+    private GraphicsBuffer _vertexBuffer;
+    private GraphicsBuffer _indexBuffer;
     
-    private static GraphicsBuffer _projViewBuffer;
+    private GraphicsBuffer _projViewBuffer;
 
-    private static Effect _spriteEffect;
-    private static Effect _roundedRectEffect;
-    private static Effect _effectToUse;
-    private static InputLayout _layout;
-    private static RasterizerState _rasterizerState;
-    private static DepthState _depthState;
-    private static BlendState _blendState;
-    private static SamplerState _samplerState;
+    private Effect _spriteEffect;
+    private Effect _roundedRectEffect;
+    private Effect _effectToUse;
+    private InputLayout _layout;
+    private RasterizerState _rasterizerState;
+    private DepthState _depthState;
+    private BlendState _blendState;
+    private SamplerState _samplerState;
 
-    private static GraphicsDevice _device;
+    private GraphicsDevice _device;
 
-    private static bool _begun;
+    private bool _begun;
 
-    private static Texture _currentTexture;
-    private static SpriteType _currentType;
+    private Texture _currentTexture;
+    private SpriteType _currentType;
 
-    static SpriteRenderer()
+    public SpriteRenderer(GraphicsDevice device)
     {
-        _device = EaselGame.Instance.GraphicsInternal.PieGraphics;
+        _device = device;
 
         _vertices = new SpriteVertex[MaxSprites * NumVertices];
         _indices = new uint[MaxSprites * NumIndices];
@@ -95,7 +95,7 @@ public static class SpriteRenderer
         _samplerState = _device.CreateSamplerState(SamplerStateDescription.LinearRepeat);
     }
 
-    public static void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null)
+    public void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null)
     {
         if (_begun)
             throw new EaselException("SpriteRenderer session is already active.");
@@ -109,44 +109,44 @@ public static class SpriteRenderer
         _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
     }
 
-    public static void Draw(Texture texture, Rectangle destination, Color tint)
+    public void Draw(Texture texture, Rectangle destination, Color tint)
     {
         Draw(texture, (Vector2) destination.Location, null, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
     }
 
-    public static void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint)
+    public void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint)
     {
         Draw(texture, (Vector2) destination.Location, source, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
     }
 
-    public static void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
+    public void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
         Vector2 origin, SpriteFlip flip = SpriteFlip.None)
     {
         Draw(texture, (Vector2) destination.Location, source, tint, rotation, origin, (Vector2) destination.Size / (Vector2) texture.Size, flip);
     }
     
-    public static void Draw(Texture texture, Vector2 position)
+    public void Draw(Texture texture, Vector2 position)
     {
         Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
     }
 
-    public static void Draw(Texture texture, Vector2 position, Color tint)
+    public void Draw(Texture texture, Vector2 position, Color tint)
     {
         Draw(texture, position, null, tint, 0, Vector2.Zero, Vector2.One);
     }
     
-    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint)
+    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint)
     {
         Draw(texture, position, source, tint, 0, Vector2.Zero, Vector2.One);
     }
 
-    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation,
+    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation,
         Vector2 origin, float scale, SpriteFlip flip = SpriteFlip.None)
     {
         Draw(texture, position, source, tint, rotation, origin, new Vector2(scale), flip);
     }
 
-    public static void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
+    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
@@ -154,13 +154,13 @@ public static class SpriteRenderer
         _spriteCount++;
     }
 
-    public static void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color,
+    public void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color,
         Color borderColor, float rotation, Vector2 origin)
     {
         DrawRoundedRect(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
     }
     
-    public static void DrawRoundedRect(Texture2D texture, Vector2 position, Size size, int borderWidth, float radius, 
+    public void DrawRoundedRect(Texture2D texture, Vector2 position, Size size, int borderWidth, float radius, 
         Color color, Color borderColor, float rotation, Vector2 origin)
     {
         if (!_begun)
@@ -169,7 +169,7 @@ public static class SpriteRenderer
         _spriteCount++;
     }
 
-    public static void End()
+    public void End()
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
@@ -187,7 +187,7 @@ public static class SpriteRenderer
         Flush();
     }
 
-    private static void DrawSprite(Sprite sprite)
+    private void DrawSprite(Sprite sprite)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
         if (sprite.Texture != _currentTexture || sprite.Type != _currentType || _drawCount >= MaxSprites)
@@ -274,7 +274,7 @@ public static class SpriteRenderer
         _drawCount++;
     }
 
-    private static void Flush()
+    private void Flush()
     {
         if (_drawCount == 0)
             return;
@@ -372,6 +372,22 @@ public static class SpriteRenderer
     {
         Bitmap,
         RoundedRect
+    }
+
+    public void Dispose()
+    {
+        _vertexBuffer.Dispose();
+        _indexBuffer.Dispose();
+        _projViewBuffer.Dispose();
+        _spriteEffect.Dispose();
+        _roundedRectEffect.Dispose();
+        _layout.Dispose();
+        _rasterizerState.Dispose();
+        _depthState.Dispose();
+        _blendState.Dispose();
+        _samplerState.Dispose();
+        _device.Dispose();
+        _currentTexture.Dispose();
     }
 }
 

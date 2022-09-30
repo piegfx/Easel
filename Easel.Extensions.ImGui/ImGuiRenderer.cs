@@ -309,13 +309,13 @@ void main()
                 device.SetTexture(1, _fontTexture, _samplerState);
                 
                 Vector4 clipRect = pcmd.ClipRect;
-                device.Scissor = new SRect((int) clipRect.X, _windowHeight - (int) clipRect.W, 
+                device.Scissor = new SRect((int) clipRect.X, (int) clipRect.Y, 
                     (int) (clipRect.Z - clipRect.X), (int) (clipRect.W - clipRect.Y));
-                
+
                 device.SetVertexBuffer(_vertexBuffer, _inputLayout);
                 device.SetIndexBuffer(_indexBuffer, IndexType.UShort);
                 device.SetPrimitiveType(PrimitiveType.TriangleList);
-                device.DrawIndexed(pcmd.ElemCount, (int) pcmd.IdxOffset * sizeof(ushort), (int) pcmd.VtxOffset);
+                device.DrawIndexed(pcmd.ElemCount, (int) pcmd.IdxOffset, (int) pcmd.VtxOffset);
             }
         }
 

@@ -18,6 +18,7 @@ public class RenderTarget : Texture
 
         description.Format = PixelFormat.D24_UNorm_S8_UInt;
         description.Usage = TextureUsage.Framebuffer;
+        description.Mipmap = false;
 
         _depth = device.CreateTexture<byte>(description, null);
 

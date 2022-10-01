@@ -1,5 +1,3 @@
-#version 450
-
 #include "Easel.Graphics.Shaders.Forward.Lighting.glsl"
 #include "Easel.Graphics.Shaders.Forward.Material.glsl"
 
@@ -21,10 +19,15 @@ layout (binding = 3) uniform sampler2D uSpecular;
 
 void main()
 {
+    #ifdef LIGHTING
     vec3 norm = normalize(frag_normal);
     vec3 viewDir = normalize(uCameraPos.xyz - frag_position);
     
     vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords * uMaterial.tiling.xy, norm, viewDir);
-    //vec4 result = texture(uAlbedo, frag_texCoords);
+    
+    #else
+    vec4 result = texture(uAlbedo, frag_texCoords);
+    #endif
+    
     out_color = result * uMaterial.color;
 }

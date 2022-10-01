@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Threading;
 using Easel.Graphics;
 using Easel.Scenes;
@@ -21,6 +22,8 @@ public class EaselGame : IDisposable
 {
     private GameSettings _settings;
     private double _targetFrameTime;
+
+    public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
     /// <summary>
     /// The underlying game window. Access this to change its size, title, and subscribe to various events.

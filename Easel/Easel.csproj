@@ -6,6 +6,10 @@
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+    
+    <PropertyGroup>
+        <Version>1.0.0-pre</Version>
+    </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj" />

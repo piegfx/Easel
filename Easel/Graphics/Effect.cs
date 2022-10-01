@@ -29,7 +29,7 @@ public class Effect : IDisposable
     /// <param name="loadType">The <see cref="EffectLoadType"/> that both shaders will be loaded with</param>
     /// <exception cref="NotImplementedException"></exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public Effect(string vertex, string fragment, EffectLoadType loadType = EffectLoadType.EmbeddedResource)
+    public Effect(string vertex, string fragment, EffectLoadType loadType = EffectLoadType.EmbeddedResource, params string[] defines)
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         switch (loadType)
@@ -48,6 +48,13 @@ public class Effect : IDisposable
             default:
                 throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
         }
+
+        StringBuilder defineBuilder = new StringBuilder("#version 450\n");
+        foreach (string define in defines)
+            defineBuilder.AppendLine("#define " + define);
+
+        vertex = vertex.Insert(0, defineBuilder.ToString());
+        fragment = fragment.Insert(0, defineBuilder.ToString());
 
         vertex = PreProcess(vertex);
         fragment = PreProcess(fragment);

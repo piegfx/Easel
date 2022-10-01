@@ -22,6 +22,8 @@ public class EffectManager
         /// The standard shader.
         /// </summary>
         public const string Standard = "Forward/Standard";
+        
+        public const string StandardUnlit = "Forward/StandardUnlit";
     }
     
     private Dictionary<string, Lazy<EffectLayout>> _effects;
@@ -30,15 +32,23 @@ public class EffectManager
 
     internal EffectManager(GraphicsDevice device)
     {
+        InputLayout standardVertexShader = device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
+            new InputLayoutDescription("aPosition", AttributeType.Float3),
+            new InputLayoutDescription("aTexCoords", AttributeType.Float2),
+            new InputLayoutDescription("aNormals", AttributeType.Float3));
+        
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
-        _effects.Add("Forward/Standard",
-            new Lazy<EffectLayout>(() =>
-                new EffectLayout(
-                    new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag"),
-                    device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes, 
-                        new InputLayoutDescription("aPosition", AttributeType.Float3),
-                        new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-                        new InputLayoutDescription("aNormals", AttributeType.Float3)))));
+        _effects.Add("Forward/Standard", new Lazy<EffectLayout>(() =>
+        {
+            return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", defines: "LIGHTING"),
+                standardVertexShader);
+        }));
+        
+        _effects.Add("Forward/StandardUnlit", new Lazy<EffectLayout>(() =>
+        {
+            return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag"),
+                standardVertexShader);
+        }));
     }
 
     /// <summary>

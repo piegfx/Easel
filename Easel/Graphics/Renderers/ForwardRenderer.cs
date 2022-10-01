@@ -31,6 +31,7 @@ public sealed class ForwardRenderer : I3DRenderer
     private RasterizerState _rasterizerState;
     private DepthState _depthState;
     private SamplerState _samplerState;
+    private BlendState _blendState;
 
     public ForwardRenderer(GraphicsDevice device, EffectManager manager)
     {
@@ -52,6 +53,7 @@ public sealed class ForwardRenderer : I3DRenderer
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
+        _blendState = device.CreateBlendState(BlendStateDescription.Opaque);
 
         _effectLayout = manager.GetEffectLayout(EffectManager.Forward.Standard);
     }
@@ -83,26 +85,34 @@ public sealed class ForwardRenderer : I3DRenderer
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
         _cameraInfo.CameraPos = new Vector4(camera.Transform.Position, 1);
 
+        _device.SetShader(_effectLayout.Effect.PieShader);
+        _device.SetRasterizerState(_rasterizerState);
+        _device.SetDepthState(_depthState);
+        _device.SetBlendState(_blendState);
+        _device.SetUniformBuffer(0, _projViewModelBuffer);
+        _device.SetUniformBuffer(1, _cameraBuffer);
+        _device.SetPrimitiveType(PrimitiveType.TriangleList);
+        
         foreach (Renderable renderable in _opaques)
         {
-            _projViewModel.Model = renderable.ModelMatrix;
-            _device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
-
-            _cameraInfo.Material = renderable.Material.ShaderMaterial;
-            _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
-
-            _device.SetShader(_effectLayout.Effect.PieShader);
-            _device.SetRasterizerState(_rasterizerState);
-            _device.SetDepthState(_depthState);
-            _device.SetUniformBuffer(0, _projViewModelBuffer);
-            _device.SetUniformBuffer(1, _cameraBuffer);
-            _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-            _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-            _device.SetPrimitiveType(PrimitiveType.TriangleList);
-            _device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
-            _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
-            _device.DrawIndexed(renderable.IndicesLength);
+            // TODO move to array and convert to ref
+            DrawRenderable(renderable);
         }
+    }
+
+    private void DrawRenderable(Renderable renderable)
+    {
+        _projViewModel.Model = renderable.ModelMatrix;
+        _device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
+
+        _cameraInfo.Material = renderable.Material.ShaderMaterial;
+        _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
+        
+        _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+        _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+        _device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
+        _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
+        _device.DrawIndexed(renderable.IndicesLength);
     }
 
     [StructLayout(LayoutKind.Sequential)]

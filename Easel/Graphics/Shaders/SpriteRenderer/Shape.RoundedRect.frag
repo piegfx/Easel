@@ -15,9 +15,11 @@ float RectSDF(vec2 p, vec2 b, float r)
 
 void main()
 {
-    vec2 pos = frag_meta1.zw * frag_texCoords;
-    float fDist = RectSDF(pos - frag_meta1.zw / 2.0, frag_meta1.zw / 2.0 - frag_meta1.x / 2.0 - 1.0, frag_meta1.y);
-    float fBlendAmount = smoothstep(-1.0, 1.0, abs(fDist) - frag_meta1.x / 2.0);
+    vec2 size = frag_meta1.zw;
+    vec2 fPos = frag_meta1.xy;
+    vec2 pos = size * frag_texCoords;
+    float fDist = RectSDF(pos - size / 2.0, size / 2.0 - fPos.x / 2.0 - 1.0, fPos.y);
+    float fBlendAmount = smoothstep(-1.0, 1.0, abs(fDist) - fPos.x / 2.0);
 
     vec4 v4ToColor = (fDist < 0.0) ? texture(uTexture, frag_texCoords) * frag_tint : vec4(0.0);
     out_color = mix(frag_meta2, v4ToColor, fBlendAmount);

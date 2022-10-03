@@ -29,5 +29,10 @@ void main()
     vec4 result = texture(uAlbedo, frag_texCoords);
     #endif
     
+    #ifdef ALPHA
+    if (result.a <= uMaterial.alphaCutoff.x)
+        discard;
+    #endif
+    
     out_color = result * uMaterial.color;
 }

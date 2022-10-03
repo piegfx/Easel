@@ -16,7 +16,7 @@ public static class FontHelper
         const int padding = 2;
         
         int size = 0;
-        int totalSize = (rangeMax - rangeMin) * face.Size * face.Size;
+        int totalSize = (rangeMax - rangeMin) * (face.Size + padding) * (face.Size + padding);
         size = (int) MathF.Sqrt(totalSize);
         size--;
         size |= size >> 1;

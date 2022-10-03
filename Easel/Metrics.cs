@@ -1,3 +1,6 @@
+using System;
+using Pie;
+
 namespace Easel;
 
 public static class Metrics
@@ -10,6 +13,11 @@ public static class Metrics
     public static ulong TotalFrames => _totalFrames;
 
     public static int FPS => _fps;
+
+    public static string GetString()
+    {
+        return $"FPS: {FPS} (dt: {MathF.Round((1f / FPS) * 1000, 1)}ms)\nFrame: {TotalFrames}\nTotal VBuffers: {PieMetrics.VertexBufferCount}\nTotal IBuffers: {PieMetrics.IndexBufferCount}\nTotal CBuffers: {PieMetrics.UniformBufferCount}\nDraws: {PieMetrics.DrawCalls}\nTris: {PieMetrics.TriCount}\nBackend: {EaselGame.Instance.GraphicsInternal.PieGraphics.Api.ToFriendlyString()}\nPie {PieMetrics.Version}\nEasel {EaselGame.Version}";
+    }
 
     internal static void Update()
     {

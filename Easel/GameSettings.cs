@@ -12,17 +12,17 @@ namespace Easel;
 public struct GameSettings
 {
     /// <summary>
-    /// The starting size (resolution) of the game window, in pixels. (Default: 1280x720)
+    /// The starting size (resolution) of the game view, in pixels. (Default: 1280x720)
     /// </summary>
     public Size Size;
 
     /// <summary>
-    /// The starting title of the game window. (Default: The starting assembly name)
+    /// The starting title of the game view. (Default: The starting assembly name)
     /// </summary>
     public string Title;
 
     /// <summary>
-    /// The initial border of the window. (Default: <see cref="WindowBorder.Fixed"/>)
+    /// The initial border of the view. (Default: <see cref="WindowBorder.Fixed"/>)
     /// </summary>
     public WindowBorder Border;
 
@@ -56,7 +56,7 @@ public struct GameSettings
     public bool AllowMissing;
 
     /// <summary>
-    /// The window icon, if any. (Default: <see langword="null" />)
+    /// The view icon, if any. (Default: <see langword="null" />)
     /// </summary>
     public Bitmap Icon;
 
@@ -72,7 +72,7 @@ public struct GameSettings
     {
         Size = new Size(1280, 720);
         
-        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
+        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel View";
         Border = WindowBorder.Fixed;
         VSync = true;
         TargetFps = 0;

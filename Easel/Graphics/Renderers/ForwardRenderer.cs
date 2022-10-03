@@ -15,8 +15,6 @@ namespace Easel.Graphics.Renderers;
 public sealed class ForwardRenderer : I3DRenderer
 {
     private GraphicsDevice _device;
-    
-    private EffectLayout _effectLayout;
 
     private GraphicsBuffer _projViewModelBuffer;
     private ProjViewModel _projViewModel;
@@ -33,7 +31,7 @@ public sealed class ForwardRenderer : I3DRenderer
     private SamplerState _samplerState;
     private BlendState _blendState;
 
-    public ForwardRenderer(GraphicsDevice device, EffectManager manager)
+    public ForwardRenderer(GraphicsDevice device)
     {
         _device = device;
         
@@ -54,8 +52,6 @@ public sealed class ForwardRenderer : I3DRenderer
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
         _blendState = device.CreateBlendState(BlendStateDescription.Opaque);
-
-        _effectLayout = manager.GetEffectLayout(EffectManager.Forward.Standard);
     }
 
     /// <inheritdoc />
@@ -85,7 +81,6 @@ public sealed class ForwardRenderer : I3DRenderer
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
         _cameraInfo.CameraPos = new Vector4(camera.Transform.Position, 1);
 
-        _device.SetShader(_effectLayout.Effect.PieShader);
         _device.SetRasterizerState(_rasterizerState);
         _device.SetDepthState(_depthState);
         _device.SetBlendState(_blendState);
@@ -107,10 +102,11 @@ public sealed class ForwardRenderer : I3DRenderer
 
         _cameraInfo.Material = renderable.Material.ShaderMaterial;
         _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
-        
+
+        _device.SetShader(renderable.Material.EffectLayout.Effect.PieShader);
         _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
         _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-        _device.SetVertexBuffer(renderable.VertexBuffer, _effectLayout.Layout);
+        _device.SetVertexBuffer(renderable.VertexBuffer, renderable.Material.EffectLayout.Layout);
         _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
         _device.DrawIndexed(renderable.IndicesLength);
     }
@@ -132,7 +128,6 @@ public sealed class ForwardRenderer : I3DRenderer
 
     public void Dispose()
     {
-        _effectLayout.Dispose();
         _projViewModelBuffer.Dispose();
         _cameraBuffer.Dispose();
         _rasterizerState.Dispose();

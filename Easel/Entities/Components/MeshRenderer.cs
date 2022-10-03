@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
@@ -51,7 +52,7 @@ public class MeshRenderer : Component
         if (_assimp == null)
             _assimp = Assimp.GetApi();
         Scene* scene = _assimp.ImportFile(path,
-            (uint) PostProcessSteps.Triangulate | (uint) PostProcessSteps.FlipWindingOrder | (uint) PostProcessSteps.JoinIdenticalVertices | (uint) (flipUvs ? PostProcessSteps.FlipUVs : 0));
+            (uint) PostProcessSteps.Triangulate | (uint) PostProcessSteps.FlipWindingOrder | (uint) PostProcessSteps.JoinIdenticalVertices | (uint) (flipUvs ? PostProcessSteps.FlipUVs : 0) | (uint) PostProcessSteps.GenerateNormals);
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 || scene->MRootNode == null)
             Logging.Critical("Scene failed to import: " + _assimp.GetErrorStringS());
 
@@ -81,8 +82,7 @@ public class MeshRenderer : Component
         List<VertexPositionTextureNormal> vertices = new List<VertexPositionTextureNormal>();
         List<uint> indices = new List<uint>();
         List<Texture2D> textures = new List<Texture2D>();
-
-        Console.WriteLine(mesh->MNumVertices);
+        
         for (int i = 0; i < mesh->MNumVertices; i++)
             vertices.Add(new VertexPositionTextureNormal(mesh->MVertices[i], mesh->MTextureCoords[0] != null ? mesh->MTextureCoords[0][i].ToVector2() : Vector2.Zero, mesh->MNormals[i]));
 
@@ -97,9 +97,15 @@ public class MeshRenderer : Component
         //textures.AddRange(LoadTextures(material, TextureType.Diffuse));
         //textures.AddRange(LoadTextures(material, TextureType.Specular));
 
+        MaterialProperty* shininessProp;
+        _assimp.GetMaterialProperty(material, Assimp.MatkeyShininess, 0, 0, &shininessProp);
+
+        float shininess =
+            BitConverter.ToSingle(new ReadOnlySpan<byte>(shininessProp->MData, (int) shininessProp->MDataLength));
+        
         Texture2D[] diffuses = LoadTextures(material, TextureType.Diffuse);
         Texture2D[] speculars = LoadTextures(material, TextureType.Specular);
-        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing, speculars.Length > 0 ? speculars[0] : Texture2D.Void, Color.White, 32);
+        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing, speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing, Color.White, shininess);
         return new Mesh(vertices.ToArray(), indices.ToArray(), mat);
     }
 
@@ -141,7 +147,7 @@ public class MeshRenderer : Component
             ref Mesh mesh = ref _meshes[i];
             _renderables[i] = new Renderable(device.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices),
                 device.CreateBuffer(BufferType.IndexBuffer, mesh.Indices), (uint) mesh.Indices.Length,
-                Matrix4x4.Identity, mesh.Material);
+                Matrix4x4.Identity, mesh.Material, Graphics.EffectManager.GetEffectLayout(EffectManager.Forward.Standard));
         }
     }
 

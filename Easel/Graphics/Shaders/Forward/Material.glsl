@@ -6,6 +6,7 @@ struct Material
     vec4 color;
     vec4 tiling;
     vec4 shininess;
+    vec4 alphaCutoff;
 };
 
 #endif

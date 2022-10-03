@@ -40,7 +40,7 @@ public class EffectManager
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
         _effects.Add("Forward/Standard", new Lazy<EffectLayout>(() =>
         {
-            return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", defines: "LIGHTING"),
+            return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", EffectLoadType.EmbeddedResource, "LIGHTING", "ALPHA"),
                 standardVertexShader);
         }));
         

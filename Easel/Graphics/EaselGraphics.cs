@@ -39,7 +39,6 @@ public class EaselGraphics : IDisposable
         get => _viewport;
         set
         {
-            Size winSize = (Size) EaselGame.Instance.Window.Size;
             _viewport = new Rectangle(value.X, value.Y, value.Width, value.Height);
             PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
             ViewportResized?.Invoke(_viewport);
@@ -58,7 +57,7 @@ public class EaselGraphics : IDisposable
     {
         EffectManager = new EffectManager(PieGraphics);
         
-        Renderer = new ForwardRenderer(PieGraphics, EffectManager);
+        Renderer = new ForwardRenderer(PieGraphics);
         SpriteRenderer = new SpriteRenderer(PieGraphics);
     }
 

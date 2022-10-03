@@ -160,8 +160,13 @@ public sealed class SpriteRenderer : IDisposable
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
-        _sprites.Add(new Sprite(texture, texture.Size, position, source, tint, rotation, origin, scale, flip, SpriteType.Bitmap, 0, 0, Color.Transparent));
+        _sprites.Add(new Sprite(texture, texture?.Size ?? Size.Zero, position, source, tint, rotation, origin, scale, flip, SpriteType.Bitmap, 0, 0, Color.Transparent));
         _spriteCount++;
+    }
+
+    public void DrawRectangle(Vector2 position, Size size, Color color, float rotation, Vector2 origin)
+    {
+        Draw(Texture2D.Blank, position, null, color, rotation, origin, (Vector2) size);
     }
 
     public void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color,
@@ -175,7 +180,9 @@ public sealed class SpriteRenderer : IDisposable
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
-        _sprites.Add(new Sprite(texture, size, position, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius, borderWidth, borderColor));
+        // We need to adjust the size and position as for some reason the rectangle is one pixel off position wise
+        // however removing the offset in the shader doesn't look right...
+        _sprites.Add(new Sprite(texture, size + new Size(2), position - Vector2.One, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius <= 0 ? -borderWidth : radius, borderWidth, borderColor));
         _spriteCount++;
     }
 
@@ -308,7 +315,7 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetDepthState(_depthState);
         _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
-        _device.SetTexture(1, _currentTexture?.PieTexture ?? Texture2D.Missing.PieTexture, _stateToUse);
+        _device.SetTexture(1, _currentTexture.PieTexture, _stateToUse);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(_vertexBuffer, _layout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);

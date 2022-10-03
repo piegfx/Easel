@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using Easel.Graphics;
+using Easel.GUI;
+using Easel.Math;
 using Easel.Scenes;
 using Easel.Utilities;
 using Pie;
 using Pie.Audio;
 using Pie.Windowing;
+using Window = Pie.Windowing.Window;
 
 namespace Easel;
 
@@ -50,6 +54,8 @@ public class EaselGame : IDisposable
     public bool VSync;
 
     public bool AllowMissing;
+    
+    public bool ShowMetrics;
 
     private ConcurrentBag<Action> _actions;
 
@@ -139,7 +145,7 @@ public class EaselGame : IDisposable
         
         Logging.Info($"Using {api.ToFriendlyString()} graphics API.");
 
-        Logging.Log("Creating window...");
+        Logging.Log("Creating view...");
         Window = Window.CreateWindow(settings, api);
         Logging.Log("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
@@ -173,6 +179,8 @@ public class EaselGame : IDisposable
             // TODO: Fix pie
             GraphicsInternal.SetRenderTarget(null);
             Draw();
+            if (ShowMetrics)
+                DrawMetrics();
             Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }
     }
@@ -194,6 +202,7 @@ public class EaselGame : IDisposable
         SceneManager.Update();
         Physics.Update();
         SceneManager.PhysicsUpdate();
+        UI.Update(GraphicsInternal.Viewport);
     }
 
     /// <summary>
@@ -206,6 +215,7 @@ public class EaselGame : IDisposable
         foreach (Action action in _actions)
             action();
         _actions.Clear();
+        UI.Draw(GraphicsInternal.SpriteRenderer);
     }
 
     /// <summary>
@@ -236,4 +246,15 @@ public class EaselGame : IDisposable
     /// <remarks>Currently you can set this value. <b>Do not do this</b> unless you have a reason to, as it will screw
     /// up many other parts of the engine and it will likely stop working.</remarks>
     public static EaselGame Instance;
+
+    private void DrawMetrics()
+    {
+        string metrics = Metrics.GetString();
+        Graphics.SpriteRenderer.Begin();
+        Font font = UI.DefaultTheme.Font;
+        Size size = font.MeasureString(12, metrics);
+        Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
+        font.Draw(12, metrics, new Vector2(5), Color.White);
+        Graphics.SpriteRenderer.End();
+    }
 }

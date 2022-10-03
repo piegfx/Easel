@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Pie.Windowing;
+using Silk.NET.GLFW;
+using MouseButton = Pie.Windowing.MouseButton;
 
 namespace Easel;
 
@@ -54,7 +56,7 @@ public static class Input
     public static bool MouseButtonPressed(MouseButton button) => _newMouseButtons.Contains(button);
     
     /// <summary>
-    /// Get the current mouse position relative to the window (top left = 0, 0)
+    /// Get the current mouse position relative to the view (top left = 0, 0)
     /// </summary>
     public static Vector2 MousePosition { get; private set; }
     
@@ -67,7 +69,7 @@ public static class Input
     private static bool _mouseStateChanged;
 
     /// <summary>
-    /// Get or set the mouse state for the current game window.
+    /// Get or set the mouse state for the current game view.
     /// </summary>
     public static MouseState MouseState
     {
@@ -85,6 +87,9 @@ public static class Input
         window.KeyUp += WindowOnKeyUp;
         window.MouseButtonDown += WindowOnMouseButtonDown;
         window.MouseButtonUp += WindowOnMouseButtonUp;
+
+        InputState state = window.ProcessEvents();
+        MousePosition = state.MousePosition;
     }
 
     internal static void Update(Window window)

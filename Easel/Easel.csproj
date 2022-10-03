@@ -49,6 +49,8 @@
       <EmbeddedResource Include="EaselLogo.png" />
       <None Remove="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
       <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
+      <None Remove="Roboto-Regular.ttf" />
+      <EmbeddedResource Include="Roboto-Regular.ttf" />
     </ItemGroup>
 
 </Project>

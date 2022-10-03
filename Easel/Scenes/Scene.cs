@@ -127,14 +127,13 @@ public abstract class Scene : IDisposable
                 break;
             entity.Draw();
         }
-
-        Graphics.PieGraphics.Clear((System.Drawing.Color) World.ClearColor);
+        
         Rectangle viewport = Graphics.Viewport;
         foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
         {
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
             Camera camera = (Camera) entity;
-            // TODO: Update to handle render targets instead of using window size.
+            // TODO: Update to handle render targets instead of using view size.
             Graphics.Viewport = camera.Viewport ?? viewport;
             Graphics.Renderer.Render(camera);
         }

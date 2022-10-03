@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
@@ -20,12 +21,20 @@ public class Font : IDisposable
     public Font(string path)
     {
         Face = FontHelper.FreeType.CreateFace(path, 0);
-
+        
         _charmaps = new Dictionary<uint, Charmap>();
         _graphics = EaselGame.Instance.GraphicsInternal;
     }
 
-    public void Draw(uint size, string text, Vector2 position)
+    public Font(byte[] data)
+    {
+        Face = FontHelper.FreeType.CreateFace(data, 0);
+        
+        _charmaps = new Dictionary<uint, Charmap>();
+        _graphics = EaselGame.Instance.GraphicsInternal;
+    }
+
+    public void Draw(uint size, string text, Vector2 position, Color color)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -57,12 +66,12 @@ public class Font : IDisposable
             Charmap.Character chr = charmap.GetCharacter(c);
             Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, Color.White);
+            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, color);
             pos.X += chr.Advance;
         }
     }
 
-    public void DrawBBCode(uint size, string text, Vector2 position)
+    public void DrawBBCode(uint size, string text, Vector2 position, Color initialColor)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -83,7 +92,6 @@ public class Font : IDisposable
         }
         pos.Y += largestChar;
         
-        Color initialColor = Color.White;
         ref Color currentColor = ref initialColor;
 
         foreach (BBCodeInstruction instruction in bbCode)
@@ -143,7 +151,8 @@ public class Font : IDisposable
 
         int pos = 0;
         Size measuredSize = new Size(0, largestChar);
-        
+
+        int i = 0;
         foreach (char c in text)
         {
             switch (c)
@@ -156,8 +165,9 @@ public class Font : IDisposable
             
             Charmap.Character chr = charmap.GetCharacter(c);
             pos += chr.Advance;
-            if (pos + chr.Source.Width > measuredSize.Width)
-                measuredSize.Width = pos + chr.Source.Width;
+            if (pos > measuredSize.Width)
+                measuredSize.Width = pos;
+            i++;
         }
 
         return measuredSize;
@@ -200,8 +210,8 @@ public class Font : IDisposable
             
                 Charmap.Character chr = charmap.GetCharacter(c);
                 pos += chr.Advance;
-                if (pos + chr.Source.Width > measuredSize.Width)
-                    measuredSize.Width = pos + chr.Source.Width;
+                if (pos > measuredSize.Width)
+                    measuredSize.Width = pos;
             }
         }
         

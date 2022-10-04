@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
@@ -51,7 +52,7 @@ public sealed class ForwardRenderer : I3DRenderer
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
-        _blendState = device.CreateBlendState(BlendStateDescription.Opaque);
+        _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
     }
 
     /// <inheritdoc />
@@ -88,11 +89,14 @@ public sealed class ForwardRenderer : I3DRenderer
         _device.SetUniformBuffer(1, _cameraBuffer);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         
-        foreach (Renderable renderable in _opaques)
+        foreach (Renderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
         {
             // TODO move to array and convert to ref
             DrawRenderable(renderable);
         }
+        
+        foreach (Renderable renderable in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
+            DrawRenderable(renderable);
     }
 
     private void DrawRenderable(Renderable renderable)

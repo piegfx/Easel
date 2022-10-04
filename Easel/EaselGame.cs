@@ -200,8 +200,6 @@ public class EaselGame : IDisposable
     protected virtual void Update()
     {
         SceneManager.Update();
-        Physics.Update();
-        SceneManager.PhysicsUpdate();
         UI.Update(GraphicsInternal.Viewport);
     }
 

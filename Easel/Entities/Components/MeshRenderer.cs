@@ -161,7 +161,10 @@ public class MeshRenderer : Component
             
             renderable.ModelMatrix = Transform.TransformMatrix *
                                       (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
-            Graphics.Renderer.DrawOpaque(renderable);
+            if (renderable.Material.Color.A < 1)
+                Graphics.Renderer.DrawTranslucent(renderable);
+            else
+                Graphics.Renderer.DrawOpaque(renderable);
         }
     }
 

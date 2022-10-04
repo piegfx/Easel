@@ -94,12 +94,6 @@ public class Entity : InheritableEntity, IDisposable
             _components[i].Update();
     }
 
-    protected internal virtual void PhysicsUpdate()
-    {
-        for (int i = 0; i < _componentCount; i++)
-            _components[i].PhysicsUpdate();
-    }
-
     protected internal virtual void Draw()
     {
         for (int i = 0; i < _componentCount; i++)

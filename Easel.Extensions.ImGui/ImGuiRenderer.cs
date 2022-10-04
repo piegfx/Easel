@@ -202,6 +202,9 @@ void main()
 
         io.MousePos = Input.MousePosition / Scale;
 
+        io.MouseWheel = Input.ScrollWheelDelta.Y;
+        io.MouseWheelH = Input.ScrollWheelDelta.X;
+
         foreach (Key key in _keysList)
         {
             // This code is terrible, needs to be changed to Input.KeyDown list instead so we're not iterating through

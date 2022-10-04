@@ -34,7 +34,7 @@ public class Rigidbody : Component
         _iShape = shape;
     }
 
-    protected internal override void Initialize()
+    protected override void Initialize()
     {
         base.Initialize();
 
@@ -53,22 +53,13 @@ public class Rigidbody : Component
         //_rb.CcdSweptSphereRadius = 0.5f;
     }
 
-    protected internal override void Update()
+    protected override void Update()
     {
         base.Update();
         
         _rb.WorldTransform = Matrix4x4.CreateFromQuaternion(Transform.Rotation) *
                              Matrix4x4.CreateTranslation(Transform.Position);
         _rb.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
-    }
-    
-    protected internal override void PhysicsUpdate()
-    {
-        if (Transform != _lastTransform)
-            _rb.Activate();
-        Transform.Position = _rb.WorldTransform.Translation;
-        Transform.Rotation = _rb.Orientation;
-        _lastTransform = (Transform) Transform.Clone();
     }
 
     public override void Dispose()

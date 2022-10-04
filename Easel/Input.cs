@@ -80,6 +80,8 @@ public static class Input
             _mouseStateChanged = true;
         }
     }
+    
+    public static Vector2 ScrollWheelDelta { get; private set; }
 
     internal static void Initialize(Window window)
     {
@@ -87,6 +89,7 @@ public static class Input
         window.KeyUp += WindowOnKeyUp;
         window.MouseButtonDown += WindowOnMouseButtonDown;
         window.MouseButtonUp += WindowOnMouseButtonUp;
+        window.Scroll += WindowOnScroll;
 
         InputState state = window.ProcessEvents();
         MousePosition = state.MousePosition;
@@ -97,6 +100,8 @@ public static class Input
         _newKeys.Clear();
         _newMouseButtons.Clear();
         
+        ScrollWheelDelta = Vector2.Zero;
+
         InputState state = window.ProcessEvents();
         DeltaMousePosition = state.MousePosition - MousePosition;
         MousePosition = state.MousePosition;
@@ -130,5 +135,10 @@ public static class Input
     {
         _mouseButtonsPressed.Remove(button);
         _newMouseButtons.Remove(button);
+    }
+    
+    private static void WindowOnScroll(Vector2 scroll)
+    {
+        ScrollWheelDelta += scroll;
     }
 }

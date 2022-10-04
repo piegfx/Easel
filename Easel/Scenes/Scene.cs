@@ -100,17 +100,6 @@ public abstract class Scene : IDisposable
         }
     }
 
-    protected internal virtual void PhysicsUpdate()
-    {
-        for (int i = 0; i < _entityCount; i++)
-        {
-            ref Entity entity = ref _entities[i];
-            if (entity == null || !entity.Enabled)
-                return;
-            entity.PhysicsUpdate();
-        }
-    }
-
     /// <summary>
     /// Called once per frame during draw. Where the base function is called will determine when entities in the scene
     /// are drawn.

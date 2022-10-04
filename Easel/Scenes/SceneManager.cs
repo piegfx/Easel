@@ -39,11 +39,6 @@ public static class SceneManager
         _activeScene?.Update();
     }
 
-    internal static void PhysicsUpdate()
-    {
-        _activeScene?.PhysicsUpdate();
-    }
-
     internal static void Draw()
     {
         if (_activeScene != null)

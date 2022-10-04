@@ -18,7 +18,7 @@ public class Trigger : Component
         _iShape = shape;
     }
 
-    protected internal override void Initialize()
+    protected override void Initialize()
     {
         base.Initialize();
         
@@ -29,7 +29,7 @@ public class Trigger : Component
         _ghost = Physics.AddTrigger(_iShape, transform);
     }
 
-    protected internal override void Update()
+    protected override void Update()
     {
         base.Update();
 

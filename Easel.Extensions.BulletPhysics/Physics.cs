@@ -53,7 +53,7 @@ public static class Physics
         return obj;
     }
 
-    internal static void Update()
+    public static void Update()
     {
         World.StepSimulation(Time.DeltaTime * SimulationSpeed, fixedTimeStep: (1 / 60f) * SimulationSpeed);
     }

@@ -59,4 +59,16 @@ public class Material
         AlphaCutoff = 0;
         Effect = normal != null ? EffectManager.Forward.Normal : EffectManager.Forward.Diffuse;
     }
+
+    public Material(Material clone)
+    {
+        Albedo = clone.Albedo;
+        Specular = clone.Specular;
+        Normal = clone.Normal;
+        Color = new Color(clone.Color.R, clone.Color.G, clone.Color.B, clone.Color.A);
+        Shininess = clone.Shininess;
+        Tiling = new Vector2(clone.Tiling.X, clone.Tiling.Y);
+        AlphaCutoff = clone.AlphaCutoff;
+        Effect = clone.Effect;
+    }
 }

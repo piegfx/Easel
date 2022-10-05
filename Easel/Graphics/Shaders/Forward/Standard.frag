@@ -4,6 +4,9 @@
 layout (location = 0) in vec2 frag_texCoords;
 layout (location = 1) in vec3 frag_normal;
 layout (location = 2) in vec3 frag_position;
+layout (location = 3) in vec3 frag_tangentLightPos;
+layout (location = 4) in vec3 frag_tangentViewPos;
+layout (location = 5) in vec3 frag_tangentFragPos;
 
 layout (location = 0) out vec4 out_color;
 
@@ -16,23 +19,34 @@ layout (binding = 1) uniform CameraInfo
 
 layout (binding = 2) uniform sampler2D uAlbedo;
 layout (binding = 3) uniform sampler2D uSpecular;
+layout (binding = 4) uniform sampler2D uNormal;
 
 void main()
 {
-    #ifdef LIGHTING
-    vec3 norm = normalize(frag_normal);
-    vec3 viewDir = normalize(uCameraPos.xyz - frag_position);
-    
-    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords * uMaterial.tiling.xy, norm, viewDir);
-    
+#ifdef LIGHTING
+    //
+    #ifdef NORMAL_MAPS
+        vec3 norm = texture(uNormal, frag_texCoords * uMaterial.tiling.xy).rgb;
+        norm = normalize(norm * 2.0 - 1.0);
+        
+        vec3 viewDir = normalize(frag_tangentViewPos - frag_tangentFragPos);
+        vec3 lightDir = normalize(frag_tangentLightPos);
     #else
-    vec4 result = texture(uAlbedo, frag_texCoords);
+        vec3 norm = normalize(frag_normal);
+        vec3 viewDir = normalize(uCameraPos.xyz - frag_position);
+        vec3 lightDir = normalize(-uSun.direction.xyz);
     #endif
     
-    #ifdef ALPHA
+    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords * uMaterial.tiling.xy, norm, viewDir, lightDir);
+    
+#else
+    vec4 result = texture(uAlbedo, frag_texCoords);
+#endif
+    
+#ifdef ALPHA
     if (result.a <= uMaterial.alphaCutoff.x)
         discard;
-    #endif
+#endif
     
     out_color = result * uMaterial.color;
 }

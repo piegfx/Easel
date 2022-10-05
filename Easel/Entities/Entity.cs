@@ -162,4 +162,6 @@ public class Entity : InheritableEntity, IDisposable
     protected override T GetEntity<T>(string name) => SceneManager.ActiveScene.GetEntity<T>(name);
 
     protected override Entity[] GetEntitiesWithTag(string tag) => SceneManager.ActiveScene.GetEntitiesWithTag(tag);
+
+    protected override Entity[] GetAllEntities() => SceneManager.ActiveScene.GetAllEntities();
 }

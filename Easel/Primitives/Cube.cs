@@ -1,4 +1,5 @@
 using System.Numerics;
+using Easel.Utilities;
 using Pie.Utils;
 
 namespace Easel.Primitives;
@@ -8,37 +9,37 @@ namespace Easel.Primitives;
 /// </summary>
 public struct Cube : IPrimitive
 {
-    public VertexPositionTextureNormal[] Vertices => new[]
+    public VertexPositionTextureNormalTangent[] Vertices => new[]
     {
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(0, 1, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(0, 1, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(1, 1), new Vector3(0, 1, 0)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(0, 1), new Vector3(0, 1, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(0, 1, 0), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(0, 1, 0), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(1, 1), new Vector3(0, 1, 0), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(0, 1), new Vector3(0, 1, 0), new Vector3(-1, 0, 0)),
 
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(0, 0), new Vector3(0, -1, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(1, 0), new Vector3(0, -1, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(0, -1, 0)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(0, -1, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(0, 0), new Vector3(0, -1, 0), new Vector3(1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(1, 0), new Vector3(0, -1, 0), new Vector3(1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(0, -1, 0), new Vector3(1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(0, -1, 0), new Vector3(1, 0, 0)),
 
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(-1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(1, 0), new Vector3(-1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(1, 1), new Vector3(-1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(-1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(1, 0), new Vector3(-1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(1, 1), new Vector3(-1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(-1, 0, 0), new Vector3(0, 0, 1)),
 
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(0, 0), new Vector3(1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(1, 0, 0)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(0, 1), new Vector3(1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(1, 0, 0), new Vector3(0, 0, 1)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(0, 1), new Vector3(1, 0, 0), new Vector3(0, 0, 1)),
 
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(0, 0, -1)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(0, 0, -1)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(0, 0, -1)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(0, 0, -1)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, -0.5f), new Vector2(0, 0), new Vector3(0, 0, -1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, -0.5f), new Vector2(1, 0), new Vector3(0, 0, -1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, -0.5f), new Vector2(1, 1), new Vector3(0, 0, -1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, -0.5f), new Vector2(0, 1), new Vector3(0, 0, -1), new Vector3(-1, 0, 0)),
 
-        new VertexPositionTextureNormal(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(0, 0), new Vector3(0, 0, 1)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(1, 0), new Vector3(0, 0, 1)),
-        new VertexPositionTextureNormal(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(1, 1), new Vector3(0, 0, 1)),
-        new VertexPositionTextureNormal(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(0, 1), new Vector3(0, 0, 1))
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, 0.5f, 0.5f), new Vector2(0, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, 0.5f, 0.5f), new Vector2(1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(0.5f, -0.5f, 0.5f), new Vector2(1, 1), new Vector3(0, 0, 1), new Vector3(-1, 0, 0)),
+        new VertexPositionTextureNormalTangent(new Vector3(-0.5f, -0.5f, 0.5f), new Vector2(0, 1), new Vector3(0, 0, 1), new Vector3(-1, 0, 0))
     };
 
     public uint[] Indices => new uint[]

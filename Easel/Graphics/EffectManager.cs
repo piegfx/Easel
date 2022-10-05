@@ -19,11 +19,19 @@ public class EffectManager
     public static class Forward
     {
         /// <summary>
-        /// The standard shader.
+        /// Render with diffuse, specular, and normal map.
         /// </summary>
-        public const string Standard = "Forward/Standard";
+        public const string Normal = "Forward/Normal";
         
-        public const string StandardUnlit = "Forward/StandardUnlit";
+        /// <summary>
+        /// Render with a diffuse and specular texture.
+        /// </summary>
+        public const string Diffuse = "Forward/Diffuse";
+        
+        /// <summary>
+        /// No lighting or special effects are applied.
+        /// </summary>
+        public const string Unshaded = "Forward/StandardUnlit";
     }
     
     private Dictionary<string, Lazy<EffectLayout>> _effects;
@@ -32,19 +40,27 @@ public class EffectManager
 
     internal EffectManager(GraphicsDevice device)
     {
-        InputLayout standardVertexShader = device.CreateInputLayout(VertexPositionTextureNormal.SizeInBytes,
+        InputLayout standardVertexShader = device.CreateInputLayout(VertexPositionTextureNormalTangent.SizeInBytes,
             new InputLayoutDescription("aPosition", AttributeType.Float3),
             new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-            new InputLayoutDescription("aNormals", AttributeType.Float3));
+            new InputLayoutDescription("aNormals", AttributeType.Float3),
+            new InputLayoutDescription("aTangent", AttributeType.Float3));
         
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
-        _effects.Add("Forward/Standard", new Lazy<EffectLayout>(() =>
+        
+        _effects.Add("Forward/Normal", new Lazy<EffectLayout>(() =>
+        {
+            return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", EffectLoadType.EmbeddedResource, "LIGHTING", "ALPHA", "NORMAL_MAPS"),
+                standardVertexShader);
+        }));
+        
+        _effects.Add("Forward/Diffuse", new Lazy<EffectLayout>(() =>
         {
             return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", EffectLoadType.EmbeddedResource, "LIGHTING", "ALPHA"),
                 standardVertexShader);
         }));
         
-        _effects.Add("Forward/StandardUnlit", new Lazy<EffectLayout>(() =>
+        _effects.Add("Forward/Unshaded", new Lazy<EffectLayout>(() =>
         {
             return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag"),
                 standardVertexShader);

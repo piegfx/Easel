@@ -45,6 +45,15 @@ public static class Utils
         return new Vector2(vector3.X, vector3.Y);
     }
 
+    public static Matrix4x4 To3x3Matrix(this Matrix4x4 matrix)
+    {
+        return new Matrix4x4(
+            matrix.M11, matrix.M12, matrix.M13, 0,
+            matrix.M21, matrix.M22, matrix.M23, 0,
+            matrix.M31, matrix.M32, matrix.M33, 0,
+            0, 0, 0, 1);
+    }
+
     /// <summary>
     /// Load an embedded resource with the given name.
     /// </summary>

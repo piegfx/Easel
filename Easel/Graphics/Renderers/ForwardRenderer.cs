@@ -110,6 +110,7 @@ public sealed class ForwardRenderer : I3DRenderer
         _device.SetShader(renderable.Material.EffectLayout.Effect.PieShader);
         _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
         _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+        _device.SetTexture(4, renderable.Material.Normal?.PieTexture ?? Texture2D.Void.PieTexture, _samplerState);
         _device.SetVertexBuffer(renderable.VertexBuffer, renderable.Material.EffectLayout.Layout);
         _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
         _device.DrawIndexed(renderable.IndicesLength);

@@ -24,6 +24,8 @@ public class Material
 
     public Texture Specular;
 
+    public Texture Normal;
+
     public Color Color;
 
     public float Shininess;
@@ -40,20 +42,21 @@ public class Material
         AlphaCutoff = new Vector4(AlphaCutoff)
     };
 
-    public Material(Texture texture) : this(texture, texture, Color.White, 32) { }
+    public Material(Texture texture) : this(texture, texture, null, Color.White, 32) { }
     
-    public Material(Texture texture, Color color) : this(texture, texture, color, 32) { }
+    public Material(Texture texture, Color color) : this(texture, texture, null, color, 32) { }
     
-    public Material(Texture texture, Color color, int shininess) : this(texture, texture, color, shininess) { }
+    public Material(Texture texture, Color color, int shininess) : this(texture, texture, null, color, shininess) { }
 
-    public Material(Texture albedo, Texture specular, Color color, float shininess)
+    public Material(Texture albedo, Texture specular, Texture2D normal, Color color, float shininess)
     {
         Albedo = albedo;
         Specular = specular;
+        Normal = normal;
         Color = color;
         Shininess = shininess;
         Tiling = new Vector2(1);
         AlphaCutoff = 0;
-        Effect = EffectManager.Forward.Standard;
+        Effect = normal != null ? EffectManager.Forward.Normal : EffectManager.Forward.Diffuse;
     }
 }

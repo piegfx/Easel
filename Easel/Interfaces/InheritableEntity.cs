@@ -80,4 +80,10 @@ public abstract class InheritableEntity
     /// <param name="tag">The tag to search for.</param>
     /// <returns>All entities with the given tag.</returns>
     protected abstract Entity[] GetEntitiesWithTag(string tag);
+
+    /// <summary>
+    /// Get all entities in the current scene.
+    /// </summary>
+    /// <returns>The entity array.</returns>
+    protected abstract Entity[] GetAllEntities();
 }

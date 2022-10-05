@@ -1,3 +1,4 @@
+using Easel.Utilities;
 using Pie.Utils;
 
 namespace Easel.Primitives;
@@ -10,7 +11,7 @@ public interface IPrimitive
     /// <summary>
     /// The vertices of this primitive.
     /// </summary>
-    public VertexPositionTextureNormal[] Vertices { get; }
+    public VertexPositionTextureNormalTangent[] Vertices { get; }
     
     /// <summary>
     /// The indices of this primitive.

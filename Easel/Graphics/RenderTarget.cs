@@ -11,7 +11,7 @@ public class RenderTarget : Texture
     public RenderTarget(Size size, bool autoDispose = true) : base(autoDispose)
     {
         TextureDescription description = new TextureDescription(TextureType.Texture2D, size.Width, size.Height,
-            PixelFormat.B8G8R8A8_UNorm, true, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer);
+            PixelFormat.B8G8R8A8_UNorm, false, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer);
 
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         PieTexture = device.CreateTexture<byte>(description, null);

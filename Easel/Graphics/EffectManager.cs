@@ -31,7 +31,7 @@ public class EffectManager
         /// <summary>
         /// No lighting or special effects are applied.
         /// </summary>
-        public const string Unshaded = "Forward/StandardUnlit";
+        public const string Unshaded = "Forward/Unshaded";
     }
     
     private Dictionary<string, Lazy<EffectLayout>> _effects;

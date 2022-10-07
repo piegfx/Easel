@@ -53,11 +53,6 @@ public class MeshRenderer : Component
     public MeshRenderer(Mesh[] meshes)
     {
         _meshes = meshes;
-
-        foreach (VertexPositionTextureNormalTangent vptn in meshes[0].Vertices)
-        {
-            Console.WriteLine("new VertexPositionTextureNormalTangent(new Vector3(" + vptn.Position.X / 2 + "f, " + vptn.Position.Y / 2 + "f, " + vptn.Position.X / 2 + "f), new Vector2(" + MathF.Round(vptn.TexCoords.X) + ", " + MathF.Round(vptn.TexCoords.Y) + "), new Vector3(" + vptn.Normals.X + ", " + vptn.Normals.Y + ", " + vptn.Normals.Z + "), new Vector3(" + vptn.Tangents.X + ", " + vptn.Tangents.Y + ", " + vptn.Tangents.Z + ")),");
-        }
     }
 
     protected internal override void Initialize()

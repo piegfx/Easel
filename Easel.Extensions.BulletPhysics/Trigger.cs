@@ -1,9 +1,8 @@
-using System;
 using System.Numerics;
 using BulletSharp;
-using Easel.Utilities;
+using Easel.Entities.Components;
 
-namespace Easel.Entities.Components;
+namespace Easel.Extensions.BulletPhysics;
 
 public class Trigger : Component
 {

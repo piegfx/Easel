@@ -27,7 +27,7 @@ public static class Physics
     {
         Vector3 dir = position + direction * distance;
         using ClosestRayResultCallback cb = new ClosestRayResultCallback(ref position, ref dir);
-        cb.Flags |= (uint) TriangleRaycastCallback.EFlags.DisableHeightfieldAccelerator;
+        cb.Flags |= (uint) TriangleRaycastCallback.EFlags.KeepUnflippedNormal;
         World.RayTest(position, dir, cb);
 
         if (!cb.HasHit)
@@ -38,11 +38,27 @@ public static class Physics
 
         Matrix4x4.Decompose(cb.CollisionObject.WorldTransform, out _, out Quaternion rotation, out _);
         Quaternion invert = Quaternion.Inverse(rotation);
-        Vector3 normal = Vector3.Transform(cb.HitNormalWorld, invert);
-        normal = new Vector3((int) MathF.Round(normal.X), (int) MathF.Round(normal.Y), (int) MathF.Round(normal.Z));
+        Vector3 normal = Vector3.Transform(cb.HitNormalWorld, Matrix4x4.CreateFromQuaternion(invert));
+        Vector3 normalAbs = Vector3.Abs(normal);
+        if (normalAbs.X > normalAbs.Y && normalAbs.X > normalAbs.Z)
+            normal = new Vector3(1 * MathF.Sign(normal.X), 0, 0);
+        else if (normalAbs.Y > normalAbs.X && normalAbs.Y > normalAbs.Z)
+            normal = new Vector3(0, 1 * MathF.Sign(normal.Y), 0);
+        else if (normalAbs.Z > normalAbs.Y && normalAbs.Z > normalAbs.Y)
+            normal = new Vector3(0, 0, 1 * MathF.Sign(normal.Z));
+        else
+            normal = Vector3.Zero;
+        
+        //Console.WriteLine(Vector3.Normalize(normal));
+        //normal = new Vector3((int) MathF.Round(normal.X), (int) MathF.Round(normal.Y), (int) MathF.Round(normal.Z));
+        //Vector3 normal = cb.HitNormalWorld;
+        //Vector3 normal = cb.HitNormalWorld;
+        //Vector3 normal = Vector3.TransformNormal(cb.HitNormalWorld, Matrix4x4.CreateFromQuaternion(invert));
 
-        hit.Position = cb.CollisionObject.WorldTransform.Translation;
-        hit.Normal = normal;
+        hit.WorldPosition = cb.CollisionObject.WorldTransform.Translation;
+        hit.HitPosition = cb.HitPointWorld;
+        hit.CubeNormal = normal;
+        hit.RealNormal = cb.HitNormalWorld;
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;
 

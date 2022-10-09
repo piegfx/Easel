@@ -55,9 +55,10 @@ public class Bitmap
         Format = PixelFormat.R8G8B8A8_UNorm;
     }
 
-    public Bitmap(int width, int height, byte[] data)
+    public Bitmap(int width, int height, PixelFormat format, byte[] data)
     {
         Size = new Size(width, height);
+        Format = format;
         Data = data;
     }
     

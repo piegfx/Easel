@@ -51,7 +51,7 @@ public class Material
     public Material(Texture albedo, Texture specular, Texture2D normal, Color color, float shininess)
     {
         Albedo = albedo;
-        Specular = specular;
+        Specular = specular ?? albedo;
         Normal = normal;
         Color = color;
         Shininess = shininess;

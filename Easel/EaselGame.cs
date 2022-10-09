@@ -145,7 +145,7 @@ public class EaselGame : IDisposable
         
         Logging.Info($"Using {api.ToFriendlyString()} graphics API.");
 
-        Logging.Log("Creating view...");
+        Logging.Log("Creating window...");
         Window = Window.CreateWindow(settings, api);
         Logging.Log("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
@@ -235,6 +235,14 @@ public class EaselGame : IDisposable
     public void RunOnMainThread(Action code)
     {
         _actions.Add(code);
+    }
+
+    /// <summary>
+    /// The game will close & stop running when it is safe to do so.
+    /// </summary>
+    public void Close()
+    {
+        Window.ShouldClose = true;
     }
 
     /// <summary>

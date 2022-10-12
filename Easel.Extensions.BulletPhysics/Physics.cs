@@ -26,7 +26,7 @@ public static class Physics
     public static bool Raycast(Vector3 position, Vector3 direction, float distance, out RayHit hit)
     {
         Vector3 dir = position + direction * distance;
-        using ClosestRayResultCallback cb = new ClosestRayResultCallback(ref position, ref dir);
+        using CompoundClosestRayResultCallback cb = new CompoundClosestRayResultCallback(ref position, ref dir);
         cb.Flags |= (uint) TriangleRaycastCallback.EFlags.KeepUnflippedNormal;
         World.RayTest(position, dir, cb);
 
@@ -61,6 +61,7 @@ public static class Physics
         hit.RealNormal = cb.HitNormalWorld;
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;
+        hit.ChildIndex = cb.ChildIndex;
 
         return true;
     }

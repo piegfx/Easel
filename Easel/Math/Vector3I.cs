@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
@@ -19,10 +20,13 @@ public struct Vector3I
 
     public static readonly Vector3I UnitZ = new Vector3I(0, 0, 1);
     
+    [XmlAttribute]
     public int X;
 
+    [XmlAttribute]
     public int Y;
 
+    [XmlAttribute]
     public int Z;
 
     public Vector3I(int xyz)

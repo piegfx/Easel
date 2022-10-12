@@ -10,6 +10,7 @@ public struct RayHit
     public Vector3 CubeNormal;
     public Vector3 RealNormal;
     public Quaternion Rotation;
+    public int ChildIndex;
 
     public CollisionObject CollisionObject;
 }

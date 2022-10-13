@@ -42,7 +42,7 @@ public class Skybox : IDisposable
 
         PieTexture =
             _device.CreateTexture(
-                new TextureDescription(TextureType.Cubemap, right.Size.Width, right.Size.Height, right.Format, false, 1,
+                new TextureDescription(TextureType.Cubemap, right.Size.Width, right.Size.Height, right.Format, 1, 1,
                     TextureUsage.ShaderResource), cubemapDatas);
 
         Cube cube = new Cube();

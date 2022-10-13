@@ -109,7 +109,7 @@ public abstract class Scene : IDisposable
         Camera main = Camera.Main;
 
         Graphics.Renderer.ClearAll();
-        Graphics.SpriteRenderer.Begin(main.ViewMatrix, main.ProjectionMatrix);
+        Graphics.SpriteRenderer.Begin(/*main.ViewMatrix, main.ProjectionMatrix*/);
 
         for (int i = 0; i < _entityCount; i++)
         {

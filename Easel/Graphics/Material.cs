@@ -32,13 +32,15 @@ public class Material
 
     public Vector2 Tiling;
 
+    public Vector2 TextureOffset;
+
     public float AlphaCutoff;
 
     public ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
         Color = Color,
         Specular = new Vector4(Shininess),
-        Tiling = new Vector4(Tiling, 0, 0),
+        Tiling = new Vector4(Tiling, TextureOffset.X, TextureOffset.Y),
         AlphaCutoff = new Vector4(AlphaCutoff)
     };
 
@@ -56,6 +58,7 @@ public class Material
         Color = color;
         Shininess = shininess;
         Tiling = new Vector2(1);
+        TextureOffset = Vector2.Zero;
         AlphaCutoff = 0;
         Effect = normal != null ? EffectManager.Forward.Normal : EffectManager.Forward.Diffuse;
     }
@@ -68,6 +71,7 @@ public class Material
         Color = new Color(clone.Color.R, clone.Color.G, clone.Color.B, clone.Color.A);
         Shininess = clone.Shininess;
         Tiling = new Vector2(clone.Tiling.X, clone.Tiling.Y);
+        TextureOffset = new Vector2(clone.TextureOffset.X, clone.TextureOffset.Y);
         AlphaCutoff = clone.AlphaCutoff;
         Effect = clone.Effect;
     }

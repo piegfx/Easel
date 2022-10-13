@@ -42,7 +42,7 @@ public struct Renderable : IDisposable
     /// <param name="indicesLength">The number of indices in the <see cref="IndexBuffer"/>.</param>
     /// <param name="material">The material of this renderable.</param>
     /// <param name="modelMatrix">The model matrix for this renderable.</param>
-    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Matrix4x4 modelMatrix, Material material, EffectLayout effectLayout)
+    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Matrix4x4 modelMatrix, Material material)
     {
         VertexBuffer = vertexBuffer;
         IndexBuffer = indexBuffer;

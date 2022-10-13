@@ -29,7 +29,7 @@ layout (binding = 1) uniform CameraInfo
 
 void main()
 {
-    frag_texCoords = aTexCoords;
+    frag_texCoords = (aTexCoords * uMaterial.tiling.xy) + uMaterial.tiling.zw;
     frag_position = vec3(uModel * vec4(aPosition, 1.0));
     gl_Position = uProjView * vec4(frag_position, 1.0);
     frag_normal = mat3(transpose(inverse(uModel))) * aNormals;

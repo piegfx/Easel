@@ -67,7 +67,7 @@ public class MeshRenderer : Component
             ref Mesh mesh = ref _meshes[i];
             _renderables[i] = new Renderable(device.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices),
                 device.CreateBuffer(BufferType.IndexBuffer, mesh.Indices), (uint) mesh.Indices.Length,
-                Matrix4x4.Identity, mesh.Material, Graphics.EffectManager.GetEffectLayout(EffectManager.Forward.Diffuse));
+                Matrix4x4.Identity, mesh.Material);
         }
     }
 

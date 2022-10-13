@@ -108,6 +108,8 @@ public class EaselGraphics : IDisposable
     
     private void WindowOnResize(System.Drawing.Size size)
     {
+        if (size == new System.Drawing.Size(0, 0))
+            return;
         PieGraphics.ResizeSwapchain(size);
         Viewport = new Rectangle(Point.Zero, (Size) size);
     }

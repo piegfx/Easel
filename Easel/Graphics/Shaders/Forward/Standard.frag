@@ -26,7 +26,7 @@ void main()
 #ifdef LIGHTING
     //
     #ifdef NORMAL_MAPS
-        vec3 norm = texture(uNormal, frag_texCoords * uMaterial.tiling.xy).rgb;
+        vec3 norm = texture(uNormal, frag_texCoords).rgb;
         norm = normalize(norm * 2.0 - 1.0);
         
         vec3 viewDir = normalize(frag_tangentViewPos - frag_tangentFragPos);
@@ -37,7 +37,7 @@ void main()
         vec3 lightDir = normalize(-uSun.direction.xyz);
     #endif
     
-    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords * uMaterial.tiling.xy, norm, viewDir, lightDir);
+    vec4 result = CalculateDirectional(uSun, uMaterial, uAlbedo, uSpecular, frag_texCoords, norm, viewDir, lightDir);
     
 #else
     vec4 result = texture(uAlbedo, frag_texCoords);

@@ -36,8 +36,9 @@ public class Texture2D : Texture
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         TextureDescription description =
-            new TextureDescription(TextureType.Texture2D, width, height, format, true, 1, TextureUsage.ShaderResource);
+            new TextureDescription(TextureType.Texture2D, width, height, format, 0, 1, TextureUsage.ShaderResource);
         PieTexture = device.CreateTexture(description, data);
+        device.GenerateMipmaps(PieTexture);
     }
 
     public void SetData(int x, int y, int width, int height, byte[] data)

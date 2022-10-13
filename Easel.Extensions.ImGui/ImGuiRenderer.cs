@@ -46,9 +46,12 @@ public class ImGuiRenderer : IDisposable
 
     private IntPtr _context;
 
+    private List<Texture> _texture2Ds;
+
     public ImGuiRenderer()
     {
         Scale = Vector2.One;
+        _texture2Ds = new List<Texture>();
 
         EaselGraphics graphics = EaselGame.Instance.Graphics;
         _windowWidth = graphics.Viewport.Width;
@@ -155,11 +158,11 @@ void main()
         _fontTexture?.Dispose();
         _fontTexture =
             device.CreateTexture(
-                new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, true, 1,
+                new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
                     TextureUsage.ShaderResource), pixels);
-        
-        // TODO: Temp fix for fonts
-        io.Fonts.SetTexID((IntPtr) 1);
+        //device.GenerateMipmaps(_fontTexture);
+
+        io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
     }
 
     public void Draw()
@@ -309,7 +312,7 @@ void main()
                 if (pcmd.UserCallback != IntPtr.Zero)
                     throw new NotImplementedException();
                 
-                device.SetTexture(1, _fontTexture, _samplerState);
+                device.SetTexture(1, _texture2Ds[pcmd.TextureId.ToInt32()], _samplerState);
                 
                 Vector4 clipRect = pcmd.ClipRect;
                 device.Scissor = new SRect((int) clipRect.X, (int) clipRect.Y, 
@@ -324,6 +327,21 @@ void main()
 
         device.Scissor = device.Viewport;
     }
+
+    private IntPtr GetImGuiTexture(Texture texture)
+    {
+        int index = _texture2Ds.IndexOf(texture);
+        if (index == -1)
+        {
+            Logging.Log("Texture does not have an ImGui binding, creating...");
+            _texture2Ds.Add(texture);
+            return new IntPtr(_texture2Ds.Count - 1);
+        }
+
+        return new IntPtr(index);
+    }
+
+    public IntPtr GetImGuiTexture(Easel.Graphics.Texture texture) => GetImGuiTexture(texture.PieTexture);
 
     public void Dispose()
     {

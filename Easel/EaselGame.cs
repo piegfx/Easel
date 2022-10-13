@@ -121,7 +121,7 @@ public class EaselGame : IDisposable
         
 #if DEBUG
         Logging.Info("Graphics debugging enabled.");
-        options.Debug = false;
+        options.Debug = true;
 #endif
         
         Logging.Log($"Checking for {EnvVars.ForceApi}...");

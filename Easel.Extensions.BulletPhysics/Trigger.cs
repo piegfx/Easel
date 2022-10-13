@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using BulletSharp;
 using Easel.Entities.Components;
@@ -11,6 +12,8 @@ public class Trigger : Component
     private CollisionShape _iShape;
     
     private GhostObject _ghost;
+
+    public bool IsCollision;
     
     public Trigger(CollisionShape shape)
     {
@@ -31,6 +34,10 @@ public class Trigger : Component
     protected override void Update()
     {
         base.Update();
+
+        _ghost.WorldTransform = Transform.TransformMatrix;
+
+        IsCollision = _ghost.NumOverlappingObjects > 0;
 
         for (int i = 0; i < _ghost.NumOverlappingObjects; i++)
         {

@@ -52,6 +52,6 @@ public class UITheme
         BorderColor = Color.Black;
         TransitionTime = 0;
         DropShadow = null;
-        Font = new Font("/home/ollie/Documents/Roboto-Regular.ttf");
+        Font = null;
     }
 }

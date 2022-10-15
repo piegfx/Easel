@@ -143,7 +143,6 @@ void main()
         _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
-        // TODO: Byte attribute types.
         _inputLayout = device.CreateInputLayout(_stride, 
             new InputLayoutDescription("aPosition", AttributeType.Float2),
             new InputLayoutDescription("aTexCoords", AttributeType.Float2),

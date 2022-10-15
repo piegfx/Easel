@@ -78,7 +78,7 @@ public class EaselGraphics : IDisposable
                 Logging.Error(message);
                 break;
             case LogType.Critical:
-                Logging.Critical(message);
+                Logging.Fatal(message);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(logtype), logtype, null);

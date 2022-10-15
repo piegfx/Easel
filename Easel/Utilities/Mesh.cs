@@ -34,7 +34,7 @@ public struct Mesh
         Scene* scene = _assimp.ImportFile(path,
             (uint) PostProcessSteps.Triangulate | (uint) PostProcessSteps.FlipWindingOrder | (uint) PostProcessSteps.CalculateTangentSpace | (uint) PostProcessSteps.JoinIdenticalVertices | (uint) (flipUvs ? PostProcessSteps.FlipUVs : 0) | (uint) PostProcessSteps.GenerateNormals);
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 || scene->MRootNode == null)
-            Logging.Critical("Scene failed to import: " + _assimp.GetErrorStringS());
+            Logging.Fatal("Scene failed to import: " + _assimp.GetErrorStringS());
         
         string directory = Path.GetDirectoryName(path);
 
@@ -82,12 +82,12 @@ public struct Mesh
 
         float shininess =
             BitConverter.ToSingle(new ReadOnlySpan<byte>(shininessProp->MData, (int) shininessProp->MDataLength));
-        
+
         Texture2D[] diffuses = LoadTextures(material, TextureType.Diffuse, directory, ref loadedTextures);
         Texture2D[] speculars = LoadTextures(material, TextureType.Specular, directory, ref loadedTextures);
         Texture2D[] normals = LoadTextures(material, TextureType.Height, directory, ref loadedTextures);
-        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing,
-            speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : Texture2D.Missing,
+        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Blank,
+            speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : null,
             normals.Length > 0 ? normals[0] : null, Color.White, shininess);
         return new Mesh(vertices.ToArray(), indices.ToArray(), mat);
     }

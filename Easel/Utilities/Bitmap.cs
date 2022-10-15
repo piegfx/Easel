@@ -39,7 +39,7 @@ public class Bitmap
             return;
         }
         else if (!File.Exists(path))
-            Logging.Critical($"Failed to find path \"{path}\".");
+            Logging.Fatal($"Failed to find path \"{path}\".");
 
         ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;

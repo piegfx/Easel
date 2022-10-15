@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
+using Easel.Content;
 using Easel.Graphics;
 using Easel.GUI;
 using Easel.Math;
@@ -47,6 +49,8 @@ public class EaselGame : IDisposable
     /// The audio device for this EaselGame.
     /// </summary>
     public AudioDevice Audio => AudioInternal;
+
+    public ContentManager Content;
 
     /// <summary>
     /// If enabled, the game will synchronize with the monitor's vertical refresh rate.
@@ -103,6 +107,26 @@ public class EaselGame : IDisposable
     public void Run()
     {
         Logging.Log("Hello World! Welcome to Easel. Setting up...");
+        
+        Logging.Info("System information:");
+        if (OperatingSystem.IsWindows())
+            Logging.Info("\tCPU: (not implemented for windows)");
+        else if (OperatingSystem.IsLinux())
+        {
+            string[] lines = File.ReadAllLines("/proc/cpuinfo");
+            string modelName = "Unknown (cpuinfo doesn't contain expected result..)";
+            foreach (string line in lines)
+            {
+                if (line.Trim().ToLower().StartsWith("model name"))
+                {
+                    modelName = line.Split(':')[1].Trim();
+                    break;
+                }
+            }
+            Logging.Info($"\tCPU: {modelName}");
+        }
+        
+        Logging.Info("\tLogical processors: " + Environment.ProcessorCount);
 
         _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource("Easel.EaselLogo.png"));
         
@@ -114,7 +138,8 @@ public class EaselGame : IDisposable
             Title = _settings.Title,
             Border = _settings.Border,
             EventDriven = false,
-            Icons = new []{ icon }
+            Icons = new []{ icon },
+            StartVisible = _settings.StartVisible
         };
 
         GraphicsDeviceOptions options = new GraphicsDeviceOptions();
@@ -158,6 +183,9 @@ public class EaselGame : IDisposable
         Input.Initialize(Window);
         Logging.Log("Initializing time...");
         Time.Initialize();
+        
+        Logging.Log("Creating content manager...");
+        Content = new ContentManager();
         
         Logging.Log("Initializing your application...");
         Initialize();

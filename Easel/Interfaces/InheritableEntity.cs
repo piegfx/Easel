@@ -1,4 +1,5 @@
 using System;
+using Easel.Content;
 using Easel.Entities;
 using Easel.Graphics;
 using Easel.Scenes;
@@ -32,6 +33,8 @@ public abstract class InheritableEntity
     /// The current <see cref="Pie.Audio.AudioDevice"/> instance.
     /// </summary>
     protected abstract AudioDevice Audio { get; }
+    
+    protected abstract ContentManager Content { get; }
 
     /// <summary>
     /// Add an entity to the current scene.

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 
 namespace Easel;
 
@@ -42,11 +44,11 @@ public static class Logging
         Console.WriteLine(message);
     }
 
-    public static void Critical(string message)
+    public static void Fatal(string message)
     {
-        LogAdded?.Invoke(LogType.Critical, message);
+        LogAdded?.Invoke(LogType.Fatal, message);
         Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.Write("[CRITICAL]\t");
+        Console.Write("[Fatal]\t");
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine(message);
         throw new EaselException(message);
@@ -54,12 +56,39 @@ public static class Logging
 
     public delegate void OnLogAdded(LogType type, string message);
 
+    private static string GetLogMessage(LogType type, string message)
+    {
+        return "[" + type + "]" + message;
+    }
+
     public enum LogType
     {
         Debug,
         Info,
         Warn,
         Error,
-        Critical
+        Fatal
     }
+    
+    #region Log file
+
+    public static string LogFilePath { get; private set; }
+
+    private static StreamWriter _stream;
+    
+    public static void InitializeLogFile(string path)
+    {
+        LogFilePath = path;
+        _stream = new StreamWriter(path, true);
+        _stream.AutoFlush = true;
+        
+        LogAdded += LogFile;
+    }
+
+    private static void LogFile(LogType type, string message)
+    {
+        _stream.WriteLine(DateTime.Now + ": " + GetLogMessage(type, message));
+    }
+
+    #endregion
 }

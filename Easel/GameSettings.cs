@@ -64,6 +64,11 @@ public struct GameSettings
     /// The title bar flags, if any (Default: <see cref="Easel.TitleBarFlags.ShowEasel"/>)
     /// </summary>
     public TitleBarFlags TitleBarFlags;
+
+    /// <summary>
+    /// If disabled, the game window will not be visible until you tell it to become visible.
+    /// </summary>
+    public bool StartVisible;
     
     /// <summary>
     /// Create the default game settings.
@@ -80,5 +85,6 @@ public struct GameSettings
         AllowMissing = false;
         Icon = null;
         TitleBarFlags = TitleBarFlags.ShowEasel;
+        StartVisible = true;
     }
 }

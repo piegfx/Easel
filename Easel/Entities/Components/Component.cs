@@ -1,4 +1,5 @@
 ﻿using System;
+using Easel.Content;
 using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Scenes;
@@ -19,7 +20,9 @@ public abstract class Component : InheritableEntity, IDisposable
     protected override Scene ActiveScene => SceneManager.ActiveScene;
     
     protected override AudioDevice Audio => EaselGame.Instance.AudioInternal;
-    
+
+    protected override ContentManager Content => EaselGame.Instance.Content;
+
     protected internal Entity Entity { get; internal set; }
 
     /// <summary>

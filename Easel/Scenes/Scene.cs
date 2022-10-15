@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Easel.Content;
 using Easel.Entities;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
@@ -56,6 +57,8 @@ public abstract class Scene : IDisposable
     /// The current <see cref="Pie.Audio.AudioDevice"/> instance.
     /// </summary>
     protected AudioDevice Audio => EaselGame.Instance.AudioInternal;
+
+    protected ContentManager Content => EaselGame.Instance.Content;
 
     /// <summary>
     /// The scene's <see cref="Scenes.World"/> properties, such as skybox and clear color.

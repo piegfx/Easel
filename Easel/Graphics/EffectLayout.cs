@@ -18,15 +18,18 @@ public class EffectLayout : IDisposable
     /// </summary>
     public readonly InputLayout Layout;
 
+    public readonly uint Stride;
+
     /// <summary>
     /// Create a new <see cref="EffectLayout"/> with the given <see cref="Graphics.Effect"/> and <see cref="InputLayout"/>.
     /// </summary>
     /// <param name="effect">The <see cref="Graphics.Effect"/> to use.</param>
     /// <param name="layout">The <see cref="InputLayout"/> to use.</param>
-    public EffectLayout(Effect effect, InputLayout layout)
+    public EffectLayout(Effect effect, InputLayout layout, uint stride)
     {
         Effect = effect;
         Layout = layout;
+        Stride = stride;
     }
 
     public void Dispose()

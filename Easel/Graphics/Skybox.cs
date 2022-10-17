@@ -66,8 +66,9 @@ public class Skybox : IDisposable
             new ShaderAttachment(ShaderStage.Vertex, Utils.LoadEmbeddedString("Easel.Graphics.Shaders.Skybox.Skybox.vert")),
             new ShaderAttachment(ShaderStage.Fragment, Utils.LoadEmbeddedString("Easel.Graphics.Shaders.Skybox.Skybox.frag")));
 
-        _inputLayout = _device.CreateInputLayout(VertexPosition.SizeInBytes,
-            new InputLayoutDescription("aPosition", AttributeType.Float3));
+        _inputLayout =
+            _device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0,
+                InputType.PerVertex));
     }
 
     internal void Draw(Camera camera)
@@ -83,7 +84,7 @@ public class Skybox : IDisposable
         _device.SetTexture(1, PieTexture, _samplerState);
         _device.SetDepthState(_depthState);
         _device.SetRasterizerState(_rasterizerState);
-        _device.SetVertexBuffer(_vertexBuffer, _inputLayout);
+        _device.SetVertexBuffer(0, _vertexBuffer, VertexPosition.SizeInBytes, _inputLayout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
         // 36 because cube
         _device.DrawIndexed(36);

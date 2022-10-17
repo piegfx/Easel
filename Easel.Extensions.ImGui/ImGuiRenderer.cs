@@ -143,10 +143,10 @@ void main()
         _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
-        _inputLayout = device.CreateInputLayout(_stride, 
-            new InputLayoutDescription("aPosition", AttributeType.Float2),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-            new InputLayoutDescription("aColor", AttributeType.NByte4));
+        _inputLayout = device.CreateInputLayout(
+            new InputLayoutDescription("aPosition", AttributeType.Float2, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription("aColor", AttributeType.NByte4, 16, 0, InputType.PerVertex));
     }
 
     public void RecreateFontDeviceTexture()
@@ -317,7 +317,7 @@ void main()
                 device.Scissor = new SRect((int) clipRect.X, (int) clipRect.Y, 
                     (int) (clipRect.Z - clipRect.X), (int) (clipRect.W - clipRect.Y));
 
-                device.SetVertexBuffer(_vertexBuffer, _inputLayout);
+                device.SetVertexBuffer(0, _vertexBuffer, _stride, _inputLayout);
                 device.SetIndexBuffer(_indexBuffer, IndexType.UShort);
                 device.SetPrimitiveType(PrimitiveType.TriangleList);
                 device.DrawIndexed(pcmd.ElemCount, (int) pcmd.IdxOffset, (int) pcmd.VtxOffset);

@@ -81,15 +81,14 @@ public sealed class SpriteRenderer : IDisposable
         _roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
 
         _layout = _device.CreateInputLayout(
-            SpriteVertex.SizeInBytes, 
-            new InputLayoutDescription("aPosition", AttributeType.Float2),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-            new InputLayoutDescription("aTint", AttributeType.Float4),
-            new InputLayoutDescription("aRotation", AttributeType.Float),
-            new InputLayoutDescription("aOrigin", AttributeType.Float2),
-            new InputLayoutDescription("aScale", AttributeType.Float2),
-            new InputLayoutDescription("aMeta1", AttributeType.Float4),
-            new InputLayoutDescription("aMeta2", AttributeType.Float4));
+            new InputLayoutDescription("aPosition", AttributeType.Float2, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTint", AttributeType.Float4, 16, 0, InputType.PerVertex),
+            new InputLayoutDescription("aRotation", AttributeType.Float, 32, 0, InputType.PerVertex),
+            new InputLayoutDescription("aOrigin", AttributeType.Float2, 36, 0, InputType.PerVertex),
+            new InputLayoutDescription("aScale", AttributeType.Float2, 44, 0, InputType.PerVertex),
+            new InputLayoutDescription("aMeta1", AttributeType.Float4, 52, 0, InputType.PerVertex),
+            new InputLayoutDescription("aMeta2", AttributeType.Float4, 68, 0, InputType.PerVertex));
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
@@ -317,7 +316,7 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetUniformBuffer(0, _projViewBuffer);
         _device.SetTexture(1, _currentTexture.PieTexture, _stateToUse);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
-        _device.SetVertexBuffer(_vertexBuffer, _layout);
+        _device.SetVertexBuffer(0, _vertexBuffer, SpriteVertex.SizeInBytes, _layout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
         _device.DrawIndexed(NumIndices * _drawCount);
 

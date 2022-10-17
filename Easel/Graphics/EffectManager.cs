@@ -40,30 +40,30 @@ public class EffectManager
 
     internal EffectManager(GraphicsDevice device)
     {
-        InputLayout standardVertexShader = device.CreateInputLayout(VertexPositionTextureNormalTangent.SizeInBytes,
-            new InputLayoutDescription("aPosition", AttributeType.Float3),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2),
-            new InputLayoutDescription("aNormals", AttributeType.Float3),
-            new InputLayoutDescription("aTangent", AttributeType.Float3));
+        InputLayout standardVertexShader = device.CreateInputLayout(
+            new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 12, 0, InputType.PerVertex),
+            new InputLayoutDescription("aNormals", AttributeType.Float3, 20, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTangent", AttributeType.Float3, 32, 0, InputType.PerVertex));
         
         _effects = new Dictionary<string, Lazy<EffectLayout>>();
         
         _effects.Add("Forward/Normal", new Lazy<EffectLayout>(() =>
         {
             return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", EffectLoadType.EmbeddedResource, "LIGHTING", "ALPHA", "NORMAL_MAPS"),
-                standardVertexShader);
+                standardVertexShader, VertexPositionTextureNormalTangent.SizeInBytes);
         }));
         
         _effects.Add("Forward/Diffuse", new Lazy<EffectLayout>(() =>
         {
             return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag", EffectLoadType.EmbeddedResource, "LIGHTING", "ALPHA"),
-                standardVertexShader);
+                standardVertexShader, VertexPositionTextureNormalTangent.SizeInBytes);
         }));
         
         _effects.Add("Forward/Unshaded", new Lazy<EffectLayout>(() =>
         {
             return new EffectLayout(new Effect(Assembly + "Standard.vert", Assembly + "Forward.Standard.frag"),
-                standardVertexShader);
+                standardVertexShader, VertexPositionTextureNormalTangent.SizeInBytes);
         }));
     }
 

@@ -106,27 +106,14 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Run()
     {
-        Logging.Log("Hello World! Welcome to Easel. Setting up...");
+        Logging.Log("Hello World! Easel is setting up...");
         
         Logging.Info("System information:");
-        if (OperatingSystem.IsWindows())
-            Logging.Info("\tCPU: (not implemented for windows)");
-        else if (OperatingSystem.IsLinux())
-        {
-            string[] lines = File.ReadAllLines("/proc/cpuinfo");
-            string modelName = "Unknown (cpuinfo doesn't contain expected result..)";
-            foreach (string line in lines)
-            {
-                if (line.Trim().ToLower().StartsWith("model name"))
-                {
-                    modelName = line.Split(':')[1].Trim();
-                    break;
-                }
-            }
-            Logging.Info($"\tCPU: {modelName}");
-        }
+        Logging.Info("\tCPU: " + SystemInfo.CpuInfo);
+        Logging.Info("\tMemory: " + SystemInfo.MemoryInfo);
+        Logging.Info("\tLogical threads: " + SystemInfo.LogicalThreads);
+        Logging.Info("\tOS: " + Environment.OSVersion.VersionString);
         
-        Logging.Info("\tLogical processors: " + Environment.ProcessorCount);
 
         _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource("Easel.EaselLogo.png"));
         

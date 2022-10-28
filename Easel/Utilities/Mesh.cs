@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Math;
+using Easel.Primitives;
 using Pie.Utils;
 using Silk.NET.Assimp;
 using Material = Easel.Graphics.Material;
@@ -24,8 +25,18 @@ public struct Mesh
         Indices = indices;
         Material = material;
     }
+
+    public static Mesh[] FromPrimitive(IPrimitive primitive, Material material)
+    {
+        return new[]
+        {
+            new Mesh(primitive.Vertices, primitive.Indices, material)
+        };
+    }
+
+    public static Mesh[] FromPrimitive(IPrimitive primitive) => FromPrimitive(primitive, new Material(Texture2D.Blank));
     
-    public static unsafe Mesh[] LoadFromFile(string path, bool flipUvs = false)
+    public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
         // TODO is the incorrect loading of UVs for some models supposed to happen...??
         Logging.Log("Importing model with assimp...");

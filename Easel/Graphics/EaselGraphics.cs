@@ -49,6 +49,7 @@ public class EaselGraphics : IDisposable
     {
         Pie.Logging.DebugLog += PieDebug;
         PieGraphics = window.CreateGraphicsDevice(options);
+        Viewport = new Rectangle(0, 0, window.Size.Width, window.Size.Height);
 
         window.Resize += WindowOnResize;
     }
@@ -56,8 +57,8 @@ public class EaselGraphics : IDisposable
     internal void Initialize()
     {
         EffectManager = new EffectManager(PieGraphics);
-        
-        Renderer = new ForwardRenderer(PieGraphics);
+
+        Renderer = new ForwardRenderer(this);
         SpriteRenderer = new SpriteRenderer(PieGraphics);
     }
 

@@ -29,27 +29,6 @@ public class MeshRenderer : Component
     private string _directory;
     private Dictionary<string, Texture2D> _loadedTextures;
 
-    /// <summary>
-    /// Create a new <see cref="MeshRenderer"/> instance with the given <see cref="IPrimitive"/> and <see cref="Material"/>
-    /// </summary>
-    /// <param name="primitive">The <see cref="IPrimitive"/> mesh.</param>
-    /// <param name="material">The <see cref="Material"/> to apply to the mesh.</param>
-    public MeshRenderer(IPrimitive primitive, Material material)
-    {
-        _meshes = new Mesh[1];
-        _meshes[0] = new Mesh(primitive.Vertices, primitive.Indices, material);
-    }
-
-    /// <summary>
-    /// Create a new <see cref="MeshRenderer"/> instance from the given path.
-    /// </summary>
-    /// <param name="path">The path to load.</param>
-    /// <param name="flipUvs">Some models load with incorrect UVs, this will flip them so they are correct.</param>
-    public MeshRenderer(string path, bool flipUvs = false)
-    {
-        _meshes = Mesh.LoadFromFile(path, flipUvs);
-    }
-
     public MeshRenderer(Mesh[] meshes)
     {
         _meshes = meshes;

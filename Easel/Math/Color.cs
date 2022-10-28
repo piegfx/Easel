@@ -55,6 +55,55 @@ public struct Color
     public Color(uint rgbaColor) : 
         this((byte) (rgbaColor >> 24), (byte) ((rgbaColor & 0xFF0000) >> 16), (byte) ((rgbaColor & 0xFF00) >> 8), (byte) (rgbaColor & 0xFF)) { }
 
+    public static Color FromHsv(float h, float s, float v)
+    {
+        float c = v * s;
+        float x = c * (1 - MathF.Abs((h / 60f) % 2 - 1));
+        float m = v - c;
+        float r, g, b;
+
+        switch (h)
+        {
+            case >= 0 and < 60:
+                r = c;
+                g = x;
+                b = 0;
+                break;
+            case >= 60 and < 120:
+                r = x;
+                g = c;
+                b = 0;
+                break;
+            case >= 120 and < 180:
+                r = 0;
+                g = c;
+                b = x;
+                break;
+            case >= 180 and < 240:
+                r = 0;
+                g = x;
+                b = c;
+                break;
+            case >= 240 and < 300:
+                r = x;
+                g = 0;
+                b = c;
+                break;
+            case >= 300 and < 360:
+                r = c;
+                g = 0;
+                b = x;
+                break;
+            default:
+                r = 0;
+                g = 0;
+                b = 0;
+                break;
+        }
+
+        return new Color(r + m, g + m, b + m, 1);
+    }
+
     public static Color FromString(string text)
     {
         if (text.StartsWith("#") || text.StartsWith("0x"))

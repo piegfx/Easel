@@ -68,4 +68,16 @@ public static class EaselMath
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Wrap(int value, int min, int max) => value < min ? max : value > max ? min : value;
+    
+    /// <summary>
+    /// Similar to <see cref="Clamp(float,float,float)"/>, the given value cannot exceed the bounds of the min and max values.
+    /// If it does, it will wrap around back to the other value. For example, if max is exceeded, the value will wrap
+    /// around back to min. This works both ways.
+    /// </summary>
+    /// <param name="value">The value to wrap.</param>
+    /// <param name="min">The minimum value (inclusive).</param>
+    /// <param name="max">The maximum value (inclusive).</param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Wrap(float value, float min, float max) => value < min ? max : value > max ? min : value;
 }

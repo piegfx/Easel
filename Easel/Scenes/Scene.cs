@@ -130,7 +130,7 @@ public abstract class Scene : IDisposable
             World.Skybox?.Draw(camera);
             // TODO: Update to handle render targets instead of using view size.
             Graphics.Viewport = camera.Viewport ?? viewport;
-            Graphics.Renderer.Render(camera);
+            Graphics.Renderer.Render(camera, World.ClearColor);
         }
         Graphics.SpriteRenderer.End();
     }

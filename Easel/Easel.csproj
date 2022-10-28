@@ -45,6 +45,8 @@
       <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.vert" />
       <None Remove="Graphics\Shaders\Skybox\Skybox.frag" />
       <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.frag" />
+      <None Remove="Graphics\Shaders\PostProcessor.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\PostProcessor.frag" />
     </ItemGroup>
 
 </Project>

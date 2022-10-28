@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
 using Easel.Graphics.Structs;
+using Easel.Math;
 using Easel.Scenes;
 using Pie;
 
@@ -15,7 +16,7 @@ namespace Easel.Graphics.Renderers;
 /// </summary>
 public sealed class ForwardRenderer : I3DRenderer
 {
-    private GraphicsDevice _device;
+    private EaselGraphics _graphics;
 
     private GraphicsBuffer _projViewModelBuffer;
     private ProjViewModel _projViewModel;
@@ -32,9 +33,10 @@ public sealed class ForwardRenderer : I3DRenderer
     private SamplerState _samplerState;
     private BlendState _blendState;
 
-    public ForwardRenderer(GraphicsDevice device)
+    public ForwardRenderer(EaselGraphics graphics)
     {
-        _device = device;
+        _graphics = graphics;
+        GraphicsDevice device = graphics.PieGraphics;
         
         _translucents = new List<Renderable>();
         _opaques = new List<Renderable>();
@@ -53,7 +55,12 @@ public sealed class ForwardRenderer : I3DRenderer
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
         _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
+
+        PostProcessor.PostProcessorSettings settings = new PostProcessor.PostProcessorSettings();
+        PostProcessor = new PostProcessor(ref settings, graphics);
     }
+
+    public PostProcessor PostProcessor { get; }
 
     /// <inheritdoc />
     public void DrawTranslucent(Renderable renderable)
@@ -75,19 +82,23 @@ public sealed class ForwardRenderer : I3DRenderer
     }
 
     /// <inheritdoc />
-    public void Render(Camera camera)
+    public void Render(Camera camera, Color clearColor)
     {
+        GraphicsDevice device = _graphics.PieGraphics;
+        
+        device.SetFramebuffer(PostProcessor.MainTarget.PieBuffer);
+        _graphics.Clear(clearColor);
         _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
 
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
         _cameraInfo.CameraPos = new Vector4(camera.Transform.Position, 1);
 
-        _device.SetRasterizerState(_rasterizerState);
-        _device.SetDepthState(_depthState);
-        _device.SetBlendState(_blendState);
-        _device.SetUniformBuffer(0, _projViewModelBuffer);
-        _device.SetUniformBuffer(1, _cameraBuffer);
-        _device.SetPrimitiveType(PrimitiveType.TriangleList);
+        device.SetRasterizerState(_rasterizerState);
+        device.SetDepthState(_depthState);
+        device.SetBlendState(_blendState);
+        device.SetUniformBuffer(0, _projViewModelBuffer);
+        device.SetUniformBuffer(1, _cameraBuffer);
+        device.SetPrimitiveType(PrimitiveType.TriangleList);
         
         foreach (Renderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
         {
@@ -97,23 +108,28 @@ public sealed class ForwardRenderer : I3DRenderer
         
         foreach (Renderable renderable in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
             DrawRenderable(renderable);
+        
+        device.SetFramebuffer(null);
+        PostProcessor.Process(_graphics);
     }
 
     private void DrawRenderable(Renderable renderable)
     {
+        GraphicsDevice device = _graphics.PieGraphics;
+        
         _projViewModel.Model = renderable.ModelMatrix;
-        _device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
+        device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
 
         _cameraInfo.Material = renderable.Material.ShaderMaterial;
-        _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
+        device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
 
-        _device.SetShader(renderable.Material.EffectLayout.Effect.PieShader);
-        _device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-        _device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-        _device.SetTexture(4, renderable.Material.Normal?.PieTexture ?? Texture2D.Void.PieTexture, _samplerState);
-        _device.SetVertexBuffer(0, renderable.VertexBuffer, renderable.Material.EffectLayout.Stride, renderable.Material.EffectLayout.Layout);
-        _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
-        _device.DrawIndexed(renderable.IndicesLength);
+        device.SetShader(renderable.Material.EffectLayout.Effect.PieShader);
+        device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+        device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
+        device.SetTexture(4, renderable.Material.Normal?.PieTexture ?? Texture2D.Void.PieTexture, _samplerState);
+        device.SetVertexBuffer(0, renderable.VertexBuffer, renderable.Material.EffectLayout.Stride, renderable.Material.EffectLayout.Layout);
+        device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
+        device.DrawIndexed(renderable.IndicesLength);
     }
 
     [StructLayout(LayoutKind.Sequential)]

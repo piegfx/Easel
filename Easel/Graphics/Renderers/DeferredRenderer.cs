@@ -1,4 +1,5 @@
 using Easel.Entities;
+using Easel.Math;
 using Pie;
 using PTex = Pie.Texture;
 
@@ -35,6 +36,8 @@ public class DeferredRenderer : I3DRenderer
             new FramebufferAttachment(SpecularTexture, AttachmentType.Color));
     }
 
+    public PostProcessor PostProcessor { get; }
+
     public void DrawTranslucent(Renderable renderable)
     {
         throw new System.NotImplementedException();
@@ -50,11 +53,11 @@ public class DeferredRenderer : I3DRenderer
         throw new System.NotImplementedException();
     }
 
-    public void Render(Camera camera)
+    public void Render(Camera camera, Color clearColor)
     {
         throw new System.NotImplementedException();
     }
-    
+
     public void Dispose()
     {
         throw new System.NotImplementedException();

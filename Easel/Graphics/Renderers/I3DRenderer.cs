@@ -1,5 +1,6 @@
 using System;
 using Easel.Entities;
+using Easel.Math;
 
 namespace Easel.Graphics.Renderers;
 
@@ -8,6 +9,8 @@ namespace Easel.Graphics.Renderers;
 /// </summary>
 public interface I3DRenderer : IDisposable
 {
+    public PostProcessor PostProcessor { get; }
+    
     /// <summary>
     /// Draw a translucent object. These objects are drawn back-to-front to allow transparency to work.
     /// </summary>
@@ -29,5 +32,5 @@ public interface I3DRenderer : IDisposable
     /// <summary>
     /// Render all draw lists and perform post-processing.
     /// </summary>
-    public void Render(Camera camera);
+    public void Render(Camera camera, Color clearColor);
 }

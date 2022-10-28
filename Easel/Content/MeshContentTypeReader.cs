@@ -6,6 +6,6 @@ public class MeshContentTypeReader : IContentTypeReader
 {
     public object LoadContentItem(string path)
     {
-        return Mesh.LoadFromFile(path);
+        return Mesh.FromFile(path);
     }
 }

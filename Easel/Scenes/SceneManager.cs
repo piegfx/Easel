@@ -43,7 +43,6 @@ public static class SceneManager
     {
         if (_activeScene != null)
         {
-            EaselGame.Instance.GraphicsInternal.Clear(_activeScene.World.ClearColor);
             _activeScene.Draw();
         }
     }

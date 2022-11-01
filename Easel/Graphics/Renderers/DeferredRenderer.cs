@@ -1,5 +1,6 @@
 using Easel.Entities;
 using Easel.Math;
+using Easel.Scenes;
 using Pie;
 using PTex = Pie.Texture;
 
@@ -53,7 +54,7 @@ public class DeferredRenderer : I3DRenderer
         throw new System.NotImplementedException();
     }
 
-    public void Render(Camera camera, Color clearColor)
+    public void Render(Camera camera, World world)
     {
         throw new System.NotImplementedException();
     }

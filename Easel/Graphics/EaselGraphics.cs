@@ -39,6 +39,8 @@ public class EaselGraphics : IDisposable
         get => _viewport;
         set
         {
+            if (value == _viewport)
+                return;
             _viewport = new Rectangle(value.X, value.Y, value.Width, value.Height);
             PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
             ViewportResized?.Invoke(_viewport);

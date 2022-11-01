@@ -1,6 +1,7 @@
 using System;
 using Easel.Entities;
 using Easel.Math;
+using Easel.Scenes;
 
 namespace Easel.Graphics.Renderers;
 
@@ -32,5 +33,5 @@ public interface I3DRenderer : IDisposable
     /// <summary>
     /// Render all draw lists and perform post-processing.
     /// </summary>
-    public void Render(Camera camera, Color clearColor);
+    public void Render(Camera camera, World world);
 }

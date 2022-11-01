@@ -109,11 +109,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-        Camera main = Camera.Main;
-
         Graphics.Renderer.ClearAll();
-        Graphics.SpriteRenderer.Begin(/*main.ViewMatrix, main.ProjectionMatrix*/);
-
+        
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
@@ -122,17 +119,24 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
         
+        #region 3D pass
+        
         Rectangle viewport = Graphics.Viewport;
         foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
         {
-            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
             Camera camera = (Camera) entity;
-            World.Skybox?.Draw(camera);
             // TODO: Update to handle render targets instead of using view size.
             Graphics.Viewport = camera.Viewport ?? viewport;
-            Graphics.Renderer.Render(camera, World.ClearColor);
+            Graphics.Renderer.Render(camera, World);
         }
-        Graphics.SpriteRenderer.End();
+        
+        #endregion
+
+        #region 2D pass
+
+        
+
+        #endregion
     }
 
     /// <summary>

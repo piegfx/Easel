@@ -14,7 +14,7 @@ namespace Easel.Graphics.Renderers;
 /// <summary>
 /// Efficiently batches and renders 2D sprites.
 /// </summary>
-public sealed class SpriteRenderer : IDisposable
+public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
 {
     private const uint NumVertices = 4;
     private const uint NumIndices = 6;

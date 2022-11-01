@@ -82,12 +82,13 @@ public sealed class ForwardRenderer : I3DRenderer
     }
 
     /// <inheritdoc />
-    public void Render(Camera camera, Color clearColor)
+    public void Render(Camera camera, World world)
     {
         GraphicsDevice device = _graphics.PieGraphics;
         
         device.SetFramebuffer(PostProcessor.MainTarget.PieBuffer);
-        _graphics.Clear(clearColor);
+        _graphics.Clear(world.ClearColor);
+        world.Skybox?.Draw(camera);
         _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
 
         _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;

@@ -13,19 +13,22 @@ public static class UI
     static UI()
     {
         _drawList = new List<IDrawListInstruction>();
+        _elements = new List<UIElement>();
         Theme = new UITheme();
     }
 
     internal static void BeforeUpdate()
     {
+        _elements.Clear();
         _drawList.Clear();
     }
 
     internal static void Update(Rectangle viewport)
     {
         bool mouseCaptured = false;
-        
-        
+
+        for (int i = _elements.Count - 1; i >= 0; i--)
+            _elements[i].Update(ref mouseCaptured, viewport);
     }
 
     internal static void Draw(EaselGraphics graphics)
@@ -41,9 +44,11 @@ public static class UI
     #region Immediate mode
 
     private static List<IDrawListInstruction> _drawList;
+    private static List<UIElement> _elements;
 
-    public static void AddToDrawList(IDrawListInstruction instruction)
+    public static void AddElement(UIElement element, IDrawListInstruction instruction)
     {
+        _elements.Add(element);
         _drawList.Add(instruction);
     }
 

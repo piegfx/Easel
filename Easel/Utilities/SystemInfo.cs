@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Microsoft.Win32;
 
 namespace Easel.Utilities;
 
@@ -10,7 +11,12 @@ public static class SystemInfo
         get
         {
             if (OperatingSystem.IsWindows())
-                return "(not implemented for windows)";
+            {
+                return Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+                           ?.GetValue("ProcessorNameString")?.ToString() ??
+                       "Unknown (expected value was not found in the registry)";
+            }
+
             if (OperatingSystem.IsLinux())
             {
                 string[] lines = File.ReadAllLines("/proc/cpuinfo");

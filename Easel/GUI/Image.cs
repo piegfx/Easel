@@ -5,8 +5,13 @@ namespace Easel.GUI;
 
 public class Image : UIElement
 {
-    public static void Draw(Position position, Size size, Texture texture)
+    public Image(Position position, Size size) : base(position, size) { }
+    
+    public static Image Place(Position position, Size size, Texture texture)
     {
-        UI.AddToDrawList(new UI.TextureDrawListInstruction(texture, position, size));
+        Image image = new Image(position, size);
+        UI.AddElement(image, new UI.TextureDrawListInstruction(texture, position, size));
+
+        return image;
     }
 }

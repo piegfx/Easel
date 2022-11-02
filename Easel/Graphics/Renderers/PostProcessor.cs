@@ -10,7 +10,6 @@ public class PostProcessor
     
     public PostProcessor(ref PostProcessorSettings settings, EaselGraphics graphics)
     {
-        Console.WriteLine(graphics.Viewport.Size);
         MainTarget = new RenderTarget(graphics.Viewport.Size, false);
         graphics.ViewportResized += GraphicsOnViewportResized;
         CreateResources(ref settings);
@@ -20,7 +19,6 @@ public class PostProcessor
     {
         MainTarget.Dispose();
         MainTarget = new RenderTarget(viewport.Size);
-        Console.WriteLine("aaaaaa");
     }
 
     public void ApplyPostProcessorSettings(ref PostProcessorSettings settings)

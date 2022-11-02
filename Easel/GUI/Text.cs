@@ -1,9 +1,16 @@
-﻿namespace Easel.GUI;
+﻿using Easel.Math;
+
+namespace Easel.GUI;
 
 public class Text : UIElement
 {
-    public static void Draw(Position position, string text, uint size)
+    public Text(Position position, Size size) : base(position, size) { }
+    
+    public static Text Place(Position position, string text, uint size)
     {
-        UI.AddToDrawList(new UI.TextDrawListInstruction(position, text, size));
+        Text txt = new Text(position, UI.Theme.Font.MeasureStringBBCode(size, text));
+        UI.AddElement(txt, new UI.TextDrawListInstruction(position, text, size));
+
+        return txt;
     }
 }

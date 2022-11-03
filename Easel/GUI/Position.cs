@@ -32,7 +32,7 @@ public struct Position
     /// <param name="viewport">The bounds that the element will abide by.</param>
     /// <param name="elementSize">The size in pixels of this UI element.</param>
     /// <returns>The calculated position.</returns>
-    public Point CalculatePosition(Rectangle viewport, Size elementSize)
+    public readonly Point CalculatePosition(Rectangle viewport, Size elementSize)
     {
         Point pos = Point.Zero;
 

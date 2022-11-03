@@ -98,7 +98,7 @@ public abstract class Scene : IDisposable
         {
             ref Entity entity = ref _entities[i];
             if (entity == null || !entity.Enabled)
-                return;
+                continue;
             entity.Update();
         }
     }
@@ -115,7 +115,7 @@ public abstract class Scene : IDisposable
         {
             ref Entity entity = ref _entities[i];
             if (!entity.Enabled)
-                break;
+                continue;
             entity.Draw();
         }
         

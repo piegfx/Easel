@@ -14,7 +14,7 @@ namespace Easel.Graphics.Renderers;
 /// <summary>
 /// Efficiently batches and renders 2D sprites.
 /// </summary>
-public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
+public sealed class SpriteRenderer : IDisposable
 {
     private const uint NumVertices = 4;
     private const uint NumIndices = 6;
@@ -29,9 +29,7 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
 
     private SpriteVertex[] _verticesCache;
     private uint[] _indicesCache;
-
-    private List<Sprite> _sprites;
-    private uint _spriteCount;
+    
     private uint _drawCount;
 
     private GraphicsBuffer _vertexBuffer;
@@ -66,7 +64,6 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
         
         _verticesCache = new SpriteVertex[NumVertices];
         _indicesCache = new uint[NumIndices];
-        _sprites = new List<Sprite>();
 
         _vertexBuffer = _device.CreateBuffer<SpriteVertex>(BufferType.VertexBuffer, MaxSprites * VertexSizeInBytes, null, true);
         _indexBuffer = _device.CreateBuffer<uint>(BufferType.IndexBuffer, MaxSprites * IndicesSizeInBytes, null, true);
@@ -118,51 +115,6 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
         };
     }
 
-    public void Draw(Texture texture, Rectangle destination, Color tint)
-    {
-        Draw(texture, (Vector2) destination.Location, null, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
-    }
-
-    public void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint)
-    {
-        Draw(texture, (Vector2) destination.Location, source, tint, 0, Vector2.Zero, (Vector2) destination.Size / (Vector2) texture.Size);
-    }
-
-    public void Draw(Texture texture, Rectangle destination, Rectangle? source, Color tint, float rotation,
-        Vector2 origin, SpriteFlip flip = SpriteFlip.None)
-    {
-        Draw(texture, (Vector2) destination.Location, source, tint, rotation, origin, (Vector2) destination.Size / (Vector2) texture.Size, flip);
-    }
-    
-    public void Draw(Texture texture, Vector2 position)
-    {
-        Draw(texture, position, null, Color.White, 0, Vector2.Zero, Vector2.One);
-    }
-
-    public void Draw(Texture texture, Vector2 position, Color tint)
-    {
-        Draw(texture, position, null, tint, 0, Vector2.Zero, Vector2.One);
-    }
-    
-    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint)
-    {
-        Draw(texture, position, source, tint, 0, Vector2.Zero, Vector2.One);
-    }
-
-    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation,
-        Vector2 origin, float scale, SpriteFlip flip = SpriteFlip.None)
-    {
-        Draw(texture, position, source, tint, rotation, origin, new Vector2(scale), flip);
-    }
-
-    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
-    {
-        if (!_begun)
-            throw new EaselException("No current active sprite renderer session.");
-        _sprites.Add(new Sprite(texture, texture?.Size ?? Size.Zero, position, source, tint, rotation, origin, scale, flip, SpriteType.Bitmap, 0, 0, Color.Transparent));
-        _spriteCount++;
-    }
-
     public void DrawRectangle(Vector2 position, Size size, Color color, float rotation, Vector2 origin)
     {
         Draw(Texture2D.Blank, position, null, color, rotation, origin, (Vector2) size);
@@ -181,8 +133,7 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
             throw new EaselException("No current active sprite renderer session.");
         // We need to adjust the size and position as for some reason the rectangle is one pixel off position wise
         // however removing the offset in the shader doesn't look right...
-        _sprites.Add(new Sprite(texture, size + new Size(2), position - Vector2.One, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius <= 0 ? -borderWidth : radius, borderWidth, borderColor));
-        _spriteCount++;
+        //_sprites.Add(new Sprite(texture, size + new Size(2), position - Vector2.One, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius <= 0 ? -borderWidth : radius, borderWidth, borderColor));
     }
 
     public void End()
@@ -191,42 +142,33 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
             throw new EaselException("No current active sprite renderer session.");
         _begun = false;
 
-        for (int i = 0; i < _spriteCount; i++)
-        {
-            DrawSprite(_sprites[i]);
-        }
-
-        _spriteCount = 0;
-        
-        _sprites.Clear();
-        
         Flush();
     }
 
-    private void DrawSprite(Sprite sprite)
+    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
-        if (sprite.Texture != _currentTexture || sprite.Type != _currentType || _drawCount >= MaxSprites)
+        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _drawCount >= MaxSprites)
             Flush();
         if (EaselGame.Instance.AllowMissing)
-            sprite.Texture ??= Texture2D.Missing;
-        _currentTexture = sprite.Texture;
-        _currentType = sprite.Type;
+            texture ??= Texture2D.Missing;
+        _currentTexture = texture;
+        _currentType = SpriteType.Bitmap;
 
-        Rectangle source = sprite.Source ?? new Rectangle(Point.Zero, sprite.TextureSize);
+        Rectangle src = source ?? new Rectangle(Point.Zero, texture.Size);
 
-        int rectX = source.X;
-        int rectY = source.Y;
-        int rectWidth = source.Width;
-        int rectHeight = source.Height;
+        int rectX = src.X;
+        int rectY = src.Y;
+        int rectWidth = src.Width;
+        int rectHeight = src.Height;
         
-        float width = sprite.TextureSize.Width;
-        float height = sprite.TextureSize.Height;
+        float width = texture.Size.Width;
+        float height = texture.Size.Height;
         
-        sprite.Position -= sprite.Origin * sprite.Scale;
-        sprite.Origin += sprite.Position / sprite.Scale;
-        float posX = sprite.Position.X;
-        float posY = sprite.Position.Y;
+        position -= origin * scale;
+        origin += position / scale;
+        float posX = position.X;
+        float posY = position.Y;
 
         float texX = rectX / width;
         float texY = rectY / height;
@@ -234,12 +176,12 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
         float texH = rectHeight / height;
 
         bool isRenderTarget = _currentTexture is RenderTarget && _device.Api == GraphicsApi.OpenGl33;
-        if (isRenderTarget && sprite.Flip != SpriteFlip.FlipY)
-            sprite.Flip = SpriteFlip.FlipY;
-        else if (isRenderTarget && sprite.Flip == SpriteFlip.FlipY)
-            sprite.Flip = SpriteFlip.None;
+        if (isRenderTarget && flip != SpriteFlip.FlipY)
+            flip = SpriteFlip.FlipY;
+        else if (isRenderTarget && flip == SpriteFlip.FlipY)
+            flip = SpriteFlip.None;
 
-        switch (sprite.Flip)
+        switch (flip)
         {
             case SpriteFlip.None:
                 break;
@@ -261,15 +203,11 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
                 throw new ArgumentOutOfRangeException();
         }
 
-        width = rectWidth * sprite.Scale.X;
-        height = rectHeight * sprite.Scale.Y;
-
-        Color tint = sprite.Tint;
-        float rotation = sprite.Rotation;
-        Vector2 origin = sprite.Origin;
-        Vector2 scale = sprite.Scale;
-        Vector4 meta1 = new Vector4(sprite.BorderWidth, sprite.Radius, sprite.TextureSize.Width, sprite.TextureSize.Height);
-        Vector4 meta2 = (Vector4) sprite.BorderColor;
+        width = rectWidth * scale.X;
+        height = rectHeight * scale.Y;
+        
+        Vector4 meta1 = new Vector4(0, 0, texture.Size.Width, texture.Size.Height);
+        Vector4 meta2 = Vector4.Zero;
         
         _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(texX + texW, texY + texH), tint, rotation, origin, scale, meta1, meta2);
         _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(texX + texW, texY), tint, rotation, origin, scale, meta1, meta2);
@@ -321,40 +259,6 @@ public sealed class SpriteRenderer : I2DDrawMethods, IDisposable
         _device.DrawIndexed(NumIndices * _drawCount);
 
         _drawCount = 0;
-    }
-
-    private struct Sprite
-    {
-        public Texture Texture;
-        public Size TextureSize;
-        public Vector2 Position;
-        public readonly Rectangle? Source;
-        public readonly Color Tint;
-        public readonly float Rotation;
-        public Vector2 Origin;
-        public readonly Vector2 Scale;
-        public SpriteFlip Flip;
-        public SpriteType Type;
-        public float Radius;
-        public float BorderWidth;
-        public Color BorderColor;
-
-        public Sprite(Texture texture, Size textureSize, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip, SpriteType type, float radius, float borderWidth, Color borderColor)
-        {
-            Texture = texture;
-            TextureSize = textureSize;
-            Position = position;
-            Source = source;
-            Tint = tint;
-            Rotation = rotation;
-            Origin = origin;
-            Scale = scale;
-            Flip = flip;
-            Type = type;
-            Radius = radius;
-            BorderWidth = borderWidth;
-            BorderColor = borderColor;
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

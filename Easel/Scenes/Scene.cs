@@ -110,7 +110,8 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         Graphics.Renderer.ClearAll();
-        
+        Graphics.Renderer2D.ClearAll();
+
         for (int i = 0; i < _entityCount; i++)
         {
             ref Entity entity = ref _entities[i];
@@ -134,7 +135,7 @@ public abstract class Scene : IDisposable
 
         #region 2D pass
 
-        
+        Graphics.Renderer2D.Render(Camera.Main);
 
         #endregion
     }

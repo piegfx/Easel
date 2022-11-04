@@ -27,6 +27,8 @@ public class EaselGraphics : IDisposable
 
     public I3DRenderer Renderer;
 
+    public I2DRenderer Renderer2D;
+
     public SpriteRenderer SpriteRenderer;
 
     public EffectManager EffectManager;
@@ -56,11 +58,12 @@ public class EaselGraphics : IDisposable
         window.Resize += WindowOnResize;
     }
 
-    internal void Initialize()
+    internal void Initialize(I3DRenderer renderer, I2DRenderer renderer2D)
     {
         EffectManager = new EffectManager(PieGraphics);
 
-        Renderer = new ForwardRenderer(this);
+        Renderer = renderer;
+        Renderer2D = renderer2D;
         SpriteRenderer = new SpriteRenderer(PieGraphics);
     }
 

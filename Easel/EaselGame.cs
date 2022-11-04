@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using Easel.Content;
 using Easel.Graphics;
+using Easel.Graphics.Renderers;
 using Easel.GUI;
 using Easel.Math;
 using Easel.Scenes;
@@ -161,7 +162,7 @@ public class EaselGame : IDisposable
         Window = Window.CreateWindow(settings, api);
         Logging.Log("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
-        GraphicsInternal.Initialize();
+        GraphicsInternal.Initialize(new ForwardRenderer(GraphicsInternal), new Default2DRenderer(GraphicsInternal));
 
         Logging.Log("Creating audio device...");
         AudioInternal = new AudioDevice(256);

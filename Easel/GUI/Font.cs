@@ -66,7 +66,7 @@ public class Font : IDisposable
             Charmap.Character chr = charmap.GetCharacter(c);
             Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, color);
+            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, color, 0, Vector2.Zero, Vector2.One);
             pos.X += chr.Advance;
         }
     }
@@ -116,7 +116,7 @@ public class Font : IDisposable
                         Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor);
+                        _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor, 0, Vector2.Zero, Vector2.One);
                         pos.X += chr.Advance;
                     }
 

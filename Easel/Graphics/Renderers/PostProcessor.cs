@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using Easel.Math;
 
 namespace Easel.Graphics.Renderers;
@@ -41,7 +42,7 @@ public class PostProcessor
     public void Process(EaselGraphics graphics)
     {
         graphics.SpriteRenderer.Begin(effect: _effect);
-        graphics.SpriteRenderer.Draw(MainTarget, graphics.Viewport, Color.White);
+        graphics.SpriteRenderer.Draw(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
         graphics.SpriteRenderer.End();
     }
     

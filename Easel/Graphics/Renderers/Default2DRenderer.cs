@@ -9,12 +9,12 @@ public class Default2DRenderer : I2DRenderer
 {
     private EaselGraphics _graphics;
 
-    private List<I2DDrawInstruction> _drawList;
+    private List<Sprite> _drawList;
 
     public Default2DRenderer(EaselGraphics graphics)
     {
         _graphics = graphics;
-        _drawList = new List<I2DDrawInstruction>();
+        _drawList = new List<Sprite>();
     }
     
     public void Draw(Texture texture, Rectangle destination, Color tint)
@@ -75,13 +75,8 @@ public class Default2DRenderer : I2DRenderer
             _drawList[i].Draw(_graphics.SpriteRenderer);
         _graphics.SpriteRenderer.End();
     }
-    
-    private interface I2DDrawInstruction
-    {
-        public void Draw(SpriteRenderer renderer);
-    }
 
-    private struct Sprite : I2DDrawInstruction
+    private struct Sprite
     {
         private Texture _texture;
         private Vector2 _position;

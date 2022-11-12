@@ -21,8 +21,29 @@ public class Camera : Entity
     /// <summary>
     /// Calculates and returns the view matrix of this camera.
     /// </summary>
-    public Matrix4x4 ViewMatrix =>
-        Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
+    public Matrix4x4 ViewMatrix
+    {
+        get
+        {
+            Matrix4x4 parent = Matrix4x4.Identity;
+            if (Parent != null)
+                Matrix4x4.Invert(Parent.Transform.TransformMatrix, out parent);
+            return parent * Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
+        }
+    }
+
+    public Frustum? Frustum
+    {
+        get
+        {
+            float halfVSide = _far * MathF.Tan(_fov * 0.5f);
+            float halfHSize = halfVSide * _aspectRatio;
+            //return new Frustum(
+            //    new Frustum.Plane(Transform.Position, ),
+            //    new Frustum.Plane());
+            return new Frustum?();
+        }
+    }
 
     private float _fov;
     private float _aspectRatio;

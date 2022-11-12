@@ -81,6 +81,13 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
                                     Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
                                     Matrix4x4.CreateTranslation(Position);
 
+    public void RotateAroundLocalPoint(Vector3 point, Vector3 axis, float angle)
+    {
+        Quaternion rotation = Quaternion.CreateFromAxisAngle(axis, angle);
+        Rotation *= rotation;
+        Position = Vector3.Transform(Position, Rotation) + point;
+    }
+
     public bool Equals(Transform other)
     {
         if (ReferenceEquals(null, other)) return false;

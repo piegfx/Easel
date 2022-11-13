@@ -14,11 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\Pie.Audio\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Extensions.ImGui", "Easel.Extensions.ImGui\Easel.Extensions.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Freetype", "Pie\Pie.Freetype\Pie.Freetype.csproj", "{5D364965-C9F5-4E4C-8B9D-7342B4427804}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Extensions.BulletPhysics", "Easel.Extensions.BulletPhysics\Easel.Extensions.BulletPhysics.csproj", "{06B18F63-DF52-4134-9CD5-834585D6D62A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Physics", "Easel.Physics\Easel.Physics.csproj", "{06B18F63-DF52-4134-9CD5-834585D6D62A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

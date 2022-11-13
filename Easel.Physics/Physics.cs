@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using BulletSharp;
 
-namespace Easel.Extensions.BulletPhysics;
+namespace Easel.Physics;
 
 public static class Physics
 {

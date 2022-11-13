@@ -1,7 +1,7 @@
 using System.Numerics;
 using BulletSharp;
 
-namespace Easel.Extensions.BulletPhysics;
+namespace Easel.Physics;
 
 public struct RayHit
 {

@@ -6,8 +6,6 @@ namespace Easel.Content.Localization;
 
 public class Locale
 {
-    public string Id;
-
     public string Name;
 
     [XmlIgnore]
@@ -18,14 +16,12 @@ public class Locale
 
     public Locale()
     {
-        Id = "unknown";
         Name = "Unknown";
         Strings = new Dictionary<string, string>();
     }
     
-    public Locale(string id, string name)
+    public Locale(string name)
     {
-        Id = id;
         Name = name;
 
         Strings = new Dictionary<string, string>();
@@ -57,7 +53,7 @@ public class Locale
     {
         [XmlAttribute] public string Key;
         
-        [XmlAttribute]
+        [XmlText]
         public string Value;
     }
 }

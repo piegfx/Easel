@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using Easel.Content.Localization;
+using Easel.Formats;
 using Easel.Graphics;
 using Easel.Utilities;
 
@@ -16,38 +18,13 @@ public class ContentManager
 
     private string _localeDir;
     private Dictionary<string, string> _loadedLocales;
-    
-    public string LocaleDir
-    {
-        get => _localeDir;
-        set
-        {
-            _localeDir = value;
-            Logging.Log("Loading locales from directory...");
-            Dictionary<string, string> locales = new Dictionary<string, string>();
-            string dir = Path.Combine(ContentRootDir, value);
-            if (!Directory.Exists(dir))
-                return;
-            
-            foreach (string file in Directory.GetFiles(dir))
-            {
-                Console.WriteLine(file);
-                try
-                {
-                    Locale locale = XmlSerializer.Deserialize<Locale>(File.ReadAllText(file));
-                    Logging.Log("Loaded \"" + locale.Id + "\".");
-                    locales.Add(locale.Id, file);
-                }
-                catch (Exception)
-                {
-                    Logging.Warn("File was found, but was not a valid locale file. For speed reasons, you should place all locales in a separate directory.");
-                }
-            }
 
-            _loadedLocales = locales;
-        }
-    }
-    
+    private Dictionary<string, ContentCacheItem> _cachedObjects;
+    private List<string> _objectsToRemove;
+
+    public TimeSpan DeleteObjectsAfter;
+    public Timer DeleteObjectsTimer;
+
     private Dictionary<Type, IContentTypeReader> _contentTypes;
 
     public ContentManager(string contentRootDir = "Content")
@@ -55,11 +32,36 @@ public class ContentManager
         _contentTypes = new Dictionary<Type, IContentTypeReader>();
         AddNewTypeReader(typeof(Texture2D), new Texture2DContentTypeReader());
         AddNewTypeReader(typeof(Mesh[]), new MeshContentTypeReader());
+        AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
 
         ContentRootDir = contentRootDir;
 
         _loadedLocales = new Dictionary<string, string>();
-        LocaleDir = "Locales";
+
+        _cachedObjects = new Dictionary<string, ContentCacheItem>();
+        _objectsToRemove = new List<string>();
+        
+        DeleteObjectsAfter = TimeSpan.FromMinutes(5);
+        DeleteObjectsTimer = new Timer(60000);
+        DeleteObjectsTimer.Elapsed += (sender, args) => RemovedUnusedObjectsFromCache();
+        DeleteObjectsTimer.Start();
+    }
+
+    public void RemovedUnusedObjectsFromCache()
+    {
+        foreach ((string key, ContentCacheItem item) in _cachedObjects)
+        {
+            if (item.NeedsRemove(DeleteObjectsAfter))
+            {
+                Logging.Log("Removing \"" + item + "\" from cache.");
+                _objectsToRemove.Add(key);
+            }
+        }
+
+        foreach (string item in _objectsToRemove)
+            _cachedObjects.Remove(item);
+        
+        _objectsToRemove.Clear();
     }
 
     /// <summary>
@@ -71,6 +73,9 @@ public class ContentManager
     /// <returns>The loaded file.</returns>
     public T Load<T>(string path)
     {
+        if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
+            return item.Get<T>();
+        
         Logging.Log($"Loading content item \"{path}\"...");
         string fullPath = Path.Combine(ContentRootDir, path);
         if (!Path.HasExtension(fullPath))
@@ -78,10 +83,13 @@ public class ContentManager
             IEnumerable<string> dirs = Directory.GetFiles(Path.GetDirectoryName(fullPath)).Where(s => Path.GetFileNameWithoutExtension(s) == Path.GetFileName(path));
             if (dirs.Count() > 1)
                 Logging.Warn("Multiple files were found with the given name. Provide a file extension to load a specific file. The first file found will be loaded.");
+            
             fullPath = dirs.First();
         }
 
-        return (T) _contentTypes[typeof(T)].LoadContentItem(fullPath);
+        item = new ContentCacheItem(_contentTypes[typeof(T)].LoadContentItem(fullPath));
+        _cachedObjects.Add(path, item);
+        return item.Get<T>();
     }
 
     public void SetLocale(string id)
@@ -95,6 +103,31 @@ public class ContentManager
         }
     }
 
+    public void LoadLocales(string directory, string pattern)
+    {
+        Logging.Log("Loading locales from directory...");
+        string dir = Path.Combine(ContentRootDir, directory);
+        if (!Directory.Exists(dir))
+            return;
+
+        Dictionary<string, string> locales = new Dictionary<string, string>();
+        
+        foreach (string file in Directory.GetFiles(dir, pattern))
+            locales.Add(Path.GetFileNameWithoutExtension(file), file);
+
+        _loadedLocales = locales;
+    }
+
+    public string[] GetAllFiles(string directory, string pattern = "")
+    {
+        return Directory.GetFiles(Path.Combine(ContentRootDir, directory), pattern);
+    }
+
+    public string GetFullPath(string localPath)
+    {
+        return Path.Combine(ContentRootDir, localPath);
+    }
+
     /// <summary>
     /// Add a custom type reader to load content.
     /// </summary>
@@ -103,5 +136,28 @@ public class ContentManager
     public void AddNewTypeReader(Type type, IContentTypeReader reader)
     {
         _contentTypes.Add(type, reader);
+    }
+
+    private class ContentCacheItem
+    {
+        private object _item;
+        private DateTime _lastAccessTime;
+
+        public ContentCacheItem(object item)
+        {
+            _item = item;
+            _lastAccessTime = DateTime.Now;
+        }
+
+        public T Get<T>()
+        {
+            _lastAccessTime = DateTime.Now;
+            return (T) _item;
+        }
+
+        public bool NeedsRemove(TimeSpan maxTimeSpan)
+        {
+            return DateTime.Now - _lastAccessTime >= maxTimeSpan;
+        }
     }
 }

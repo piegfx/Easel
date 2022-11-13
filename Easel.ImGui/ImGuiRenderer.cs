@@ -11,7 +11,7 @@ using Pie.Windowing;
 using Texture = Pie.Texture;
 using SRect = System.Drawing.Rectangle;
 
-namespace Easel.Extensions.Imgui;
+namespace Easel.ImGui;
 
 public class ImGuiRenderer : IDisposable
 {
@@ -64,9 +64,9 @@ public class ImGuiRenderer : IDisposable
         _pressedChars = new List<char>();
         _keysList = Enum.GetValues<Key>();
 
-        _context = ImGui.CreateContext();
-        ImGui.SetCurrentContext(_context);
-        ImGuiIOPtr io = ImGui.GetIO();
+        _context = ImGuiNET.ImGui.CreateContext();
+        ImGuiNET.ImGui.SetCurrentContext(_context);
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
         io.Fonts.AddFontDefault();
         io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
@@ -75,7 +75,7 @@ public class ImGuiRenderer : IDisposable
 
         SetPerFrameImGuiData(1f / 60f);
         
-        ImGui.NewFrame();
+        ImGuiNET.ImGui.NewFrame();
         _frameBegun = true;
     }
 
@@ -151,7 +151,7 @@ void main()
 
     public void RecreateFontDeviceTexture()
     {
-        ImGuiIOPtr io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height);
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         _fontTexture?.Dispose();
@@ -169,26 +169,26 @@ void main()
         if (_frameBegun)
         {
             _frameBegun = false;
-            ImGui.Render();
-            RenderImDrawData(ImGui.GetDrawData());
+            ImGuiNET.ImGui.Render();
+            RenderImDrawData(ImGuiNET.ImGui.GetDrawData());
         }
     }
 
     public void Update()
     {
         if (_frameBegun)
-            ImGui.Render();
+            ImGuiNET.ImGui.Render();
 
         SetPerFrameImGuiData(Time.DeltaTime);
         UpdateImGuiInput();
 
         _frameBegun = true;
-        ImGui.NewFrame();
+        ImGuiNET.ImGui.NewFrame();
     }
 
     private void SetPerFrameImGuiData(float deltaTime)
     {
-        ImGuiIOPtr io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
         io.DisplaySize = new Vector2(_windowWidth / Scale.X, _windowHeight / Scale.Y);
         io.DisplayFramebufferScale = Scale;
         io.DeltaTime = deltaTime;
@@ -196,7 +196,7 @@ void main()
 
     private void UpdateImGuiInput()
     {
-        ImGuiIOPtr io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
 
         io.MouseDown[0] = Input.MouseButtonDown(MouseButton.Left);
         io.MouseDown[1] = Input.MouseButtonDown(MouseButton.Right);
@@ -233,7 +233,7 @@ void main()
 
     private static void SetKeyMappings()
     {
-        ImGuiIOPtr io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
         io.KeyMap[(int)ImGuiKey.Tab] = (int)Key.Tab;
         io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Key.Left;
         io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Key.Right;
@@ -278,7 +278,7 @@ void main()
             _indexBuffer = device.CreateBuffer<ushort>(BufferType.IndexBuffer, _eboSize, null, true);
         }
 
-        ImGuiIOPtr io = ImGui.GetIO();
+        ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
 
         SRect scissor = device.Scissor;
 

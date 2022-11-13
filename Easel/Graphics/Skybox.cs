@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
+using Easel.Formats;
 using Easel.Primitives;
 using Easel.Utilities;
 using Pie;
@@ -27,6 +28,12 @@ public class Skybox : IDisposable
     private CameraInfo _cameraInfo;
 
     private GraphicsDevice _device;
+
+    public Skybox(EaselTexture texture) : this(texture.Cubemap[0], texture.Cubemap[1], texture.Cubemap[2],
+        texture.Cubemap[3], texture.Cubemap[4], texture.Cubemap[5])
+    {
+        
+    }
     
     public Skybox(Bitmap right, Bitmap left, Bitmap top, Bitmap bottom, Bitmap front, Bitmap back)
     {

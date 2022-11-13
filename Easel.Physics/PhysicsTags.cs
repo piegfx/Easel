@@ -1,4 +1,4 @@
-namespace Easel.Extensions.BulletPhysics;
+namespace Easel.Physics;
 
 public enum PhysicsTags
 {

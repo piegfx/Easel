@@ -114,7 +114,7 @@ public sealed class ForwardRenderer : I3DRenderer
         PostProcessor.Process(_graphics);
     }
 
-    private void DrawRenderable(Renderable renderable)
+    private void DrawRenderable(in Renderable renderable)
     {
         GraphicsDevice device = _graphics.PieGraphics;
         

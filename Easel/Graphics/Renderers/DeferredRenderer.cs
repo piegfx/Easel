@@ -1,3 +1,4 @@
+using System.Numerics;
 using Easel.Entities;
 using Easel.Math;
 using Easel.Scenes;
@@ -39,12 +40,12 @@ public class DeferredRenderer : I3DRenderer
 
     public PostProcessor PostProcessor { get; }
 
-    public void DrawTranslucent(Renderable renderable)
+    public void DrawTranslucent(Renderable renderable, Matrix4x4 world)
     {
         throw new System.NotImplementedException();
     }
 
-    public void DrawOpaque(Renderable renderable)
+    public void DrawOpaque(Renderable renderable, Matrix4x4 world)
     {
         throw new System.NotImplementedException();
     }

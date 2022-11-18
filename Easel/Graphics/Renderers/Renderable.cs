@@ -25,11 +25,6 @@ public struct Renderable : IDisposable
     public uint IndicesLength;
 
     /// <summary>
-    /// The model matrix for this renderable.
-    /// </summary>
-    public Matrix4x4 ModelMatrix;
-
-    /// <summary>
     /// The material of this renderable.
     /// </summary>
     public Material Material;
@@ -41,13 +36,11 @@ public struct Renderable : IDisposable
     /// <param name="indexBuffer">The index buffer of this renderable.</param>
     /// <param name="indicesLength">The number of indices in the <see cref="IndexBuffer"/>.</param>
     /// <param name="material">The material of this renderable.</param>
-    /// <param name="modelMatrix">The model matrix for this renderable.</param>
-    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Matrix4x4 modelMatrix, Material material)
+    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Material material)
     {
         VertexBuffer = vertexBuffer;
         IndexBuffer = indexBuffer;
         IndicesLength = indicesLength;
-        ModelMatrix = modelMatrix;
         Material = material;
     }
 

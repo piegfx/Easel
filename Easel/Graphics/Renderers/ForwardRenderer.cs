@@ -24,9 +24,8 @@ public sealed class ForwardRenderer : I3DRenderer
     private CameraInfo _cameraInfo;
     private GraphicsBuffer _cameraBuffer;
 
-    private List<Renderable> _translucents;
-
-    private List<Renderable> _opaques;
+    private List<(Renderable, Matrix4x4)> _translucents;
+    private List<(Renderable, Matrix4x4)> _opaques;
 
     private RasterizerState _rasterizerState;
     private DepthState _depthState;
@@ -38,8 +37,8 @@ public sealed class ForwardRenderer : I3DRenderer
         _graphics = graphics;
         GraphicsDevice device = graphics.PieGraphics;
         
-        _translucents = new List<Renderable>();
-        _opaques = new List<Renderable>();
+        _translucents = new List<(Renderable, Matrix4x4)>();
+        _opaques = new List<(Renderable, Matrix4x4)>();
 
         _projViewModel = new ProjViewModel()
         {
@@ -63,15 +62,15 @@ public sealed class ForwardRenderer : I3DRenderer
     public PostProcessor PostProcessor { get; }
 
     /// <inheritdoc />
-    public void DrawTranslucent(Renderable renderable)
+    public void DrawTranslucent(Renderable renderable, Matrix4x4 world)
     {
-        _translucents.Add(renderable);
+        _translucents.Add((renderable, world));
     }
 
     /// <inheritdoc />
-    public void DrawOpaque(Renderable renderable)
+    public void DrawOpaque(Renderable renderable, Matrix4x4 world)
     {
-        _opaques.Add(renderable);
+        _opaques.Add((renderable, world));
     }
 
     /// <inheritdoc />
@@ -100,25 +99,25 @@ public sealed class ForwardRenderer : I3DRenderer
         device.SetUniformBuffer(0, _projViewModelBuffer);
         device.SetUniformBuffer(1, _cameraBuffer);
         device.SetPrimitiveType(PrimitiveType.TriangleList);
-        
-        foreach (Renderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
+
+        foreach ((Renderable renderable, Matrix4x4 mWorld) in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
         {
             // TODO move to array and convert to ref
-            DrawRenderable(renderable);
+            DrawRenderable(renderable, mWorld);
         }
         
-        foreach (Renderable renderable in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.ModelMatrix.Translation, camera.Transform.Position)))
-            DrawRenderable(renderable);
+        foreach ((Renderable renderable, Matrix4x4 mWorld) in _opaques.OrderBy(renderable => -Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
+            DrawRenderable(renderable, mWorld);
         
         device.SetFramebuffer(null);
         PostProcessor.Process(_graphics);
     }
 
-    private void DrawRenderable(in Renderable renderable)
+    private void DrawRenderable(in Renderable renderable, in Matrix4x4 world)
     {
         GraphicsDevice device = _graphics.PieGraphics;
         
-        _projViewModel.Model = renderable.ModelMatrix;
+        _projViewModel.Model = world;
         device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
 
         _cameraInfo.Material = renderable.Material.ShaderMaterial;

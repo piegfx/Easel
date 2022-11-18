@@ -63,7 +63,7 @@ public class Effect : IDisposable
         if (!_hasCheckedForDisplayEffects)
         {
             _hasCheckedForDisplayEffects = true;
-            Logging.Log($"Checking for {EnvVars.PrintEffects}...");
+            Logging.Debug($"Checking for {EnvVars.PrintEffects}...");
             string? pr = Environment.GetEnvironmentVariable(EnvVars.PrintEffects);
             if (pr is "1")
             {
@@ -87,7 +87,7 @@ public class Effect : IDisposable
     public void Dispose()
     {
         PieShader.Dispose();
-        Logging.Log("Effect disposed.");
+        Logging.Debug("Effect disposed.");
     }
 
     private static string PreProcess(string shader)
@@ -117,7 +117,7 @@ public class Effect : IDisposable
         StringBuilder builder = new StringBuilder($"{stage} shader:\n");
         for (int i = 0; i < shaderLines.Length; i++)
             builder.AppendLine(i + 1 + ": " + shaderLines[i]);
-        Logging.Log(builder.ToString());
+        Logging.Debug(builder.ToString());
     }
 }
 

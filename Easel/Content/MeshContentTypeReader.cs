@@ -1,3 +1,4 @@
+using Easel.Graphics;
 using Easel.Utilities;
 
 namespace Easel.Content;

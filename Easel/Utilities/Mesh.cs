@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using Easel.Graphics;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 using Easel.Primitives;
 using Pie.Utils;
@@ -18,7 +19,7 @@ public struct Mesh
     public VertexPositionTextureNormalTangent[] Vertices;
     public uint[] Indices;
     public Material Material;
-    
+
     public Mesh(VertexPositionTextureNormalTangent[] vertices, uint[] indices, Material material)
     {
         Vertices = vertices;
@@ -39,7 +40,7 @@ public struct Mesh
     public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
         // TODO is the incorrect loading of UVs for some models supposed to happen...??
-        Logging.Log("Importing model with assimp...");
+        Logging.Debug("Importing model with assimp...");
         if (_assimp == null)
             _assimp = Assimp.GetApi();
         Scene* scene = _assimp.ImportFile(path,

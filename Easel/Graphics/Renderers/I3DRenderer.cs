@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using Easel.Entities;
 using Easel.Math;
 using Easel.Scenes;
@@ -16,14 +17,14 @@ public interface I3DRenderer : IDisposable
     /// Draw a translucent object. These objects are drawn back-to-front to allow transparency to work.
     /// </summary>
     /// <param name="renderable">The renderable object.</param>
-    public void DrawTranslucent(Renderable renderable);
+    public void DrawTranslucent(Renderable renderable, Matrix4x4 world);
     
     /// <summary>
     /// Draw an opaque object. These objects are draw front-to-back so the GPU won't process fragments that are covered
     /// by other fragments.
     /// </summary>
     /// <param name="renderable"></param>
-    public void DrawOpaque(Renderable renderable);
+    public void DrawOpaque(Renderable renderable, Matrix4x4 world);
 
     /// <summary>
     /// Clear all draw lists and prepare the renderer for a new frame.

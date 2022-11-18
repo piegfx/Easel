@@ -65,6 +65,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     public readonly World World;
 
+    private float _timer;
+
     /// <summary>
     /// Create a new scene.
     /// </summary>
@@ -138,6 +140,14 @@ public abstract class Scene : IDisposable
         Graphics.Renderer2D.Render(Camera.Main);
 
         #endregion
+
+        _timer += Time.DeltaTime;
+
+        if (_timer >= 60)
+        {
+            _timer = 0;
+            Graphics.CleanMeshes();
+        }
     }
 
     /// <summary>
@@ -145,15 +155,15 @@ public abstract class Scene : IDisposable
     /// </summary>
     public virtual void Dispose()
     {
-        Logging.Log("Disposing entities...");
+        Logging.Debug("Disposing entities...");
         for (int i = 0; i < _entityCount; i++)
             _entities[i].Dispose();
         
-        Logging.Log("Collecting garbage...");
+        Logging.Debug("Collecting garbage...");
         foreach (IDisposable disposable in GarbageCollections)
             disposable.Dispose();
         
-        Logging.Log("Scene disposed.");
+        Logging.Debug("Scene disposed.");
     }
 
     /// <summary>

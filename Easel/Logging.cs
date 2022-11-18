@@ -1,18 +1,43 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace Easel;
 
 public static class Logging
 {
     public static event OnLogAdded LogAdded;
+
+    public static void Log(LogType type, string message)
+    {
+        switch (type)
+        {
+            case LogType.Debug:
+                Debug(message);
+                break;
+            case LogType.Info:
+                Info(message);
+                break;
+            case LogType.Warn:
+                Warn(message);
+                break;
+            case LogType.Error:
+                Error(message);
+                break;
+            case LogType.Fatal:
+                Fatal(message);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
     
-    public static void Log(string message)
+    public static void Debug(string message)
     {
         LogAdded?.Invoke(LogType.Debug, message);
         Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("[Debug]\t");
+        Console.Write("[" + GetCaller() + "::Debug]\t");
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine(message);
     }
@@ -52,6 +77,11 @@ public static class Logging
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine(message);
         throw new EaselException(message);
+    }
+
+    private static string GetCaller()
+    {
+        return new StackFrame(2).GetMethod()?.DeclaringType?.Name;
     }
 
     public delegate void OnLogAdded(LogType type, string message);

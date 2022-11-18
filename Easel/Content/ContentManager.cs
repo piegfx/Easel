@@ -30,6 +30,7 @@ public class ContentManager
     public ContentManager(string contentRootDir = "Content")
     {
         _contentTypes = new Dictionary<Type, IContentTypeReader>();
+        AddNewTypeReader(typeof(Bitmap), new BitmapContentTypeReader());
         AddNewTypeReader(typeof(Texture2D), new Texture2DContentTypeReader());
         AddNewTypeReader(typeof(Mesh[]), new MeshContentTypeReader());
         AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
@@ -53,7 +54,7 @@ public class ContentManager
         {
             if (item.NeedsRemove(DeleteObjectsAfter))
             {
-                Logging.Log("Removing \"" + item + "\" from cache.");
+                Logging.Debug("Removing \"" + item + "\" from cache.");
                 _objectsToRemove.Add(key);
             }
         }
@@ -76,7 +77,7 @@ public class ContentManager
         if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
             return item.Get<T>();
         
-        Logging.Log($"Loading content item \"{path}\"...");
+        Logging.Debug($"Loading content item \"{path}\"...");
         string fullPath = Path.Combine(ContentRootDir, path);
         if (!Path.HasExtension(fullPath))
         {
@@ -105,7 +106,7 @@ public class ContentManager
 
     public void LoadLocales(string directory, string pattern)
     {
-        Logging.Log("Loading locales from directory...");
+        Logging.Debug("Loading locales from directory...");
         string dir = Path.Combine(ContentRootDir, directory);
         if (!Directory.Exists(dir))
             return;

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
+using Easel.Utilities;
 using Pie;
 using Pie.Windowing;
 using Color = Easel.Math.Color;
@@ -55,6 +58,8 @@ public class EaselGraphics : IDisposable
         PieGraphics = window.CreateGraphicsDevice(options);
         Viewport = new Rectangle(0, 0, window.Size.Width, window.Size.Height);
 
+        _renderables = new Dictionary<Mesh, GCRenderable>();
+
         window.Resize += WindowOnResize;
     }
 
@@ -72,7 +77,7 @@ public class EaselGraphics : IDisposable
         switch (logtype)
         {
             case LogType.Debug:
-                Logging.Log(message);
+                Logging.Debug(message);
                 break;
             case LogType.Info:
                 Logging.Info(message);
@@ -105,11 +110,46 @@ public class EaselGraphics : IDisposable
         PieGraphics.SetFramebuffer(target?.PieBuffer);
         Viewport = new Rectangle(Point.Zero, target?.Size ?? (Size) EaselGame.Instance.Window.Size);
     }
-    
+
+    public Renderable CreateRenderable(in Mesh mesh)
+    {
+        Renderable renderable = new Renderable();
+        renderable.VertexBuffer = PieGraphics.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices);
+        renderable.IndexBuffer = PieGraphics.CreateBuffer(BufferType.IndexBuffer, mesh.Indices);
+        renderable.IndicesLength = (uint) mesh.Indices.Length;
+        renderable.Material = mesh.Material;
+        return renderable;
+    }
+
+    private Dictionary<Mesh, GCRenderable> _renderables;
+
+    public void DrawMesh(in Mesh mesh, in Matrix4x4 world)
+    {
+        if (!_renderables.TryGetValue(mesh, out GCRenderable renderable))
+        {
+            Logging.Debug("Creating new mesh...");
+            _renderables.Add(mesh, renderable = new GCRenderable(CreateRenderable(mesh)));
+        }
+
+        Renderer.DrawOpaque(renderable.Get(), world);
+    }
+
+    public void CleanMeshes()
+    {
+        foreach ((Mesh mesh, GCRenderable renderable) in _renderables)
+        {
+            if (renderable.TryDispose())
+            {
+                Logging.Debug("Disposing unused mesh...");
+                _renderables.Remove(mesh);
+            }
+        }
+    }
+
     public void Dispose()
     {
         PieGraphics?.Dispose();
-        Logging.Log("Graphics disposed.");
+        Logging.Debug("Graphics disposed.");
     }
     
     private void WindowOnResize(System.Drawing.Size size)

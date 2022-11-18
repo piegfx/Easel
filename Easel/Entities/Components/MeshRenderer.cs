@@ -44,9 +44,7 @@ public class MeshRenderer : Component
         for (int i = 0; i < _meshes.Length; i++)
         {
             ref Mesh mesh = ref _meshes[i];
-            _renderables[i] = new Renderable(device.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices),
-                device.CreateBuffer(BufferType.IndexBuffer, mesh.Indices), (uint) mesh.Indices.Length,
-                Matrix4x4.Identity, mesh.Material);
+            _renderables[i] = Graphics.CreateRenderable(mesh);
         }
     }
 
@@ -58,12 +56,12 @@ public class MeshRenderer : Component
         {
             ref Renderable renderable = ref _renderables[i];
             
-            renderable.ModelMatrix = Transform.TransformMatrix *
+            Matrix4x4 world = Transform.TransformMatrix *
                                       (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
             if (renderable.Material.Color.A < 1)
-                Graphics.Renderer.DrawTranslucent(renderable);
+                Graphics.Renderer.DrawTranslucent(renderable, world);
             else
-                Graphics.Renderer.DrawOpaque(renderable);
+                Graphics.Renderer.DrawOpaque(renderable, world);
         }
     }
 

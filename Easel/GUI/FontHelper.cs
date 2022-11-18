@@ -26,7 +26,7 @@ public static class FontHelper
         size |= size >> 16;
         size++;
         
-        Logging.Debug($"Font texture size calculated to be {size}x{size} pixels.");
+        Logger.Debug($"Font texture size calculated to be {size}x{size} pixels.");
         int width = size;
         int height = size;
         byte[] initialData = new byte[width * height * 4];

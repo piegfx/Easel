@@ -54,7 +54,7 @@ public class ContentManager
         {
             if (item.NeedsRemove(DeleteObjectsAfter))
             {
-                Logging.Debug("Removing \"" + item + "\" from cache.");
+                Logger.Debug("Removing \"" + item + "\" from cache.");
                 _objectsToRemove.Add(key);
             }
         }
@@ -77,13 +77,13 @@ public class ContentManager
         if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
             return item.Get<T>();
         
-        Logging.Debug($"Loading content item \"{path}\"...");
+        Logger.Debug($"Loading content item \"{path}\"...");
         string fullPath = Path.Combine(ContentRootDir, path);
         if (!Path.HasExtension(fullPath))
         {
             IEnumerable<string> dirs = Directory.GetFiles(Path.GetDirectoryName(fullPath)).Where(s => Path.GetFileNameWithoutExtension(s) == Path.GetFileName(path));
             if (dirs.Count() > 1)
-                Logging.Warn("Multiple files were found with the given name. Provide a file extension to load a specific file. The first file found will be loaded.");
+                Logger.Warn("Multiple files were found with the given name. Provide a file extension to load a specific file. The first file found will be loaded.");
             
             fullPath = dirs.First();
         }
@@ -106,7 +106,7 @@ public class ContentManager
 
     public void LoadLocales(string directory, string pattern)
     {
-        Logging.Debug("Loading locales from directory...");
+        Logger.Debug("Loading locales from directory...");
         string dir = Path.Combine(ContentRootDir, directory);
         if (!Directory.Exists(dir))
             return;

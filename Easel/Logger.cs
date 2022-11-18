@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Easel;
 
-public static class Logging
+public static class Logger
 {
     public static event OnLogAdded LogAdded;
 
@@ -15,7 +15,7 @@ public static class Logging
 
     public static bool ShowCallerMethod;
 
-    static Logging()
+    static Logger()
     {
         ShowCallerClass = true;
         ShowCallerMethod = true;

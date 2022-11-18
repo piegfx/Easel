@@ -45,14 +45,14 @@ public static class Data
 
     public static void SaveConfigFromFile(string path, EaselConfig config)
     {
-        Logging.Debug("Saving config file \"" + ConfigFile + "\".");
+        Logger.Debug("Saving config file \"" + ConfigFile + "\".");
         Directory.CreateDirectory(Path.GetDirectoryName(path));
         File.WriteAllText(path, XmlSerializer.Serialize(config));
     }
 
     public static T GetConfigFromFile<T>(string path) where T : EaselConfig
     {
-        Logging.Debug("Loading config file \"" + ConfigFile + "\".");
+        Logger.Debug("Loading config file \"" + ConfigFile + "\".");
         if (!File.Exists(path))
             return null;
         return XmlSerializer.Deserialize<T>(File.ReadAllText(path));

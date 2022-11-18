@@ -35,11 +35,11 @@ public class Bitmap
             Data = GetMissingBitmap(128, 128);
             Size = new Size(128, 128);
             Format = PixelFormat.R8G8B8A8_UNorm;
-            Logging.Error($"Failed to find path \"{path}\".");
+            Logger.Error($"Failed to find path \"{path}\".");
             return;
         }
         else if (!File.Exists(path))
-            Logging.Fatal($"Failed to find path \"{path}\".");
+            Logger.Fatal($"Failed to find path \"{path}\".");
 
         ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;

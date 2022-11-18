@@ -77,19 +77,19 @@ public class EaselGraphics : IDisposable
         switch (logtype)
         {
             case LogType.Debug:
-                Logging.Debug(message);
+                Logger.Debug(message);
                 break;
             case LogType.Info:
-                Logging.Info(message);
+                Logger.Info(message);
                 break;
             case LogType.Warning:
-                Logging.Warn(message);
+                Logger.Warn(message);
                 break;
             case LogType.Error:
-                Logging.Error(message);
+                Logger.Error(message);
                 break;
             case LogType.Critical:
-                Logging.Fatal(message);
+                Logger.Fatal(message);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(logtype), logtype, null);
@@ -127,7 +127,7 @@ public class EaselGraphics : IDisposable
     {
         if (!_renderables.TryGetValue(mesh, out GCRenderable renderable))
         {
-            Logging.Debug("Creating new mesh...");
+            Logger.Debug("Creating new mesh...");
             _renderables.Add(mesh, renderable = new GCRenderable(CreateRenderable(mesh)));
         }
 
@@ -140,7 +140,7 @@ public class EaselGraphics : IDisposable
         {
             if (renderable.TryDispose())
             {
-                Logging.Debug("Disposing unused mesh...");
+                Logger.Debug("Disposing unused mesh...");
                 _renderables.Remove(mesh);
             }
         }
@@ -149,7 +149,7 @@ public class EaselGraphics : IDisposable
     public void Dispose()
     {
         PieGraphics?.Dispose();
-        Logging.Debug("Graphics disposed.");
+        Logger.Debug("Graphics disposed.");
     }
     
     private void WindowOnResize(System.Drawing.Size size)

@@ -108,10 +108,10 @@ public class Entity : InheritableEntity, IDisposable
     /// </summary>
     public virtual void Dispose()
     {
-        Logging.Debug($"Disposing {_componentCount} components...");
+        Logger.Debug($"Disposing {_componentCount} components...");
         for (int i = 0; i < _componentCount; i++)
             _components[i].Dispose();
-        Logging.Debug("Entity disposed.");
+        Logger.Debug("Entity disposed.");
     }
 
     /// <summary>

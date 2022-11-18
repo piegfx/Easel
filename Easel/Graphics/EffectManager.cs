@@ -76,7 +76,7 @@ public class EffectManager
     {
         Lazy<EffectLayout> value = _effects[name];
         if (!value.IsValueCreated)
-            Logging.Info($"Effect \"{name}\" is used for first time: Creating...");
+            Logger.Info($"Effect \"{name}\" is used for first time: Creating...");
         return value.Value;
     }
 }

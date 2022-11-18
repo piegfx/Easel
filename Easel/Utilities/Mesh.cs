@@ -40,13 +40,13 @@ public struct Mesh
     public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
         // TODO is the incorrect loading of UVs for some models supposed to happen...??
-        Logging.Debug("Importing model with assimp...");
+        Logger.Debug("Importing model with assimp...");
         if (_assimp == null)
             _assimp = Assimp.GetApi();
         Scene* scene = _assimp.ImportFile(path,
             (uint) PostProcessSteps.Triangulate | (uint) PostProcessSteps.FlipWindingOrder | (uint) PostProcessSteps.CalculateTangentSpace | (uint) PostProcessSteps.JoinIdenticalVertices | (uint) (flipUvs ? PostProcessSteps.FlipUVs : 0) | (uint) PostProcessSteps.GenerateNormals);
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 || scene->MRootNode == null)
-            Logging.Fatal("Scene failed to import: " + _assimp.GetErrorStringS());
+            Logger.Fatal("Scene failed to import: " + _assimp.GetErrorStringS());
         
         string directory = Path.GetDirectoryName(path);
 

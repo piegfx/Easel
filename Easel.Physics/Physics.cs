@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using BulletSharp;
+using Easel.Math;
 
 namespace Easel.Physics;
 
@@ -58,7 +59,7 @@ public static class Physics
 
         hit.WorldPosition = cb.CollisionObject.WorldTransform.Translation;
         hit.HitPosition = cb.HitPointWorld;
-        hit.CubeNormal = normal;
+        hit.CubeNormal = (Vector3I) normal;
         hit.RealNormal = cb.HitNormalWorld;
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;

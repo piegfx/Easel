@@ -332,7 +332,7 @@ void main()
         int index = _texture2Ds.IndexOf(texture);
         if (index == -1)
         {
-            Logging.Debug("Texture does not have an ImGui binding, creating...");
+            Logger.Debug("Texture does not have an ImGui binding, creating...");
             _texture2Ds.Add(texture);
             return new IntPtr(_texture2Ds.Count - 1);
         }

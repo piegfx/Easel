@@ -89,8 +89,6 @@ public struct EaselTexture
                     
                     BitmapLayer layer = (BitmapLayer) reader.ReadByte();
                     PixelFormat format = (PixelFormat) reader.ReadByte();
-                    
-                    Console.WriteLine(layer);
 
                     int length = reader.ReadInt32();
                     byte[] bData = reader.ReadBytes(length);

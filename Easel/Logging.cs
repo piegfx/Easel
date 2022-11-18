@@ -9,86 +9,73 @@ public static class Logging
 {
     public static event OnLogAdded LogAdded;
 
+    public static bool ShowCallerClass;
+
+    public static bool ShowNamespace;
+
+    public static bool ShowCallerMethod;
+
+    static Logging()
+    {
+        ShowCallerClass = true;
+        ShowCallerMethod = true;
+        ShowNamespace = true;
+    }
+
     public static void Log(LogType type, string message)
     {
-        switch (type)
-        {
-            case LogType.Debug:
-                Debug(message);
-                break;
-            case LogType.Info:
-                Info(message);
-                break;
-            case LogType.Warn:
-                Warn(message);
-                break;
-            case LogType.Error:
-                Error(message);
-                break;
-            case LogType.Fatal:
-                Fatal(message);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
+        string caller = GetCaller(3);
+        string msg = GetLogMessage(type, caller, message);
+        LogAdded?.Invoke(type, caller, message);
     }
     
     public static void Debug(string message)
     {
-        LogAdded?.Invoke(LogType.Debug, message);
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("[" + GetCaller() + "::Debug]\t");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine(message);
+        Log(LogType.Debug, message);
     }
     
     public static void Info(string message)
     {
-        LogAdded?.Invoke(LogType.Info, message);
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.Write("[Info]\t");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine(message);
+        Log(LogType.Info, message);
     }
 
     public static void Warn(string message)
     {
-        LogAdded?.Invoke(LogType.Warn, message);
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("[Warn]\t");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine(message);
+        Log(LogType.Warn, message);
     }
     
     public static void Error(string message)
     {
-        LogAdded?.Invoke(LogType.Error, message);
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write("[Error]\t");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine(message);
+        Log(LogType.Error, message);
     }
 
     public static void Fatal(string message)
     {
-        LogAdded?.Invoke(LogType.Fatal, message);
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.Write("[Fatal]\t");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine(message);
+        Log(LogType.Fatal, message);
         throw new EaselException(message);
     }
 
-    private static string GetCaller()
+    private static string GetCaller(int frames)
     {
-        return new StackFrame(2).GetMethod()?.DeclaringType?.Name;
+        if (!(ShowCallerClass || ShowCallerMethod))
+            return "";
+        
+        MethodBase info = new StackFrame(frames).GetMethod();
+        string caller = "";
+        if (ShowCallerClass)
+            caller += ShowNamespace ? info.DeclaringType.FullName : info.DeclaringType.Name;
+        if (ShowCallerMethod)
+            caller += "::" + info.Name;
+        return caller;
     }
 
-    public delegate void OnLogAdded(LogType type, string message);
+    public delegate void OnLogAdded(LogType type, string caller, string message);
 
-    private static string GetLogMessage(LogType type, string message)
+    private static string GetLogMessage(LogType type, string caller, string message)
     {
-        return "[" + type + "]" + message;
+        caller += " ";
+        
+        return "[" + caller + type.ToString().ToUpper() + "] " + message;
     }
 
     public enum LogType
@@ -99,7 +86,47 @@ public static class Logging
         Error,
         Fatal
     }
-    
+
+    public static void UseConsoleLogs()
+    {
+        LogAdded += ConsoleLog;
+    }
+
+    private static void ConsoleLog(LogType type, string caller, string message)
+    {
+        string msg = GetLogMessage(type, caller, message);
+        
+        switch (type)
+        {
+            case LogType.Debug:
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(msg);
+                break;
+            case LogType.Info:
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            case LogType.Warn:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            case LogType.Error:
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            case LogType.Fatal:
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = ConsoleColor.White;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+    }
+
     #region Log file
 
     public static string LogFilePath { get; private set; }
@@ -115,9 +142,9 @@ public static class Logging
         LogAdded += LogFile;
     }
 
-    private static void LogFile(LogType type, string message)
+    private static void LogFile(LogType type, string caller, string message)
     {
-        _stream.WriteLine(DateTime.Now + ": " + GetLogMessage(type, message));
+        _stream.WriteLine(DateTime.Now + ": " + GetLogMessage(type, caller, message));
     }
 
     #endregion

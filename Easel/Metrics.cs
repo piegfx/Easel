@@ -12,6 +12,8 @@ public static class Metrics
 
     public static ulong TotalFrames => _totalFrames;
 
+    // hec u rider
+    // ReSharper disable once InconsistentNaming
     public static int FPS => _fps;
 
     public static string GetString()

@@ -106,7 +106,7 @@ public sealed class ForwardRenderer : I3DRenderer
             DrawRenderable(renderable, mWorld);
         }
         
-        foreach ((Renderable renderable, Matrix4x4 mWorld) in _opaques.OrderBy(renderable => -Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
+        foreach ((Renderable renderable, Matrix4x4 mWorld) in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
             DrawRenderable(renderable, mWorld);
         
         device.SetFramebuffer(null);

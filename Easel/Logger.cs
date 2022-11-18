@@ -25,7 +25,6 @@ public static class Logger
     public static void Log(LogType type, string message)
     {
         string caller = GetCaller(3);
-        string msg = GetLogMessage(type, caller, message);
         LogAdded?.Invoke(type, caller, message);
     }
     

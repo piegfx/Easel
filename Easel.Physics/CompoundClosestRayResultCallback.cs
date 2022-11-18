@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using BulletSharp;
 
@@ -18,8 +19,8 @@ public class CompoundClosestRayResultCallback : ClosestRayResultCallback
 
     public override bool NeedsCollision(BroadphaseProxy proxy0)
     {
-        if (((CollisionObject) proxy0.ClientObject).UserIndex == (int) PhysicsTags.IgnoreRaycast)
-            return false;
+        //if (((CollisionObject) proxy0.ClientObject).UserIndex == (int) PhysicsTags.IgnoreRaycast)
+        //    return false;
 
         return base.NeedsCollision(proxy0);
     }

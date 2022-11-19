@@ -199,6 +199,8 @@ public class EaselGame : IDisposable
                 DrawMetrics();
             Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }
+        
+        Logger.Debug("Close requested, shutting down...");
     }
 
     /// <summary>
@@ -239,6 +241,7 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Dispose()
     {
+        SceneManager.ActiveScene?.Dispose();
         Graphics.Dispose();
         Window.Dispose();
         Logger.Debug("EaselGame disposed.");

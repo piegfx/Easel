@@ -74,26 +74,9 @@ public class EaselGraphics : IDisposable
 
     private void PieDebug(LogType logtype, string message)
     {
-        switch (logtype)
-        {
-            case LogType.Debug:
-                Logger.Debug(message);
-                break;
-            case LogType.Info:
-                Logger.Info(message);
-                break;
-            case LogType.Warning:
-                Logger.Warn(message);
-                break;
-            case LogType.Error:
-                Logger.Error(message);
-                break;
-            case LogType.Critical:
-                Logger.Fatal(message);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(logtype), logtype, null);
-        }
+        if (logtype == LogType.Debug)
+            return;
+        Logger.Log((Logger.LogType) logtype, message);
     }
 
     /// <summary>

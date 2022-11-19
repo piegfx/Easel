@@ -69,48 +69,53 @@ public struct EaselTexture
 
         reader.ReadUInt16(); // Version
 
-        if (reader.ReadByte() == 1)
-            throw new EaselException("Compressed files not supported.");
+        bool compress = reader.ReadByte() == 1;
+        if (compress)
+            Logger.Debug("Decompressing Easel Texture...");
 
         TextureType type = (TextureType) reader.ReadByte();
 
         Size size = new Size(reader.ReadInt32(), reader.ReadInt32());
 
+        byte[] compData = reader.ReadBytes((int) (reader.BaseStream.Length - reader.BaseStream.Position));
+        using MemoryStream compStream = new MemoryStream(compress ? Utils.Decompress(compData) : compData);
+        using BinaryReader compReader = new BinaryReader(compStream);
+
         switch (type)
         {
             case TextureType.Bitmap:
-                byte bLength = reader.ReadByte();
+                byte bLength = compReader.ReadByte();
                 (BitmapLayer, Bitmap)[] bitmaps = new (BitmapLayer, Bitmap)[bLength];
 
                 for (int i = 0; i < bLength; i++)
                 {
-                    if (new string(reader.ReadChars(4)) != "TEXB")
+                    if (new string(compReader.ReadChars(4)) != "TEXB")
                         throw new EaselException("\"TEXB\" expected, was not found.");
                     
-                    BitmapLayer layer = (BitmapLayer) reader.ReadByte();
-                    PixelFormat format = (PixelFormat) reader.ReadByte();
+                    BitmapLayer layer = (BitmapLayer) compReader.ReadByte();
+                    PixelFormat format = (PixelFormat) compReader.ReadByte();
 
-                    int length = reader.ReadInt32();
-                    byte[] bData = reader.ReadBytes(length);
+                    int length = compReader.ReadInt32();
+                    byte[] bData = compReader.ReadBytes(length);
                     bitmaps[i] = (layer, new Bitmap(size.Width, size.Height, format, bData));
                 }
 
                 return new EaselTexture(bitmaps);
 
             case TextureType.Cubemap:
-                PixelFormat cFmt = (PixelFormat) reader.ReadByte();
+                PixelFormat cFmt = (PixelFormat) compReader.ReadByte();
 
-                byte cLength = reader.ReadByte();
+                byte cLength = compReader.ReadByte();
 
                 Bitmap[] cubemaps = new Bitmap[cLength];
                 
                 for (int i = 0; i < cLength; i++)
                 {
-                    if (new string(reader.ReadChars(4)) != "TEXC")
+                    if (new string(compReader.ReadChars(4)) != "TEXC")
                         throw new EaselException("\"TEXC\" expected, was not found.");
 
-                    int dataLength = reader.ReadInt32();
-                    byte[] cData = reader.ReadBytes(dataLength);
+                    int dataLength = compReader.ReadInt32();
+                    byte[] cData = compReader.ReadBytes(dataLength);
                     cubemaps[i] = new Bitmap(size.Width, size.Height, cFmt, cData);
                 }
 
@@ -123,9 +128,6 @@ public struct EaselTexture
 
     public byte[] Serialize(bool compress)
     {
-        if (compress)
-            throw new EaselException("Compression not supported.");
-        
         const ushort version = 1;
 
         using MemoryStream stream = new MemoryStream();
@@ -140,37 +142,45 @@ public struct EaselTexture
         writer.Write(Size.Width);
         writer.Write(Size.Height);
 
+        using MemoryStream compStream = new MemoryStream();
+        using BinaryWriter compWriter = new BinaryWriter(compStream);
+        
         switch (Type)
         {
             case TextureType.Bitmap:
-                writer.Write((byte) Bitmaps.Count);
+                compWriter.Write((byte) Bitmaps.Count);
                 foreach ((BitmapLayer layer, Bitmap bp) in Bitmaps)
                 {
-                    writer.Write("TEXB".ToCharArray());
-                    writer.Write((byte) layer);
-                    writer.Write((byte) bp.Format);
+                    compWriter.Write("TEXB".ToCharArray());
+                    compWriter.Write((byte) layer);
+                    compWriter.Write((byte) bp.Format);
                     
-                    writer.Write(bp.Data.Length);
-                    writer.Write(bp.Data);
+                    compWriter.Write(bp.Data.Length);
+                    compWriter.Write(bp.Data);
                 }
                 
                 break;
             
             case TextureType.Cubemap:
-                writer.Write((byte) Cubemap[0].Format);
+                compWriter.Write((byte) Cubemap[0].Format);
                 
-                writer.Write((byte) Cubemap.Length);
+                compWriter.Write((byte) Cubemap.Length);
                 for (int i = 0; i < Cubemap.Length; i++)
                 {
-                    writer.Write("TEXC".ToCharArray());
-                    writer.Write(Cubemap[i].Data.Length);
-                    writer.Write(Cubemap[i].Data);
+                    compWriter.Write("TEXC".ToCharArray());
+                    compWriter.Write(Cubemap[i].Data.Length);
+                    compWriter.Write(Cubemap[i].Data);
                 }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
         
+        if (compress)
+            writer.Write(Utils.Compress(compStream.ToArray()));
+        else
+            writer.Write(compStream.ToArray());
+
         return stream.ToArray();
     }
 

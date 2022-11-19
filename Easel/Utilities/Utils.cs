@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -70,5 +71,22 @@ public static class Utils
     public static string LoadEmbeddedString(string assemblyName)
     {
         return Encoding.UTF8.GetString(LoadEmbeddedResource(assemblyName));
+    }
+
+    public static byte[] Compress(byte[] data, CompressionLevel level = CompressionLevel.Optimal)
+    {
+        using MemoryStream stream = new MemoryStream();
+        using DeflateStream deflate = new DeflateStream(stream, level);
+        deflate.Write(data, 0, data.Length);
+        return stream.ToArray();
+    }
+    
+    public static byte[] Decompress(byte[] data)
+    {
+        using MemoryStream stream = new MemoryStream(data);
+        using MemoryStream output = new MemoryStream();
+        using DeflateStream deflate = new DeflateStream(stream, CompressionMode.Decompress);
+        deflate.CopyTo(output);
+        return output.ToArray();
     }
 }

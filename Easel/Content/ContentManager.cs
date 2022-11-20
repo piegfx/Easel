@@ -6,6 +6,7 @@ using System.Timers;
 using Easel.Content.Localization;
 using Easel.Formats;
 using Easel.Graphics;
+using Easel.GUI;
 using Easel.Utilities;
 
 namespace Easel.Content;
@@ -34,6 +35,7 @@ public class ContentManager
         AddNewTypeReader(typeof(Texture2D), new Texture2DContentTypeReader());
         AddNewTypeReader(typeof(Mesh[]), new MeshContentTypeReader());
         AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
+        AddNewTypeReader(typeof(Font), new FontContentTypeReader());
 
         ContentRootDir = contentRootDir;
 
@@ -74,6 +76,10 @@ public class ContentManager
     /// <returns>The loaded file.</returns>
     public T Load<T>(string path)
     {
+        if (!_contentTypes.ContainsKey(typeof(T)))
+            throw new NotSupportedException("A content type reader for type \"" + typeof(T).FullName +
+                                            "\" has not been implemented.");
+        
         if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
             return item.Get<T>();
         

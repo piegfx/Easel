@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Easel.Configs;
 
 namespace Easel;
 
@@ -141,9 +142,15 @@ public static class Logger
         LogAdded += LogFile;
     }
 
+    public static void InitializeLogFile()
+    {
+        Directory.CreateDirectory(Path.Combine(Data.AppBaseDir, "Logs"));
+        InitializeLogFile(Path.Combine(Data.AppBaseDir, "Logs", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".log"));
+    }
+
     private static void LogFile(LogType type, string caller, string message)
     {
-        _stream.WriteLine(DateTime.Now + ": " + GetLogMessage(type, caller, message));
+        _stream.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ": " + GetLogMessage(type, caller, message));
     }
 
     #endregion

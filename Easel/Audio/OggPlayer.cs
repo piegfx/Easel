@@ -5,6 +5,9 @@ using StbVorbisSharp;
 
 namespace Easel.Audio;
 
+/// <summary>
+/// Streams & plays Ogg Vorbis audio files.
+/// </summary>
 public class OggPlayer : IAudioPlayer
 {
     private AudioBuffer[] _buffers;
@@ -33,7 +36,8 @@ public class OggPlayer : IAudioPlayer
         if (_currentBuffer >= _buffers.Length)
             _currentBuffer = 0;
     }
-
+    
+    /// <inheritdoc />
     public void Play(AudioDevice device, int channel, float volume, float pitch, bool loop, Priority priority)
     {
         _vorbis.Restart();

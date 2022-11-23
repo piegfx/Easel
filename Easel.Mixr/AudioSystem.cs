@@ -12,9 +12,13 @@ public unsafe class AudioSystem : IDisposable
     private Sdl _sdl;
     private uint _device;
     private AudioSpec _spec;
+
+    public readonly ushort NumChannels;
     
     public AudioSystem(AudioFormat format, ushort channels)
     {
+        NumChannels = channels;
+        
         _system = mxCreateSystem(format, channels);
         
         _sdl = Sdl.GetApi();

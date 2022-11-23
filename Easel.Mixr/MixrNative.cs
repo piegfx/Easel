@@ -20,8 +20,19 @@ public static unsafe class MixrNative
         AudioFormat format);
 
     [DllImport(MixrName)]
-    public static extern void mxPlayBuffer(IntPtr system, ushort channel, int buffer, double volume, double speed,
-        double panning);
+    public static extern void mxPlayBuffer(IntPtr system, int buffer, ushort channel, ChannelProperties properties);
+
+    [DllImport(MixrName)]
+    public static extern void mxSetChannelProperties(IntPtr system, ushort channel, ChannelProperties properties);
+
+    [DllImport(MixrName)]
+    public static extern void mxPlay(IntPtr system, ushort channel);
+    
+    [DllImport(MixrName)]
+    public static extern void mxPause(IntPtr system, ushort channel);
+    
+    [DllImport(MixrName)]
+    public static extern void mxStop(IntPtr system, ushort channel);
 
     [DllImport(MixrName)]
     public static extern short mxAdvance(IntPtr system);

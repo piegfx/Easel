@@ -50,8 +50,17 @@ public unsafe class AudioSystem : IDisposable
             mxUpdateBuffer(_system, buffer, buf, (nuint) data.Length, format);
     }
 
-    public void PlayBuffer(ushort channel, int buffer, double volume = 1.0, double speed = 1.0, double panning = 0.5) =>
-        mxPlayBuffer(_system, channel, buffer, volume, speed, panning);
+    public void PlayBuffer(int buffer, ushort channel, ChannelProperties properties) =>
+        mxPlayBuffer(_system, buffer, channel, properties);
+
+    public void SetChannelProperties(ushort channel, ChannelProperties properties) =>
+        mxSetChannelProperties(_system, channel, properties);
+
+    public void Play(ushort channel) => mxPlay(_system, channel);
+
+    public void Pause(ushort channel) => mxPause(_system, channel);
+
+    public void Stop(ushort channel) => mxStop(_system, channel);
 
     private void AudioCallback(void* arg0, byte* bData, int len)
     {

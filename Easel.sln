@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Freetype", "Pie\Pie.Fre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Physics", "Easel.Physics\Easel.Physics.csproj", "{06B18F63-DF52-4134-9CD5-834585D6D62A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Mixr", "Easel.Mixr\Easel.Mixr.csproj", "{5FAB3196-B6E9-4324-988B-4552F442CCE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +68,9 @@ Global
 		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FAB3196-B6E9-4324-988B-4552F442CCE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FAB3196-B6E9-4324-988B-4552F442CCE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FAB3196-B6E9-4324-988B-4552F442CCE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FAB3196-B6E9-4324-988B-4552F442CCE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

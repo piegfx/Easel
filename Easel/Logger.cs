@@ -18,9 +18,11 @@ public static class Logger
 
     static Logger()
     {
+#if DEBUG
         ShowCallerClass = true;
         ShowCallerMethod = true;
         ShowNamespace = true;
+#endif
     }
 
     public static void Log(LogType type, string message)

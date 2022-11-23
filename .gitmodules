@@ -4,3 +4,6 @@
 [submodule "BulletSharpPInvoke"]
 	path = BulletSharpPInvoke
 	url = https://github.com/AndresTraks/BulletSharpPInvoke
+[submodule "mixr"]
+	path = mixr
+	url = https://github.com/piegfx/mixr/

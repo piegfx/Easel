@@ -74,8 +74,8 @@ public unsafe class AudioSystem : IDisposable
 
     public void Dispose()
     {
-        mxDeleteSystem(_system);
         _sdl.CloseAudioDevice(_device);
         _sdl.Quit();
+        mxDeleteSystem(_system);
     }
 }

@@ -11,6 +11,9 @@ public static unsafe class MixrNative
 
     [DllImport(MixrName)]
     public static extern void mxDeleteSystem(IntPtr system);
+    
+    [DllImport(MixrName)]
+    public static extern void mxSetBufferFinishedCallback(IntPtr system, BufferFinishedCallback callback);
 
     [DllImport(MixrName)]
     public static extern int mxCreateBuffer(IntPtr system);
@@ -21,6 +24,9 @@ public static unsafe class MixrNative
 
     [DllImport(MixrName)]
     public static extern void mxPlayBuffer(IntPtr system, int buffer, ushort channel, ChannelProperties properties);
+
+    [DllImport(MixrName)]
+    public static extern void mxQueueBuffer(IntPtr system, int buffer, ushort channel);
 
     [DllImport(MixrName)]
     public static extern void mxSetChannelProperties(IntPtr system, ushort channel, ChannelProperties properties);
@@ -36,4 +42,6 @@ public static unsafe class MixrNative
 
     [DllImport(MixrName)]
     public static extern short mxAdvance(IntPtr system);
+
+    public delegate void BufferFinishedCallback(ushort channel, int buffer);
 }

@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Silk.NET.SDL" Version="2.16.0" />
+      <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
 
     <ItemGroup>

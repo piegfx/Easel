@@ -8,18 +8,25 @@ public unsafe class AudioSystem : IDisposable
 {
     private IntPtr _system;
     
+    public event OnBufferFinished BufferFinished;
+    
     // Use SDL for audio.
     private Sdl _sdl;
     private uint _device;
     private AudioSpec _spec;
 
     public readonly ushort NumChannels;
+
+    private BufferFinishedCallback _callback;
     
     public AudioSystem(AudioFormat format, ushort channels)
     {
         NumChannels = channels;
         
         _system = mxCreateSystem(format, channels);
+
+        _callback = BufferFinishedCB;
+        mxSetBufferFinishedCallback(_system, _callback);
         
         _sdl = Sdl.GetApi();
         if (_sdl.Init(Sdl.InitAudio) != 0)
@@ -53,6 +60,8 @@ public unsafe class AudioSystem : IDisposable
     public void PlayBuffer(int buffer, ushort channel, ChannelProperties properties) =>
         mxPlayBuffer(_system, buffer, channel, properties);
 
+    public void QueueBuffer(int buffer, ushort channel) => mxQueueBuffer(_system, buffer, channel);
+
     public void SetChannelProperties(ushort channel, ChannelProperties properties) =>
         mxSetChannelProperties(_system, channel, properties);
 
@@ -78,4 +87,11 @@ public unsafe class AudioSystem : IDisposable
         _sdl.Quit();
         mxDeleteSystem(_system);
     }
+
+    private void BufferFinishedCB(ushort channel, int buffer)
+    {
+        BufferFinished?.Invoke(this, channel, buffer);
+    }
+
+    public delegate void OnBufferFinished(AudioSystem system, ushort channel, int buffer);
 }

@@ -77,6 +77,8 @@ public struct Point : IEquatable<Point>
     {
         return new Point((int) (left.X / right), (int) (left.Y / right));
     }
+
+    public static explicit operator Point(Size size) => new Point(size.Width, size.Height);
     
     public static explicit operator Vector2(Point point) => new Vector2(point.X, point.Y);
 

@@ -217,7 +217,6 @@ public class EaselGame : IDisposable
     /// </summary>
     protected virtual void Update()
     {
-        UI.BeforeUpdate();
         SceneManager.Update();
         UI.Update(GraphicsInternal.Viewport);
     }

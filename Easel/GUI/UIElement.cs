@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie.Windowing;
 
@@ -7,6 +8,8 @@ namespace Easel.GUI;
 
 public abstract class UIElement
 {
+    public event OnClick Click;
+    
     public readonly Position Position;
 
     public readonly Size Size;
@@ -17,23 +20,29 @@ public abstract class UIElement
 
     protected bool IsMouseButtonHeld;
 
+    protected Point CalculatedScreenPos;
+
+    public UITheme Theme;
+
     protected UIElement(Position position, Size size)
     {
         Position = position;
         Size = size;
+        // UITheme is purposefully a struct, copy it for each element.
+        Theme = UI.Theme;
     }
 
     protected internal virtual void Update(ref bool mouseTaken, Rectangle viewport)
     {
         Vector2 mousePos = Input.MousePosition;
 
-        Point pos = Position.CalculatePosition(viewport, Size);
+        CalculatedScreenPos = Position.CalculatePosition(viewport, Size);
 
         IsClicked = false;
         IsHovering = false;
         
-        if (!mouseTaken && mousePos.X >= pos.X && mousePos.X < pos.X + Size.Width &&
-            mousePos.Y >= pos.Y && mousePos.Y < pos.Y + Size.Height)
+        if (!mouseTaken && mousePos.X >= CalculatedScreenPos.X && mousePos.X < CalculatedScreenPos.X + Size.Width &&
+            mousePos.Y >= CalculatedScreenPos.Y && mousePos.Y < CalculatedScreenPos.Y + Size.Height)
         {
             mouseTaken = true;
             IsHovering = true;
@@ -42,9 +51,14 @@ public abstract class UIElement
                 IsMouseButtonHeld = true;
             else if (IsMouseButtonHeld)
             {
+                Click?.Invoke(this);
                 IsClicked = true;
                 IsMouseButtonHeld = false;
             }
         }
     }
+
+    protected internal abstract void Draw(SpriteRenderer renderer);
+
+    public delegate void OnClick(UIElement element);
 }

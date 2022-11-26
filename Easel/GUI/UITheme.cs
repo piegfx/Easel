@@ -10,7 +10,7 @@ namespace Easel.GUI;
 /// <summary>
 /// Represents the default UI theme for this application. This can be overridden for any UI element.
 /// </summary>
-public class UITheme
+public struct UITheme
 {
     /// <summary>
     /// The rectangle border width for elements that use rectangles.
@@ -41,6 +41,8 @@ public class UITheme
 
     public Font Font;
 
+    public Color FontColor;
+
     public UITheme()
     {
         BorderWidth = 1;
@@ -53,5 +55,6 @@ public class UITheme
         TransitionTime = 0;
         DropShadow = null;
         Font = null;
+        FontColor = Color.Black;
     }
 }

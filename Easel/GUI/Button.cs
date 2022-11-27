@@ -28,7 +28,7 @@ public class Button : UIElement
         // TODO: Fix your damn rounded rectangles!
         //renderer.DrawRoundedRect((Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color,
         //    Theme.BorderColor, 0, Vector2.Zero);
-        renderer.DrawRectangle((Vector2) CalculatedScreenPos, Size, color, 0, Vector2.Zero);
+        renderer.DrawRectangle((Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
 
         Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
         Theme.Font.DrawBBCode(FontSize, Text, (Vector2) (CalculatedScreenPos + (Point) Size / 2 - (Point) size / 2), Theme.FontColor);

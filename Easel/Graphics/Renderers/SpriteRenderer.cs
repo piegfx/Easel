@@ -115,25 +115,52 @@ public sealed class SpriteRenderer : IDisposable
         };
     }
 
-    public void DrawRectangle(Vector2 position, Size size, Color color, float rotation, Vector2 origin)
-    {
-        Draw(Texture2D.Blank, position, null, color, rotation, origin, (Vector2) size);
-    }
-
-    public void DrawRoundedRect(Vector2 position, Size size, int borderWidth, float radius, Color color,
+    public void DrawRectangle(Vector2 position, Size size, int borderWidth, float radius, Color color,
         Color borderColor, float rotation, Vector2 origin)
     {
-        DrawRoundedRect(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
+        DrawRectangle(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
     }
     
-    public void DrawRoundedRect(Texture2D texture, Vector2 position, Size size, int borderWidth, float radius, 
+    public void DrawRectangle(Texture2D texture, Vector2 position, Size size, int borderWidth, float radius, 
         Color color, Color borderColor, float rotation, Vector2 origin)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
         // We need to adjust the size and position as for some reason the rectangle is one pixel off position wise
         // however removing the offset in the shader doesn't look right...
-        //_sprites.Add(new Sprite(texture, size + new Size(2), position - Vector2.One, null, color, rotation, origin, Vector2.One, SpriteFlip.None, SpriteType.RoundedRect, radius <= 0 ? -borderWidth : radius, borderWidth, borderColor));
+        if (_currentTexture != texture || _currentType != SpriteType.RoundedRect || _drawCount >= MaxSprites)
+            Flush();
+        _currentType = SpriteType.RoundedRect;
+        _currentTexture = texture;
+
+        float width = size.Width;
+        float height = size.Height;
+        
+        position -= origin;
+        origin += position;
+        float posX = position.X;
+        float posY = position.Y;
+        
+        Vector4 meta1 = new Vector4(borderWidth, radius, size.Width, size.Height);
+        Vector4 meta2 = (Vector4) borderColor;
+        
+        _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(1, 1), color, rotation, origin, Vector2.One, meta1, meta2);
+        _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(1, 0), color, rotation, origin, Vector2.One, meta1, meta2);
+        _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(0, 0), color, rotation, origin, Vector2.One, meta1, meta2);
+        _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(0, 1), color, rotation, origin, Vector2.One, meta1, meta2);
+
+        uint dc = _drawCount * 4;
+        _indicesCache[0] = 0u + dc;
+        _indicesCache[1] = 1u + dc;
+        _indicesCache[2] = 3u + dc;
+        _indicesCache[3] = 1u + dc;
+        _indicesCache[4] = 2u + dc;
+        _indicesCache[5] = 3u + dc;
+        
+        Array.Copy(_verticesCache, 0, _vertices, _drawCount * NumVertices, NumVertices);
+        Array.Copy(_indicesCache, 0, _indices, _drawCount * NumIndices, NumIndices);
+
+        _drawCount++;
     }
 
     public void End()

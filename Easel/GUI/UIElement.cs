@@ -10,9 +10,9 @@ public abstract class UIElement
 {
     public event OnClick Click;
     
-    public readonly Position Position;
+    public Position Position;
 
-    public readonly Size Size;
+    public Size Size;
     
     public bool IsClicked;
 
@@ -23,6 +23,8 @@ public abstract class UIElement
     protected Point CalculatedScreenPos;
 
     public UITheme Theme;
+
+    public Tooltip Tooltip;
 
     protected UIElement(Position position, Size size)
     {
@@ -46,6 +48,8 @@ public abstract class UIElement
         {
             mouseTaken = true;
             IsHovering = true;
+
+            UI.CurrentTooltip = Tooltip;
 
             if (Input.MouseButtonDown(MouseButton.Left))
                 IsMouseButtonHeld = true;

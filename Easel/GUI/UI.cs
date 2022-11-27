@@ -15,6 +15,8 @@ public static class UI
 
     public static UITheme Theme;
 
+    public static Tooltip CurrentTooltip;
+
     static UI()
     {
         _elements = new Dictionary<string, UIElement>();
@@ -35,8 +37,21 @@ public static class UI
         _reversedElements.Remove(element);
     }
 
+    public static T Get<T>(string id) where T : UIElement
+    {
+        return (T) _elements[id];
+    }
+
+    public static void Clear()
+    {
+        _elements.Clear();
+        _reversedElements.Clear();
+    }
+
     internal static void Update(Rectangle viewport)
     {
+        CurrentTooltip = null;
+        
         bool mouseCaptured = false;
         for (int i = _reversedElements.Count - 1; i >= 0; i--)
             _reversedElements[i].Update(ref mouseCaptured, viewport);
@@ -48,6 +63,8 @@ public static class UI
         
         foreach ((_, UIElement element) in _elements)
             element.Draw(graphics.SpriteRenderer);
+        
+        CurrentTooltip?.Draw(graphics.SpriteRenderer);
         
         graphics.SpriteRenderer.End();
     }

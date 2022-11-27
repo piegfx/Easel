@@ -12,10 +12,15 @@ public class Button : UIElement
     
     public uint FontSize;
 
-    public Button(Position position, Size size, string text, uint fontSize = 24) : base(position, size)
+    public Point TextOffset;
+
+    public Justification Justification;
+
+    public Button(Position position, Size size, string text, uint fontSize = 24, Justification justification = Justification.Center) : base(position, size)
     {
         Text = text;
         FontSize = fontSize;
+        Justification = justification;
     }
     
     protected internal override void Draw(SpriteRenderer renderer)
@@ -33,8 +38,15 @@ public class Button : UIElement
         }
 
         renderer.DrawRectangle((Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
-
         Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
-        Theme.Font.DrawBBCode(FontSize, Text, (Vector2) (CalculatedScreenPos + (Point) Size / 2 - (Point) size / 2), Theme.FontColor);
+
+        int posX = Justification switch
+        {
+            Justification.Left => CalculatedScreenPos.X,
+            Justification.Center => CalculatedScreenPos.X + Size.Width / 2 - size.Width / 2,
+            Justification.Right => CalculatedScreenPos.X + Size.Width - size.Width,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        Theme.Font.DrawBBCode(FontSize, Text, new Vector2(posX, CalculatedScreenPos.Y + Size.Height / 2 - size.Height / 2) + (Vector2) TextOffset, Theme.FontColor);
     }
 }

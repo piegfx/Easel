@@ -12,14 +12,14 @@ public class PostProcessor
     public PostProcessor(ref PostProcessorSettings settings, EaselGraphics graphics)
     {
         MainTarget = new RenderTarget(graphics.Viewport.Size, false);
-        graphics.ViewportResized += GraphicsOnViewportResized;
+        graphics.SwapchainResized += GraphicsOnSwapchainResized;
         CreateResources(ref settings);
     }
 
-    private void GraphicsOnViewportResized(Rectangle viewport)
+    private void GraphicsOnSwapchainResized(Size size)
     {
         MainTarget.Dispose();
-        MainTarget = new RenderTarget(viewport.Size);
+        MainTarget = new RenderTarget(size);
     }
 
     public void ApplyPostProcessorSettings(ref PostProcessorSettings settings)

@@ -22,6 +22,9 @@ public class EaselGraphics : IDisposable
     /// Is invoked when the <see cref="Viewport"/> is resized.
     /// </summary>
     public event OnViewportResized ViewportResized;
+
+    // Temporary
+    public event OnSwapchainResized SwapchainResized;
     
     /// <summary>
     /// Access the Pie graphics device to gain lower-level graphics access.
@@ -141,7 +144,10 @@ public class EaselGraphics : IDisposable
             return;
         PieGraphics.ResizeSwapchain(size);
         Viewport = new Rectangle(Point.Zero, (Size) size);
+        SwapchainResized?.Invoke((Size) size);
     }
 
     public delegate void OnViewportResized(Rectangle viewport);
+    
+    public delegate void OnSwapchainResized(Size size);
 }

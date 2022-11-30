@@ -11,7 +11,6 @@ namespace Easel.GUI;
 public static class UI
 {
     private static Dictionary<string, UIElement> _elements;
-    private static List<UIElement> _reversedElements;
 
     public static UITheme Theme;
 
@@ -20,21 +19,18 @@ public static class UI
     static UI()
     {
         _elements = new Dictionary<string, UIElement>();
-        _reversedElements = new List<UIElement>();
-        
+
         Theme = new UITheme();
     }
 
     public static void Add(string id, UIElement element)
     {
         _elements.Add(id, element);
-        _reversedElements.Add(element);
     }
 
     public static void Remove(string id)
     {
         _elements.Remove(id, out UIElement element);
-        _reversedElements.Remove(element);
     }
 
     public static T Get<T>(string id) where T : UIElement
@@ -45,7 +41,6 @@ public static class UI
     public static void Clear()
     {
         _elements.Clear();
-        _reversedElements.Clear();
     }
 
     internal static void Update(Rectangle viewport)
@@ -53,8 +48,8 @@ public static class UI
         CurrentTooltip = null;
         
         bool mouseCaptured = false;
-        for (int i = _reversedElements.Count - 1; i >= 0; i--)
-            _reversedElements[i].Update(ref mouseCaptured, viewport);
+        foreach ((_, UIElement element) in _elements.Reverse())
+            element.Update(ref mouseCaptured, viewport);
     }
 
     internal static void Draw(EaselGraphics graphics)

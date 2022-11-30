@@ -29,6 +29,8 @@ public static class Logger
     {
         string caller = GetCaller(3);
         LogAdded?.Invoke(type, caller, message);
+        if (type == LogType.Fatal)
+            throw new EaselException(message);
     }
     
     public static void Debug(string message)
@@ -54,7 +56,6 @@ public static class Logger
     public static void Fatal(string message)
     {
         Log(LogType.Fatal, message);
-        throw new EaselException(message);
     }
 
     private static string GetCaller(int frames)

@@ -122,6 +122,8 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
         
+        Graphics.SetRenderTarget(Graphics.PostProcessor.MainTarget);
+        
         #region 3D pass
         
         Rectangle viewport = Graphics.Viewport;
@@ -140,6 +142,9 @@ public abstract class Scene : IDisposable
         Graphics.Renderer2D.Render(Camera.Main);
 
         #endregion
+        
+        Graphics.SetRenderTarget(null);
+        Graphics.PostProcessor.Process(Graphics);
 
         _timer += Time.DeltaTime;
 

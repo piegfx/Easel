@@ -8,15 +8,39 @@ public class PostProcessor
 {
     public RenderTarget MainTarget;
     private Effect _effect;
-    
-    public PostProcessor(ref PostProcessorSettings settings, EaselGraphics graphics)
+    private bool _shouldAutomaticallyAdjust;
+    private Size? _resolution;
+
+    public Size? Resolution
     {
-        MainTarget = new RenderTarget(graphics.Viewport.Size, false);
+        get => _resolution;
+        set
+        {
+            if (value != null)
+            {
+                _resolution = value;
+                _shouldAutomaticallyAdjust = false;
+                ResizeTarget(value.Value);
+            }
+        }
+    }
+    
+    public PostProcessor(ref PostProcessorSettings settings, EaselGraphics graphics, Size? resolution = null)
+    {
+        _resolution = resolution;
+        _shouldAutomaticallyAdjust = resolution == null;
+        MainTarget = new RenderTarget(resolution ?? graphics.Viewport.Size, false);
         graphics.SwapchainResized += GraphicsOnSwapchainResized;
         CreateResources(ref settings);
     }
 
     private void GraphicsOnSwapchainResized(Size size)
+    {
+        if (_shouldAutomaticallyAdjust)
+            ResizeTarget(size);
+    }
+
+    private void ResizeTarget(Size size)
     {
         MainTarget.Dispose();
         MainTarget = new RenderTarget(size);

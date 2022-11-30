@@ -35,6 +35,8 @@ public class EaselGraphics : IDisposable
 
     public I2DRenderer Renderer2D;
 
+    public PostProcessor PostProcessor;
+
     public SpriteRenderer SpriteRenderer;
 
     public EffectManager EffectManager;
@@ -73,6 +75,9 @@ public class EaselGraphics : IDisposable
         Renderer = renderer;
         Renderer2D = renderer2D;
         SpriteRenderer = new SpriteRenderer(PieGraphics);
+
+        PostProcessor.PostProcessorSettings settings = new PostProcessor.PostProcessorSettings();
+        PostProcessor = new PostProcessor(ref settings, this, null);
     }
 
     private void PieDebug(LogType logtype, string message)

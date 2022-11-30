@@ -11,8 +11,6 @@ namespace Easel.Graphics.Renderers;
 /// </summary>
 public interface I3DRenderer : IDisposable
 {
-    public PostProcessor PostProcessor { get; }
-    
     /// <summary>
     /// Draw a translucent object. These objects are drawn back-to-front to allow transparency to work.
     /// </summary>

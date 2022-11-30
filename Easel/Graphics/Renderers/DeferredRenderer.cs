@@ -38,8 +38,6 @@ public class DeferredRenderer : I3DRenderer
             new FramebufferAttachment(SpecularTexture, AttachmentType.Color));
     }
 
-    public PostProcessor PostProcessor { get; }
-
     public void DrawTranslucent(Renderable renderable, Matrix4x4 world)
     {
         throw new System.NotImplementedException();

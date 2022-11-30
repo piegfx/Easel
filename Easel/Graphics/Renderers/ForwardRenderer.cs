@@ -54,12 +54,7 @@ public sealed class ForwardRenderer : I3DRenderer
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
         _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
         _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
-
-        PostProcessor.PostProcessorSettings settings = new PostProcessor.PostProcessorSettings();
-        PostProcessor = new PostProcessor(ref settings, graphics);
     }
-
-    public PostProcessor PostProcessor { get; }
 
     /// <inheritdoc />
     public void DrawTranslucent(Renderable renderable, Matrix4x4 world)
@@ -84,8 +79,6 @@ public sealed class ForwardRenderer : I3DRenderer
     public void Render(Camera camera, World world)
     {
         GraphicsDevice device = _graphics.PieGraphics;
-        
-        device.SetFramebuffer(PostProcessor.MainTarget.PieBuffer);
         _graphics.Clear(world.ClearColor);
         world.Skybox?.Draw(camera);
         _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
@@ -108,9 +101,6 @@ public sealed class ForwardRenderer : I3DRenderer
         
         foreach ((Renderable renderable, Matrix4x4 mWorld) in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
             DrawRenderable(renderable, mWorld);
-        
-        device.SetFramebuffer(null);
-        PostProcessor.Process(_graphics);
     }
 
     private void DrawRenderable(in Renderable renderable, in Matrix4x4 world)

@@ -25,6 +25,8 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// </summary>
     public Vector3 Scale;
 
+    public Vector3 Origin;
+
     /// <summary>
     /// The Sprite (Z) rotation of this transform. This is helpful when dealing with 2D objects.
     /// </summary>
@@ -42,6 +44,7 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
         Position = Vector3.Zero;
         Rotation = Quaternion.Identity;
         Scale = Vector3.One;
+        Origin = Vector3.Zero;
     }
 
     /// <summary>
@@ -78,8 +81,9 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// Calculates and returns the matrix for this transform.
     /// </summary>
     public Matrix4x4 TransformMatrix => Matrix4x4.CreateScale(Scale) *
-                                    Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
-                                    Matrix4x4.CreateTranslation(Position);
+                                        Matrix4x4.CreateTranslation(-Origin) *
+                                        Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
+                                        Matrix4x4.CreateTranslation(Position);
 
     public void RotateAroundLocalPoint(Vector3 point, Vector3 axis, float angle)
     {

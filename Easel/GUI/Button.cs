@@ -16,6 +16,8 @@ public class Button : UIElement
 
     public Justification Justification;
 
+    public Texture Image;
+
     public Button(Position position, Size size, string text, uint fontSize = 24, Justification justification = Justification.Center) : base(position, size)
     {
         Text = text;
@@ -36,8 +38,8 @@ public class Button : UIElement
             DropShadow shadow = Theme.DropShadow.Value;
             renderer.DrawRectangle((Vector2) CalculatedScreenPos + shadow.Offset, Size, 0, Theme.BorderRadius, shadow.Color, Color.Transparent, 0, Vector2.Zero);
         }
-
-        renderer.DrawRectangle((Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
+        
+        renderer.DrawRectangle(Image ?? Texture2D.Blank, (Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
         Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
 
         int posX = Justification switch

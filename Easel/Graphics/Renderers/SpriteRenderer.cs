@@ -255,6 +255,29 @@ public sealed class SpriteRenderer : IDisposable
         _drawCount++;
     }
 
+    public void DrawVertices(Texture texture, SpriteVertex[] vertices, uint[] indices)
+    {
+        // TODO: Check for vertex & index buffer overflows instead of checking for draw count
+        // TODO: DAMN AUTO SUPER DUPER BUFFER RESIZING GET ON IT
+        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _drawCount >= MaxSprites)
+            Flush();
+        if (EaselGame.Instance.AllowMissing)
+            texture ??= Texture2D.Missing;
+        _currentTexture = texture;
+        _currentType = SpriteType.Bitmap;
+        
+        uint dc = _drawCount * 4;
+        for (int i = 0; i < indices.Length; i++)
+            indices[i] += dc;
+
+        Array.Copy(vertices, 0, _vertices, _drawCount * NumIndices, vertices.Length);
+        Array.Copy(indices, 0, _indices, _drawCount * NumIndices, NumIndices);
+
+        // For now, so that the sprite renderer continues to work correctly, we just increment it the number of indices
+        // we are using. Not perfect but it works in a pinch. I think. I haven't actually tested it yet.
+        _drawCount += (uint) MathF.Ceiling(indices.Length / (float) NumIndices);
+    }
+
     private void Flush()
     {
         if (_drawCount == 0)

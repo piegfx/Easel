@@ -23,14 +23,18 @@ public sealed class SpriteRenderer : IDisposable
     private const uint VertexSizeInBytes = NumVertices * SpriteVertex.SizeInBytes;
     private const uint IndicesSizeInBytes = NumIndices * sizeof(uint);
 
+    private const uint MaxVertices = NumVertices * MaxSprites;
+    private const uint MaxIndices = NumIndices * MaxSprites;
+
+    private uint _totalVertices;
+    private uint _totalIndices;
+
     private SpriteVertex[] _vertices;
 
     private uint[] _indices;
 
     private SpriteVertex[] _verticesCache;
     private uint[] _indicesCache;
-    
-    private uint _drawCount;
 
     private GraphicsBuffer _vertexBuffer;
     private GraphicsBuffer _indexBuffer;
@@ -128,7 +132,7 @@ public sealed class SpriteRenderer : IDisposable
             throw new EaselException("No current active sprite renderer session.");
         // We need to adjust the size and position as for some reason the rectangle is one pixel off position wise
         // however removing the offset in the shader doesn't look right...
-        if (_currentTexture != texture || _currentType != SpriteType.RoundedRect || _drawCount >= MaxSprites)
+        if (_currentTexture != texture || _currentType != SpriteType.RoundedRect || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
             Flush();
         _currentType = SpriteType.RoundedRect;
         _currentTexture = texture;
@@ -149,7 +153,7 @@ public sealed class SpriteRenderer : IDisposable
         _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(0, 0), color, rotation, origin, Vector2.One, meta1, meta2);
         _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(0, 1), color, rotation, origin, Vector2.One, meta1, meta2);
 
-        uint dc = _drawCount * 4;
+        uint dc = _totalIndices;
         _indicesCache[0] = 0u + dc;
         _indicesCache[1] = 1u + dc;
         _indicesCache[2] = 3u + dc;
@@ -157,10 +161,11 @@ public sealed class SpriteRenderer : IDisposable
         _indicesCache[4] = 2u + dc;
         _indicesCache[5] = 3u + dc;
         
-        Array.Copy(_verticesCache, 0, _vertices, _drawCount * NumVertices, NumVertices);
-        Array.Copy(_indicesCache, 0, _indices, _drawCount * NumIndices, NumIndices);
+        Array.Copy(_verticesCache, 0, _vertices, _totalVertices, NumVertices);
+        Array.Copy(_indicesCache, 0, _indices, _totalIndices, NumIndices);
 
-        _drawCount++;
+        _totalVertices += NumVertices;
+        _totalIndices += NumIndices;
     }
 
     public void End()
@@ -175,7 +180,7 @@ public sealed class SpriteRenderer : IDisposable
     public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
-        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _drawCount >= MaxSprites)
+        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
             Flush();
         if (EaselGame.Instance.AllowMissing)
             texture ??= Texture2D.Missing;
@@ -241,7 +246,7 @@ public sealed class SpriteRenderer : IDisposable
         _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(texX, texY), tint, rotation, origin, scale, meta1, meta2);
         _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(texX, texY + texH), tint, rotation, origin, scale, meta1, meta2);
 
-        uint dc = _drawCount * 4;
+        uint dc = _totalIndices;
         _indicesCache[0] = 0u + dc;
         _indicesCache[1] = 1u + dc;
         _indicesCache[2] = 3u + dc;
@@ -249,38 +254,38 @@ public sealed class SpriteRenderer : IDisposable
         _indicesCache[4] = 2u + dc;
         _indicesCache[5] = 3u + dc;
         
-        Array.Copy(_verticesCache, 0, _vertices, _drawCount * NumVertices, NumVertices);
-        Array.Copy(_indicesCache, 0, _indices, _drawCount * NumIndices, NumIndices);
+        Array.Copy(_verticesCache, 0, _vertices, _totalVertices, NumVertices);
+        Array.Copy(_indicesCache, 0, _indices, _totalIndices, NumIndices);
 
-        _drawCount++;
+        _totalVertices += NumVertices;
+        _totalIndices += NumIndices;
     }
 
     public void DrawVertices(Texture texture, SpriteVertex[] vertices, uint[] indices)
     {
         // TODO: Check for vertex & index buffer overflows instead of checking for draw count
         // TODO: DAMN AUTO SUPER DUPER BUFFER RESIZING GET ON IT
-        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _drawCount >= MaxSprites)
+        if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
             Flush();
         if (EaselGame.Instance.AllowMissing)
             texture ??= Texture2D.Missing;
         _currentTexture = texture;
         _currentType = SpriteType.Bitmap;
-        
-        uint dc = _drawCount * 4;
+
+        uint dc = _totalIndices;
         for (int i = 0; i < indices.Length; i++)
             indices[i] += dc;
 
-        Array.Copy(vertices, 0, _vertices, _drawCount * NumIndices, vertices.Length);
-        Array.Copy(indices, 0, _indices, _drawCount * NumIndices, NumIndices);
+        Array.Copy(vertices, 0, _vertices, _totalVertices, vertices.Length);
+        Array.Copy(indices, 0, _indices, _totalIndices, indices.Length);
 
-        // For now, so that the sprite renderer continues to work correctly, we just increment it the number of indices
-        // we are using. Not perfect but it works in a pinch. I think. I haven't actually tested it yet.
-        _drawCount += (uint) MathF.Ceiling(indices.Length / (float) NumIndices);
+        _totalVertices += (uint) vertices.Length;
+        _totalIndices += (uint) indices.Length;
     }
 
     private void Flush()
     {
-        if (_drawCount == 0)
+        if (_totalVertices == 0 || _totalIndices == 0)
             return;
         
         _device.UpdateBuffer(_vertexBuffer, 0, _vertices);
@@ -306,9 +311,10 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(0, _vertexBuffer, SpriteVertex.SizeInBytes, _layout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
-        _device.DrawIndexed(NumIndices * _drawCount);
+        _device.DrawIndexed(_totalIndices);
 
-        _drawCount = 0;
+        _totalVertices = 0;
+        _totalIndices = 0;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -333,6 +339,13 @@ public sealed class SpriteRenderer : IDisposable
             Scale = scale;
             Meta1 = meta1;
             Meta2 = meta2;
+        }
+
+        public SpriteVertex(Vector2 position, Vector2 texCoord, Color tint) : this()
+        {
+            Position = position;
+            TexCoord = texCoord;
+            Tint = tint;
         }
 
         public const uint SizeInBytes = 84;

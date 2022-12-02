@@ -80,8 +80,8 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     /// <summary>
     /// Calculates and returns the matrix for this transform.
     /// </summary>
-    public Matrix4x4 TransformMatrix => Matrix4x4.CreateScale(Scale) *
-                                        Matrix4x4.CreateTranslation(-Origin) *
+    public Matrix4x4 TransformMatrix => Matrix4x4.CreateTranslation(-Origin) *
+                                        Matrix4x4.CreateScale(Scale) *
                                         Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(Rotation)) *
                                         Matrix4x4.CreateTranslation(Position);
 

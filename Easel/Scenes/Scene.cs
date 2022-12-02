@@ -139,7 +139,7 @@ public abstract class Scene : IDisposable
 
         #region 2D pass
 
-        Graphics.Renderer2D.Render(Camera.Main);
+        Graphics.Renderer2D.Render(Camera.Main, World);
 
         #endregion
         

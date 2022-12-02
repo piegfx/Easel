@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using Easel.Entities;
 using Easel.Math;
+using Easel.Scenes;
 using Easel.Utilities;
 
 namespace Easel.Graphics.Renderers;
@@ -69,9 +70,9 @@ public class Default2DRenderer : I2DRenderer
         _drawList.Clear();
     }
 
-    public void Render(Camera camera)
+    public void Render(Camera camera, World world)
     {
-        _graphics.SpriteRenderer.Begin(camera.ViewMatrix, camera.ProjectionMatrix);
+        _graphics.SpriteRenderer.Begin(camera.ViewMatrix, camera.ProjectionMatrix, mode: world.SpriteRenderMode);
         _drawList.Sort((sprite, sprite1) => sprite1.Depth.CompareTo(sprite.Depth));
         for (int i = 0; i < _drawList.Count; i++)
             _drawList[i].Draw(_graphics.SpriteRenderer);

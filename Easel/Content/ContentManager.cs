@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Timers;
+using Easel.Audio;
 using Easel.Content.Localization;
 using Easel.Formats;
 using Easel.Graphics;
@@ -36,6 +37,7 @@ public class ContentManager
         AddNewTypeReader(typeof(Mesh[]), new MeshContentTypeReader());
         AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
         AddNewTypeReader(typeof(Font), new FontContentTypeReader());
+        AddNewTypeReader(typeof(Sound), new SoundContentTypeReader());
 
         ContentRootDir = contentRootDir;
 

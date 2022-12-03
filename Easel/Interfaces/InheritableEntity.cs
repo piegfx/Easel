@@ -1,10 +1,8 @@
-using System;
+using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
 using Easel.Graphics;
 using Easel.Scenes;
-using Pie;
-using Pie.Audio;
 
 namespace Easel.Interfaces;
 
@@ -30,7 +28,7 @@ public abstract class InheritableEntity
     protected abstract Scene ActiveScene { get; }
     
     /// <summary>
-    /// The current <see cref="Pie.Audio.AudioDevice"/> instance.
+    /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
     protected abstract AudioDevice Audio { get; }
     

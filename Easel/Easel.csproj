@@ -12,7 +12,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Pie\Pie.Audio\Pie.Audio.csproj" />
       <ProjectReference Include="..\Pie\Pie.Freetype\Pie.Freetype.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
@@ -22,6 +21,7 @@
 
     <ItemGroup>
       <PackageReference Include="Silk.NET.Assimp" Version="2.16.0" />
+      <PackageReference Include="Silk.NET.SDL" Version="2.16.0" />
       <PackageReference Include="StbImageSharp" Version="2.27.11" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
@@ -47,6 +47,12 @@
       <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.frag" />
       <None Remove="Graphics\Shaders\PostProcessor.frag" />
       <EmbeddedResource Include="Graphics\Shaders\PostProcessor.frag" />
+      <None Update="Audio\libmixr.so">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Audio\mixr.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

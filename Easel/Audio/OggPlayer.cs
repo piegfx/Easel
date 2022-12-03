@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using Pie.Audio;
 using StbVorbisSharp;
 
 namespace Easel.Audio;
@@ -10,45 +8,52 @@ namespace Easel.Audio;
 /// </summary>
 public class OggPlayer : IAudioPlayer
 {
-    private AudioBuffer[] _buffers;
+    private int[] _buffers;
     private Vorbis _vorbis;
     private int _currentBuffer;
-    private uint _playingChannel;
+    private ushort _playingChannel;
     private bool _loop;
+
+    private ChannelProperties _properties;
 
     public OggPlayer(AudioDevice device, byte[] file)
     {
         _vorbis = Vorbis.FromMemory(file);
-        _buffers = new AudioBuffer[2];
+        _buffers = new int[2];
         for (int i = 0; i < _buffers.Length; i++)
             _buffers[i] = device.CreateBuffer();
 
         device.BufferFinished += DeviceOnBufferFinished;
     }
 
-    private void DeviceOnBufferFinished(AudioDevice device, uint channel)
+    private void DeviceOnBufferFinished(AudioDevice device, ushort channel, int buffer)
     {
         if (channel != _playingChannel)
             return;
         FillBuffer(device, _currentBuffer);
-        device.Queue((int) channel, _buffers[_currentBuffer]);
+        device.QueueBuffer(_buffers[_currentBuffer], channel);
         _currentBuffer++;
         if (_currentBuffer >= _buffers.Length)
             _currentBuffer = 0;
     }
     
     /// <inheritdoc />
-    public void Play(AudioDevice device, int channel, float volume, float pitch, bool loop, Priority priority)
+    public void Play(AudioDevice device, ushort channel, float volume, float pitch, bool loop)
     {
         _vorbis.Restart();
-        device.Stop((int) _playingChannel);
+        device.Stop(_playingChannel);
         for (int i = 0; i < _buffers.Length; i++)
             FillBuffer(device, i);
         _currentBuffer = 0;
-        device.Play(channel, _buffers[0], volume, pitch, false, priority);
+        _properties = new ChannelProperties()
+        {
+            Volume = volume,
+            Speed = pitch
+        };
+        device.PlayBuffer(_buffers[0], channel, _properties);
         for (int i = 1; i < _buffers.Length; i++)
-            device.Queue(channel, _buffers[i]);
-        _playingChannel = (uint) channel;
+            device.QueueBuffer(_buffers[i], channel);
+        _playingChannel = channel;
         _loop = loop;
     }
 
@@ -62,16 +67,23 @@ public class OggPlayer : IAudioPlayer
             if (_loop)
                 _vorbis.Restart();
             else if (_vorbis.Decoded == 0)
-                device.Stop((int) _playingChannel);
+                device.Stop(_playingChannel);
         }
 
-        device.UpdateBuffer(_buffers[index], AudioFormat.Stereo16, data, (uint) _vorbis.SampleRate);
+        byte[] bData = new byte[data.Length * 2];
+        for (int i = 0; i < data.Length; i++)
+        {
+            bData[i * 2] = (byte) (data[i] & 0xFF);
+            bData[i * 2 + 1] = (byte) (data[i] >> 8);
+        }
+
+        device.UpdateBuffer(_buffers[index], bData, new AudioFormat(2, _vorbis.SampleRate, 16));
     }
     
     public void Dispose()
     {
         _vorbis.Dispose();
-        for (int i = 0; i < _buffers.Length; i++)
-            _buffers[i].Dispose();
+        //for (int i = 0; i < _buffers.Length; i++)
+        //    _buffers[i].Dispose();
     }
 }

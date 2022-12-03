@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using Pie.Audio;
 
 namespace Easel.Audio;
 
@@ -16,11 +14,12 @@ public class Sound : IDisposable
         using Stream stream = File.OpenRead(path);
         using BinaryReader reader = new BinaryReader(stream);
         Type = GetSoundType(reader);
+
         AudioDevice device = EaselGame.Instance.AudioInternal;
         switch (Type)
         {
             case SoundType.Unknown:
-                throw new EaselException("Given sound file is not a supported format.");
+                throw new Exception("Given sound file is not a supported format.");
             case SoundType.Wav:
                 Player = new WavPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
                 break;
@@ -32,13 +31,10 @@ public class Sound : IDisposable
         }
     }
 
-    public int Play(int channel = -1, float volume = 1, float pitch = 1, bool loop = false, Priority priority = Priority.Low)
+    public void Play(ushort channel, float volume = 1, float pitch = 1, bool loop = false)
     {
         // TODO: Volume and stuff
-        AudioDevice device = EaselGame.Instance.AudioInternal;
-        channel = channel < 0 ? device.FindChannel() : channel;
-        Player.Play(device, channel, volume, pitch, loop, priority);
-        return channel;
+        Player.Play(EaselGame.Instance.AudioInternal, channel, volume, pitch, loop);
     }
 
     public void Dispose()

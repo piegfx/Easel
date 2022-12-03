@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
+using Easel.Audio;
 using Easel.Content;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
@@ -12,7 +13,6 @@ using Easel.Math;
 using Easel.Scenes;
 using Easel.Utilities;
 using Pie;
-using Pie.Audio;
 using Pie.Windowing;
 using Window = Pie.Windowing.Window;
 
@@ -165,7 +165,7 @@ public class EaselGame : IDisposable
         GraphicsInternal.Initialize(new ForwardRenderer(GraphicsInternal), new Default2DRenderer(GraphicsInternal));
 
         Logger.Debug("Creating audio device...");
-        AudioInternal = new AudioDevice(256);
+        AudioInternal = new AudioDevice(AudioFormat.Stereo48khz, 256);
 
         Logger.Debug("Initializing input...");
         Input.Initialize(Window);

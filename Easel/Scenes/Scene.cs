@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
 using Easel.Graphics;
-using Easel.Graphics.Renderers;
-using Easel.Interfaces;
 using Easel.Math;
-using Easel.Utilities;
-using Pie;
-using Pie.Audio;
 
 namespace Easel.Scenes;
 
@@ -54,7 +49,7 @@ public abstract class Scene : IDisposable
     protected EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
 
     /// <summary>
-    /// The current <see cref="Pie.Audio.AudioDevice"/> instance.
+    /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
     protected AudioDevice Audio => EaselGame.Instance.AudioInternal;
 

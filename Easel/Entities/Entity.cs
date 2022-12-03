@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Easel.Audio;
 using Easel.Content;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Scenes;
-using Pie;
-using Pie.Audio;
 
 namespace Easel.Entities;
 

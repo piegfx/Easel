@@ -1,5 +1,4 @@
 using System;
-using Pie.Audio;
 
 namespace Easel.Audio;
 
@@ -17,5 +16,5 @@ public interface IAudioPlayer : IDisposable
     /// <param name="pitch">The pitch to play at.</param>
     /// <param name="loop">Loop the audio?</param>
     /// <param name="priority">The priority of the audio.</param>
-    public void Play(AudioDevice device, int channel, float volume, float pitch, bool loop, Priority priority);
+    public void Play(AudioDevice device, ushort channel, float volume, float pitch, bool loop);
 }

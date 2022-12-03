@@ -1,10 +1,9 @@
 ﻿using System;
+using Easel.Audio;
 using Easel.Content;
 using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Scenes;
-using Pie;
-using Pie.Audio;
 
 namespace Easel.Entities.Components;
 

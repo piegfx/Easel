@@ -1,30 +1,33 @@
-using System;
-using System.IO;
 using Pie.Audio;
 
 namespace Easel.Audio;
 
 public class WavPlayer : IAudioPlayer
 {
-    private AudioBuffer _buffer;
+    private int _buffer;
 
     public readonly byte[] Data;
-    public readonly uint SampleRate;
+    public readonly AudioFormat Format;
 
     public WavPlayer(AudioDevice device, byte[] file)
     {
         _buffer = device.CreateBuffer();
-        Data = AudioHelper.LoadWav(file, out SampleRate, out AudioFormat format);
-        device.UpdateBuffer(_buffer, format, Data, SampleRate);
+        Data = AudioHelper.LoadWav(file, out Format);
+        device.UpdateBuffer(_buffer, Data, Format);
     }
 
-    public void Play(AudioDevice device, int channel, float volume, float pitch, bool loop, Priority priority)
+    public void Play(AudioDevice device, ushort channel, float volume, float pitch, bool loop)
     {
-        device.Play(channel, _buffer, volume, pitch, loop, priority);
+        device.PlayBuffer(_buffer, channel, new ChannelProperties()
+        {
+            Volume = volume,
+            Speed = pitch,
+            Loop = loop
+        });
     }
 
     public void Dispose()
     {
-        _buffer.Dispose();
+        // _buffer.Dispose();
     }
 }

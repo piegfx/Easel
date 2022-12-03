@@ -52,6 +52,8 @@ public unsafe class AudioDevice : IDisposable
 
     public int CreateBuffer() => mxCreateBuffer(_system);
 
+    public void DeleteBuffer(int buffer) => mxDeleteBuffer(_system, buffer);
+
     public void UpdateBuffer(int buffer, byte[] data, AudioFormat format)
     {
         fixed (byte* buf = data)

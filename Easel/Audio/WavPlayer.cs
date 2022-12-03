@@ -28,6 +28,6 @@ public class WavPlayer : IAudioPlayer
 
     public void Dispose()
     {
-        // _buffer.Dispose();
+        EaselGame.Instance.AudioInternal.DeleteBuffer(_buffer);
     }
 }

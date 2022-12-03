@@ -83,7 +83,7 @@ public class OggPlayer : IAudioPlayer
     public void Dispose()
     {
         _vorbis.Dispose();
-        //for (int i = 0; i < _buffers.Length; i++)
-        //    _buffers[i].Dispose();
+        for (int i = 0; i < _buffers.Length; i++)
+            EaselGame.Instance.AudioInternal.DeleteBuffer(_buffers[i]);
     }
 }

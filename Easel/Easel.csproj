@@ -47,10 +47,10 @@
       <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.frag" />
       <None Remove="Graphics\Shaders\PostProcessor.frag" />
       <EmbeddedResource Include="Graphics\Shaders\PostProcessor.frag" />
-      <None Update="Audio\libmixr.so">
+      <None Update="libmixr.so">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Audio\mixr.dll">
+      <None Update="mixr.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

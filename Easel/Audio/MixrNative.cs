@@ -20,6 +20,9 @@ public static unsafe class MixrNative
     public static extern int mxCreateBuffer(IntPtr system);
 
     [DllImport(MixrName)]
+    public static extern void mxDeleteBuffer(IntPtr system, int buffer);
+
+    [DllImport(MixrName)]
     public static extern void mxUpdateBuffer(IntPtr system, int buffer, byte* data, nuint dataLength,
         AudioFormat format);
 

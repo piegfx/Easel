@@ -79,6 +79,11 @@ public class OggPlayer : IAudioPlayer
 
         device.UpdateBuffer(_buffers[index], bData, new AudioFormat(2, _vorbis.SampleRate, 16));
     }
+
+    public void Stop()
+    {
+        EaselGame.Instance.AudioInternal.Stop(_playingChannel);
+    }
     
     public void Dispose()
     {

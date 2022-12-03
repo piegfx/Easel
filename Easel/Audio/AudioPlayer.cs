@@ -17,4 +17,6 @@ public interface IAudioPlayer : IDisposable
     /// <param name="loop">Loop the audio?</param>
     /// <param name="priority">The priority of the audio.</param>
     public void Play(AudioDevice device, ushort channel, float volume, float pitch, bool loop);
+
+    public void Stop();
 }

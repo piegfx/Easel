@@ -128,4 +128,15 @@ public sealed class Transform : IEquatable<Transform>, ICloneable
     {
         return !Equals(left, right);
     }
+
+    public static Transform Lerp(Transform a, Transform b, float amount)
+    {
+        return new Transform()
+        {
+            Position = Vector3.Lerp(a.Position, b.Position, amount),
+            Rotation = Quaternion.Lerp(a.Rotation, b.Rotation, amount),
+            Scale = Vector3.Lerp(a.Scale, b.Scale, amount),
+            Origin = Vector3.Lerp(a.Origin, b.Origin, amount)
+        };
+    }
 }

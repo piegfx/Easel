@@ -26,6 +26,11 @@ public class WavPlayer : IAudioPlayer
         });
     }
 
+    public void Stop()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void Dispose()
     {
         EaselGame.Instance.AudioInternal.DeleteBuffer(_buffer);

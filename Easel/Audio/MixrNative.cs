@@ -47,5 +47,14 @@ public static unsafe class MixrNative
     [DllImport(MixrName)]
     public static extern short mxAdvance(IntPtr system);
 
+    [DllImport(MixrName)]
+    public static extern ushort mxGetNumChannels(IntPtr system);
+
+    [DllImport(MixrName)]
+    public static extern bool mxIsPlaying(IntPtr system, ushort channel);
+
+    [DllImport(MixrName)]
+    public static extern ushort mxGetAvailableChannel(IntPtr system);
+
     public delegate void BufferFinishedCallback(ushort channel, int buffer);
 }

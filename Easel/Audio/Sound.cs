@@ -1,45 +1,45 @@
 using System;
 using System.IO;
+using Pie.Audio;
 
 namespace Easel.Audio;
 
 public class Sound : IDisposable
 {
-    public readonly SoundType Type;
-
-    public readonly IAudioPlayer Player;
-
+    private int _buffer;
+    
     public Sound(string path)
     {
-        using Stream stream = File.OpenRead(path);
-        using BinaryReader reader = new BinaryReader(stream);
-        Type = GetSoundType(reader);
+        //using Stream stream = File.OpenRead(path);
+        //using BinaryReader reader = new BinaryReader(stream);
 
         AudioDevice device = EaselGame.Instance.AudioInternal;
-        switch (Type)
-        {
-            case SoundType.Unknown:
-                throw new Exception("Given sound file is not a supported format.");
-            case SoundType.Wav:
-                Player = new WavPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
-                break;
-            case SoundType.OggVorbis:
-                Player = new OggPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        byte[] data = AudioHelper.LoadWav(File.ReadAllBytes(path), out AudioFormat format);
+        _buffer = device.CreateBuffer();
+        device.UpdateBuffer(_buffer, data, format);
     }
 
-    public void Play(ushort channel, float volume = 1, float pitch = 1, bool loop = false)
+    public ISoundInstance Play(double volume = 1, double speed = 1, double panning = 0.5f, bool loop = false)
     {
-        // TODO: Volume and stuff
-        Player.Play(EaselGame.Instance.AudioInternal, channel, volume, pitch, loop);
+        ChannelProperties properties = new ChannelProperties()
+        {
+            Volume = volume,
+            Speed = speed,
+            Panning = panning,
+            Loop = loop
+        };
+
+        AudioDevice device = EaselGame.Instance.AudioInternal;
+        ushort channel = device.GetAvailableChannel();
+        device.PlayBuffer(_buffer, channel, properties);
+
+        return new PcmInstance(EaselGame.Instance.AudioInternal, 0, properties);
     }
 
     public void Dispose()
     {
-        Player.Dispose();
+        AudioDevice device = EaselGame.Instance.AudioInternal;
+        device.DeleteBuffer(_buffer);
     }
 
     private bool CheckWav(BinaryReader reader)
@@ -70,12 +70,12 @@ public class Sound : IDisposable
         return true;
     }
 
-    private SoundType GetSoundType(BinaryReader reader)
+    /*private SoundType GetSoundType(BinaryReader reader)
     {
         if (CheckWav(reader))
             return SoundType.Wav;
         if (CheckOggVorbis(reader))
             return SoundType.OggVorbis;
         return SoundType.Unknown;
-    }
+    }*/
 }

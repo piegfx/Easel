@@ -21,8 +21,8 @@ public class ContentManager
     private string _localeDir;
     private Dictionary<string, string> _loadedLocales;
 
-    private Dictionary<string, ContentCacheItem> _cachedObjects;
-    private List<string> _objectsToRemove;
+    //private Dictionary<string, ContentCacheItem> _cachedObjects;
+    //private List<string> _objectsToRemove;
 
     public TimeSpan DeleteObjectsAfter;
     public Timer DeleteObjectsTimer;
@@ -43,16 +43,16 @@ public class ContentManager
 
         _loadedLocales = new Dictionary<string, string>();
 
-        _cachedObjects = new Dictionary<string, ContentCacheItem>();
+        /*_cachedObjects = new Dictionary<string, ContentCacheItem>();
         _objectsToRemove = new List<string>();
         
         DeleteObjectsAfter = TimeSpan.FromMinutes(5);
         DeleteObjectsTimer = new Timer(60000);
         DeleteObjectsTimer.Elapsed += (sender, args) => RemovedUnusedObjectsFromCache();
-        DeleteObjectsTimer.Start();
+        DeleteObjectsTimer.Start();*/
     }
 
-    public void RemovedUnusedObjectsFromCache()
+    /*public void RemovedUnusedObjectsFromCache()
     {
         foreach ((string key, ContentCacheItem item) in _cachedObjects)
         {
@@ -67,7 +67,7 @@ public class ContentManager
             _cachedObjects.Remove(item);
         
         _objectsToRemove.Clear();
-    }
+    }*/
 
     /// <summary>
     /// Load the given file into the given type. Note: While you do not have to provide an extension, it's recommended
@@ -82,8 +82,8 @@ public class ContentManager
             throw new NotSupportedException("A content type reader for type \"" + typeof(T).FullName +
                                             "\" has not been implemented.");
         
-        if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
-            return item.Get<T>();
+        //if (_cachedObjects.TryGetValue(path, out ContentCacheItem item))
+        //    return item.Get<T>();
         
         Logger.Debug($"Loading content item \"{path}\"...");
         string fullPath = Path.Combine(ContentRootDir, path);
@@ -96,9 +96,10 @@ public class ContentManager
             fullPath = dirs.First();
         }
 
-        item = new ContentCacheItem(_contentTypes[typeof(T)].LoadContentItem(fullPath));
-        _cachedObjects.Add(path, item);
-        return item.Get<T>();
+        //item = new ContentCacheItem(_contentTypes[typeof(T)].LoadContentItem(fullPath));
+        //_cachedObjects.Add(path, item);
+        //return item.Get<T>();
+        return (T) _contentTypes[typeof(T)].LoadContentItem(fullPath);
     }
 
     public void SetLocale(string id)

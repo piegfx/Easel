@@ -1,3 +1,4 @@
+using System.Numerics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 
@@ -11,13 +12,15 @@ public class Label : UIElement
     
     public Label(Position position, string text, uint fontSize) : base(position, Size.Zero)
     {
-        Size = Theme.Font.MeasureString(fontSize, text);
+        Size = Theme.Font.MeasureStringBBCode(fontSize, text);
         Text = text;
         FontSize = fontSize;
     }
     
     protected internal override void Draw(SpriteRenderer renderer)
     {
-        Theme.Font.MeasureStringBBCode(FontSize, Text);
+        Size = Theme.Font.MeasureStringBBCode(FontSize, Text);
+        
+        Theme.Font.DrawBBCode(FontSize, Text, (Vector2) CalculatedScreenPos, Color.White);
     }
 }

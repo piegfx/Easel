@@ -68,8 +68,8 @@ public sealed class SpriteRenderer : IDisposable
         _verticesCache = new SpriteVertex[NumVertices];
         _indicesCache = new uint[NumIndices];
 
-        _vertexBuffer = _device.CreateBuffer<SpriteVertex>(BufferType.VertexBuffer, MaxSprites * VertexSizeInBytes, null, true);
-        _indexBuffer = _device.CreateBuffer<uint>(BufferType.IndexBuffer, MaxSprites * IndicesSizeInBytes, null, true);
+        _vertexBuffer = _device.CreateBuffer(BufferType.VertexBuffer, MaxSprites * VertexSizeInBytes, true);
+        _indexBuffer = _device.CreateBuffer(BufferType.IndexBuffer, MaxSprites * IndicesSizeInBytes, true);
         
         _projViewBuffer = _device.CreateBuffer(BufferType.UniformBuffer, Matrix4x4.Identity, true);
 

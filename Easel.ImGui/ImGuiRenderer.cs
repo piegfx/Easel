@@ -91,8 +91,8 @@ public class ImGuiRenderer : IDisposable
         _eboSize = 2000;
 
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
-        _vertexBuffer = device.CreateBuffer<ImDrawVert>(BufferType.VertexBuffer, _vboSize, null, true);
-        _indexBuffer = device.CreateBuffer<ushort>(BufferType.IndexBuffer, _eboSize, null, true);
+        _vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, _vboSize, true);
+        _indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, _eboSize, true);
         _uniformBuffer = device.CreateBuffer(BufferType.UniformBuffer, Matrix4x4.Identity, true);
 
         RecreateFontDeviceTexture();
@@ -158,7 +158,7 @@ void main()
         _fontTexture =
             device.CreateTexture(
                 new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
-                    TextureUsage.ShaderResource), pixels);
+                    TextureUsage.ShaderResource), new [] { new TextureData(pixels) });
         //device.GenerateMipmaps(_fontTexture);
 
         io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
@@ -267,7 +267,7 @@ void main()
         {
             _vboSize = (uint) MathF.Max(_vboSize * 1.5f, totalVbSize);
             _vertexBuffer.Dispose();
-            _vertexBuffer = device.CreateBuffer<ImDrawVert>(BufferType.VertexBuffer, _vboSize, null, true);
+            _vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, _vboSize, true);
         }
         
         uint totalIbSize = (uint) (drawData.TotalIdxCount * sizeof(ushort));
@@ -275,7 +275,7 @@ void main()
         {
             _eboSize = (uint) MathF.Max(_eboSize * 1.5f, totalIbSize);
             _indexBuffer.Dispose();
-            _indexBuffer = device.CreateBuffer<ushort>(BufferType.IndexBuffer, _eboSize, null, true);
+            _indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, _eboSize, true);
         }
 
         ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();

@@ -27,10 +27,10 @@ public class DeferredRenderer : I3DRenderer
         int texWidth = 1280;
         int texHeight = 720;
         
-        PositionTexture = device.CreateTexture<byte>(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer), null);
-        NormalTexture = device.CreateTexture<byte>(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer), null);
-        AlbedoTexture = device.CreateTexture<byte>(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer), null);
-        SpecularTexture = device.CreateTexture<byte>(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer), null);
+        PositionTexture = device.CreateTexture(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer));
+        NormalTexture = device.CreateTexture(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer));
+        AlbedoTexture = device.CreateTexture(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer));
+        SpecularTexture = device.CreateTexture(new TextureDescription(TextureType.Texture2D, texWidth, texHeight, PixelFormat.R8G8B8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer));
         
         GBuffer = device.CreateFramebuffer(new FramebufferAttachment(PositionTexture, AttachmentType.Color),
             new FramebufferAttachment(NormalTexture, AttachmentType.Color),

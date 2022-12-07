@@ -39,18 +39,18 @@ public class Skybox : IDisposable
     {
         _device = EaselGame.Instance.GraphicsInternal.PieGraphics;
 
-        Pie.Texture.CubemapData[] cubemapDatas = new Pie.Texture.CubemapData[6];
-        cubemapDatas[0] = new Pie.Texture.CubemapData(right.Data);
-        cubemapDatas[1] = new Pie.Texture.CubemapData(left.Data);
-        cubemapDatas[2] = new Pie.Texture.CubemapData(top.Data);
-        cubemapDatas[3] = new Pie.Texture.CubemapData(bottom.Data);
-        cubemapDatas[4] = new Pie.Texture.CubemapData(front.Data);
-        cubemapDatas[5] = new Pie.Texture.CubemapData(back.Data);
+        TextureData[] textureDatas = new TextureData[6];
+        textureDatas[0] = new TextureData(right.Data);
+        textureDatas[1] = new TextureData(left.Data);
+        textureDatas[2] = new TextureData(top.Data);
+        textureDatas[3] = new TextureData(bottom.Data);
+        textureDatas[4] = new TextureData(front.Data);
+        textureDatas[5] = new TextureData(back.Data);
 
         PieTexture =
             _device.CreateTexture(
                 new TextureDescription(TextureType.Cubemap, right.Size.Width, right.Size.Height, right.Format, 1, 1,
-                    TextureUsage.ShaderResource), cubemapDatas);
+                    TextureUsage.ShaderResource), textureDatas);
 
         Cube cube = new Cube();
         VertexPositionTextureNormalTangent[] vptnts = cube.Vertices;

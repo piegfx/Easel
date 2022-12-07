@@ -14,12 +14,12 @@ public class RenderTarget : Texture
             PixelFormat.B8G8R8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer);
 
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
-        PieTexture = device.CreateTexture<byte>(description, null);
+        PieTexture = device.CreateTexture(description);
 
         description.Format = PixelFormat.D24_UNorm_S8_UInt;
         description.Usage = TextureUsage.Framebuffer;
 
-        _depth = device.CreateTexture<byte>(description, null);
+        _depth = device.CreateTexture(description);
 
         PieBuffer = device.CreateFramebuffer(new FramebufferAttachment(PieTexture, AttachmentType.Color),
             new FramebufferAttachment(_depth, AttachmentType.DepthStencil));

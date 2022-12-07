@@ -15,6 +15,8 @@ public struct PcmInstance : ISoundInstance
         _channel = channel;
 
         _properties = properties;
+        
+        Console.WriteLine(channel);
     }
 
     public double Volume

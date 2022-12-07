@@ -218,6 +218,7 @@ public class EaselGame : IDisposable
     protected virtual void Update()
     {
         SceneManager.Update();
+        AudioEffect.Update();
         UI.Update(GraphicsInternal.Viewport);
     }
 

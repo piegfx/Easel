@@ -33,7 +33,7 @@ public class Sound : IDisposable
         ushort channel = device.GetAvailableChannel();
         device.PlayBuffer(_buffer, channel, properties);
 
-        return new PcmInstance(EaselGame.Instance.AudioInternal, 0, properties);
+        return new PcmInstance(EaselGame.Instance.AudioInternal, channel, properties);
     }
 
     public void Dispose()

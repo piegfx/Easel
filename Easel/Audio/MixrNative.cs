@@ -20,29 +20,29 @@ public static unsafe class MixrNative
     public static extern int mxCreateBuffer(IntPtr system);
 
     [DllImport(MixrName)]
-    public static extern void mxDeleteBuffer(IntPtr system, int buffer);
+    public static extern AudioResult mxDeleteBuffer(IntPtr system, int buffer);
 
     [DllImport(MixrName)]
-    public static extern void mxUpdateBuffer(IntPtr system, int buffer, byte* data, nuint dataLength,
+    public static extern AudioResult mxUpdateBuffer(IntPtr system, int buffer, byte* data, nuint dataLength,
         AudioFormat format);
 
     [DllImport(MixrName)]
-    public static extern void mxPlayBuffer(IntPtr system, int buffer, ushort channel, ChannelProperties properties);
+    public static extern AudioResult mxPlayBuffer(IntPtr system, int buffer, ushort channel, ChannelProperties properties);
 
     [DllImport(MixrName)]
-    public static extern void mxQueueBuffer(IntPtr system, int buffer, ushort channel);
+    public static extern AudioResult mxQueueBuffer(IntPtr system, int buffer, ushort channel);
 
     [DllImport(MixrName)]
-    public static extern void mxSetChannelProperties(IntPtr system, ushort channel, ChannelProperties properties);
+    public static extern AudioResult mxSetChannelProperties(IntPtr system, ushort channel, ChannelProperties properties);
 
     [DllImport(MixrName)]
-    public static extern void mxPlay(IntPtr system, ushort channel);
+    public static extern AudioResult mxPlay(IntPtr system, ushort channel);
     
     [DllImport(MixrName)]
-    public static extern void mxPause(IntPtr system, ushort channel);
+    public static extern AudioResult mxPause(IntPtr system, ushort channel);
     
     [DllImport(MixrName)]
-    public static extern void mxStop(IntPtr system, ushort channel);
+    public static extern AudioResult mxStop(IntPtr system, ushort channel);
 
     [DllImport(MixrName)]
     public static extern short mxAdvance(IntPtr system);
@@ -57,4 +57,12 @@ public static unsafe class MixrNative
     public static extern ushort mxGetAvailableChannel(IntPtr system);
 
     public delegate void BufferFinishedCallback(ushort channel, int buffer);
+
+    public enum AudioResult
+    {
+        Ok,
+        InvalidBuffer,
+        InvalidChannels,
+        NoChannels
+    }
 }

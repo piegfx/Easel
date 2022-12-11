@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
+using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Math;
 
@@ -255,6 +256,18 @@ public abstract class Scene : IDisposable
             ref Entity entity = ref _entities[i];
             if (entity.Tag == tag)
                 entities.Add(entity);
+        }
+
+        return entities.ToArray();
+    }
+
+    public Entity[] GetEntitiesWithComponent<T>() where T : Component
+    {
+        List<Entity> entities = new List<Entity>();
+        for (int i = 0; i < _entityCount; i++)
+        {
+            if (entities[i].GetComponent<T>() != null)
+                entities.Add(entities[i]);
         }
 
         return entities.ToArray();

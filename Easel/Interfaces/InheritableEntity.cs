@@ -1,6 +1,7 @@
 using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
+using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Scenes;
 
@@ -81,6 +82,8 @@ public abstract class InheritableEntity
     /// <param name="tag">The tag to search for.</param>
     /// <returns>All entities with the given tag.</returns>
     protected abstract Entity[] GetEntitiesWithTag(string tag);
+
+    protected abstract Entity[] GetEntitiesWithComponent<T>() where T : Component;
 
     /// <summary>
     /// Get all entities in the current scene.

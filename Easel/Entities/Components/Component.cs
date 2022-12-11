@@ -72,5 +72,7 @@ public abstract class Component : InheritableEntity, IDisposable
 
     protected override Entity[] GetEntitiesWithTag(string tag) => SceneManager.ActiveScene.GetEntitiesWithTag(tag);
 
+    protected override Entity[] GetEntitiesWithComponent<T>() => SceneManager.ActiveScene.GetEntitiesWithComponent<T>();
+
     protected override Entity[] GetAllEntities() => SceneManager.ActiveScene.GetAllEntities();
 }

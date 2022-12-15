@@ -12,6 +12,8 @@ namespace Easel.Entities.Components;
 /// </summary>
 public abstract class Component : InheritableEntity, IDisposable
 {
+    public bool Enabled;
+
     protected override EaselGame Game => EaselGame.Instance;
     
     protected override EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
@@ -23,6 +25,11 @@ public abstract class Component : InheritableEntity, IDisposable
     protected override ContentManager Content => EaselGame.Instance.Content;
 
     protected internal Entity Entity { get; internal set; }
+
+    protected Component()
+    {
+        Enabled = true;
+    }
 
     /// <summary>
     /// The <see cref="Easel.Entities.Transform"/> of the current entity.

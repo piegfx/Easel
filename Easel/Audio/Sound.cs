@@ -6,17 +6,27 @@ namespace Easel.Audio;
 
 public class Sound : IDisposable
 {
-    private int _buffer;
+    public IAudioPlayer AudioPlayer;
+    public SoundType SoundType;
     
     public Sound(string path)
     {
-        //using Stream stream = File.OpenRead(path);
-        //using BinaryReader reader = new BinaryReader(stream);
+        using Stream stream = File.OpenRead(path);
+        using BinaryReader reader = new BinaryReader(stream);
 
         AudioDevice device = EaselGame.Instance.AudioInternal;
-        byte[] data = AudioHelper.LoadWav(File.ReadAllBytes(path), out AudioFormat format);
-        _buffer = device.CreateBuffer();
-        device.UpdateBuffer(_buffer, data, format);
+
+        SoundType = GetSoundType(reader);
+        switch (SoundType)
+        {
+            case SoundType.Wav:
+                AudioPlayer = new WavPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
+                break;
+            //case SoundType.Vorbis:
+            //    break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     public ISoundInstance Play(double volume = 1, double speed = 1, double panning = 0.5f, bool loop = false)
@@ -31,15 +41,12 @@ public class Sound : IDisposable
 
         AudioDevice device = EaselGame.Instance.AudioInternal;
         ushort channel = device.GetAvailableChannel();
-        device.PlayBuffer(_buffer, channel, properties);
-
-        return new PcmInstance(EaselGame.Instance.AudioInternal, channel, properties);
+        return AudioPlayer.Play(channel, properties);
     }
 
     public void Dispose()
     {
-        AudioDevice device = EaselGame.Instance.AudioInternal;
-        device.DeleteBuffer(_buffer);
+        AudioPlayer.Dispose();
     }
 
     private bool CheckWav(BinaryReader reader)
@@ -70,12 +77,12 @@ public class Sound : IDisposable
         return true;
     }
 
-    /*private SoundType GetSoundType(BinaryReader reader)
+    private SoundType GetSoundType(BinaryReader reader)
     {
         if (CheckWav(reader))
             return SoundType.Wav;
         if (CheckOggVorbis(reader))
-            return SoundType.OggVorbis;
+            return SoundType.Vorbis;
         return SoundType.Unknown;
-    }*/
+    }
 }

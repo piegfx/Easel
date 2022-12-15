@@ -22,8 +22,9 @@ public class Sound : IDisposable
             case SoundType.Wav:
                 AudioPlayer = new WavPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
                 break;
-            //case SoundType.Vorbis:
-            //    break;
+            case SoundType.Vorbis:
+                AudioPlayer = new VorbisPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -36,7 +37,7 @@ public class Sound : IDisposable
             Volume = volume,
             Speed = speed,
             Panning = panning,
-            Loop = loop
+            Loop = SoundType != SoundType.Vorbis && loop
         };
 
         AudioDevice device = EaselGame.Instance.AudioInternal;

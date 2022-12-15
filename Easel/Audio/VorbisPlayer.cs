@@ -70,6 +70,8 @@ public class VorbisPlayer : IAudioPlayer
     
     public void Dispose()
     {
+        _device.BufferFinished -= DeviceOnBufferFinished;
+        
         for (int i = 0; i < NumBuffers; i++)
             _device.DeleteBuffer(_buffers[i]);
         _vorbis.Dispose();

@@ -11,12 +11,12 @@ public class Default2DRenderer : I2DRenderer
 {
     private EaselGraphics _graphics;
 
-    private List<Sprite> _drawList;
+    private List<ISprite> _drawList;
 
     public Default2DRenderer(EaselGraphics graphics)
     {
         _graphics = graphics;
-        _drawList = new List<Sprite>();
+        _drawList = new List<ISprite>();
     }
     
     public void Draw(Texture texture, Rectangle destination, Color tint, float z = 0)
@@ -65,6 +65,18 @@ public class Default2DRenderer : I2DRenderer
         _drawList.Add(new Sprite(texture, position, source, tint, rotation, origin, scale, flip));
     }
 
+    public void DrawRectangle(Vector3 position, Size size, int borderWidth, float radius, Color color, Color borderColor,
+        float rotation, Vector2 origin)
+    {
+        DrawRectangle(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
+    }
+
+    public void DrawRectangle(Texture texture, Vector3 position, Size size, int borderWidth, float radius, Color color,
+        Color borderColor, float rotation, Vector2 origin)
+    {
+        _drawList.Add(new RectangleSprite(texture, position, size, borderWidth, radius, color, borderColor, rotation, origin));
+    }
+
     public void ClearAll()
     {
         _drawList.Clear();
@@ -79,7 +91,14 @@ public class Default2DRenderer : I2DRenderer
         _graphics.SpriteRenderer.End();
     }
 
-    private struct Sprite
+    private interface ISprite
+    {
+        public float Depth { get; }
+        
+        public void Draw(SpriteRenderer renderer);
+    }
+
+    private struct Sprite : ISprite
     {
         private Texture _texture;
         private Vector2 _position;
@@ -89,7 +108,6 @@ public class Default2DRenderer : I2DRenderer
         private Vector2 _origin;
         private Vector2 _scale;
         private SpriteFlip _flip;
-        public float Depth;
 
         public Sprite(Texture texture, Vector3 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip)
         {
@@ -104,9 +122,46 @@ public class Default2DRenderer : I2DRenderer
             Depth = position.Z;
         }
 
+        public float Depth { get; }
+
         public void Draw(SpriteRenderer renderer)
         {
             renderer.Draw(_texture, _position, _source, _tint, _rotation, _origin, _scale, _flip);
+        }
+    }
+
+    private struct RectangleSprite : ISprite
+    {
+        private Texture _texture;
+        private Vector2 _position;
+        private Size _size;
+        private int _borderWidth;
+        private float _radius;
+        private Color _color;
+        private Color _borderColor;
+        private float _rotation;
+        private Vector2 _origin;
+
+        public RectangleSprite(Texture texture, Vector3 position, Size size, int borderWidth, float radius, Color color, Color borderColor, float rotation, Vector2 origin)
+        {
+            _texture = texture;
+            _position = position.ToVector2();
+            _size = size;
+            _borderWidth = borderWidth;
+            _radius = radius;
+            _color = color;
+            _borderColor = borderColor;
+            _rotation = rotation;
+            _origin = origin;
+            Depth = position.Z;
+        }
+
+        public float Depth { get; }
+        
+        public void Draw(SpriteRenderer renderer)
+        {
+            renderer.DrawRectangle(_texture, _position, _size, _borderWidth, _radius, _color, _borderColor, _rotation,
+                _origin);
         }
     }
 }

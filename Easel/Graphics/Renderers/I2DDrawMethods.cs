@@ -23,4 +23,10 @@ public interface I2DDrawMethods
 
     public void Draw(Texture texture, Vector3 position, Rectangle? source, Color tint, float rotation, Vector2 origin,
         Vector2 scale, SpriteFlip flip = SpriteFlip.None);
+
+    public void DrawRectangle(Vector3 position, Size size, int borderWidth, float radius, Color color,
+        Color borderColor, float rotation, Vector2 origin);
+    
+    public void DrawRectangle(Texture texture, Vector3 position, Size size, int borderWidth, float radius,
+        Color color, Color borderColor, float rotation, Vector2 origin);
 }

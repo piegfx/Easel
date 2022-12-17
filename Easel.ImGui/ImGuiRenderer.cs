@@ -327,7 +327,7 @@ void main()
         device.Scissor = device.Viewport;
     }
 
-    private IntPtr GetImGuiTexture(Texture texture)
+    public IntPtr GetImGuiTexture(Texture texture)
     {
         int index = _texture2Ds.IndexOf(texture);
         if (index == -1)

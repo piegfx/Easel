@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Entities;
+using Easel.Graphics.Renderers.Structs;
 using Easel.Graphics.Structs;
 using Easel.Math;
 using Easel.Scenes;
@@ -120,21 +121,6 @@ public sealed class ForwardRenderer : I3DRenderer
         device.SetVertexBuffer(0, renderable.VertexBuffer, renderable.Material.EffectLayout.Stride, renderable.Material.EffectLayout.Layout);
         device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
         device.DrawIndexed(renderable.IndicesLength);
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct ProjViewModel
-    {
-        public Matrix4x4 ProjView;
-        public Matrix4x4 Model;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct CameraInfo
-    {
-        public ShaderMaterial Material;
-        public ShaderDirectionalLight Sun;
-        public Vector4 CameraPos;
     }
 
     public void Dispose()

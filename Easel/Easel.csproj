@@ -53,6 +53,8 @@
       <None Update="mixr.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Remove="Graphics\Shaders\Deferred\GBuffer.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\Deferred\GBuffer.frag" />
     </ItemGroup>
 
 </Project>

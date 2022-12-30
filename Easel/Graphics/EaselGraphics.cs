@@ -31,11 +31,7 @@ public class EaselGraphics : IDisposable
     /// </summary>
     public readonly GraphicsDevice PieGraphics;
 
-    public I3DRenderer Renderer;
-
-    public I2DRenderer Renderer2D;
-
-    public PostProcessor PostProcessor;
+    public IRenderer Renderer;
 
     public SpriteRenderer SpriteRenderer;
 

@@ -37,7 +37,8 @@ public class Sound : IDisposable
             Volume = volume,
             Speed = speed,
             Panning = panning,
-            Loop = SoundType != SoundType.Vorbis && loop
+            Loop = SoundType != SoundType.Vorbis && loop,
+            InterpolationType = InterpolationType.Linear
         };
 
         AudioDevice device = EaselGame.Instance.AudioInternal;

@@ -54,10 +54,10 @@ public unsafe class AudioDevice : IDisposable
 
     public void DeleteBuffer(int buffer) => mxDeleteBuffer(_system, buffer);
 
-    public void UpdateBuffer(int buffer, byte[] data, AudioFormat format)
+    public void UpdateBuffer<T>(int buffer, T[] data, AudioFormat format) where T : unmanaged
     {
-        fixed (byte* buf = data)
-            mxUpdateBuffer(_system, buffer, buf, (nuint) data.Length, format);
+        fixed (void* buf = data)
+            mxUpdateBuffer(_system, buffer, buf, (nuint) (data.Length * sizeof(T)), format);
     }
 
     public void PlayBuffer(int buffer, ushort channel, ChannelProperties properties) =>

@@ -1,3 +1,4 @@
+using System;
 using StbVorbisSharp;
 
 namespace Easel.Audio;
@@ -43,18 +44,14 @@ public class VorbisPlayer : IAudioPlayer
             _currentBuffer = 0;
     }
 
-    private byte[] GetNextVorbisData()
+    private short[] GetNextVorbisData()
     {
         _vorbis.SubmitBuffer();
         if (_vorbis.Decoded * _vorbis.Channels < _vorbis.SongBuffer.Length)
             _vorbis.Restart();
 
-        byte[] data = new byte[_vorbis.Decoded * _vorbis.Channels * 2];
-        for (int i = 0; i < _vorbis.Decoded * _vorbis.Channels; i++)
-        {
-            data[i * 2] = (byte) (_vorbis.SongBuffer[i] & 255);
-            data[i * 2 + 1] = (byte) (_vorbis.SongBuffer[i] >> 8);
-        }
+        short[] data = new short[_vorbis.Decoded * _vorbis.Channels];
+        Array.Copy(_vorbis.SongBuffer, data, _vorbis.Decoded * _vorbis.Channels);
 
         return data;
     }

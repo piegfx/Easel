@@ -11,7 +11,7 @@ using Pie.Windowing;
 using Texture = Pie.Texture;
 using SRect = System.Drawing.Rectangle;
 
-namespace Easel.ImGui;
+namespace Easel.Imgui;
 
 public class ImGuiRenderer : IDisposable
 {

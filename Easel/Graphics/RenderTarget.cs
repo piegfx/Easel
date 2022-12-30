@@ -5,7 +5,7 @@ namespace Easel.Graphics;
 
 public class RenderTarget : Texture
 {
-    public Framebuffer PieBuffer;
+    public readonly Framebuffer PieBuffer;
     private Pie.Texture _depth;
     
     public RenderTarget(Size size, bool autoDispose = true) : base(autoDispose)

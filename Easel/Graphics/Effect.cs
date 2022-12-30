@@ -19,7 +19,7 @@ public class Effect : IDisposable
     /// <summary>
     /// The native Pie <see cref="Shader"/> object.
     /// </summary>
-    public Shader PieShader;
+    public readonly Shader PieShader;
 
     /// <summary>
     /// Create a new <see cref="Effect"/> with the given vertex and fragment/pixel shader.

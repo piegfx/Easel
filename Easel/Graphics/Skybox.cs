@@ -13,7 +13,7 @@ namespace Easel.Graphics;
 
 public class Skybox : IDisposable
 {
-    public Pie.Texture PieTexture;
+    public readonly Pie.Texture PieTexture;
     private GraphicsBuffer _vertexBuffer;
     private GraphicsBuffer _indexBuffer;
     private GraphicsBuffer _cameraBuffer;

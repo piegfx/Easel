@@ -1,13 +1,12 @@
 using System.Numerics;
-using System.Runtime.InteropServices;
-using Easel.Graphics.Structs;
+using Easel.Math;
 
 namespace Easel.Graphics.Renderers.Structs;
 
-[StructLayout(LayoutKind.Sequential)]
 public struct CameraInfo
 {
-    public ShaderMaterial Material;
-    public ShaderDirectionalLight Sun;
-    public Vector4 CameraPos;
+    public Matrix4x4 Projection;
+    public Matrix4x4 View;
+
+    public Color ClearColor;
 }

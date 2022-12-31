@@ -13,6 +13,8 @@ namespace Easel.Entities;
 /// </summary>
 public class Camera : Entity
 {
+    public Vector4 Viewport;
+    
     /// <summary>
     /// The projection matrix of this camera.
     /// </summary>
@@ -159,6 +161,9 @@ public class Camera : Entity
         CameraType = CameraType.Perspective;
         _orthoSize = Vector2.One;
         ClearColor = Color.Black;
+
+        Viewport = new Vector4(0, 0, 1, 1);
+        
         GenerateProjectionMatrix();
     }
 

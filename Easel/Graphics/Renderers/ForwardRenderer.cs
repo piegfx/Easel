@@ -32,15 +32,13 @@ public class ForwardRenderer : IRenderer
         EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
         graphics.SetRenderTarget(MainTarget);
         graphics.Clear(Camera.ClearColor);
-        
-        Camera.Skybox?.Draw(Camera.Projection, Camera.View);
     }
 
     public void Perform3DPass()
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         
-        
+        Camera.Skybox?.Draw(Camera.Projection, Camera.View);
     }
 
     public void Perform2DPass()

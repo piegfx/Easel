@@ -110,10 +110,21 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
 
-        Graphics.Renderer.Camera = Camera.Main.CameraInfo;
-        Graphics.Renderer.Perform3DPass();
-        //Graphics.Renderer.Perform2DPass();
-        
+        Size framebufferSize = Graphics.Renderer.MainTarget.Size;
+        foreach (Camera camera in GetEntitiesWithTag(Tags.MainCamera))
+        {
+            Rectangle viewport = new Rectangle();
+            viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);
+            viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);
+            viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;
+            viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
+            
+            Graphics.Viewport = viewport;
+            Graphics.Renderer.Camera = camera.CameraInfo;
+            Graphics.Renderer.Perform3DPass();
+            //Graphics.Renderer.Perform2DPass();
+        }
+
         Graphics.SetRenderTarget(null);
         Graphics.SpriteRenderer.Begin();
         Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,

@@ -8,5 +8,7 @@ GameSettings settings = new GameSettings()
     Border = WindowBorder.Resizable
 };
 
+Logger.UseConsoleLogs();
+
 using TestGame game = new TestGame(settings, new Test3D());
 game.Run();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
@@ -60,7 +61,9 @@ public sealed class ForwardRenderer : IRenderer
         
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         
-        foreach (TransformedRenderable renderable in _opaques)
+        // Draw front-to-back for opaques.
+        // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
+        foreach (TransformedRenderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, Camera.Position)))
             DrawRenderable(device, renderable);
     }
 

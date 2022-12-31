@@ -21,7 +21,7 @@ public class Skybox : IDisposable
     private GraphicsBuffer _cameraBuffer;
     
     private DepthState _depthState;
-    private RasterizerState _rasterizerState;
+    private Pie.RasterizerState _rasterizerState;
 
     private Shader _shader;
     private InputLayout _inputLayout;

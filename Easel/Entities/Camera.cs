@@ -42,6 +42,7 @@ public class Camera : Entity
     {
         Projection = ProjectionMatrix,
         View = ViewMatrix,
+        Position = Transform.Position,
         ClearColor = ClearColor,
         Skybox = Skybox
     };

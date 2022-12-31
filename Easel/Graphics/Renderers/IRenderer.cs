@@ -1,9 +1,10 @@
+using System;
 using System.Numerics;
 using Easel.Graphics.Renderers.Structs;
 
 namespace Easel.Graphics.Renderers;
 
-public interface IRenderer
+public interface IRenderer : IDisposable
 {
     public CameraInfo Camera { get; set; }
     

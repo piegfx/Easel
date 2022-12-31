@@ -35,8 +35,6 @@ public class EaselGraphics : IDisposable
 
     public SpriteRenderer SpriteRenderer;
 
-    public EffectManager EffectManager;
-
     /// <summary>
     /// Get or set the graphics viewport. If set, <see cref="ViewportResized"/> is invoked.
     /// </summary>
@@ -64,8 +62,6 @@ public class EaselGraphics : IDisposable
 
     internal void Initialize(in RenderOptions options)
     {
-        EffectManager = new EffectManager(PieGraphics);
-
         if (options.Deferred)
             throw new NotImplementedException("Deferred rendering has currently not been implemented.");
 

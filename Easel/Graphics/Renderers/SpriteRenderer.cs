@@ -44,7 +44,7 @@ public sealed class SpriteRenderer : IDisposable
     private Effect _roundedRectEffect;
     private Effect _effectToUse;
     private InputLayout _layout;
-    private RasterizerState _rasterizerState;
+    private Pie.RasterizerState _rasterizerState;
     private DepthState _depthState;
     private BlendState _blendState;
 

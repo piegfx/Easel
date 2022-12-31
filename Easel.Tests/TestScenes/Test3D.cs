@@ -4,6 +4,7 @@ using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Formats;
 using Easel.Graphics;
+using Easel.Graphics.Materials;
 using Easel.Math;
 using Easel.Primitives;
 using Easel.Scenes;
@@ -30,8 +31,11 @@ public class Test3D : Scene
         second.Viewport = new Vector4(0.5f, 0, 1.0f, 0.5f);
         AddEntity("second", second);
 
-        Entity entity = new Entity();
-        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new Material(Content.Load<Texture2D>("awesomeface")))));
+        Entity entity = new Entity(new Transform()
+        {
+            Position = new Vector3(0, 0, 3)
+        });
+        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(Content.Load<Texture2D>("awesomeface")))));
         AddEntity("cube", entity);
     }
 

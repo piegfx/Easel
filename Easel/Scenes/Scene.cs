@@ -113,6 +113,7 @@ public abstract class Scene : IDisposable
         Size framebufferSize = Graphics.Renderer.MainTarget.Size;
         foreach (Camera camera in GetEntitiesWithTag(Tags.MainCamera))
         {
+            // Convert the camera's normalized viewport into a viewport pie can understand.
             Rectangle viewport = new Rectangle();
             viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);
             viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);

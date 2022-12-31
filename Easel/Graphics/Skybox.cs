@@ -13,12 +13,13 @@ namespace Easel.Graphics;
 
 public class Skybox : IDisposable
 {
+    public SamplerState SamplerState;
+    
     public readonly Pie.Texture PieTexture;
     private GraphicsBuffer _vertexBuffer;
     private GraphicsBuffer _indexBuffer;
     private GraphicsBuffer _cameraBuffer;
-
-    private SamplerState _samplerState;
+    
     private DepthState _depthState;
     private RasterizerState _rasterizerState;
 
@@ -29,13 +30,14 @@ public class Skybox : IDisposable
 
     private GraphicsDevice _device;
 
-    public Skybox(EaselTexture texture) : this(texture.Cubemap[0], texture.Cubemap[1], texture.Cubemap[2],
-        texture.Cubemap[3], texture.Cubemap[4], texture.Cubemap[5])
+    public Skybox(EaselTexture texture, SamplerState samplerState = null) 
+        : this(texture.Cubemap[0], texture.Cubemap[1], texture.Cubemap[2],
+        texture.Cubemap[3], texture.Cubemap[4], texture.Cubemap[5], samplerState)
     {
         
     }
     
-    public Skybox(Bitmap right, Bitmap left, Bitmap top, Bitmap bottom, Bitmap front, Bitmap back)
+    public Skybox(Bitmap right, Bitmap left, Bitmap top, Bitmap bottom, Bitmap front, Bitmap back, SamplerState samplerState = null)
     {
         _device = EaselGame.Instance.GraphicsInternal.PieGraphics;
 
@@ -64,8 +66,7 @@ public class Skybox : IDisposable
         _indexBuffer = _device.CreateBuffer(BufferType.IndexBuffer, cube.Indices);
 
         _cameraBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
-
-        _samplerState = _device.CreateSamplerState(SamplerStateDescription.LinearClamp);
+        
         _depthState = _device.CreateDepthState(new DepthStateDescription(true, false, DepthComparison.LessEqual));
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
@@ -76,6 +77,8 @@ public class Skybox : IDisposable
         _inputLayout =
             _device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0,
                 InputType.PerVertex));
+
+        SamplerState = samplerState ?? SamplerState.LinearClamp;
     }
 
     internal void Draw(Camera camera)
@@ -88,7 +91,7 @@ public class Skybox : IDisposable
         _device.SetShader(_shader);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetUniformBuffer(0, _cameraBuffer);
-        _device.SetTexture(1, PieTexture, _samplerState);
+        _device.SetTexture(1, PieTexture, SamplerState.PieSamplerState);
         _device.SetDepthState(_depthState);
         _device.SetRasterizerState(_rasterizerState);
         _device.SetVertexBuffer(0, _vertexBuffer, VertexPosition.SizeInBytes, _inputLayout);
@@ -110,7 +113,6 @@ public class Skybox : IDisposable
         _vertexBuffer.Dispose();
         _indexBuffer.Dispose();
         _cameraBuffer.Dispose();
-        _samplerState.Dispose();
         _depthState.Dispose();
         _rasterizerState.Dispose();
         _shader.Dispose();

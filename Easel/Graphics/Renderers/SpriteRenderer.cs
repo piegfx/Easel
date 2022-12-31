@@ -47,9 +47,6 @@ public sealed class SpriteRenderer : IDisposable
     private RasterizerState _rasterizerState;
     private DepthState _depthState;
     private BlendState _blendState;
-    private SamplerState _linearSamplerState;
-    private SamplerState _pointSamplerState;
-    private SamplerState _stateToUse;
 
     private GraphicsDevice _device;
 
@@ -93,11 +90,9 @@ public sealed class SpriteRenderer : IDisposable
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
         _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
-        _linearSamplerState = _device.CreateSamplerState(SamplerStateDescription.LinearRepeat);
-        _pointSamplerState = _device.CreateSamplerState(SamplerStateDescription.PointRepeat);
     }
 
-    public void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null, SpriteRenderMode mode = SpriteRenderMode.Linear)
+    public void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null)
     {
         if (_begun)
             throw new EaselException("SpriteRenderer session is already active.");
@@ -109,13 +104,6 @@ public sealed class SpriteRenderer : IDisposable
         _effectToUse = effect;
         
         _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
-
-        _stateToUse = mode switch
-        {
-            SpriteRenderMode.Linear => _linearSamplerState,
-            SpriteRenderMode.Nearest => _pointSamplerState,
-            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-        };
     }
 
     public void DrawRectangle(Vector2 position, Size size, int borderWidth, float radius, Color color,
@@ -303,7 +291,7 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetDepthState(_depthState);
         _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
-        _device.SetTexture(1, _currentTexture.PieTexture, _stateToUse);
+        _device.SetTexture(1, _currentTexture.PieTexture, _currentTexture.SamplerState.PieSamplerState);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetVertexBuffer(0, _vertexBuffer, SpriteVertex.SizeInBytes, _layout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
@@ -363,8 +351,6 @@ public sealed class SpriteRenderer : IDisposable
         _rasterizerState.Dispose();
         _depthState.Dispose();
         _blendState.Dispose();
-        _linearSamplerState.Dispose();
-        _pointSamplerState.Dispose();
         _currentTexture.Dispose();
     }
 }
@@ -375,11 +361,4 @@ public enum SpriteFlip
     FlipX,
     FlipY,
     FlipXY
-}
-
-public enum SpriteRenderMode
-{
-    Linear,
-    Nearest,
-    Point = Nearest
 }

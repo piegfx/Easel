@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
@@ -99,7 +100,7 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-        Graphics.Renderer.ClearAll();
+        Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -108,8 +109,16 @@ public abstract class Scene : IDisposable
                 continue;
             entity.Draw();
         }
+
+        Graphics.Renderer.Camera = Camera.Main.CameraInfo;
+        Graphics.Renderer.Perform3DPass();
+        //Graphics.Renderer.Perform2DPass();
         
-        Graphics.Renderer.Render(Camera.Main.CameraInfo);
+        Graphics.SetRenderTarget(null);
+        Graphics.SpriteRenderer.Begin();
+        Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
+            Vector2.One);
+        Graphics.SpriteRenderer.End();
     }
 
     /// <summary>

@@ -83,7 +83,7 @@ public struct GameSettings
     {
         Size = new Size(1280, 720);
         
-        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel View";
+        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
         Border = WindowBorder.Fixed;
         VSync = true;
         TargetFps = 0;

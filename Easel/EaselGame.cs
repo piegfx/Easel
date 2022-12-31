@@ -232,7 +232,7 @@ public class EaselGame : IDisposable
         foreach (Action action in _actions)
             action();
         _actions.Clear();
-        UI.Draw(GraphicsInternal);
+        //UI.Draw(GraphicsInternal);
     }
 
     /// <summary>

@@ -5,6 +5,10 @@ namespace Easel.Graphics.Renderers;
 
 public interface IRenderer
 {
+    public CameraInfo Camera { get; set; }
+    
+    public RenderTarget MainTarget { get; set; }
+    
     /// <summary>
     /// Add a single opaque object instance that will be rendered in the scene. These objects are drawn front-to-back.
     /// </summary>
@@ -13,15 +17,14 @@ public interface IRenderer
     public void AddOpaque(in Renderable renderable, in Matrix4x4 world);
 
     /// <summary>
-    /// Clear all objects, lights, etc in the current frame.
+    /// Prepare the renderer for a new frame of objects.
     /// </summary>
-    public void ClearAll();
+    public void NewFrame();
     
-    // I could use a camera as a parameter instead, but I'd rather separate the rendering part of the engine
-    // from the other parts of the engine, to keep things modular.
     /// <summary>
     /// Render all objects added to the current render frame.
     /// </summary>
-    /// <param name="cameraInfo"></param>
-    public void Render(in CameraInfo cameraInfo);
+    public void Perform3DPass();
+
+    public void Perform2DPass();
 }

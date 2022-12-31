@@ -1,6 +1,7 @@
 
 using System;
 using System.Numerics;
+using Easel.Graphics;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Easel.Scenes;
@@ -31,11 +32,16 @@ public class Camera : Entity
         }
     }
 
+    public Color ClearColor;
+
+    public Skybox Skybox;
+
     public CameraInfo CameraInfo => new CameraInfo()
     {
         Projection = ProjectionMatrix,
         View = ViewMatrix,
-        ClearColor = Color.CornflowerBlue
+        ClearColor = ClearColor,
+        Skybox = Skybox
     };
 
     private float _fov;
@@ -152,6 +158,7 @@ public class Camera : Entity
         _far = far;
         CameraType = CameraType.Perspective;
         _orthoSize = Vector2.One;
+        ClearColor = Color.Black;
         GenerateProjectionMatrix();
     }
 

@@ -81,10 +81,10 @@ public class Skybox : IDisposable
         SamplerState = samplerState ?? SamplerState.LinearClamp;
     }
 
-    internal void Draw(Camera camera)
+    internal void Draw(Matrix4x4 projection, Matrix4x4 view)
     {
-        _cameraInfo.Projection = camera.ProjectionMatrix;
-        _cameraInfo.View = camera.ViewMatrix.To3x3Matrix();
+        _cameraInfo.Projection = projection;
+        _cameraInfo.View = view.To3x3Matrix();
         
         _device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
         

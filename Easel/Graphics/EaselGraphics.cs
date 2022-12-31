@@ -68,6 +68,11 @@ public class EaselGraphics : IDisposable
 
         if (options.Deferred)
             throw new NotImplementedException("Deferred rendering has currently not been implemented.");
+
+        // TODO: Move SpriteRenderer to generic batch renderer for both 2D and 3D?
+        SpriteRenderer = new SpriteRenderer(PieGraphics);
+        
+        Renderer = new ForwardRenderer(this, Viewport.Size);
     }
 
     private void PieDebug(LogType logtype, string message)

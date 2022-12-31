@@ -9,4 +9,5 @@ public struct CameraInfo
     public Matrix4x4 View;
 
     public Color ClearColor;
+    public Skybox Skybox;
 }

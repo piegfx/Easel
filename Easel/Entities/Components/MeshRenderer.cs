@@ -38,14 +38,7 @@ public class MeshRenderer : Component
     {
         base.Initialize();
 
-        GraphicsDevice device = Graphics.PieGraphics;
-        
-        _renderables = new Renderable[_meshes.Length];
-        for (int i = 0; i < _meshes.Length; i++)
-        {
-            ref Mesh mesh = ref _meshes[i];
-            _renderables[i] = Graphics.CreateRenderable(mesh);
-        }
+        _renderables = Renderable.CreateFromMeshes(_meshes);
     }
 
     protected internal override void Draw()
@@ -58,10 +51,7 @@ public class MeshRenderer : Component
             
             Matrix4x4 world = Transform.TransformMatrix *
                                       (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
-            if (renderable.Material.Color.A < 1)
-                Graphics.Renderer.DrawTranslucent(renderable, world);
-            else
-                Graphics.Renderer.DrawOpaque(renderable, world);
+            Graphics.Renderer.AddOpaque(renderable, world);
         }
     }
 

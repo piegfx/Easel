@@ -1,6 +1,7 @@
 
 using System;
 using System.Numerics;
+using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Easel.Scenes;
 
@@ -11,8 +12,6 @@ namespace Easel.Entities;
 /// </summary>
 public class Camera : Entity
 {
-    public Rectangle? Viewport;
-    
     /// <summary>
     /// The projection matrix of this camera.
     /// </summary>
@@ -32,18 +31,12 @@ public class Camera : Entity
         }
     }
 
-    public Frustum? Frustum
+    public CameraInfo CameraInfo => new CameraInfo()
     {
-        get
-        {
-            float halfVSide = _far * MathF.Tan(_fov * 0.5f);
-            float halfHSize = halfVSide * _aspectRatio;
-            //return new Frustum(
-            //    new Frustum.Plane(Transform.Position, ),
-            //    new Frustum.Plane());
-            return new Frustum?();
-        }
-    }
+        Projection = ProjectionMatrix,
+        View = ViewMatrix,
+        ClearColor = Color.CornflowerBlue
+    };
 
     private float _fov;
     private float _aspectRatio;

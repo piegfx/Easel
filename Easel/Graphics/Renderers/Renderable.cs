@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Renderers;
 
-public struct Renderable
+public struct Renderable : IDisposable
 {
     public GraphicsBuffer VertexBuffer;
     public GraphicsBuffer IndexBuffer;
@@ -38,5 +39,11 @@ public struct Renderable
             renderables.Add(CreateFromMesh(meshes[i]));
 
         return renderables.ToArray();
+    }
+
+    public void Dispose()
+    {
+        VertexBuffer.Dispose();
+        IndexBuffer.Dispose();
     }
 }

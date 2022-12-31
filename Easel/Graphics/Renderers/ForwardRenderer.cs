@@ -24,6 +24,11 @@ public class ForwardRenderer : IRenderer
         _opaques.Add(new TransformedRenderable(renderable, world));
     }
 
+    public void ClearAll()
+    {
+        _opaques.Clear();
+    }
+
     public void Render(in CameraInfo info)
     {
         EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;

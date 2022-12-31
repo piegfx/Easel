@@ -57,13 +57,6 @@ public abstract class Scene : IDisposable
     protected ContentManager Content => EaselGame.Instance.Content;
 
     /// <summary>
-    /// The scene's <see cref="Scenes.World"/> properties, such as skybox and clear color.
-    /// </summary>
-    public readonly World World;
-
-    private float _timer;
-
-    /// <summary>
     /// Create a new scene.
     /// </summary>
     /// <param name="initialCapacity">The starting entity array size. This array doubles in size when its size is exceeded.</param>
@@ -72,7 +65,6 @@ public abstract class Scene : IDisposable
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
         GarbageCollections = new List<IDisposable>();
-        World = new World();
     }
 
     /// <summary>
@@ -108,7 +100,6 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         Graphics.Renderer.ClearAll();
-        Graphics.Renderer2D.ClearAll();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -118,37 +109,7 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
         
-        Graphics.SetRenderTarget(Graphics.PostProcessor.MainTarget);
-        
-        #region 3D pass
-        
-        Rectangle viewport = Graphics.Viewport;
-        foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
-        {
-            Camera camera = (Camera) entity;
-            // TODO: Update to handle render targets instead of using view size.
-            Graphics.Viewport = camera.Viewport ?? viewport;
-            Graphics.Renderer.Render(camera, World);
-        }
-        
-        #endregion
-
-        #region 2D pass
-
-        Graphics.Renderer2D.Render(Camera.Main, World);
-
-        #endregion
-        
-        Graphics.SetRenderTarget(null);
-        Graphics.PostProcessor.Process(Graphics);
-
-        _timer += Time.DeltaTime;
-
-        if (_timer >= 60)
-        {
-            _timer = 0;
-            Graphics.CleanMeshes();
-        }
+        Graphics.Renderer.Render(Camera.Main.CameraInfo);
     }
 
     /// <summary>

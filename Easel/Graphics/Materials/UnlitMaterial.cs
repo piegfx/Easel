@@ -1,8 +1,13 @@
+using Easel.Graphics.Renderers.Structs;
 using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Materials;
 
+/// <summary>
+/// An unlit/unshaded material. Objects using this material do not receive lighting and shadow information, however
+/// <i>do</i> cast shadows.
+/// </summary>
 public sealed class UnlitMaterial : Material
 {
     public Texture Diffuse;
@@ -23,8 +28,13 @@ public sealed class UnlitMaterial : Material
             "Easel.Graphics.Shaders.Forward.Standard.frag"), layout, VertexPositionTextureNormalTangent.SizeInBytes);
     }
 
-    internal override void Apply(GraphicsDevice device)
+    public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
-        device.SetTexture(1, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
+        Tiling = Tiling
+    };
+
+    protected internal override void ApplyTextures(GraphicsDevice device)
+    {
+        device.SetTexture(TextureBindingLoc, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
     }
 }

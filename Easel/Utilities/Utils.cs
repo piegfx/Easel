@@ -68,10 +68,12 @@ public static class Utils
         return memoryStream.ToArray();
     }
 
-    public static string LoadEmbeddedString(string assemblyName)
+    public static string LoadEmbeddedString(string assemblyName, Encoding encoding)
     {
-        return Encoding.UTF8.GetString(LoadEmbeddedResource(assemblyName));
+        return encoding.GetString(LoadEmbeddedResource(assemblyName));
     }
+
+    public static string LoadEmbeddedString(string assemblyName) => LoadEmbeddedString(assemblyName, Encoding.UTF8);
 
     public static byte[] Compress(byte[] data, CompressionLevel level = CompressionLevel.Optimal)
     {

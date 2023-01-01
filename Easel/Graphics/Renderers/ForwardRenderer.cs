@@ -10,9 +10,12 @@ namespace Easel.Graphics.Renderers;
 public sealed class ForwardRenderer : IRenderer
 {
     private List<TransformedRenderable> _opaques;
+    private List<Sprite> _opaqueSprites;
 
     private ProjViewModel _projViewModel;
     private GraphicsBuffer _projViewModelBuffer;
+
+    private GraphicsBuffer _shaderMaterialBuffer;
 
     public ForwardRenderer(EaselGraphics graphics, Size initialResolution)
     {
@@ -26,6 +29,7 @@ public sealed class ForwardRenderer : IRenderer
         GraphicsDevice device = graphics.PieGraphics;
 
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
+        _shaderMaterialBuffer = device.CreateBuffer(BufferType.UniformBuffer, new ShaderMaterial(), true);
     }
 
     private void GraphicsOnSwapchainResized(Size size)
@@ -40,6 +44,11 @@ public sealed class ForwardRenderer : IRenderer
     public void AddOpaque(in Renderable renderable, in Matrix4x4 world)
     {
         _opaques.Add(new TransformedRenderable(renderable, world));
+    }
+
+    public void AddSpriteOpaque(in Sprite sprite)
+    {
+        throw new System.NotImplementedException();
     }
 
     public void NewFrame()
@@ -71,10 +80,12 @@ public sealed class ForwardRenderer : IRenderer
     {
         _projViewModel.Model = renderable.Transform;
         device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
-        
+        device.UpdateBuffer(_shaderMaterialBuffer, 0, renderable.Renderable.Material.ShaderMaterial);
+
         device.SetShader(renderable.Renderable.Material.EffectLayout.Effect.PieShader);
         device.SetUniformBuffer(0, _projViewModelBuffer);
-        renderable.Renderable.Material.Apply(device);
+        device.SetUniformBuffer(1, _shaderMaterialBuffer);
+        renderable.Renderable.Material.ApplyTextures(device);
         device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
 
         device.SetVertexBuffer(0, renderable.Renderable.VertexBuffer,
@@ -92,5 +103,6 @@ public sealed class ForwardRenderer : IRenderer
     public void Dispose()
     {
         MainTarget.Dispose();
+        _projViewModelBuffer.Dispose();
     }
 }

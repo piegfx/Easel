@@ -35,7 +35,10 @@ public class Test3D : Scene
         {
             Position = new Vector3(0, 0, 3)
         });
-        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(Content.Load<Texture2D>("awesomeface")))));
+        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(Content.Load<Texture2D>("awesomeface"))
+        {
+            Tiling = new Vector2(2)
+        })));
         AddEntity("cube", entity);
     }
 

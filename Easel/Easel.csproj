@@ -27,31 +27,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.vert" />
-      <EmbeddedResource Include="Graphics\Shaders\Standard.vert" />
-      <None Remove="Graphics\Shaders\Forward\Lighting.glsl" />
-      <None Remove="Graphics\Shaders\Forward\Material.glsl" />
-      <None Remove="EaselLogo.png" />
       <EmbeddedResource Include="EaselLogo.png" />
-      <None Remove="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
-      <None Remove="Roboto-Regular.ttf" />
       <EmbeddedResource Include="Roboto-Regular.ttf" />
-      <None Remove="Graphics\Shaders\Skybox\Skybox.vert" />
-      <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.vert" />
-      <None Remove="Graphics\Shaders\Skybox\Skybox.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.frag" />
-      <None Remove="Graphics\Shaders\PostProcessor.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\**\*" />
+        
       <None Update="libmixr.so">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="mixr.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Remove="Graphics\Shaders\Deferred\GBuffer.frag" />
-      <None Remove="Graphics\Shaders\Forward\Standard.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\Forward\Standard.frag" />
     </ItemGroup>
 
 </Project>

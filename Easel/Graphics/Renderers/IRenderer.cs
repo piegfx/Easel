@@ -18,6 +18,12 @@ public interface IRenderer : IDisposable
     public void AddOpaque(in Renderable renderable, in Matrix4x4 world);
 
     /// <summary>
+    /// Add a single opaque sprite that will be batched and rendered in the scene.
+    /// </summary>
+    /// <param name="sprite">The sprite to render.</param>
+    public void AddSpriteOpaque(in Sprite sprite);
+
+    /// <summary>
     /// Prepare the renderer for a new frame of objects.
     /// </summary>
     public void NewFrame();

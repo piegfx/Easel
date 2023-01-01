@@ -38,6 +38,7 @@ public class StandardMaterial : Material
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
+        Color = Color,
         Tiling = Tiling,
         Shininess = ShininessExponent
     };

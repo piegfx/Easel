@@ -23,21 +23,29 @@ public class Test3D : Scene
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
+        second.Transform.Position = new Vector3(0, 0, -5);
+        second.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(180), 0, 0);
         second.ClearColor = Color.RebeccaPurple;
         Bitmap awesomeface = Content.Load<Bitmap>("awesomeface");
         // lol
-        second.Skybox = new Skybox(awesomeface, awesomeface, awesomeface, awesomeface, awesomeface, awesomeface);
+        //second.Skybox = new Skybox(awesomeface, awesomeface, awesomeface, awesomeface, awesomeface, awesomeface);
+        second.Skybox = Camera.Main.Skybox;
         second.Tag = Tags.MainCamera;
         second.Viewport = new Vector4(0.5f, 0, 1.0f, 0.5f);
         AddEntity("second", second);
 
         Entity entity = new Entity(new Transform()
         {
-            Position = new Vector3(0, 0, 3)
+            Position = new Vector3(0, 0, -3)
         });
-        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(Content.Load<Texture2D>("awesomeface"))
+
+        Texture2D texture = Content.Load<Texture2D>("awesomeface");
+        texture.SamplerState = SamplerState.AnisotropicRepeat;
+        
+        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture)
         {
-            Tiling = new Vector2(2)
+            Tiling = new Vector2(2),
+            Color = Color.Orange with { A = 0.5f }
         })));
         AddEntity("cube", entity);
     }
@@ -46,7 +54,12 @@ public class Test3D : Scene
     {
         base.Update();
         
-        Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
-        GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);
+        //Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
+        //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);
+
+        GetEntity("cube").Transform.Rotation *=
+            Quaternion.CreateFromAxisAngle(Vector3.UnitX, 1 * Time.DeltaTime) *
+            Quaternion.CreateFromAxisAngle(Vector3.UnitY, 0.75f * Time.DeltaTime) *
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);
     }
 }

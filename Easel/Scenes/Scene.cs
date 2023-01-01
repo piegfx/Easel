@@ -127,6 +127,8 @@ public abstract class Scene : IDisposable
         }
 
         Graphics.SetRenderTarget(null);
+        Graphics.Clear(Color.Black);
+        
         Graphics.SpriteRenderer.Begin();
         Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
             Vector2.One);

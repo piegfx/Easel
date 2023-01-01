@@ -30,6 +30,7 @@ public sealed class UnlitMaterial : Material
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
+        Color = Color,
         Tiling = Tiling
     };
 

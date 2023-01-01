@@ -3,6 +3,7 @@
 
 struct Material
 {
+    vec4 color;
     vec2 tiling;
     float shininess;
 };

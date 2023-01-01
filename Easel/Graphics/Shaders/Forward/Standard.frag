@@ -21,5 +21,10 @@ layout (binding = 4) uniform sampler2D uNormal;
 
 void main()
 {
-    out_color = texture(uDiffuse, in_data.texCoords);
+    out_color = texture(uDiffuse, in_data.texCoords) * uMaterial.color;
+    
+    // Standard materials do not support transparency whatsoever. Therefore, we must remove it.
+    #ifndef TRANSPARENCY
+    out_color = vec4(out_color.xyz, 1.0);
+    #endif
 }

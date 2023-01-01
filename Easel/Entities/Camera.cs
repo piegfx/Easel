@@ -51,21 +51,23 @@ public class Camera : Entity
     private float _aspectRatio;
     private float _near;
     private float _far;
-    private CameraType _cameraType;
+    private ProjectionType _projectionType;
 
     /// <summary>
     /// The type of camera this is, a projection (typically for 3D), or an orthographic (typically for 2D) camera.
     /// </summary>
     /// <remarks>Certain camera properties will have no effect depending on which mode is selected.</remarks>
-    public CameraType CameraType
+    public ProjectionType ProjectionType
     {
-        get => _cameraType;
+        get => _projectionType;
         set
         {
-            _cameraType = value;
+            _projectionType = value;
             GenerateProjectionMatrix();
         }
     }
+
+    public CameraType CameraType;
     
     #region Perspective
 
@@ -159,13 +161,32 @@ public class Camera : Entity
         _aspectRatio = aspectRatio;
         _near = near;
         _far = far;
-        CameraType = CameraType.Perspective;
+        ProjectionType = ProjectionType.Perspective;
         _orthoSize = Vector2.One;
         ClearColor = Color.Black;
+        CameraType = CameraType.Camera3D;
 
         Viewport = new Vector4(0, 0, 1, 1);
         
         GenerateProjectionMatrix();
+    }
+
+    /// <summary>
+    /// Quickly switch this camera to an orthographic 2D camera.
+    /// </summary>
+    public void UseOrtho2D()
+    {
+        CameraType = CameraType.Camera2D;
+        ProjectionType = ProjectionType.Orthographic;
+    }
+
+    /// <summary>
+    /// Quickly switch this camera to a perspective 3D camera.
+    /// </summary>
+    public void UsePerspective3D()
+    {
+        CameraType = CameraType.Camera3D;
+        ProjectionType = ProjectionType.Perspective;
     }
 
     protected internal override void Initialize()
@@ -183,10 +204,10 @@ public class Camera : Entity
 
     private void GenerateProjectionMatrix()
     {
-        ProjectionMatrix = CameraType switch
+        ProjectionMatrix = ProjectionType switch
         {
-            CameraType.Perspective => Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far),
-            CameraType.Orthographic => Matrix4x4.CreateOrthographicOffCenter(0, Graphics.Viewport.Width * _orthoSize.X, Graphics.Viewport.Height * _orthoSize.Y, 0, -1, 1),
+            ProjectionType.Perspective => Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far),
+            ProjectionType.Orthographic => Matrix4x4.CreateOrthographicOffCenter(0, Graphics.Viewport.Width * _orthoSize.X, Graphics.Viewport.Height * _orthoSize.Y, 0, -1, 1),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -205,8 +226,15 @@ public class Camera : Entity
     public static Camera Main => (Camera) SceneManager.ActiveScene.GetEntitiesWithTag(Tags.MainCamera)[0];
 }
 
-public enum CameraType
+public enum ProjectionType
 {
     Perspective,
     Orthographic
+}
+
+[Flags]
+public enum CameraType
+{
+    Camera2D = 1 << 0,
+    Camera3D = 1 << 1
 }

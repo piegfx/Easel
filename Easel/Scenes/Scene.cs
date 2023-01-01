@@ -127,8 +127,10 @@ public abstract class Scene : IDisposable
             
             Graphics.Viewport = viewport;
             Graphics.Renderer.Camera = camera.CameraInfo;
-            Graphics.Renderer.Perform3DPass();
-            //Graphics.Renderer.Perform2DPass();
+            if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
+                Graphics.Renderer.Perform3DPass();
+            if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
+                Graphics.Renderer.Perform2DPass();
         }
 
         Graphics.SetRenderTarget(null);

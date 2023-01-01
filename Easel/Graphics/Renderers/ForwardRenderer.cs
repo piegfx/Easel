@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
+using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Renderers;
@@ -22,6 +23,7 @@ public sealed class ForwardRenderer : IRenderer
     public ForwardRenderer(EaselGraphics graphics, Size initialResolution)
     {
         _opaques = new List<TransformedRenderable>();
+        _opaqueSprites = new List<Sprite>();
         _projViewModel = new ProjViewModel();
 
         MainTarget = new RenderTarget(initialResolution);
@@ -52,13 +54,14 @@ public sealed class ForwardRenderer : IRenderer
 
     public void AddSpriteOpaque(in Sprite sprite)
     {
-        throw new System.NotImplementedException();
+        _opaqueSprites.Add(sprite);
     }
 
     public void NewFrame()
     {
         _opaques.Clear();
-        
+        _opaqueSprites.Clear();
+
         EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
         graphics.SetRenderTarget(MainTarget);
         graphics.Clear(Camera.ClearColor);
@@ -102,7 +105,19 @@ public sealed class ForwardRenderer : IRenderer
 
     public void Perform2DPass()
     {
-        throw new System.NotImplementedException();
+        EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
+        _opaqueSprites.Sort((sprite, sprite1) => sprite.Position.Z.CompareTo(sprite1.Position.Z));
+        
+        graphics.SpriteRenderer.Begin();
+
+        for (int i = 0; i < _opaqueSprites.Count; i++)
+        {
+            Sprite sprite = _opaqueSprites[i];
+            graphics.SpriteRenderer.Draw(sprite.Texture, sprite.Position.ToVector2(), sprite.Source, sprite.Tint,
+                sprite.Rotation, sprite.Origin, sprite.Scale, sprite.Flip);
+        }
+        
+        graphics.SpriteRenderer.End();
     }
 
     public void Dispose()

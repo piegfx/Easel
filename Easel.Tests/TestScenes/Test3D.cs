@@ -22,13 +22,14 @@ public class Test3D : Scene
         texture.SamplerState = SamplerState.AnisotropicRepeat;
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
+        Camera.Main.UseOrtho2D();
         Camera.Main.Skybox = new Skybox(Content.Load<EaselTexture>("Skybox"));
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
-        Camera.Main.AddComponent(new NoClipCamera()
-        {
-            MoveSpeed = 20
-        });
-        Camera.Main.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture))));
+        //Camera.Main.AddComponent(new NoClipCamera()
+        //{
+        //    MoveSpeed = 20
+        //});
+        //Camera.Main.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture))));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
         second.Transform.Position = new Vector3(0, 0, -5);
@@ -53,6 +54,10 @@ public class Test3D : Scene
             Color = Color.Orange with { A = 0.5f }
         })));
         AddEntity("cube", entity);
+
+        Entity thingy = new Entity();
+        thingy.AddComponent(new Sprite(texture));
+        AddEntity(thingy);
     }
 
     protected override void Update()

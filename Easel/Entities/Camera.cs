@@ -148,23 +148,34 @@ public class Camera : Entity
     #endregion
 
     /// <summary>
-    /// Create a new camera for use in 3D scenes.
+    /// Create a new perspective camera for use in 3D scenes.
     /// </summary>
     /// <param name="fov">The field of view, in radians, of this camera.</param>
     /// <param name="aspectRatio">The aspect ratio of this camera (typically width / height).</param>
     /// <param name="near">The near plane distance of this camera.</param>
     /// <param name="far">The far plane distance of this camera.</param>
-    /// <remarks>Multiple cameras are not currently supported.</remarks>
-    public Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000f)
+    public Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000f, CameraType type = CameraType.Camera3D)
     {
+        _projectionType = ProjectionType.Perspective;
         _fov = fov;
         _aspectRatio = aspectRatio;
         _near = near;
         _far = far;
-        ProjectionType = ProjectionType.Perspective;
         _orthoSize = Vector2.One;
         ClearColor = Color.Black;
-        CameraType = CameraType.Camera3D;
+        CameraType = type;
+
+        Viewport = new Vector4(0, 0, 1, 1);
+        
+        GenerateProjectionMatrix();
+    }
+
+    public Camera(Vector2? orthoSize = null, CameraType type = CameraType.Camera3D)
+    {
+        _projectionType = ProjectionType.Orthographic;
+        CameraType = type;
+        _orthoSize = orthoSize ?? Vector2.One;
+        ClearColor = Color.Black;
 
         Viewport = new Vector4(0, 0, 1, 1);
         

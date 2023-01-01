@@ -7,6 +7,7 @@ using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Math;
+using Pie;
 
 namespace Easel.Scenes;
 
@@ -100,6 +101,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
+        Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
+        Graphics.Renderer.Camera = ((Camera) cameras[0]).CameraInfo;
         Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
@@ -111,8 +114,10 @@ public abstract class Scene : IDisposable
         }
 
         Size framebufferSize = Graphics.Renderer.MainTarget.Size;
-        foreach (Camera camera in GetEntitiesWithTag(Tags.MainCamera))
+        foreach (Camera camera in cameras)
         {
+            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
+            
             // Convert the camera's normalized viewport into a viewport pie can understand.
             Rectangle viewport = new Rectangle();
             viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);

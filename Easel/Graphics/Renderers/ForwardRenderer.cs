@@ -17,6 +17,8 @@ public sealed class ForwardRenderer : IRenderer
 
     private GraphicsBuffer _shaderMaterialBuffer;
 
+    private DepthState _depthState;
+
     public ForwardRenderer(EaselGraphics graphics, Size initialResolution)
     {
         _opaques = new List<TransformedRenderable>();
@@ -30,6 +32,8 @@ public sealed class ForwardRenderer : IRenderer
 
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
         _shaderMaterialBuffer = device.CreateBuffer(BufferType.UniformBuffer, new ShaderMaterial(), true);
+
+        _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
     }
 
     private void GraphicsOnSwapchainResized(Size size)
@@ -69,6 +73,7 @@ public sealed class ForwardRenderer : IRenderer
         _projViewModel.View = Camera.View;
         
         device.SetPrimitiveType(PrimitiveType.TriangleList);
+        device.SetDepthState(_depthState);
         
         // Draw front-to-back for opaques.
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.

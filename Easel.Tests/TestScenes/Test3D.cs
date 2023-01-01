@@ -18,9 +18,17 @@ public class Test3D : Scene
     {
         base.Initialize();
 
+        Texture2D texture = Content.Load<Texture2D>("awesomeface");
+        texture.SamplerState = SamplerState.AnisotropicRepeat;
+        
         Camera.Main.ClearColor = Color.CornflowerBlue;
         Camera.Main.Skybox = new Skybox(Content.Load<EaselTexture>("Skybox"));
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
+        Camera.Main.AddComponent(new NoClipCamera()
+        {
+            MoveSpeed = 20
+        });
+        Camera.Main.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture))));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
         second.Transform.Position = new Vector3(0, 0, -5);
@@ -39,9 +47,6 @@ public class Test3D : Scene
             Position = new Vector3(0, 0, -3)
         });
 
-        Texture2D texture = Content.Load<Texture2D>("awesomeface");
-        texture.SamplerState = SamplerState.AnisotropicRepeat;
-        
         entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture)
         {
             Tiling = new Vector2(2),

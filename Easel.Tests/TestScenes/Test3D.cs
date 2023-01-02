@@ -9,6 +9,7 @@ using Easel.Math;
 using Easel.Primitives;
 using Easel.Scenes;
 using Easel.Utilities;
+using Pie.Windowing;
 
 namespace Easel.Tests.TestScenes;
 
@@ -17,6 +18,8 @@ public class Test3D : Scene
     protected override void Initialize()
     {
         base.Initialize();
+
+        Input.MouseState = MouseState.Locked;
 
         Texture2D texture = Content.Load<Texture2D>("awesomeface");
         texture.SamplerState = SamplerState.AnisotropicRepeat;
@@ -45,7 +48,7 @@ public class Test3D : Scene
         Camera third = new Camera(type: CameraType.Camera2D);
         // TODO: Better camera solution than forcing every camera to use main camera tag.
         third.Tag = Tags.MainCamera;
-        AddEntity("third", third);
+        //AddEntity("third", third);
 
         Entity entity = new Entity(new Transform()
         {
@@ -67,6 +70,9 @@ public class Test3D : Scene
     protected override void Update()
     {
         base.Update();
+        
+        if (Input.KeyPressed(Key.Escape))
+            Game.Close();
         
         //Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
         //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);

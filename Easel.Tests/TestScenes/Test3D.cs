@@ -77,9 +77,9 @@ public class Test3D : Scene
         //Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
         //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);
 
-        /*GetEntity("cube").Transform.Rotation *=
+        GetEntity("cube").Transform.Rotation *=
             Quaternion.CreateFromAxisAngle(Vector3.UnitX, 1 * Time.DeltaTime) *
             Quaternion.CreateFromAxisAngle(Vector3.UnitY, 0.75f * Time.DeltaTime) *
-            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);*/
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);
     }
 }

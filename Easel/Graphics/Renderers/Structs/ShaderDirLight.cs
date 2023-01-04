@@ -4,7 +4,7 @@ using Easel.Math;
 
 namespace Easel.Graphics.Renderers.Structs;
 
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Sequential, Size = 48)]
 public struct ShaderDirLight
 {
     public Color DiffuseColor;

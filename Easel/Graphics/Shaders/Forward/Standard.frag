@@ -28,9 +28,9 @@ void main()
 {
     #ifdef LIGHTING
     vec3 normal = normalize(in_data.normal);
-    vec3 lightDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
+    vec3 viewDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
     
-    out_color = CalculateDirectional(uSun, normal, lightDir, in_data.texCoords, uMaterial.shininess, uDiffuse, uSpecular);
+    out_color = CalculateDirectional(uSun, normal, viewDir, in_data.texCoords, uMaterial.shininess, uDiffuse, uSpecular);
     #else
     out_color = texture(uDiffuse, in_data.texCoords) * uMaterial.color;
     #endif

@@ -29,7 +29,7 @@ public class Test3D : Scene
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
         Camera.Main.AddComponent(new NoClipCamera()
         {
-            MoveSpeed = 20
+            MoveSpeed = 10
         });
         Camera.Main.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture))));
 
@@ -55,7 +55,7 @@ public class Test3D : Scene
             Position = new Vector3(0, 0, -3)
         });
 
-        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture)
+        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new StandardMaterial(texture, 32)
         {
             Tiling = new Vector2(2),
             Color = Color.Orange with { A = 0.5f }
@@ -77,9 +77,9 @@ public class Test3D : Scene
         //Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
         //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);
 
-        GetEntity("cube").Transform.Rotation *=
+        /*GetEntity("cube").Transform.Rotation *=
             Quaternion.CreateFromAxisAngle(Vector3.UnitX, 1 * Time.DeltaTime) *
             Quaternion.CreateFromAxisAngle(Vector3.UnitY, 0.75f * Time.DeltaTime) *
-            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);*/
     }
 }

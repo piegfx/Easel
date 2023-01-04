@@ -16,7 +16,8 @@ public sealed class ForwardRenderer : IRenderer
     private ProjViewModel _projViewModel;
     private GraphicsBuffer _projViewModelBuffer;
 
-    private GraphicsBuffer _shaderMaterialBuffer;
+    private SceneInfo _sceneInfo;
+    private GraphicsBuffer _sceneInfoBuffer;
 
     private DepthState _depthState;
 
@@ -33,7 +34,9 @@ public sealed class ForwardRenderer : IRenderer
         GraphicsDevice device = graphics.PieGraphics;
 
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
-        _shaderMaterialBuffer = device.CreateBuffer(BufferType.UniformBuffer, new ShaderMaterial(), true);
+
+        _sceneInfo = new SceneInfo();
+        _sceneInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _sceneInfo, true);
 
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
     }
@@ -74,6 +77,13 @@ public sealed class ForwardRenderer : IRenderer
         Camera.Skybox?.Draw(Camera.Projection, Camera.View);
         _projViewModel.Projection = Camera.Projection;
         _projViewModel.View = Camera.View;
+
+        _sceneInfo.Sun = new ShaderDirLight()
+        {
+            Direction = new Vector3(1, 1, 0.5f),
+            DiffuseColor = new Color(0.5f, 0.5f, 0.5f, 1.0f),
+            SpecularColor = new Color(1.0f, 1.0f, 1.0f, 1.0f)
+        };
         
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetDepthState(_depthState);
@@ -88,11 +98,14 @@ public sealed class ForwardRenderer : IRenderer
     {
         _projViewModel.Model = renderable.Transform;
         device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
-        device.UpdateBuffer(_shaderMaterialBuffer, 0, renderable.Renderable.Material.ShaderMaterial);
+
+        _sceneInfo.Material = renderable.Renderable.Material.ShaderMaterial;
+        _sceneInfo.CameraPos = new Vector4(Camera.Position, 1.0f);
+        device.UpdateBuffer(_sceneInfoBuffer, 0, _sceneInfo);
 
         device.SetShader(renderable.Renderable.Material.EffectLayout.Effect.PieShader);
         device.SetUniformBuffer(0, _projViewModelBuffer);
-        device.SetUniformBuffer(1, _shaderMaterialBuffer);
+        device.SetUniformBuffer(1, _sceneInfoBuffer);
         renderable.Renderable.Material.ApplyTextures(device);
         device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
 

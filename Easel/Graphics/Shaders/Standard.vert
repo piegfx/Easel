@@ -1,6 +1,7 @@
 // The bog standard vertex shader all render pipelines use.
 
 #include "Easel.Graphics.Shaders.Material.glsl"
+#include "Easel.Graphics.Shaders.Lighting.glsl"
         
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoords;
@@ -10,6 +11,7 @@ layout (location = 0) out VertexInfo
 {
     vec2 texCoords;
     vec3 normal;
+    vec3 fragPosition;
 } out_data;
 
 layout (binding = 0) uniform ProjViewModel
@@ -21,12 +23,15 @@ layout (binding = 0) uniform ProjViewModel
 
 layout (binding = 1) uniform SceneInfo
 {
+    vec4 uCameraPos;
     Material uMaterial;
+    DirectionalLight uSun;
 };
 
 void main()
 {
     gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
     out_data.texCoords = aTexCoords * uMaterial.tiling;
-    out_data.normal = aNormals;
+    out_data.normal = mat3(transpose(inverse(uModel))) * aNormals;
+    out_data.fragPosition = vec3(uModel * vec4(aPosition, 1.0));
 }

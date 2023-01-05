@@ -131,10 +131,16 @@ public class Entity : InheritableEntity, IDisposable
     /// added to the scene. Otherwise, the component is initialized when it is added.</remarks>
     public void AddComponent(Component component)
     {
+        if (!TryAddComponent(component))
+            throw new EaselException("Entities cannot have more than one type of each component.");
+    }
+
+    public bool TryAddComponent(Component component)
+    {
         Type type = component.GetType();
         if (_componentPointers.ContainsKey(type))
-            throw new EaselException("Entities cannot have more than one type of each component.");
-
+            return false;
+        
         component.Entity = this;
         if (_hasInitialized)
             component.Initialize();
@@ -144,6 +150,8 @@ public class Entity : InheritableEntity, IDisposable
             Array.Resize(ref _components, _components.Length << 1);
         _components[count] = component;
         _componentPointers.Add(type, count);
+
+        return true;
     }
 
     /// <summary>
@@ -157,6 +165,16 @@ public class Entity : InheritableEntity, IDisposable
             return null;
 
         return (T) _components[ptr];
+    }
+
+    public bool TryGetComponent<T>(out T component) where T : Component
+    {
+        return (component = GetComponent<T>()) != null;
+    }
+
+    public bool HasComponent<T>() where T : Component
+    {
+        return GetComponent<T>() != null;
     }
 
     protected override void AddEntity(string name, Entity entity) => SceneManager.ActiveScene.AddEntity(name, entity);

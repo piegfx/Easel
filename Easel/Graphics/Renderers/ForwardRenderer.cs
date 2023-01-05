@@ -27,7 +27,7 @@ public sealed class ForwardRenderer : IRenderer
         _opaqueSprites = new List<Sprite>();
         _projViewModel = new ProjViewModel();
 
-        MainTarget = new RenderTarget(initialResolution);
+        MainTarget = new RenderTarget(initialResolution, autoDispose: false);
         
         graphics.SwapchainResized += GraphicsOnSwapchainResized;
 

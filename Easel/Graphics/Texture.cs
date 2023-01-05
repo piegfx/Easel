@@ -32,7 +32,7 @@ public abstract class Texture : IDisposable
         SamplerState = state;
         
         if (autoDispose)
-            SceneManager.ActiveScene.GarbageCollections.Add(this);
+            SceneManager.ActiveScene?.GarbageCollections.Add(this);
     }
 
     public virtual void Dispose()

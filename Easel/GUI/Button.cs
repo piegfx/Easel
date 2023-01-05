@@ -49,6 +49,6 @@ public class Button : UIElement
             Justification.Right => CalculatedScreenPos.X + Size.Width - size.Width,
             _ => throw new ArgumentOutOfRangeException()
         };
-        Theme.Font.DrawBBCode(FontSize, Text, new Vector2(posX, CalculatedScreenPos.Y + Size.Height / 2 - size.Height / 2) + (Vector2) TextOffset, Theme.FontColor);
+        Theme.Font.DrawBBCode(renderer, FontSize, Text, new Vector2(posX, CalculatedScreenPos.Y + Size.Height / 2 - size.Height / 2) + (Vector2) TextOffset, Theme.FontColor);
     }
 }

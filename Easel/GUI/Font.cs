@@ -16,14 +16,11 @@ public class Font : IDisposable
 
     private Dictionary<uint, Charmap> _charmaps;
 
-    private EaselGraphics _graphics;
-
     public Font(string path)
     {
         Face = FontHelper.FreeType.CreateFace(path, 0);
         
         _charmaps = new Dictionary<uint, Charmap>();
-        _graphics = EaselGame.Instance.GraphicsInternal;
     }
 
     public Font(byte[] data)
@@ -31,10 +28,9 @@ public class Font : IDisposable
         Face = FontHelper.FreeType.CreateFace(data, 0);
         
         _charmaps = new Dictionary<uint, Charmap>();
-        _graphics = EaselGame.Instance.GraphicsInternal;
     }
 
-    public void Draw(uint size, string text, Vector2 position, Color color)
+    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2 position, Color color)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -66,12 +62,12 @@ public class Font : IDisposable
             Charmap.Character chr = charmap.GetCharacter(c);
             Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, color, 0, Vector2.Zero, Vector2.One);
+            renderer.Draw(charmap.Texture, charPos, chr.Source, color, 0, Vector2.Zero, Vector2.One);
             pos.X += chr.Advance;
         }
     }
 
-    public void DrawBBCode(uint size, string text, Vector2 position, Color initialColor)
+    public void DrawBBCode(SpriteRenderer renderer, uint size, string text, Vector2 position, Color initialColor)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -116,7 +112,7 @@ public class Font : IDisposable
                         Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        _graphics.SpriteRenderer.Draw(charmap.Texture, charPos, chr.Source, currentColor, 0, Vector2.Zero, Vector2.One);
+                        renderer.Draw(charmap.Texture, charPos, chr.Source, currentColor, 0, Vector2.Zero, Vector2.One);
                         pos.X += chr.Advance;
                     }
 

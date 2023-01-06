@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 using Easel.Utilities;
 using Pie;
@@ -69,6 +70,11 @@ public struct GameSettings
     /// If disabled, the game window will not be visible until you tell it to become visible.
     /// </summary>
     public bool StartVisible;
+
+    /// <summary>
+    /// The render options Easel will use for your application.
+    /// </summary>
+    public RenderOptions RenderOptions;
     
     /// <summary>
     /// Create the default game settings.
@@ -77,7 +83,7 @@ public struct GameSettings
     {
         Size = new Size(1280, 720);
         
-        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel View";
+        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
         Border = WindowBorder.Fixed;
         VSync = true;
         TargetFps = 0;
@@ -86,5 +92,6 @@ public struct GameSettings
         Icon = null;
         TitleBarFlags = TitleBarFlags.ShowEasel;
         StartVisible = true;
+        RenderOptions = RenderOptions.Default;
     }
 }

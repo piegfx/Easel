@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Easel.Audio;
 using Easel.Content;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Math;
+using Pie;
 
 namespace Easel.Scenes;
 
@@ -57,13 +59,6 @@ public abstract class Scene : IDisposable
     protected ContentManager Content => EaselGame.Instance.Content;
 
     /// <summary>
-    /// The scene's <see cref="Scenes.World"/> properties, such as skybox and clear color.
-    /// </summary>
-    public readonly World World;
-
-    private float _timer;
-
-    /// <summary>
     /// Create a new scene.
     /// </summary>
     /// <param name="initialCapacity">The starting entity array size. This array doubles in size when its size is exceeded.</param>
@@ -72,7 +67,6 @@ public abstract class Scene : IDisposable
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
         GarbageCollections = new List<IDisposable>();
-        World = new World();
     }
 
     /// <summary>
@@ -107,8 +101,9 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-        Graphics.Renderer.ClearAll();
-        Graphics.Renderer2D.ClearAll();
+        Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
+        Graphics.Renderer.Camera = ((Camera) cameras[0]).CameraInfo;
+        Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -117,38 +112,34 @@ public abstract class Scene : IDisposable
                 continue;
             entity.Draw();
         }
-        
-        Graphics.SetRenderTarget(Graphics.PostProcessor.MainTarget);
-        
-        #region 3D pass
-        
-        Rectangle viewport = Graphics.Viewport;
-        foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
+
+        Size framebufferSize = Graphics.Renderer.MainTarget.Size;
+        foreach (Camera camera in cameras)
         {
-            Camera camera = (Camera) entity;
-            // TODO: Update to handle render targets instead of using view size.
-            Graphics.Viewport = camera.Viewport ?? viewport;
-            Graphics.Renderer.Render(camera, World);
+            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
+            
+            // Convert the camera's normalized viewport into a viewport pie can understand.
+            Rectangle viewport = new Rectangle();
+            viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);
+            viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);
+            viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;
+            viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
+            
+            Graphics.Viewport = viewport;
+            Graphics.Renderer.Camera = camera.CameraInfo;
+            if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
+                Graphics.Renderer.Perform3DPass();
+            if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
+                Graphics.Renderer.Perform2DPass();
         }
-        
-        #endregion
 
-        #region 2D pass
-
-        Graphics.Renderer2D.Render(Camera.Main, World);
-
-        #endregion
-        
         Graphics.SetRenderTarget(null);
-        Graphics.PostProcessor.Process(Graphics);
-
-        _timer += Time.DeltaTime;
-
-        if (_timer >= 60)
-        {
-            _timer = 0;
-            Graphics.CleanMeshes();
-        }
+        Graphics.Clear(Color.Black);
+        
+        Graphics.SpriteRenderer.Begin();
+        Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
+            Vector2.One);
+        Graphics.SpriteRenderer.End();
     }
 
     /// <summary>

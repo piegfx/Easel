@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using Easel.Graphics;
+using Easel.Graphics.Materials;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Easel.Primitives;
 using Pie.Utils;
 using Silk.NET.Assimp;
-using Material = Easel.Graphics.Material;
+using Material = Easel.Graphics.Materials.Material;
 
 namespace Easel.Utilities;
 
@@ -35,7 +36,7 @@ public struct Mesh
         };
     }
 
-    public static Mesh[] FromPrimitive(IPrimitive primitive) => FromPrimitive(primitive, new Material(Texture2D.Blank));
+    public static Mesh[] FromPrimitive(IPrimitive primitive) => FromPrimitive(primitive, new UnlitMaterial(Texture2D.Blank));
     
     public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
@@ -98,10 +99,11 @@ public struct Mesh
         Texture2D[] diffuses = LoadTextures(material, TextureType.Diffuse, directory, ref loadedTextures);
         Texture2D[] speculars = LoadTextures(material, TextureType.Specular, directory, ref loadedTextures);
         Texture2D[] normals = LoadTextures(material, TextureType.Height, directory, ref loadedTextures);
-        Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Blank,
-            speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : null,
-            normals.Length > 0 ? normals[0] : null, Color.White, shininess);
-        return new Mesh(vertices.ToArray(), indices.ToArray(), mat);
+        // todo
+        //Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Blank,
+        //    speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : null,
+        //    normals.Length > 0 ? normals[0] : null, Color.White, shininess);
+        return new Mesh(vertices.ToArray(), indices.ToArray(), new UnlitMaterial(null));
     }
     
     private static unsafe Texture2D[] LoadTextures(Silk.NET.Assimp.Material* material, TextureType type, string directory, ref Dictionary<string, Texture2D> loadedTextures)

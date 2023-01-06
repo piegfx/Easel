@@ -23,6 +23,6 @@ public class Tooltip
         Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
         Point pos = (Point) Input.MousePosition + new Point(0, -20);
         renderer.DrawRectangle((Vector2) pos, size + new Size(0, 10), Theme.BorderWidth, Theme.BorderRadius, Theme.BackgroundColor, Theme.BorderColor, 0, Vector2.Zero);
-        Theme.Font.DrawBBCode(FontSize, Text, (Vector2) (pos + (Point) size / 2 - (Point) size / 2), Theme.FontColor);
+        Theme.Font.DrawBBCode(renderer, FontSize, Text, (Vector2) (pos + (Point) size / 2 - (Point) size / 2), Theme.FontColor);
     }
 }

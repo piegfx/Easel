@@ -1,134 +1,141 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using Easel.Entities;
 using Easel.Graphics.Renderers.Structs;
-using Easel.Graphics.Structs;
 using Easel.Math;
-using Easel.Scenes;
+using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Renderers;
 
-/// <summary>
-/// Forward rendering is the "traditional" way to render objects. It has its advantages, but also has many disadvantages
-/// compared to deferred rendering. As such, deferred rendering is usually preferred for most rendering tasks.
-/// </summary>
-public sealed class ForwardRenderer : I3DRenderer
+public sealed class ForwardRenderer : IRenderer
 {
-    private EaselGraphics _graphics;
+    private List<TransformedRenderable> _opaques;
+    private List<Sprite> _opaqueSprites;
 
-    private GraphicsBuffer _projViewModelBuffer;
     private ProjViewModel _projViewModel;
+    private GraphicsBuffer _projViewModelBuffer;
 
-    private CameraInfo _cameraInfo;
-    private GraphicsBuffer _cameraBuffer;
+    private SceneInfo _sceneInfo;
+    private GraphicsBuffer _sceneInfoBuffer;
 
-    private List<(Renderable, Matrix4x4)> _translucents;
-    private List<(Renderable, Matrix4x4)> _opaques;
-
-    private RasterizerState _rasterizerState;
     private DepthState _depthState;
-    private SamplerState _samplerState;
-    private BlendState _blendState;
 
-    public ForwardRenderer(EaselGraphics graphics)
+    public ForwardRenderer(EaselGraphics graphics, Size initialResolution)
     {
-        _graphics = graphics;
-        GraphicsDevice device = graphics.PieGraphics;
-        
-        _translucents = new List<(Renderable, Matrix4x4)>();
-        _opaques = new List<(Renderable, Matrix4x4)>();
+        _opaques = new List<TransformedRenderable>();
+        _opaqueSprites = new List<Sprite>();
+        _projViewModel = new ProjViewModel();
 
-        _projViewModel = new ProjViewModel()
-        {
-            ProjView = Matrix4x4.Identity,
-            Model = Matrix4x4.Identity
-        };
+        MainTarget = new RenderTarget(initialResolution, autoDispose: false);
+        
+        graphics.SwapchainResized += GraphicsOnSwapchainResized;
+
+        GraphicsDevice device = graphics.PieGraphics;
+
         _projViewModelBuffer = device.CreateBuffer(BufferType.UniformBuffer, _projViewModel, true);
 
-        _cameraInfo = new CameraInfo();
-        _cameraBuffer = device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
+        _sceneInfo = new SceneInfo();
+        _sceneInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _sceneInfo, true);
 
-        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
-        _samplerState = device.CreateSamplerState(SamplerStateDescription.AnisotropicRepeat);
-        _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
     }
 
-    /// <inheritdoc />
-    public void DrawTranslucent(Renderable renderable, Matrix4x4 world)
+    private void GraphicsOnSwapchainResized(Size size)
     {
-        _translucents.Add((renderable, world));
+        MainTarget.Dispose();
+        MainTarget = new RenderTarget(size);
     }
 
-    /// <inheritdoc />
-    public void DrawOpaque(Renderable renderable, Matrix4x4 world)
+    public CameraInfo Camera { get; set; }
+    public RenderTarget MainTarget { get; set; }
+
+    public void AddOpaque(in Renderable renderable, in Matrix4x4 world)
     {
-        _opaques.Add((renderable, world));
+        _opaques.Add(new TransformedRenderable(renderable, world));
     }
 
-    /// <inheritdoc />
-    public void ClearAll()
+    public void AddSpriteOpaque(in Sprite sprite)
     {
-        _translucents.Clear();
+        _opaqueSprites.Add(sprite);
+    }
+
+    public void NewFrame()
+    {
         _opaques.Clear();
+        _opaqueSprites.Clear();
+
+        EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
+        graphics.SetRenderTarget(MainTarget);
+        graphics.Clear(Camera.ClearColor);
     }
 
-    /// <inheritdoc />
-    public void Render(Camera camera, World world)
+    public void Perform3DPass()
     {
-        GraphicsDevice device = _graphics.PieGraphics;
-        _graphics.Clear(world.ClearColor);
-        world.Skybox?.Draw(camera);
-        _projViewModel.ProjView = camera.ViewMatrix * camera.ProjectionMatrix;
+        GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
+        
+        Camera.Skybox?.Draw(Camera.Projection, Camera.View);
+        _projViewModel.Projection = Camera.Projection;
+        _projViewModel.View = Camera.View;
 
-        _cameraInfo.Sun = SceneManager.ActiveScene.World.Sun.ShaderDirectionalLight;
-        _cameraInfo.CameraPos = new Vector4(camera.Transform.Position, 1);
-
-        device.SetRasterizerState(_rasterizerState);
-        device.SetDepthState(_depthState);
-        device.SetBlendState(_blendState);
-        device.SetUniformBuffer(0, _projViewModelBuffer);
-        device.SetUniformBuffer(1, _cameraBuffer);
-        device.SetPrimitiveType(PrimitiveType.TriangleList);
-
-        foreach ((Renderable renderable, Matrix4x4 mWorld) in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
+        _sceneInfo.Sun = new ShaderDirLight()
         {
-            // TODO move to array and convert to ref
-            DrawRenderable(renderable, mWorld);
-        }
+            Direction = new Vector3(1, 1, 0.5f),
+            DiffuseColor = new Color(0.5f, 0.5f, 0.5f, 1.0f),
+            SpecularColor = new Color(1.0f, 1.0f, 1.0f, 1.0f)
+        };
         
-        foreach ((Renderable renderable, Matrix4x4 mWorld) in _translucents.OrderBy(renderable => -Vector3.Distance(renderable.Item2.Translation, camera.Transform.Position)))
-            DrawRenderable(renderable, mWorld);
+        device.SetPrimitiveType(PrimitiveType.TriangleList);
+        device.SetDepthState(_depthState);
+        
+        // Draw front-to-back for opaques.
+        // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
+        foreach (TransformedRenderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, Camera.Position)))
+            DrawRenderable(device, renderable);
     }
 
-    private void DrawRenderable(in Renderable renderable, in Matrix4x4 world)
+    private void DrawRenderable(GraphicsDevice device, in TransformedRenderable renderable)
     {
-        GraphicsDevice device = _graphics.PieGraphics;
-        
-        _projViewModel.Model = world;
+        _projViewModel.Model = renderable.Transform;
         device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
 
-        _cameraInfo.Material = renderable.Material.ShaderMaterial;
-        device.UpdateBuffer(_cameraBuffer, 0, _cameraInfo);
+        _sceneInfo.Material = renderable.Renderable.Material.ShaderMaterial;
+        _sceneInfo.CameraPos = new Vector4(Camera.Position, 1.0f);
+        device.UpdateBuffer(_sceneInfoBuffer, 0, _sceneInfo);
 
-        device.SetShader(renderable.Material.EffectLayout.Effect.PieShader);
-        device.SetTexture(2, renderable.Material.Albedo?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-        device.SetTexture(3, renderable.Material.Specular?.PieTexture ?? Texture2D.Missing.PieTexture, _samplerState);
-        device.SetTexture(4, renderable.Material.Normal?.PieTexture ?? Texture2D.Void.PieTexture, _samplerState);
-        device.SetVertexBuffer(0, renderable.VertexBuffer, renderable.Material.EffectLayout.Stride, renderable.Material.EffectLayout.Layout);
-        device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
-        device.DrawIndexed(renderable.IndicesLength);
+        device.SetShader(renderable.Renderable.Material.EffectLayout.Effect.PieShader);
+        device.SetUniformBuffer(0, _projViewModelBuffer);
+        device.SetUniformBuffer(1, _sceneInfoBuffer);
+        renderable.Renderable.Material.ApplyTextures(device);
+        device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
+
+        device.SetVertexBuffer(0, renderable.Renderable.VertexBuffer,
+            renderable.Renderable.Material.EffectLayout.Stride,
+            renderable.Renderable.Material.EffectLayout.Layout);
+        device.SetIndexBuffer(renderable.Renderable.IndexBuffer, IndexType.UInt);
+        device.DrawIndexed(renderable.Renderable.NumIndices);
+    }
+
+    public void Perform2DPass()
+    {
+        EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
+        _opaqueSprites.Sort((sprite, sprite1) => sprite.Position.Z.CompareTo(sprite1.Position.Z));
+        
+        graphics.SpriteRenderer.Begin();
+
+        for (int i = 0; i < _opaqueSprites.Count; i++)
+        {
+            Sprite sprite = _opaqueSprites[i];
+            graphics.SpriteRenderer.Draw(sprite.Texture, sprite.Position.ToVector2(), sprite.Source, sprite.Tint,
+                sprite.Rotation, sprite.Origin, sprite.Scale, sprite.Flip);
+        }
+        
+        graphics.SpriteRenderer.End();
     }
 
     public void Dispose()
     {
+        MainTarget.Dispose();
         _projViewModelBuffer.Dispose();
-        _cameraBuffer.Dispose();
-        _rasterizerState.Dispose();
-        _depthState.Dispose();
-        _samplerState.Dispose();
     }
 }

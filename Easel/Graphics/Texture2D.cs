@@ -15,10 +15,8 @@ public class Texture2D : Texture
     /// <param name="path">The path to load from.</param>
     /// <param name="autoDispose">If <see langword="true"/>, this <see cref="Texture2D"/> will be automatically disposed
     /// on scene change.</param>
-    public Texture2D(string path, bool autoDispose = true) : this(new Bitmap(path), autoDispose)
-    {
-        
-    }
+    public Texture2D(string path, SamplerState samplerState = null, bool autoDispose = true)
+        : this(new Bitmap(path), samplerState, autoDispose) { }
 
     /// <summary>
     /// Create a new <see cref="Texture2D"/> from the given <see cref="Bitmap"/>. Useful for doing threaded loading.
@@ -26,13 +24,12 @@ public class Texture2D : Texture
     /// <param name="bitmap">The <see cref="Bitmap"/> to load from.</param>
     /// <param name="autoDispose">If <see langword="true"/>, this <see cref="Texture2D"/> will be automatically disposed
     /// on scene change.</param>
-    public Texture2D(Bitmap bitmap, bool autoDispose = true) : this(bitmap.Size.Width,
-        bitmap.Size.Height, bitmap.Data, bitmap.Format, autoDispose)
-    {
-        
-    }
+    public Texture2D(Bitmap bitmap, SamplerState samplerState = null, bool autoDispose = true)
+        : this(bitmap.Size.Width, bitmap.Size.Height, bitmap.Data, samplerState, bitmap.Format, autoDispose) { }
 
-    public Texture2D(int width, int height, byte[] data, PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool autoDispose = true) : base(autoDispose)
+    public Texture2D(int width, int height, byte[] data, SamplerState samplerState = null, 
+        PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool autoDispose = true) 
+        : base(samplerState ?? SamplerState.LinearRepeat, autoDispose)
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         TextureDescription description =

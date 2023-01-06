@@ -12,8 +12,8 @@ public class TestManyEntities : Scene
     protected override void Initialize()
     {
         base.Initialize();
-
-        Camera.Main.CameraType = CameraType.Orthographic;
+        
+        Camera.Main.UseOrtho2D();
 
         Texture2D texture = Content.Load<Texture2D>("awesomeface");
         Random random = new Random();

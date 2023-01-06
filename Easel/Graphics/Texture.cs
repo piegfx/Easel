@@ -19,16 +19,20 @@ public abstract class Texture : IDisposable
     /// The native Pie <see cref="Pie.Texture"/>.
     /// </summary>
     public Pie.Texture PieTexture { get; protected set; }
+    
+    public SamplerState SamplerState { get; set; }
 
     /// <summary>
     /// The size (resolution), in pixels of the texture.
     /// </summary>
     public Size Size => (Size) PieTexture.Size;
 
-    protected Texture(bool autoDispose)
+    protected Texture(SamplerState state, bool autoDispose)
     {
+        SamplerState = state;
+        
         if (autoDispose)
-            SceneManager.ActiveScene.GarbageCollections.Add(this);
+            SceneManager.ActiveScene?.GarbageCollections.Add(this);
     }
 
     public virtual void Dispose()

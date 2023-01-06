@@ -162,7 +162,7 @@ public class EaselGame : IDisposable
         Window = Window.CreateWindow(settings, api);
         Logger.Debug("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
-        GraphicsInternal.Initialize(new ForwardRenderer(GraphicsInternal), new Default2DRenderer(GraphicsInternal));
+        GraphicsInternal.Initialize(_settings.RenderOptions);
 
         Logger.Debug("Creating audio device...");
         AudioInternal = new AudioDevice(AudioFormat.Stereo48khz, 256);
@@ -232,7 +232,7 @@ public class EaselGame : IDisposable
         foreach (Action action in _actions)
             action();
         _actions.Clear();
-        UI.Draw(GraphicsInternal);
+        //UI.Draw(GraphicsInternal);
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ public class EaselGame : IDisposable
         Font font = UI.Theme.Font;
         Size size = font.MeasureString(12, metrics);
         //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
-        font.Draw(12, metrics, new Vector2(5), Color.White);
+        font.Draw(Graphics.SpriteRenderer, 12, metrics, new Vector2(5), Color.White);
         Graphics.SpriteRenderer.End();
     }
 }

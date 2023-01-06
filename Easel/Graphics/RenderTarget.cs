@@ -8,8 +8,11 @@ public class RenderTarget : Texture
     public readonly Framebuffer PieBuffer;
     private Pie.Texture _depth;
     
-    public RenderTarget(Size size, bool autoDispose = true) : base(autoDispose)
+    public RenderTarget(Size size, SamplerState samplerState = null, bool autoDispose = true) 
+        : base(samplerState ?? SamplerState.LinearRepeat, autoDispose)
     {
+        // TODO: RGB render targets that draw by ignoring the alpha value in the frag shader (since D3D doesn't support RGB)
+        
         TextureDescription description = new TextureDescription(TextureType.Texture2D, size.Width, size.Height,
             PixelFormat.B8G8R8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer);
 

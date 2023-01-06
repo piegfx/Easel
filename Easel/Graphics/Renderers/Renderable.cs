@@ -1,47 +1,45 @@
 using System;
-using System.Numerics;
+using System.Collections.Generic;
+using Easel.Graphics.Materials;
+using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Renderers;
 
-/// <summary>
-/// Represents a renderable object that can be used in various renderers.
-/// </summary>
 public struct Renderable : IDisposable
 {
-    /// <summary>
-    /// The vertex buffer of this renderable.
-    /// </summary>
     public GraphicsBuffer VertexBuffer;
-    
-    /// <summary>
-    /// The index buffer of this renderable.
-    /// </summary>
     public GraphicsBuffer IndexBuffer;
-    
-    /// <summary>
-    /// The number of indices in the <see cref="IndexBuffer"/>.
-    /// </summary>
-    public uint IndicesLength;
 
-    /// <summary>
-    /// The material of this renderable.
-    /// </summary>
+    public uint NumIndices;
     public Material Material;
 
-    /// <summary>
-    /// Create a new renderable object.
-    /// </summary>
-    /// <param name="vertexBuffer">The vertex buffer of this renderable.</param>
-    /// <param name="indexBuffer">The index buffer of this renderable.</param>
-    /// <param name="indicesLength">The number of indices in the <see cref="IndexBuffer"/>.</param>
-    /// <param name="material">The material of this renderable.</param>
-    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint indicesLength, Material material)
+    public Renderable(GraphicsBuffer vertexBuffer, GraphicsBuffer indexBuffer, uint numIndices, Material material)
     {
         VertexBuffer = vertexBuffer;
         IndexBuffer = indexBuffer;
-        IndicesLength = indicesLength;
+        NumIndices = numIndices;
         Material = material;
+    }
+
+    public static Renderable CreateFromMesh(in Mesh mesh)
+    {
+        GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
+
+        GraphicsBuffer vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices);
+        GraphicsBuffer indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, mesh.Indices);
+
+        return new Renderable(vertexBuffer, indexBuffer, (uint) mesh.Indices.Length, mesh.Material);
+    }
+
+    public static Renderable[] CreateFromMeshes(Mesh[] meshes)
+    {
+        List<Renderable> renderables = new List<Renderable>(meshes.Length);
+        
+        for (int i = 0; i < meshes.Length; i++)
+            renderables.Add(CreateFromMesh(meshes[i]));
+
+        return renderables.ToArray();
     }
 
     public void Dispose()

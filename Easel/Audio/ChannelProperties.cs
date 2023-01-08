@@ -7,6 +7,8 @@ public struct ChannelProperties
     public double Panning;
     public bool Loop;
     public InterpolationType InterpolationType;
+    public int BeginLoopPoint;
+    public int EndLoopPoint;
 
     public ChannelProperties()
     {
@@ -15,6 +17,8 @@ public struct ChannelProperties
         Panning = 0.5;
         Loop = false;
         InterpolationType = InterpolationType.Linear;
+        BeginLoopPoint = 0;
+        EndLoopPoint = -1;
     }
 }
 

@@ -56,6 +56,12 @@ public static unsafe class MixrNative
     [DllImport(MixrName)]
     public static extern ushort mxGetAvailableChannel(IntPtr system);
 
+    [DllImport(MixrName)]
+    public static extern PCM* mxPCMLoadWav(byte* data, nuint dataLength);
+
+    [DllImport(MixrName)]
+    public static extern void mxPCMFree(PCM* pcm);
+
     public delegate void BufferFinishedCallback(ushort channel, int buffer);
 
     public enum AudioResult
@@ -64,5 +70,13 @@ public static unsafe class MixrNative
         InvalidBuffer,
         InvalidChannels,
         NoChannels
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PCM
+    {
+        public byte* Data;
+        public nuint DataLength;
+        public AudioFormat Format;
     }
 }

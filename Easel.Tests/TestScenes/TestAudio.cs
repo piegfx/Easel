@@ -11,7 +11,7 @@ public class TestAudio : Scene
     {
         base.Initialize();
 
-        Sound sound = new Sound("/home/ollie/Music/LevelSelect2.wav");
-        sound.Play(speed: 1.15f, loop: true);
+        Sound sound = new Sound("/home/ollie/Music/r-59.ogg");
+        sound.Play(speed: 1.0, loop: true);
     }
 }

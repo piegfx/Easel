@@ -165,7 +165,7 @@ public class EaselGame : IDisposable
         GraphicsInternal.Initialize(new ForwardRenderer(GraphicsInternal), new Default2DRenderer(GraphicsInternal));
 
         Logger.Debug("Creating audio device...");
-        AudioInternal = new AudioDevice(AudioFormat.Stereo48khz, 256);
+        AudioInternal = new AudioDevice(48000, 256);
 
         Logger.Debug("Initializing input...");
         Input.Initialize(Window);

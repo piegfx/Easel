@@ -4,5 +4,5 @@ using Easel.Tests.TestScenes;
 
 GameSettings settings = new GameSettings();
 
-using TestGame game = new TestGame(settings, new TestManyEntities());
+using TestGame game = new TestGame(settings, new TestAudio());
 game.Run();

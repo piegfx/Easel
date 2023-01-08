@@ -1,5 +1,3 @@
-using Pie.Audio;
-
 namespace Easel.Audio;
 
 public class WavPlayer : IAudioPlayer
@@ -13,7 +11,8 @@ public class WavPlayer : IAudioPlayer
         _device = device;
         _buffer = _device.CreateBuffer();
         
-        _device.UpdateBuffer(_buffer, AudioHelper.LoadWav(data, out AudioFormat format), format);
+        PCM pcm = PCM.LoadWav(data);
+        _device.UpdateBuffer(_buffer, pcm.Data, pcm.Format);
     }
     
     public ISoundInstance Play(ushort channel, in ChannelProperties properties)

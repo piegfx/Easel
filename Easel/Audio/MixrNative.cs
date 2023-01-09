@@ -8,7 +8,7 @@ public static unsafe class MixrNative
     private const string MixrName = "mixr";
 
     [DllImport(MixrName)]
-    public static extern IntPtr mxCreateSystem(AudioFormat format, ushort channels);
+    public static extern IntPtr mxCreateSystem(int sampleRate, ushort channels);
 
     [DllImport(MixrName)]
     public static extern void mxDeleteSystem(IntPtr system);
@@ -45,7 +45,7 @@ public static unsafe class MixrNative
     public static extern AudioResult mxStop(IntPtr system, ushort channel);
 
     [DllImport(MixrName)]
-    public static extern short mxAdvance(IntPtr system);
+    public static extern float mxAdvance(IntPtr system);
 
     [DllImport(MixrName)]
     public static extern ushort mxGetNumChannels(IntPtr system);

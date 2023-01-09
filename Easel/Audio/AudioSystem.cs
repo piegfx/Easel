@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Silk.NET.SDL;
 using static Easel.Audio.MixrNative;
@@ -20,11 +21,11 @@ public unsafe class AudioDevice : IDisposable
 
     private BufferFinishedCallback _callback;
     
-    public AudioDevice(AudioFormat format, ushort channels)
+    public AudioDevice(int sampleRate, ushort channels)
     {
         NumChannels = channels;
         
-        _system = mxCreateSystem(format, channels);
+        _system = mxCreateSystem(sampleRate, channels);
 
         _callback = BufferFinishedCB;
         mxSetBufferFinishedCallback(_system, _callback);
@@ -33,14 +34,9 @@ public unsafe class AudioDevice : IDisposable
         if (_sdl.Init(Sdl.InitAudio) != 0)
             throw new Exception("SDL could not initialize: " + Marshal.PtrToStringAnsi((IntPtr) _sdl.GetError()));
             
-        _spec.Freq = format.SampleRate;
-        _spec.Format = format.BitsPerSample switch
-        {
-            //8 => Sdl.AudioU8,
-            16 => Sdl.AudioS16,
-            _ => throw new NotSupportedException("Currently, only 16 bit audio is supported.")
-        };
-        _spec.Channels = format.Channels;
+        _spec.Freq = sampleRate;
+        _spec.Format = Sdl.AudioF32;
+        _spec.Channels = 2;
         _spec.Samples = 512;
 
         _spec.Callback = new PfnAudioCallback(AudioCallback);
@@ -80,11 +76,14 @@ public unsafe class AudioDevice : IDisposable
 
     private void AudioCallback(void* arg0, byte* bData, int len)
     {
-        for (int i = 0; i < len; i += 2)
+        for (int i = 0; i < len; i += 4)
         {
-            short advance = mxAdvance(_system);
-            bData[i] = (byte) (advance & 0xFF);
-            bData[i + 1] = (byte) (advance >> 8);
+            float advance = mxAdvance(_system);
+            int iAdvance = *(int*) &advance;
+            bData[i + 0] = (byte) (iAdvance & 0xFF);
+            bData[i + 1] = (byte) ((iAdvance >> 8) & 0xFF);
+            bData[i + 2] = (byte) ((iAdvance >> 16) & 0xFF);
+            bData[i + 3] = (byte) (iAdvance >> 24);
         }
     }
 

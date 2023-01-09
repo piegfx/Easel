@@ -34,14 +34,14 @@ public class Texture2D : Texture
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         TextureDescription description =
             new TextureDescription(TextureType.Texture2D, width, height, format, 0, 1, TextureUsage.ShaderResource);
-        PieTexture = device.CreateTexture(description, new [] { new TextureData(data) });
+        PieTexture = device.CreateTexture(description, data);
         device.GenerateMipmaps(PieTexture);
     }
 
-    public void SetData(int x, int y, int width, int height, byte[] data)
+    public void SetData<T>(int x, int y, int width, int height, T[] data) where T : unmanaged
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
-        device.UpdateTexture(PieTexture, x, y, (uint) width, (uint) height, new TextureData(data));
+        device.UpdateTexture(PieTexture, x, y, (uint) width, (uint) height, data);
     }
 
     public static readonly Texture2D Blank = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);

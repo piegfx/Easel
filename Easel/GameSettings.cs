@@ -18,6 +18,11 @@ public struct GameSettings
     public Size Size;
 
     /// <summary>
+    /// If enabled, the window will start in fullscreen mode at the given <see cref="Size"/>. (Default: false)
+    /// </summary>
+    public bool Fullscreen;
+
+    /// <summary>
     /// The starting title of the game view. (Default: The starting assembly name)
     /// </summary>
     public string Title;
@@ -75,14 +80,33 @@ public struct GameSettings
     /// The render options Easel will use for your application.
     /// </summary>
     public RenderOptions RenderOptions;
-    
+
+    public GameSettings(Size size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
+        GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
+        RenderOptions renderOptions)
+    {
+        Size = size;
+        Fullscreen = fullscreen;
+        Title = title;
+        Border = border;
+        VSync = vSync;
+        TargetFps = targetFps;
+        Api = api;
+        AllowMissing = allowMissing;
+        Icon = icon;
+        TitleBarFlags = titleBarFlags;
+        StartVisible = startVisible;
+        RenderOptions = renderOptions;
+    }
+
     /// <summary>
     /// Create the default game settings.
     /// </summary>
     public GameSettings()
     {
         Size = new Size(1280, 720);
-        
+        Fullscreen = false;
+
         Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
         Border = WindowBorder.Fixed;
         VSync = true;
@@ -94,4 +118,10 @@ public struct GameSettings
         StartVisible = true;
         RenderOptions = RenderOptions.Default;
     }
+
+    public static GameSettings StartFullscreen => new GameSettings()
+    {
+        Size = new Size(-1, -1),
+        Fullscreen = true
+    };
 }

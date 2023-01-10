@@ -67,7 +67,7 @@ public class EaselGraphics : IDisposable
 
         // TODO: Move SpriteRenderer to generic batch renderer for both 2D and 3D?
         SpriteRenderer = new SpriteRenderer(PieGraphics);
-        
+
         Renderer = new ForwardRenderer(this, Viewport.Size);
     }
 

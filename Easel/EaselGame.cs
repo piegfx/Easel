@@ -14,6 +14,7 @@ using Easel.Scenes;
 using Easel.Utilities;
 using Pie;
 using Pie.Windowing;
+using Monitor = Pie.Windowing.Monitor;
 using Window = Pie.Windowing.Window;
 
 namespace Easel;
@@ -122,12 +123,12 @@ public class EaselGame : IDisposable
 
         WindowSettings settings = new WindowSettings()
         {
-            Size = (System.Drawing.Size) _settings.Size,
+            Size = new System.Drawing.Size(1, 1),
             Title = _settings.Title,
             Border = _settings.Border,
             EventDriven = false,
             Icons = new []{ icon },
-            StartVisible = _settings.StartVisible
+            StartVisible = false
         };
 
         GraphicsDeviceOptions options = new GraphicsDeviceOptions();
@@ -160,6 +161,12 @@ public class EaselGame : IDisposable
 
         Logger.Debug("Creating window...");
         Window = Window.CreateWindow(settings, api);
+        System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
+        if (size.Width == -1 && size.Height == -1)
+            size = Monitor.PrimaryMonitor.VideoMode.Size;
+        Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
+        Window.Visible = _settings.StartVisible;
+        
         Logger.Debug("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(Window, options);
         GraphicsInternal.Initialize(_settings.RenderOptions);

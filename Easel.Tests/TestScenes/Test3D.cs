@@ -21,6 +21,8 @@ public class Test3D : Scene
 
         Input.MouseState = MouseState.Locked;
 
+        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
+
         Texture2D texture = Content.Load<Texture2D>("awesomeface");
         texture.SamplerState = SamplerState.AnisotropicRepeat;
         

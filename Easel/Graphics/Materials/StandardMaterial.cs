@@ -53,9 +53,9 @@ public class StandardMaterial : Material
     {
         device.SetTexture(TextureBindingLoc, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
         // Disable specular if the texture is null.
-        //if (Specular != null)
+        if (Specular != null)
             device.SetTexture(TextureBindingLoc + 1, Specular.PieTexture, Specular.SamplerState.PieSamplerState);
-        //else
-        //    device.SetTexture(TextureBindingLoc + 1, Texture2D.Void.PieTexture, SamplerState.LinearClamp.PieSamplerState);
+        else
+            device.SetTexture(TextureBindingLoc + 1, Texture2D.Void.PieTexture, SamplerState.LinearClamp.PieSamplerState);
     }
 }

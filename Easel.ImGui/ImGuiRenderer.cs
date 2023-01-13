@@ -155,13 +155,13 @@ void main()
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height);
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         _fontTexture?.Dispose();
-        //_fontTexture =
-        //    device.CreateTexture(
-        //        new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
-        //            TextureUsage.ShaderResource), new [] { new TextureData(pixels) });
-        //device.GenerateMipmaps(_fontTexture);
+        _fontTexture =
+            device.CreateTexture(
+                new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
+                    TextureUsage.ShaderResource), pixels);
+        device.GenerateMipmaps(_fontTexture);
 
-        //io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
+        io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
     }
 
     public void Draw()

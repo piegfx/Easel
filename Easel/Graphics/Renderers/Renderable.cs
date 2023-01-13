@@ -22,17 +22,17 @@ public struct Renderable : IDisposable
         Material = material;
     }
 
-    public static Renderable CreateFromMesh(in Mesh mesh)
+    public static Renderable CreateFromMesh(in MaterialMesh mesh)
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
 
-        GraphicsBuffer vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, mesh.Vertices);
-        GraphicsBuffer indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, mesh.Indices);
+        GraphicsBuffer vertexBuffer = device.CreateBuffer(BufferType.VertexBuffer, mesh.Mesh.Vertices);
+        GraphicsBuffer indexBuffer = device.CreateBuffer(BufferType.IndexBuffer, mesh.Mesh.Indices);
 
-        return new Renderable(vertexBuffer, indexBuffer, (uint) mesh.Indices.Length, mesh.Material);
+        return new Renderable(vertexBuffer, indexBuffer, (uint) mesh.Mesh.Indices.Length, mesh.Material);
     }
 
-    public static Renderable[] CreateFromMeshes(Mesh[] meshes)
+    public static Renderable[] CreateFromMeshes(in MaterialMesh[] meshes)
     {
         List<Renderable> renderables = new List<Renderable>(meshes.Length);
         

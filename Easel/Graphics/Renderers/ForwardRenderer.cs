@@ -66,7 +66,6 @@ public sealed class ForwardRenderer : IRenderer
         _opaqueSprites.Clear();
 
         EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
-        graphics.SetRenderTarget(MainTarget);
         graphics.Clear(Camera.ClearColor);
     }
 

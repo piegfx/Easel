@@ -32,8 +32,10 @@ void main()
     
     out_color = CalculateDirectional(uSun, normal, viewDir, in_data.texCoords, uMaterial.shininess, uDiffuse, uSpecular);
     #else
-    out_color = texture(uDiffuse, in_data.texCoords) * uMaterial.color;
+    out_color = texture(uDiffuse, in_data.texCoords);
     #endif
+
+    out_color *= uMaterial.color;
     
     // Standard materials do not support transparency whatsoever. Therefore, we must remove it.
     #ifndef TRANSPARENCY

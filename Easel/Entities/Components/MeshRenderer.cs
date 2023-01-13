@@ -23,13 +23,18 @@ namespace Easel.Entities.Components;
 /// </summary>
 public class MeshRenderer : Component
 {
-    private Mesh[] _meshes;
+    private MaterialMesh[] _meshes;
     private Renderable[] _renderables;
     
     private string _directory;
     private Dictionary<string, Texture2D> _loadedTextures;
 
-    public MeshRenderer(Mesh[] meshes)
+    public MeshRenderer(MaterialMesh mesh)
+    {
+        _meshes = new[] { mesh };
+    }
+    
+    public MeshRenderer(MaterialMesh[] meshes)
     {
         _meshes = meshes;
     }

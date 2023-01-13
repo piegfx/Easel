@@ -235,10 +235,19 @@ public class EaselGame : IDisposable
     /// </summary>
     protected virtual void Draw()
     {
-        SceneManager.Draw();
         foreach (Action action in _actions)
             action();
         _actions.Clear();
+        
+        Graphics.SetRenderTarget(Graphics.Renderer.MainTarget);
+        SceneManager.Draw();
+        Graphics.SetRenderTarget(null);
+        Graphics.Clear(Color.Black);
+        
+        Graphics.SpriteRenderer.Begin();
+        Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
+            Vector2.One);
+        Graphics.SpriteRenderer.End();
         UI.Draw(GraphicsInternal);
     }
 

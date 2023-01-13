@@ -132,14 +132,6 @@ public abstract class Scene : IDisposable
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
         }
-
-        Graphics.SetRenderTarget(null);
-        Graphics.Clear(Color.Black);
-        
-        Graphics.SpriteRenderer.Begin();
-        Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
-            Vector2.One);
-        Graphics.SpriteRenderer.End();
     }
 
     /// <summary>

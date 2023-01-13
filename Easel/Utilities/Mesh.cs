@@ -19,25 +19,18 @@ public struct Mesh
     
     public VertexPositionTextureNormalTangent[] Vertices;
     public uint[] Indices;
-    public Material Material;
 
-    public Mesh(VertexPositionTextureNormalTangent[] vertices, uint[] indices, Material material)
+    public Mesh(VertexPositionTextureNormalTangent[] vertices, uint[] indices)
     {
         Vertices = vertices;
         Indices = indices;
-        Material = material;
     }
 
-    public static Mesh[] FromPrimitive(IPrimitive primitive, Material material)
+    public static Mesh FromPrimitive(IPrimitive primitive)
     {
-        return new[]
-        {
-            new Mesh(primitive.Vertices, primitive.Indices, material)
-        };
+        return new Mesh(primitive.Vertices, primitive.Indices);
     }
 
-    public static Mesh[] FromPrimitive(IPrimitive primitive) => FromPrimitive(primitive, new UnlitMaterial(Texture2D.Blank));
-    
     public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
         // TODO is the incorrect loading of UVs for some models supposed to happen...??
@@ -103,7 +96,7 @@ public struct Mesh
         //Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Blank,
         //    speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : null,
         //    normals.Length > 0 ? normals[0] : null, Color.White, shininess);
-        return new Mesh(vertices.ToArray(), indices.ToArray(), new UnlitMaterial(null));
+        return new Mesh(vertices.ToArray(), indices.ToArray());
     }
     
     private static unsafe Texture2D[] LoadTextures(Silk.NET.Assimp.Material* material, TextureType type, string directory, ref Dictionary<string, Texture2D> loadedTextures)

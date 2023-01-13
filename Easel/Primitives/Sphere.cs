@@ -33,6 +33,7 @@ public struct Sphere : IPrimitive
                 float sinPhi = MathF.Sin(phi);
                 float cosPhi = MathF.Cos(phi);
                 
+                // TODO: U component of tex coords is seemingly reversed.
                 vptnt.Normals = new Vector3(cosPhi * sinTheta, cosTheta, sinPhi * sinTheta);
                 vptnt.TexCoords = new Vector2((lng / (float) longitude), (lat / (float) latitude));
                 vptnt.Position = new Vector3(radius * vptnt.Normals.X, radius * vptnt.Normals.Y, radius * vptnt.Normals.Z);

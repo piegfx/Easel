@@ -206,18 +206,27 @@ public sealed class SpriteRenderer : IDisposable
             case SpriteFlip.None:
                 break;
             case SpriteFlip.FlipX:
+                //texW = -texW;
+                //texX = texW - texX;
+                texX = 1 - texX;
                 texW = -texW;
-                texX = texW - texX;
                 break;
             case SpriteFlip.FlipY:
+                //float tempTex = texH;
+                //texH = texY;
+                //texY = tempTex;
+                texY = 1 - texY;
                 texH = -texH;
-                texY = texH - texY;
                 break;
             case SpriteFlip.FlipXY:
+                //texW = -texW;
+                //texX = texW - texX;
+                //texH = -texH;
+                //texY = texH - texY;
+                texX = 1 - texX;
                 texW = -texW;
-                texX = texW - texX;
+                texY = 1 - texY;
                 texH = -texH;
-                texY = texH - texY;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

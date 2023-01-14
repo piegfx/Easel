@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Easel.Formats;
 
@@ -32,7 +33,5 @@ public class DDS
 
         if (reader.ReadUInt32() != 32)
             throw new EaselException("An error occurred while reading the DDS file (invalid pixel format).");
-        
-        
     }
 }

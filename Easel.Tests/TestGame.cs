@@ -14,6 +14,9 @@ public class TestGame : EaselGame
         ImGuiRenderer = new ImGuiRenderer();
         
         base.Initialize();
+        
+        // TODO: Fix this bug
+        Graphics.PieGraphics.ResizeSwapchain(new System.Drawing.Size(1280, 720));
     }
 
     protected override void Update()

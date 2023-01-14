@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Numerics;
 using Easel.Entities;
@@ -5,6 +6,7 @@ using Easel.Entities.Components;
 using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
+using Easel.GUI;
 using Easel.Math;
 using Easel.Primitives;
 using Easel.Scenes;
@@ -15,11 +17,13 @@ namespace Easel.Tests.TestScenes;
 
 public class Test3D : Scene
 {
+    private Font _font;
+    
     protected override void Initialize()
     {
         base.Initialize();
 
-        Input.MouseState = MouseState.Locked;
+        //Input.MouseState = MouseState.Locked;
 
         DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
@@ -28,12 +32,13 @@ public class Test3D : Scene
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
         Camera.Main.Skybox = new Skybox(Content.Load<EaselTexture>("Skybox"));
+        Camera.Main.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(20), 0, 0);
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
-        Camera.Main.AddComponent(new NoClipCamera()
+        /*Camera.Main.AddComponent(new NoClipCamera()
         {
             MoveSpeed = 10
-        });
-        Camera.Main.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new UnlitMaterial(texture))));
+        });*/
+        Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new UnlitMaterial(texture))));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
         second.Transform.Position = new Vector3(0, 0, -5);
@@ -47,17 +52,22 @@ public class Test3D : Scene
         second.Viewport = new Vector4(0.5f, 0, 1.0f, 0.5f);
         AddEntity("second", second);
 
-        Camera third = new Camera(type: CameraType.Camera2D);
+        Camera third = new Camera(EaselMath.ToRadians(75), 640 / 360f);
+        third.Transform.Position = new Vector3(-3.5f, 1f, 0f);
+        third.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(-20), 0, 0);
+        third.ClearColor = Color.Orange;
         // TODO: Better camera solution than forcing every camera to use main camera tag.
         third.Tag = Tags.MainCamera;
-        //AddEntity("third", third);
+        third.Skybox = Camera.Main.Skybox;
+        third.Viewport = new Vector4(0.5f, 0.5f, 1.0f, 1.0f);
+        AddEntity("third", third);
 
         Entity entity = new Entity(new Transform()
         {
             Position = new Vector3(0, 0, -3)
         });
 
-        entity.AddComponent(new MeshRenderer(Mesh.FromPrimitive(new Cube(), new StandardMaterial(texture, 32)
+        entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new StandardMaterial(texture, 32)
         {
             Tiling = new Vector2(2),
             Color = Color.Orange with { A = 0.5f }
@@ -67,6 +77,11 @@ public class Test3D : Scene
         Entity thingy = new Entity();
         thingy.AddComponent(new Sprite(texture));
         AddEntity(thingy);
+
+        UI.Theme.Font = new Font("/home/ollie/Documents/Roboto-Regular.ttf");
+        UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
+        
+        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter), new Size(300), 0.5f, 12));
     }
 
     protected override void Update()
@@ -77,7 +92,7 @@ public class Test3D : Scene
             Game.Close();
         
         //Camera.Main.Transform.Rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 1 * Time.DeltaTime);
-        //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime);
+        //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime)
 
         GetEntity("cube").Transform.Rotation *=
             Quaternion.CreateFromAxisAngle(Vector3.UnitX, 1 * Time.DeltaTime) *

@@ -76,7 +76,8 @@ public static class Logger
 
     private static string GetLogMessage(LogType type, string caller, string message)
     {
-        caller += " ";
+        if (caller.Length > 0)
+            caller += " ";
         
         return "[" + caller + type.ToString().ToUpper() + "] " + message;
     }

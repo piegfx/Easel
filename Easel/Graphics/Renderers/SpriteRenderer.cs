@@ -165,7 +165,7 @@ public sealed class SpriteRenderer : IDisposable
         Flush();
     }
 
-    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None)
+    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None, Vector4 meta1 = default, Vector4 meta2 = default)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
         if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
@@ -225,10 +225,7 @@ public sealed class SpriteRenderer : IDisposable
 
         width = rectWidth * scale.X;
         height = rectHeight * scale.Y;
-        
-        Vector4 meta1 = new Vector4(0, 0, texture.Size.Width, texture.Size.Height);
-        Vector4 meta2 = Vector4.Zero;
-        
+
         _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(texX + texW, texY + texH), tint, rotation, origin, scale, meta1, meta2);
         _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(texX + texW, texY), tint, rotation, origin, scale, meta1, meta2);
         _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(texX, texY), tint, rotation, origin, scale, meta1, meta2);

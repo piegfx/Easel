@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
@@ -12,7 +13,10 @@ public class GaussianBlur : UIElement
     private RenderTarget _readBuffer;
     private RenderTarget _writeBuffer;
 
-    public GaussianBlur(Position position, Size size) : base(position, size)
+    public float Radius;
+    public int Iterations;
+
+    public GaussianBlur(Position position, Size size, float radius, int iterations) : base(position, size)
     {
         _effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
             "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");
@@ -23,6 +27,9 @@ public class GaussianBlur : UIElement
         // render target of the right size instead of blurring the *entire* target.
         _readBuffer = new RenderTarget(graphics.Renderer.MainTarget.Size);
         _writeBuffer = new RenderTarget(graphics.Renderer.MainTarget.Size);
+
+        Radius = radius;
+        Iterations = iterations;
     }
     
     protected internal override void Draw(SpriteRenderer renderer)
@@ -40,11 +47,9 @@ public class GaussianBlur : UIElement
         renderer.End();
         graphics.SetRenderTarget(null);
 
-        const int iterations = 6;
-
-        for (int i = 0; i < iterations; i++)
+        for (int i = 0; i < Iterations; i++)
         {
-            float radius = (iterations - i - 1) * 0.0f;
+            float radius = (Iterations - i - 1) * Radius;
             Vector2 direction = i % 2 == 0 ? new Vector2(radius, 0) : new Vector2(0, radius);
             
             graphics.SetRenderTarget(_writeBuffer);
@@ -60,6 +65,7 @@ public class GaussianBlur : UIElement
         
         renderer.Begin();
 
+        // TODO: Fix whatever the heck is going on here, I just have no idea
         renderer.Draw(_readBuffer, (Vector2) CalculatedScreenPos, new Rectangle(CalculatedScreenPos, Size), Color.White,
             0, Vector2.Zero, Vector2.One);
     }

@@ -34,16 +34,22 @@ public static class Input
     /// <returns><see langword="true"/>, if the key is currently held.</returns>
     public static bool KeyDown(Key key) => _keysPressed.Contains(key);
 
-    public static bool AnyKeyDown(params Key[] keys)
+    public static bool AnyKeyDown(out Key pressedKey, params Key[] keys)
     {
         foreach (Key key in keys)
         {
             if (_keysPressed.Contains(key))
+            {
+                pressedKey = key;
                 return true;
+            }
         }
 
+        pressedKey = Key.Unknown;
         return false;
     }
+
+    public static bool AnyKeyDown(params Key[] keys) => AnyKeyDown(out _, keys);
 
     /// <summary>
     /// Query if the given key was pressed this frame.

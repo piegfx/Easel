@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
@@ -8,7 +9,7 @@ namespace Easel.Math;
 /// Represents an integer-based 3D vector.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Vector3I
+public struct Vector3I : IEquatable<Vector3I>
 {
     public static readonly Vector3I Zero = new Vector3I(0);
 
@@ -73,5 +74,30 @@ public struct Vector3I
     public override string ToString()
     {
         return "Vector3I(X: " + X + ", Y: " + Y + ", Z: " + Z + ")";
+    }
+
+    public bool Equals(Vector3I other)
+    {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is Vector3I other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Z);
+    }
+
+    public static bool operator ==(Vector3I left, Vector3I right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Vector3I left, Vector3I right)
+    {
+        return !left.Equals(right);
     }
 }

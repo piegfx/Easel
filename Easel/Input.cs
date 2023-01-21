@@ -50,6 +50,23 @@ public static class Input
     }
 
     public static bool AnyKeyDown(params Key[] keys) => AnyKeyDown(out _, keys);
+    
+    public static bool AnyKeyPressed(out Key pressedKey, params Key[] keys)
+    {
+        foreach (Key key in keys)
+        {
+            if (_newKeys.Contains(key))
+            {
+                pressedKey = key;
+                return true;
+            }
+        }
+
+        pressedKey = Key.Unknown;
+        return false;
+    }
+
+    public static bool AnyKeyPressed(params Key[] keys) => AnyKeyPressed(out _, keys);
 
     /// <summary>
     /// Query if the given key was pressed this frame.

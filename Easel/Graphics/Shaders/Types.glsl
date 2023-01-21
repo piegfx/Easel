@@ -1,5 +1,5 @@
-#ifndef MATERIAL_GLSL
-#define MATERIAL_GLSL
+#ifndef TYPES_GLSL
+#define TYPES_GLSL
 
 struct Material
 {
@@ -10,6 +10,12 @@ struct Material
     float ao;
     
     float _padding;
+};
+
+struct DirectionalLight
+{
+    vec4 direction;
+    vec4 color;
 };
 
 #endif

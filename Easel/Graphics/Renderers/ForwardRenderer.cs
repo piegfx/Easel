@@ -69,7 +69,7 @@ public sealed class ForwardRenderer : IRenderer
         graphics.Clear(Camera.ClearColor);
     }
 
-    public void Perform3DPass()
+    public void Perform3DPass(ShaderDirLight? dir)
     {
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
         
@@ -77,11 +77,7 @@ public sealed class ForwardRenderer : IRenderer
         _projViewModel.Projection = Camera.Projection;
         _projViewModel.View = Camera.View;
 
-        _sceneInfo.Sun = new ShaderDirLight()
-        {
-            Direction = new Vector4(-1, -0.85f, -1f, 0),
-            Color = Color.White
-        };
+        _sceneInfo.Sun = dir ?? new ShaderDirLight();
         
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetDepthState(_depthState);

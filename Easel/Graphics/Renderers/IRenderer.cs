@@ -31,7 +31,7 @@ public interface IRenderer : IDisposable
     /// <summary>
     /// Render all objects added to the current render frame.
     /// </summary>
-    public void Perform3DPass();
+    public void Perform3DPass(ShaderDirLight? dir);
 
     public void Perform2DPass();
 }

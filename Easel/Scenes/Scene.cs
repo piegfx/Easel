@@ -6,6 +6,7 @@ using Easel.Content;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
+using Easel.Graphics.Lighting;
 using Easel.Math;
 using Pie;
 
@@ -78,6 +79,11 @@ public abstract class Scene : IDisposable
         Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
         camera.Tag = Tags.MainCamera;
         AddEntity("Main Camera", camera);
+
+        Entity directionalLight = new Entity();
+        directionalLight.AddComponent(new DirectionalLight(new Vector2(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
+            Color.White));
+        AddEntity("Sun", directionalLight);
     }
 
     /// <summary>
@@ -124,11 +130,16 @@ public abstract class Scene : IDisposable
             viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);
             viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;
             viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
+
+            DirectionalLight sun = null;
+            Entity[] lights = GetEntitiesWithComponent<DirectionalLight>();
+            if (lights.Length > 0)
+                sun = lights[0].GetComponent<DirectionalLight>();
             
             Graphics.Viewport = viewport;
             Graphics.Renderer.Camera = camera.CameraInfo;
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
-                Graphics.Renderer.Perform3DPass();
+                Graphics.Renderer.Perform3DPass(sun?.ShaderDirLight);
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
         }
@@ -249,8 +260,8 @@ public abstract class Scene : IDisposable
         List<Entity> entities = new List<Entity>();
         for (int i = 0; i < _entityCount; i++)
         {
-            if (entities[i].GetComponent<T>() != null)
-                entities.Add(entities[i]);
+            if (_entities[i].HasComponent<T>())
+                entities.Add(_entities[i]);
         }
 
         return entities.ToArray();

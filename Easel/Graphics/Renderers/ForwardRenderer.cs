@@ -79,7 +79,7 @@ public sealed class ForwardRenderer : IRenderer
 
         _sceneInfo.Sun = new ShaderDirLight()
         {
-            Direction = new Vector4(-1, -1, 1f, 0),
+            Direction = new Vector4(-1, -0.85f, -1f, 0),
             Color = Color.White
         };
         

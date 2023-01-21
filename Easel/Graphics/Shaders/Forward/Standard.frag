@@ -68,17 +68,17 @@ void main()
     vec3 N = normalize(in_data.normal);
     vec3 V = normalize(vec3(uCameraPos) - in_data.fragPosition);
     
-    vec3 lightPos = uSun.direction.xyz;
+    vec3 lightPos = -uSun.direction.xyz;
     
     vec3 Lo = vec3(0.0);
     
     //vec3 L = normalize(lightPos - in_data.fragPosition);
-    vec3 L = -lightPos;
+    vec3 L = normalize(lightPos);
     vec3 H = normalize(V + L);
     
     //float distance = length(lightPos - in_data.fragPosition);
     //float attenuation = 1.0 / (distance * distance);
-    //vec3 radiance = lightPos * attenuation;
+    //vec3 radiance = uSun.color.rgb * attenuation;
     vec3 radiance = uSun.color.rgb;
     
     // 0.04 looks correct for dialetric surfaces
@@ -100,7 +100,7 @@ void main()
     float NdotL = max(dot(N, L), 0.0);
     Lo += (kD * uMaterial.albedo.rgb / PI + specular) * radiance * NdotL;
     
-    vec3 ambient = vec3(0.03) * uMaterial.albedo.rgb.rgb * uMaterial.ao;
+    vec3 ambient = vec3(0.03) * uMaterial.albedo.rgb * uMaterial.ao;
     vec3 color = ambient + Lo;
     
     color = color / (color + vec3(1.0));

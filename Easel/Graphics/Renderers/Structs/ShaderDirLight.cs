@@ -4,7 +4,7 @@ using Easel.Math;
 
 namespace Easel.Graphics.Renderers.Structs;
 
-[StructLayout(LayoutKind.Sequential, Size = 48)]
+[StructLayout(LayoutKind.Sequential)]
 public struct ShaderDirLight
 {
     public Vector4 Direction;

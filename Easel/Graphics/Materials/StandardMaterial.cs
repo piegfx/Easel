@@ -16,7 +16,7 @@ public class StandardMaterial : Material
     public float Roughness;
 
 
-    public StandardMaterial(Color albedo) : this(albedo, 0, 0.2f) { }
+    public StandardMaterial(Color albedo) : this(albedo, 0, 0.4f) { }
 
     public StandardMaterial(Color albedo, float metallic, float roughness)
     {
@@ -44,6 +44,7 @@ public class StandardMaterial : Material
         Albedo = Albedo,
         Metallic = Metallic,
         Roughness = Roughness,
+        Ao = 1,
         Tiling = new Vector4(Tiling, 0, 0)
     };
 

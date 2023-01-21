@@ -33,10 +33,10 @@ void main()
     float ao = texture(uAo, in_data.texCoords).r;
     
     vec3 viewDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
-    vec3 Lo = ProcessDirLight(uSun, viewDir, albedo, normal, metallic, roughness);
+    vec3 result = ProcessDirLight(uSun, viewDir, albedo, normal, metallic, roughness);
     
     vec3 ambient = vec3(0.03) * albedo.rgb * ao;
-    vec3 color = ambient + Lo;
+    vec3 color = ambient + result;
     
     // HDR and gamma correction
     color = color / (color + vec3(1.0));

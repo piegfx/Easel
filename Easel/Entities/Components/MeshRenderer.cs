@@ -23,48 +23,33 @@ namespace Easel.Entities.Components;
 /// </summary>
 public class MeshRenderer : Component
 {
-    private MaterialMesh[] _meshes;
-    private Renderable[] _renderables;
-    
-    private string _directory;
-    private Dictionary<string, Texture2D> _loadedTextures;
+    private MaterialMesh _mesh;
+    private Renderable _renderable;
 
     public MeshRenderer(MaterialMesh mesh)
     {
-        _meshes = new[] { mesh };
-    }
-    
-    public MeshRenderer(MaterialMesh[] meshes)
-    {
-        _meshes = meshes;
+        _mesh = mesh;
     }
 
     protected internal override void Initialize()
     {
         base.Initialize();
 
-        _renderables = Renderable.CreateFromMeshes(_meshes);
+        _renderable = Renderable.CreateFromMesh(_mesh);
     }
 
     protected internal override void Draw()
     {
         base.Draw();
-
-        for (int i = 0; i < _renderables.Length; i++)
-        {
-            ref Renderable renderable = ref _renderables[i];
-            
-            Matrix4x4 world = Transform.TransformMatrix *
-                                      (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
-            Graphics.Renderer.AddOpaque(renderable, world);
-        }
+        Matrix4x4 world = Transform.TransformMatrix *
+                          (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
+        Graphics.Renderer.AddOpaque(_renderable, world);
     }
 
     public override void Dispose()
     {
         base.Dispose();
         
-        for (int i = 0; i < _renderables.Length; i++)
-            _renderables[i].Dispose();
+        _renderable.Dispose();
     }
 }

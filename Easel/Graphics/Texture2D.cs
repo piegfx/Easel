@@ -29,7 +29,7 @@ public class Texture2D : Texture
 
     public Texture2D(int width, int height, byte[] data, SamplerState samplerState = null, 
         PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool autoDispose = true) 
-        : base(samplerState ?? SamplerState.LinearRepeat, autoDispose)
+        : base(samplerState ?? SamplerState.AnisotropicRepeat, autoDispose)
     {
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         TextureDescription description =

@@ -19,9 +19,28 @@ layout (binding = 1) uniform SceneInfo
     DirectionalLight uSun;
 };
 
-layout (binding = 2) uniform sampler2D uDiffuse;
-layout (binding = 3) uniform sampler2D uSpecular;
-layout (binding = 4) uniform sampler2D uNormal;
+layout (binding = 2) uniform sampler2D uAlbedo;
+layout (binding = 3) uniform sampler2D uNormal;
+layout (binding = 4) uniform sampler2D uMetallic;
+layout (binding = 5) uniform sampler2D uRoughness;
+layout (binding = 6) uniform sampler2D uAo;
+
+vec3 TempNormal()
+{
+    vec3 tangentNormal = texture(uNormal, in_data.texCoords).rgb * 2.0 - 1.0;
+    
+    vec3 Q1 = dFdx(in_data.fragPosition);
+    vec3 Q2 = dFdy(in_data.fragPosition);
+    vec2 st1 = dFdx(in_data.texCoords);
+    vec2 st2 = dFdy(in_data.texCoords);
+    
+    vec3 N = normalize(in_data.normal);
+    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
+    vec3 B = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+    
+    return normalize(TBN * tangentNormal);
+}
 
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
@@ -65,7 +84,13 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 
 void main()
 {
-    vec3 N = normalize(in_data.normal);
+    vec3 albedo = pow(texture(uAlbedo, in_data.texCoords).rgb, vec3(2.2));
+    vec3 normal = TempNormal();
+    float metallic = texture(uMetallic, in_data.texCoords).r;
+    float roughness = texture(uRoughness, in_data.texCoords).r;
+    float ao = texture(uAo, in_data.texCoords).r;
+    
+    vec3 N = normalize(normal);
     vec3 V = normalize(vec3(uCameraPos) - in_data.fragPosition);
     
     vec3 lightPos = -uSun.direction.xyz;
@@ -83,11 +108,11 @@ void main()
     
     // 0.04 looks correct for dialetric surfaces
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, uMaterial.albedo.rgb, uMaterial.metallic);
+    F0 = mix(F0, albedo, metallic);
     vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
     
-    float NDF = DistributionGGX(N, H, uMaterial.roughness);
-    float G = GeometrySmith(N, V, L, uMaterial.roughness);
+    float NDF = DistributionGGX(N, H, roughness);
+    float G = GeometrySmith(N, V, L, roughness);
     
     vec3 numerator = NDF * G * F;
     float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
@@ -95,12 +120,12 @@ void main()
     
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - uMaterial.metallic;
+    kD *= 1.0 - metallic;
     
     float NdotL = max(dot(N, L), 0.0);
-    Lo += (kD * uMaterial.albedo.rgb / PI + specular) * radiance * NdotL;
+    Lo += (kD * albedo.rgb / PI + specular) * radiance * NdotL;
     
-    vec3 ambient = vec3(0.03) * uMaterial.albedo.rgb * uMaterial.ao;
+    vec3 ambient = vec3(0.03) * albedo.rgb * ao;
     vec3 color = ambient + Lo;
     
     color = color / (color + vec3(1.0));

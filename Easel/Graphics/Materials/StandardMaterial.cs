@@ -11,18 +11,19 @@ namespace Easel.Graphics.Materials;
 /// </summary>
 public class StandardMaterial : Material
 {
-    public Color Albedo;
-    public float Metallic;
-    public float Roughness;
+    public Texture Albedo;
+    public Texture Normal;
+    public Texture Metallic;
+    public Texture Roughness;
+    public Texture Ao;
 
-
-    public StandardMaterial(Color albedo) : this(albedo, 0, 0.4f) { }
-
-    public StandardMaterial(Color albedo, float metallic, float roughness)
+    public StandardMaterial(Texture2D albedo, Texture2D normal, Texture2D metallic, Texture2D roughness, Texture2D ao)
     {
         Albedo = albedo;
+        Normal = normal;
         Metallic = metallic;
         Roughness = roughness;
+        Ao = ao;
 
         // TODO hey do the darn caching!!!
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
@@ -30,7 +31,8 @@ public class StandardMaterial : Material
         InputLayout layout = device.CreateInputLayout(
             new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0, InputType.PerVertex),
             new InputLayoutDescription("aTexCoords", AttributeType.Float2, 12, 0, InputType.PerVertex),
-            new InputLayoutDescription("aNormals", AttributeType.Float2, 20, 0, InputType.PerVertex)
+            new InputLayoutDescription("aNormals", AttributeType.Float3, 20, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTangents", AttributeType.Float3, 32, 0, InputType.PerVertex)
         );
 
         EffectLayout =
@@ -41,15 +43,19 @@ public class StandardMaterial : Material
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
-        Albedo = Albedo,
-        Metallic = Metallic,
-        Roughness = Roughness,
+        Albedo = new Color(0),
+        Metallic = 0,
+        Roughness = 0,
         Ao = 1,
         Tiling = new Vector4(Tiling, 0, 0)
     };
 
     protected internal override void ApplyTextures(GraphicsDevice device)
     {
-        //device.SetTexture(TextureBindingLoc, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
+        device.SetTexture(TextureBindingLoc + 0, Albedo.PieTexture, Albedo.SamplerState.PieSamplerState);
+        device.SetTexture(TextureBindingLoc + 1, Normal.PieTexture, Normal.SamplerState.PieSamplerState);
+        device.SetTexture(TextureBindingLoc + 2, Metallic.PieTexture, Albedo.SamplerState.PieSamplerState);
+        device.SetTexture(TextureBindingLoc + 3, Roughness.PieTexture, Albedo.SamplerState.PieSamplerState);
+        device.SetTexture(TextureBindingLoc + 4, Ao.PieTexture, Albedo.SamplerState.PieSamplerState);
     }
 }

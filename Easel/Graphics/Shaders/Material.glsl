@@ -3,9 +3,13 @@
 
 struct Material
 {
-    vec4 color;
-    vec2 tiling;
-    float shininess;
+    vec4 albedo;
+    vec4 tiling;
+    float metallic;
+    float roughness;
+    float ao;
+    
+    float _padding;
 };
 
 #endif

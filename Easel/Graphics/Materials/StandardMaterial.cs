@@ -1,32 +1,29 @@
-﻿using Easel.Graphics.Renderers.Structs;
+﻿using System.Numerics;
+using Easel.Graphics.Renderers.Structs;
+using Easel.Math;
 using Easel.Utilities;
 using Pie;
 
 namespace Easel.Graphics.Materials;
 
 /// <summary>
-/// The standard non-PBR material. Objects with this material receive lighting and shadows, as well as casting shadows.
+/// The standard material. Objects with this material receive lighting and shadows, as well as casting shadows.
 /// </summary>
 public class StandardMaterial : Material
 {
-    public Texture Diffuse;
+    public Color Albedo;
+    public float Metallic;
+    public float Roughness;
 
-    public Texture Specular;
 
-    //public Texture2D Normal;
+    public StandardMaterial(Color albedo) : this(albedo, 0, 0.2f) { }
 
-    public float ShininessExponent;
-
-    public StandardMaterial(Texture diffuse) : this(diffuse, null, 1) { }
-
-    public StandardMaterial(Texture diffuse, float shininess) : this(diffuse, diffuse, shininess) { }
-    
-    public StandardMaterial(Texture diffuse, Texture specular, float shininess)
+    public StandardMaterial(Color albedo, float metallic, float roughness)
     {
-        Diffuse = diffuse;
-        Specular = specular;
-        ShininessExponent = shininess;
-        
+        Albedo = albedo;
+        Metallic = metallic;
+        Roughness = roughness;
+
         // TODO hey do the darn caching!!!
         GraphicsDevice device = EaselGame.Instance.GraphicsInternal.PieGraphics;
 
@@ -44,18 +41,14 @@ public class StandardMaterial : Material
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {
-        Color = Color,
-        Tiling = Tiling,
-        Shininess = ShininessExponent
+        Albedo = Albedo,
+        Metallic = Metallic,
+        Roughness = Roughness,
+        Tiling = new Vector4(Tiling, 0, 0)
     };
 
     protected internal override void ApplyTextures(GraphicsDevice device)
     {
-        device.SetTexture(TextureBindingLoc, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
-        // Disable specular if the texture is null.
-        if (Specular != null)
-            device.SetTexture(TextureBindingLoc + 1, Specular.PieTexture, Specular.SamplerState.PieSamplerState);
-        else
-            device.SetTexture(TextureBindingLoc + 1, Texture2D.Void.PieTexture, SamplerState.LinearClamp.PieSamplerState);
+        //device.SetTexture(TextureBindingLoc, Diffuse.PieTexture, Diffuse.SamplerState.PieSamplerState);
     }
 }

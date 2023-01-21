@@ -31,7 +31,7 @@ layout (binding = 1) uniform SceneInfo
 void main()
 {
     gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
-    out_data.texCoords = aTexCoords * uMaterial.tiling;
+    out_data.texCoords = aTexCoords * uMaterial.tiling.xy;
     out_data.normal = mat3(transpose(inverse(uModel))) * aNormals;
     out_data.fragPosition = vec3(uModel * vec4(aPosition, 1.0));
 }

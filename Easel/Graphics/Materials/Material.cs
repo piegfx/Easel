@@ -23,7 +23,7 @@ public abstract class Material
     /// <summary>
     /// The tint color of this material. (Default: White)
     /// </summary>
-    public Color Color;
+    public Color Tint;
 
     /// <summary>
     /// How much the texture will tile. (Default: 1)
@@ -37,7 +37,7 @@ public abstract class Material
 
     protected Material()
     {
-        Color = Color.White;
+        Tint = Color.White;
         Tiling = Vector2.One;
         RasterizerState = RasterizerState.CullClockwise;
     }

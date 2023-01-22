@@ -39,7 +39,7 @@ public class Button : UIElement
             renderer.DrawRectangle((Vector2) CalculatedScreenPos + shadow.Offset, Size, 0, Theme.BorderRadius, shadow.Color, Color.Transparent, 0, Vector2.Zero);
         }
         
-        renderer.DrawRectangle(Image ?? Texture2D.Blank, (Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
+        renderer.DrawRectangle(Image ?? Texture2D.White, (Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
         Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
 
         int posX = Justification switch

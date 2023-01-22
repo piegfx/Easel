@@ -110,7 +110,7 @@ public sealed class SpriteRenderer : IDisposable
     public void DrawRectangle(Vector2 position, Size size, int borderWidth, float radius, Color color,
         Color borderColor, float rotation, Vector2 origin)
     {
-        DrawRectangle(Texture2D.Blank, position, size, borderWidth, radius, color, borderColor, rotation, origin);
+        DrawRectangle(Texture2D.White, position, size, borderWidth, radius, color, borderColor, rotation, origin);
     }
     
     public void DrawRectangle(Texture texture, Vector2 position, Size size, int borderWidth, float radius, 

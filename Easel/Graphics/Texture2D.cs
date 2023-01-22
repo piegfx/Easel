@@ -44,9 +44,12 @@ public class Texture2D : Texture
         device.UpdateTexture(PieTexture, x, y, (uint) width, (uint) height, data);
     }
 
-    public static readonly Texture2D Blank = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);
+    public static readonly Texture2D White = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);
 
-    public static readonly Texture2D Void = new Texture2D(1, 1, new byte[] { 0, 0, 0, 255 }, autoDispose: false);
+    public static readonly Texture2D Black = new Texture2D(1, 1, new byte[] { 0, 0, 0, 255 }, autoDispose: false);
+
+    public static readonly Texture2D EmptyNormal =
+        new Texture2D(1, 1, new byte[] { 128, 128, 255, 255 }, autoDispose: false);
 
     public static readonly Texture2D Missing = new Texture2D(128, 128, Bitmap.GetMissingBitmap(128, 128), autoDispose: false);
 }

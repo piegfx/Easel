@@ -93,7 +93,7 @@ public struct Mesh
         Texture2D[] speculars = LoadTextures(material, TextureType.Specular, directory, ref loadedTextures);
         Texture2D[] normals = LoadTextures(material, TextureType.Height, directory, ref loadedTextures);
         // todo
-        //Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.Blank,
+        //Material mat = new Material(diffuses.Length > 0 ? diffuses[0] : Texture2D.White,
         //    speculars.Length > 0 ? speculars[0] : diffuses.Length > 0 ? diffuses[0] : null,
         //    normals.Length > 0 ? normals[0] : null, Color.White, shininess);
         return new Mesh(vertices.ToArray(), indices.ToArray());

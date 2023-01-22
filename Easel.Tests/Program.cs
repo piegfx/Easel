@@ -10,5 +10,5 @@ GameSettings settings = new GameSettings()
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new Test3D());
+using TestGame game = new TestGame(settings, new TestCanvas());
 game.Run();

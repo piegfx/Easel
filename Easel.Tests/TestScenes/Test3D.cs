@@ -38,7 +38,7 @@ public class Test3D : Scene
         {
             MoveSpeed = 10
         });*/
-        Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new UnlitMaterial(texture))));
+        //Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new UnlitMaterial(texture))));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
         second.Transform.Position = new Vector3(0, 0, -5);
@@ -67,11 +67,11 @@ public class Test3D : Scene
             Position = new Vector3(0, 0, -3)
         });
 
-        entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new StandardMaterial(texture, 32)
-        {
-            Tiling = new Vector2(2),
-            Color = Color.Orange with { A = 0.5f }
-        })));
+        //entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new StandardMaterial(texture, 32)
+        //{
+        //    Tiling = new Vector2(2),
+        //    Color = Color.Orange with { A = 0.5f }
+        //})));
         AddEntity("cube", entity);
 
         Entity thingy = new Entity();

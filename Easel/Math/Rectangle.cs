@@ -16,6 +16,14 @@ public struct Rectangle : IEquatable<Rectangle>
 
     public Size Size => new Size(Width, Height);
 
+    public int Left => X;
+
+    public int Top => Y;
+
+    public int Right => X + Width;
+
+    public int Bottom => Y + Height;
+
     public Rectangle(int x, int y, int width, int height)
     {
         X = x;

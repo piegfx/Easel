@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Easel.Math;
 using Pie;
@@ -41,7 +42,7 @@ public class Canvas
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void DrawPixel(int x, int y, Color color)
+    public void DrawPixelUnchecked(int x, int y, Color color)
     {
         int pos = (y * Size.Width + x) * 4;
         _backBuffer[pos + 0] = color.Rb;
@@ -49,13 +50,74 @@ public class Canvas
         _backBuffer[pos + 2] = color.Bb;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void DrawPixelUnchecked(int index, byte value)
+    {
+        // TODO: Alpha blending
+        _backBuffer[index] = value;
+    }
+
     public void FillRectangle(int x, int y, int width, int height, Color color)
     {
-        for (int pY = 0; pY < height; pY++)
+        int startX = x < Scissor.X ? 0 : x;
+        int startY = y < Scissor.Y ? 0 : y;
+
+        int endX = x + width > Scissor.Right ? Scissor.Right : x + width;
+        int endY = y + height > Scissor.Bottom ? Scissor.Bottom : y + height;
+            
+        
+        for (int pY = startY; pY < endY; pY++)
         {
-            for (int pX = 0; pX < width; pX++)
+            for (int pX = startX; pX < endX; pX++)
             {
-                DrawPixel(x + pX, y + pY, color);
+                DrawPixelUnchecked(pX, pY, color);
+            }
+        }
+    }
+
+    public void DrawBitmap(int x, int y, Bitmap bitmap)
+    {
+        int startX = x < Scissor.X ? -x : 0;
+        int startY = y < Scissor.Y ? -y : 0;
+
+        int endX = x + bitmap.Size.Width > Scissor.Right ? Scissor.Right - x : bitmap.Size.Width;
+        int endY = y + bitmap.Size.Height > Scissor.Bottom ? Scissor.Bottom - y : bitmap.Size.Height;
+
+        for (int pY = startY; pY < endY; pY++)
+        {
+            for (int pX = startX; pX < endX; pX++)
+            {
+                int pos = ((y + pY) * Size.Width + (x + pX)) * 4;
+                int texel = (pY * bitmap.Size.Width + pX) * 4;
+                
+                DrawPixelUnchecked(pos + 0, bitmap.Data[texel + 0]);
+                DrawPixelUnchecked(pos + 1, bitmap.Data[texel + 1]);
+                DrawPixelUnchecked(pos + 2, bitmap.Data[texel + 2]);
+            }
+        }
+    }
+    
+    public void DrawBitmap(int x, int y, int width, int height, Bitmap bitmap)
+    {
+        int startX = x < Scissor.X ? -x : 0;
+        int startY = y < Scissor.Y ? -y : 0;
+
+        int endX = x + width > Scissor.Right ? Scissor.Right - x : width;
+        int endY = y + height > Scissor.Bottom ? Scissor.Bottom - y : height;
+
+        for (int pY = startY; pY < endY; pY++)
+        {
+            for (int pX = startX; pX < endX; pX++)
+            {
+                int pos = ((y + pY) * Size.Width + (x + pX)) * 4;
+
+                int texX = (int) (pX * (bitmap.Size.Width / (float) width));
+                int texY = (int) (pY * (bitmap.Size.Height / (float) height));
+                int texel = (texY * bitmap.Size.Width + texX) * 4;
+
+                DrawPixelUnchecked(pos + 0, bitmap.Data[texel + 0]);
+                DrawPixelUnchecked(pos + 1, bitmap.Data[texel + 1]);
+                DrawPixelUnchecked(pos + 2, bitmap.Data[texel + 2]);
             }
         }
     }

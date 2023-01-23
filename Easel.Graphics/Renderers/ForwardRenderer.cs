@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Easel.Graphics.Lighting;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Pie;
@@ -47,6 +48,7 @@ public sealed class ForwardRenderer : IRenderer
     }
 
     public CameraInfo Camera { get; set; }
+    public DirectionalLight? DirectionalLight { get; set; }
     public RenderTarget MainTarget { get; set; }
 
     public void AddOpaque(in Renderable renderable, in Matrix4x4 world)
@@ -65,10 +67,24 @@ public sealed class ForwardRenderer : IRenderer
         _opaqueSprites.Clear();
 
         EaselGraphics graphics = EaselGraphics.Instance;
+        graphics.SetRenderTarget(MainTarget);
         graphics.Clear(Camera.ClearColor);
     }
 
-    public void Perform3DPass(ShaderDirLight? dir)
+    public void DoneFrame()
+    {
+        EaselGraphics graphics = EaselGraphics.Instance;
+        
+        // TODO: EaselGraphics main RT.
+        graphics.SetRenderTarget(null);
+        
+        graphics.Clear(Color.Black);
+        graphics.SpriteRenderer.Begin();
+        graphics.SpriteRenderer.Draw(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
+        graphics.SpriteRenderer.End();
+    }
+
+    public void Perform3DPass()
     {
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
         
@@ -76,7 +92,7 @@ public sealed class ForwardRenderer : IRenderer
         _projViewModel.Projection = Camera.Projection;
         _projViewModel.View = Camera.View;
 
-        _sceneInfo.Sun = dir ?? new ShaderDirLight();
+        _sceneInfo.Sun = DirectionalLight?.ShaderDirLight ?? new ShaderDirLight();
         
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetDepthState(_depthState);

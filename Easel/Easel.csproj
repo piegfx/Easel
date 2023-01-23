@@ -40,15 +40,4 @@
       </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Graphics\Lighting" />
-      <Folder Include="Graphics\Materials" />
-      <Folder Include="Graphics\Renderers\Structs" />
-      <Folder Include="Graphics\Shaders\Forward" />
-      <Folder Include="Graphics\Shaders\Skybox" />
-      <Folder Include="Graphics\Shaders\SpriteRenderer" />
-      <Folder Include="Primitives" />
-      <Folder Include="Utilities" />
-    </ItemGroup>
-
 </Project>

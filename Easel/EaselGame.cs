@@ -52,12 +52,7 @@ public class EaselGame : IDisposable
     public AudioDevice Audio => AudioInternal;
 
     public ContentManager Content;
-
-    /// <summary>
-    /// If enabled, the game will synchronize with the monitor's vertical refresh rate.
-    /// </summary>
-    public bool VSync;
-
+    
     public bool AllowMissing;
     
     public bool ShowMetrics;
@@ -91,7 +86,6 @@ public class EaselGame : IDisposable
     {
         Logger.Debug("New EaselGame created!");
         _settings = settings;
-        VSync = settings.VSync;
         AllowMissing = settings.AllowMissing;
         if (AllowMissing)
             Logger.Info("Missing content support is enabled.");
@@ -167,6 +161,7 @@ public class EaselGame : IDisposable
         
         Logger.Debug("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
+        GraphicsInternal.VSync = _settings.VSync;
         Window.Resize += WindowOnResize;
 
         Logger.Debug("Creating audio device...");
@@ -187,7 +182,7 @@ public class EaselGame : IDisposable
 
         while (!Window.ShouldClose)
         {
-            if ((!VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+            if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
             {
                 sw.SpinOnce();
                 continue;
@@ -202,7 +197,7 @@ public class EaselGame : IDisposable
             Draw();
             if (ShowMetrics)
                 DrawMetrics();
-            Graphics.PieGraphics.Present(VSync ? 1 : 0);
+            GraphicsInternal.Present();
         }
         
         Logger.Debug("Close requested, shutting down...");
@@ -237,16 +232,7 @@ public class EaselGame : IDisposable
             action();
         _actions.Clear();
         
-        Graphics.SetRenderTarget(Graphics.Renderer.MainTarget);
         SceneManager.Draw();
-        Graphics.SetRenderTarget(null);
-        Graphics.Clear(Color.Black);
-        
-        Graphics.SpriteRenderer.Begin();
-        Graphics.SpriteRenderer.Draw(Graphics.Renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
-            Vector2.One);
-        Graphics.SpriteRenderer.End();
-        UI.Draw(GraphicsInternal);
     }
 
     /// <summary>
@@ -256,7 +242,7 @@ public class EaselGame : IDisposable
     public void Dispose()
     {
         SceneManager.ActiveScene?.Dispose();
-        Graphics.Dispose();
+        GraphicsInternal.Dispose();
         Window.Dispose();
         Logger.Debug("EaselGame disposed.");
     }
@@ -290,11 +276,11 @@ public class EaselGame : IDisposable
     private void DrawMetrics()
     {
         string metrics = Metrics.GetString();
-        Graphics.SpriteRenderer.Begin();
+        GraphicsInternal.SpriteRenderer.Begin();
         Font font = UI.Theme.Font;
         Size size = font.MeasureString(12, metrics);
         //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
-        font.Draw(Graphics.SpriteRenderer, 12, metrics, new Vector2(5), Color.White);
+        font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2(5), Color.White);
         Graphics.SpriteRenderer.End();
     }
     

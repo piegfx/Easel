@@ -122,6 +122,14 @@ public abstract class Scene : IDisposable
         }
 
         Size framebufferSize = Graphics.Renderer.MainTarget.Size;
+
+        DirectionalLight sun = null;
+        Entity[] lights = GetEntitiesWithComponent<DirectionalLight>();
+        if (lights.Length > 0)
+            sun = lights[0].GetComponent<DirectionalLight>();
+        
+        Graphics.Renderer.DirectionalLight = sun?.InternalLight;
+        
         foreach (Camera camera in cameras)
         {
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
@@ -133,18 +141,15 @@ public abstract class Scene : IDisposable
             viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;
             viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
 
-            DirectionalLight sun = null;
-            Entity[] lights = GetEntitiesWithComponent<DirectionalLight>();
-            if (lights.Length > 0)
-                sun = lights[0].GetComponent<DirectionalLight>();
-            
             Graphics.Viewport = viewport;
             Graphics.Renderer.Camera = camera.CameraInfo;
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
-                Graphics.Renderer.Perform3DPass(sun?.InternalLight.ShaderDirLight);
+                Graphics.Renderer.Perform3DPass();
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
         }
+        
+        Graphics.Renderer.DoneFrame();
     }
 
     /// <summary>

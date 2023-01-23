@@ -34,6 +34,11 @@ public class EaselGraphics : IDisposable
     public IRenderer Renderer;
 
     public SpriteRenderer SpriteRenderer;
+    
+    /// <summary>
+    /// If enabled, the game will synchronize with the monitor's vertical refresh rate.
+    /// </summary>
+    public bool VSync;
 
     /// <summary>
     /// Get or set the graphics viewport. If set, <see cref="ViewportResized"/> is invoked.
@@ -68,6 +73,8 @@ public class EaselGraphics : IDisposable
         SpriteRenderer = new SpriteRenderer(PieGraphics);
 
         Renderer = new ForwardRenderer(this, Viewport.Size);
+
+        VSync = true;
     }
 
     private void PieDebug(LogType logtype, string message)
@@ -105,6 +112,11 @@ public class EaselGraphics : IDisposable
         PieGraphics.ResizeSwapchain((System.Drawing.Size) size);
         SwapchainResized?.Invoke(size);
         Viewport = new Rectangle(Point.Zero, size);
+    }
+
+    public void Present()
+    {
+        PieGraphics.Present(VSync ? 1 : 0);
     }
 
     public delegate void OnViewportResized(Rectangle viewport);

@@ -27,7 +27,7 @@ public struct Mesh
         return new Mesh(primitive.Vertices, primitive.Indices);
     }
 
-    /*public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
+    public static unsafe Mesh[] FromFile(string path, bool flipUvs = false)
     {
         // TODO is the incorrect loading of UVs for some models supposed to happen...??
         Logger.Debug("Importing model with assimp...");
@@ -119,5 +119,5 @@ public struct Mesh
         }
 
         return textures;
-    }*/
+    }
 }

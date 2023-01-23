@@ -11,4 +11,11 @@ public struct CameraInfo
 
     public Color ClearColor;
     public Skybox Skybox;
+
+    public CameraInfo(Matrix4x4 projection, Matrix4x4 view)
+    {
+        Projection = projection;
+        View = view;
+        Position = view.Translation;
+    }
 }

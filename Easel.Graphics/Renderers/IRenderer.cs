@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using Easel.Graphics.Lighting;
 using Easel.Graphics.Renderers.Structs;
 
 namespace Easel.Graphics.Renderers;
@@ -7,6 +8,8 @@ namespace Easel.Graphics.Renderers;
 public interface IRenderer : IDisposable
 {
     public CameraInfo Camera { get; set; }
+
+    public DirectionalLight? DirectionalLight { get; set; }
     
     public RenderTarget MainTarget { get; set; }
     
@@ -27,11 +30,13 @@ public interface IRenderer : IDisposable
     /// Prepare the renderer for a new frame of objects.
     /// </summary>
     public void NewFrame();
+
+    public void DoneFrame();
     
     /// <summary>
     /// Render all objects added to the current render frame.
     /// </summary>
-    public void Perform3DPass(ShaderDirLight? dir);
+    public void Perform3DPass();
 
     public void Perform2DPass();
 }

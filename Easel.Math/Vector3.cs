@@ -7,30 +7,37 @@ using System.Runtime.InteropServices;
 namespace Easel.Math;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct Vector3<T> : IEquatable<Vector3<T>> where T : INumber<T>
+public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
 {
-    public static Vector3<T> Zero => new Vector3<T>(T.Zero);
+    public static Vector3T<T> Zero => new Vector3T<T>(T.Zero);
 
-    public static Vector3<T> One => new Vector3<T>(T.One);
+    public static Vector3T<T> One => new Vector3T<T>(T.One);
 
-    public static Vector3<T> UnitX => new Vector3<T>(T.One, T.Zero, T.Zero);
+    public static Vector3T<T> UnitX => new Vector3T<T>(T.One, T.Zero, T.Zero);
 
-    public static Vector3<T> UnitY => new Vector3<T>(T.Zero, T.One, T.Zero);
+    public static Vector3T<T> UnitY => new Vector3T<T>(T.Zero, T.One, T.Zero);
 
-    public static Vector3<T> UnitZ => new Vector3<T>(T.Zero, T.Zero, T.One);
+    public static Vector3T<T> UnitZ => new Vector3T<T>(T.Zero, T.Zero, T.One);
     
     public T X;
     public T Y;
     public T Z;
 
-    public Vector3(T scalar)
+    public Vector3T(T scalar)
     {
         X = scalar;
         Y = scalar;
         Z = scalar;
     }
-    
-    public Vector3(T x, T y, T z)
+
+    public Vector3T(Vector2T<T> xy, T z)
+    {
+        X = xy.X;
+        Y = xy.Y;
+        Z = z;
+    }
+
+    public Vector3T(T x, T y, T z)
     {
         X = x;
         Y = y;
@@ -40,32 +47,32 @@ public struct Vector3<T> : IEquatable<Vector3<T>> where T : INumber<T>
     #region Operators
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator +(Vector3<T> left, Vector3<T> right) =>
-        new Vector3<T>(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+    public static Vector3T<T> operator +(Vector3T<T> left, Vector3T<T> right) =>
+        new Vector3T<T>(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator -(Vector3<T> left, Vector3<T> right) =>
-        new Vector3<T>(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+    public static Vector3T<T> operator -(Vector3T<T> left, Vector3T<T> right) =>
+        new Vector3T<T>(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator *(Vector3<T> left, Vector3<T> right) =>
-        new Vector3<T>(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+    public static Vector3T<T> operator *(Vector3T<T> left, Vector3T<T> right) =>
+        new Vector3T<T>(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator *(Vector3<T> left, T right) =>
-        new Vector3<T>(left.X * right, left.Y * right, left.Z * right);
+    public static Vector3T<T> operator *(Vector3T<T> left, T right) =>
+        new Vector3T<T>(left.X * right, left.Y * right, left.Z * right);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator *(T left, Vector3<T> right) =>
-        new Vector3<T>(left * right.X, left * right.Y, left * right.Z);
+    public static Vector3T<T> operator *(T left, Vector3T<T> right) =>
+        new Vector3T<T>(left * right.X, left * right.Y, left * right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator /(Vector3<T> left, Vector3<T> right) =>
-        new Vector3<T>(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
+    public static Vector3T<T> operator /(Vector3T<T> left, Vector3T<T> right) =>
+        new Vector3T<T>(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3<T> operator /(Vector3<T> left, T right) =>
-        new Vector3<T>(left.X / right, left.Y / right, left.Z / right);
+    public static Vector3T<T> operator /(Vector3T<T> left, T right) =>
+        new Vector3T<T>(left.X / right, left.Y / right, left.Z / right);
 
     #endregion
 
@@ -75,14 +82,14 @@ public struct Vector3<T> : IEquatable<Vector3<T>> where T : INumber<T>
 
     #endregion
 
-    public bool Equals(Vector3<T> other)
+    public bool Equals(Vector3T<T> other)
     {
         return EqualityComparer<T>.Default.Equals(X, other.X) && EqualityComparer<T>.Default.Equals(Y, other.Y) && EqualityComparer<T>.Default.Equals(Z, other.Z);
     }
 
     public override bool Equals(object obj)
     {
-        return obj is Vector3<T> other && Equals(other);
+        return obj is Vector3T<T> other && Equals(other);
     }
 
     public override int GetHashCode()
@@ -90,34 +97,72 @@ public struct Vector3<T> : IEquatable<Vector3<T>> where T : INumber<T>
         return HashCode.Combine(X, Y, Z);
     }
 
-    public static bool operator ==(Vector3<T> left, Vector3<T> right)
+    public static bool operator ==(Vector3T<T> left, Vector3T<T> right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(Vector3<T> left, Vector3<T> right)
+    public static bool operator !=(Vector3T<T> left, Vector3T<T> right)
     {
         return !left.Equals(right);
     }
+
+    public override string ToString()
+    {
+        return "Vector3T<" + typeof(T) + ">(X: " + X + ", Y: " + Y + ", Z: " + Z + ")";
+    }
+    
+    public static implicit operator Vector3(Vector3T<T> vector)
+    {
+        float x = Convert.ToSingle(vector.X);
+        float y = Convert.ToSingle(vector.Y);
+        float z = Convert.ToSingle(vector.Z);
+        return new Vector3(x, y, z);
+    }
+    
+    public static implicit operator Vector3T<T>(Vector3 vector)
+    {
+        return new Vector3T<T>(T.CreateChecked(vector.X), T.CreateChecked(vector.Y), T.CreateChecked(vector.Z));
+    }
 }
 
-public static class Vector3
+public static class Vector3T
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Magnitude<T>(Vector3<T> value) where T : INumber<T>, IRootFunctions<T>
+    public static T Magnitude<T>(Vector3T<T> value) where T : INumber<T>, IRootFunctions<T>
     {
         return T.Sqrt(MagnitudeSquared(value));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T MagnitudeSquared<T>(Vector3<T> value) where T : INumber<T>, IRootFunctions<T>
+    public static T MagnitudeSquared<T>(Vector3T<T> value) where T : INumber<T>
     {
         return Dot(value, value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Dot<T>(Vector3<T> left, Vector3<T> right) where T : INumber<T>, IRootFunctions<T>
+    public static T Dot<T>(Vector3T<T> left, Vector3T<T> right) where T : INumber<T>
     {
         return T.CreateChecked(left.X * right.X + left.Y * right.Y + left.Z * right.Z);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector3T<T> Normalize<T>(Vector3T<T> vector) where T : INumber<T>, IRootFunctions<T>
+    {
+        T magnitude = Magnitude(vector);
+        return new Vector3T<T>(vector.X / magnitude, vector.Y / magnitude, vector.Z / magnitude);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Distance<T>(Vector3T<T> vector1, Vector3T<T> vector2) where T : INumber<T>, IRootFunctions<T>
+    {
+        return T.Sqrt(DistanceSquared(vector1, vector2));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T DistanceSquared<T>(Vector3T<T> vector1, Vector3T<T> vector2) where T : INumber<T>
+    {
+        Vector3T<T> dist = vector2 - vector1;
+        return Dot(dist, dist);
     }
 }

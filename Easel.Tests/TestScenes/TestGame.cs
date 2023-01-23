@@ -2,13 +2,14 @@ using System.Numerics;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
+using Easel.Math;
 using Easel.Scenes;
 
 namespace Easel.Tests.TestScenes;
 
 public class TestGameScene : Scene
 {
-    private Vector2 _velocity;
+    private Vector2T<float> _velocity;
     
     protected override void Initialize()
     {
@@ -18,7 +19,7 @@ public class TestGameScene : Scene
         
         Entity entity = new Entity(new Transform()
         {
-            Position = new Vector3(100, 100, 0)
+            Position = new Vector3T<float>(100, 100, 0)
         });
         entity.AddComponent(new Sprite(Content.Load<Texture2D>("awesomeface")));
         AddEntity("thing", entity);

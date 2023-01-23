@@ -1,5 +1,8 @@
-﻿using Easel;
+﻿using System;
+using System.Numerics;
+using Easel;
 using Easel.Core;
+using Easel.Math;
 using Easel.Tests;
 using Easel.Tests.TestScenes;
 using Pie.Windowing;
@@ -9,7 +12,7 @@ GameSettings settings = new GameSettings()
     Border = WindowBorder.Resizable
 };
 
-Logger.UseConsoleLogs();
+//Logger.UseConsoleLogs();
 
 using TestGame game = new TestGame(settings, new Test3D());
 game.Run();

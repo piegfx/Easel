@@ -1,30 +1,31 @@
 using System;
+using System.Numerics;
 
 namespace Easel.Math;
 
-public struct Rectangle : IEquatable<Rectangle>
+public struct Rectangle<T> : IEquatable<Rectangle<T>> where T : INumber<T>
 {
-    public int X;
+    public T X;
     
-    public int Y;
+    public T Y;
     
-    public int Width;
+    public T Width;
     
-    public int Height;
+    public T Height;
 
-    public Point Location => new Point(X, Y);
+    public Vector2T<T> Location => new Vector2T<T>(X, Y);
 
-    public Size<int> Size => new Size<int>(Width, Height);
+    public Size<T> Size => new Size<T>(Width, Height);
 
-    public int Left => X;
+    public T Left => X;
 
-    public int Top => Y;
+    public T Top => Y;
 
-    public int Right => X + Width;
+    public T Right => X + Width;
 
-    public int Bottom => Y + Height;
+    public T Bottom => Y + Height;
 
-    public Rectangle(int x, int y, int width, int height)
+    public Rectangle(T x, T y, T width, T height)
     {
         X = x;
         Y = y;
@@ -32,16 +33,16 @@ public struct Rectangle : IEquatable<Rectangle>
         Height = height;
     }
 
-    public Rectangle(Point location, Size<int> size) : this(location.X, location.Y, size.Width, size.Height) { }
+    public Rectangle(Vector2T<T> location, Size<T> size) : this(location.X, location.Y, size.Width, size.Height) { }
 
-    public bool Equals(Rectangle other)
+    public bool Equals(Rectangle<T> other)
     {
         return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
     }
 
     public override bool Equals(object obj)
     {
-        return obj is Rectangle other && Equals(other);
+        return obj is Rectangle<T> other && Equals(other);
     }
 
     public override int GetHashCode()
@@ -49,21 +50,29 @@ public struct Rectangle : IEquatable<Rectangle>
         return HashCode.Combine(X, Y, Width, Height);
     }
 
-    public static bool operator ==(Rectangle left, Rectangle right)
+    public static bool operator ==(Rectangle<T> left, Rectangle<T> right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(Rectangle left, Rectangle right)
+    public static bool operator !=(Rectangle<T> left, Rectangle<T> right)
     {
         return !left.Equals(right);
     }
 
-    public static explicit operator System.Drawing.Rectangle(Rectangle rectangle) =>
-        new System.Drawing.Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+    public static explicit operator System.Drawing.Rectangle(Rectangle<T> rectangle)
+    {
+        int x = Convert.ToInt32(rectangle.X);
+        int y = Convert.ToInt32(rectangle.Y);
+        int w = Convert.ToInt32(rectangle.Width);
+        int h = Convert.ToInt32(rectangle.Height);
+        
+        return new System.Drawing.Rectangle(x, y, w, h);
+    }
 
-    public static explicit operator Rectangle(System.Drawing.Rectangle rectangle) =>
-        new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+    public static explicit operator Rectangle<T>(System.Drawing.Rectangle rectangle) =>
+        new Rectangle<T>(T.CreateChecked(rectangle.X), T.CreateChecked(rectangle.Y), T.CreateChecked(rectangle.Width),
+            T.CreateChecked(rectangle.Height));
 
     public override string ToString()
     {

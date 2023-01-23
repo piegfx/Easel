@@ -40,7 +40,7 @@ public class GaussianBlur : UIElement
         renderer.End();
         
         graphics.SetRenderTarget(_readBuffer);
-        graphics.Viewport = new Rectangle(Point.Zero, graphics.Renderer.MainTarget.Size);
+        graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, graphics.Renderer.MainTarget.Size);
         graphics.Clear(Color.CornflowerBlue);
         renderer.Begin();
         renderer.Draw(rt, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
@@ -66,7 +66,7 @@ public class GaussianBlur : UIElement
         renderer.Begin();
 
         // TODO: Fix whatever the heck is going on here, I just have no idea
-        renderer.Draw(_readBuffer, (Vector2) CalculatedScreenPos, new Rectangle(CalculatedScreenPos, Size), Color.White,
+        renderer.Draw(_readBuffer, CalculatedScreenPos, new Rectangle<int>(CalculatedScreenPos, Size), Color.White,
             0, Vector2.Zero, Vector2.One);
     }
 }

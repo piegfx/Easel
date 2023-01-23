@@ -22,8 +22,6 @@ public struct DirectionalLight
             float phi = value.X;
             _position = new Vector3(MathF.Cos(phi) * MathF.Cos(theta), MathF.Cos(phi) * MathF.Sin(theta),
                 MathF.Sin(phi));
-            
-            Console.WriteLine(_position);
         }
     }
     

@@ -10,7 +10,7 @@ public class Sprite : Component
 {
     public Texture Texture;
 
-    public Rectangle? SourceRectangle;
+    public Rectangle<int>? SourceRectangle;
 
     public Color Tint;
 

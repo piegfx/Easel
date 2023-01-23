@@ -80,7 +80,7 @@ public class ImGuiRenderer : IDisposable
         _frameBegun = true;
     }
 
-    private void ViewportOnResize(Rectangle viewport)
+    private void ViewportOnResize(Rectangle<int> viewport)
     {
         _windowWidth = viewport.Width;
         _windowHeight = viewport.Height;

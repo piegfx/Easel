@@ -15,7 +15,7 @@ namespace Easel.Graphics;
 /// </summary>
 public class EaselGraphics : IDisposable
 {
-    private Rectangle _viewport;
+    private Rectangle<int> _viewport;
     internal List<IDisposable> Disposables;
 
     /// <summary>
@@ -43,14 +43,14 @@ public class EaselGraphics : IDisposable
     /// <summary>
     /// Get or set the graphics viewport. If set, <see cref="ViewportResized"/> is invoked.
     /// </summary>
-    public Rectangle Viewport
+    public Rectangle<int> Viewport
     {
         get => _viewport;
         set
         {
             if (value == _viewport)
                 return;
-            _viewport = new Rectangle(value.X, value.Y, value.Width, value.Height);
+            _viewport = new Rectangle<int>(value.X, value.Y, value.Width, value.Height);
             PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
             ViewportResized?.Invoke(_viewport);
         }
@@ -61,7 +61,7 @@ public class EaselGraphics : IDisposable
         Logging.DebugLog += PieDebug;
         PieGraphics = pieDevice;
 
-        Viewport = new Rectangle(Point.Zero, (Size<int>) pieDevice.Swapchain.Size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);
         
         Instance = this;
         Disposables = new List<IDisposable>();
@@ -96,7 +96,7 @@ public class EaselGraphics : IDisposable
     public void SetRenderTarget(RenderTarget target)
     {
         PieGraphics.SetFramebuffer(target?.PieBuffer);
-        Viewport = new Rectangle(Point.Zero, target?.Size ?? (Size<int>) PieGraphics.Swapchain.Size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, target?.Size ?? (Size<int>) PieGraphics.Swapchain.Size);
     }
 
     public void Dispose()
@@ -111,7 +111,7 @@ public class EaselGraphics : IDisposable
             return;
         PieGraphics.ResizeSwapchain((System.Drawing.Size) size);
         SwapchainResized?.Invoke(size);
-        Viewport = new Rectangle(Point.Zero, size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, size);
     }
 
     public void Present()
@@ -119,7 +119,7 @@ public class EaselGraphics : IDisposable
         PieGraphics.Present(VSync ? 1 : 0);
     }
 
-    public delegate void OnViewportResized(Rectangle viewport);
+    public delegate void OnViewportResized(Rectangle<int> viewport);
     
     public delegate void OnSwapchainResized(Size<int> size);
 

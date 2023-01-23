@@ -96,7 +96,7 @@ public sealed class SpriteRenderer : IDisposable
             throw new EaselException("SpriteRenderer session is already active.");
         _begun = true;
 
-        Rectangle viewport = EaselGraphics.Instance.Viewport;
+        Rectangle<int> viewport = EaselGraphics.Instance.Viewport;
         projection ??= Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
         transform ??= Matrix4x4.Identity;
         _effectToUse = effect;
@@ -162,7 +162,7 @@ public sealed class SpriteRenderer : IDisposable
         Flush();
     }
 
-    public void Draw(Texture texture, Vector2 position, Rectangle? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None, Vector4 meta1 = default, Vector4 meta2 = default)
+    public void Draw(Texture texture, Vector2 position, Rectangle<int>? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None, Vector4 meta1 = default, Vector4 meta2 = default)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
         if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
@@ -171,7 +171,7 @@ public sealed class SpriteRenderer : IDisposable
         _currentTexture = texture;
         _currentType = SpriteType.Bitmap;
 
-        Rectangle src = source ?? new Rectangle(Point.Zero, texture.Size);
+        Rectangle<int> src = source ?? new Rectangle<int>(Vector2T<int>.Zero, texture.Size);
 
         int rectX = src.X;
         int rectY = src.Y;

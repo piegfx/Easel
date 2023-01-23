@@ -135,7 +135,7 @@ public abstract class Scene : IDisposable
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
             
             // Convert the camera's normalized viewport into a viewport pie can understand.
-            Rectangle viewport = new Rectangle();
+            Rectangle<int> viewport = new Rectangle<int>();
             viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);
             viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);
             viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;

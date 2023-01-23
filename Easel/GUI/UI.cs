@@ -42,7 +42,7 @@ public static class UI
         _elements.Clear();
     }
 
-    internal static void Update(Rectangle viewport)
+    internal static void Update(Rectangle<int> viewport)
     {
         CurrentTooltip = null;
         

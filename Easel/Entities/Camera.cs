@@ -207,7 +207,7 @@ public class Camera : Entity
         Graphics.ViewportResized += GraphicsOnViewportResized;
     }
 
-    private void GraphicsOnViewportResized(Rectangle viewport)
+    private void GraphicsOnViewportResized(Rectangle<int> viewport)
     {
         _aspectRatio = viewport.Width / (float) viewport.Height;
         GenerateProjectionMatrix();

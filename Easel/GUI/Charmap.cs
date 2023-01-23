@@ -28,8 +28,8 @@ public class Charmap : IDisposable
 
     public struct Character
     {
-        public Rectangle Source;
-        public Point Bearing;
+        public Rectangle<int> Source;
+        public Vector2T<int> Bearing;
         public int Advance;
     }
 

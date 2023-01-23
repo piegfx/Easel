@@ -13,14 +13,14 @@ public class Canvas
 
     public readonly Size<int> Size;
 
-    public Rectangle Scissor;
+    public Rectangle<int> Scissor;
 
     public Canvas(Size<int> size)
     {
         _backBuffer = new byte[size.Width * size.Height * 4];
 
         Size = size;
-        Scissor = new Rectangle(Point.Zero, Size);
+        Scissor = new Rectangle<int>(Vector2T<int>.Zero, Size);
     }
 
     private Canvas(Size<int> size, byte[] data)

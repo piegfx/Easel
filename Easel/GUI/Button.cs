@@ -12,7 +12,7 @@ public class Button : UIElement
     
     public uint FontSize;
 
-    public Point TextOffset;
+    public Vector2T<int> TextOffset;
 
     public Justification Justification;
 

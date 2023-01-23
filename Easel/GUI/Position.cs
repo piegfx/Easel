@@ -14,17 +14,17 @@ public struct Position
     /// <summary>
     /// The offset from the anchor point of the element.
     /// </summary>
-    public Point Offset;
+    public Vector2T<int> Offset;
 
-    public Position(Anchor anchor, Point offset)
+    public Position(Anchor anchor, Vector2T<int> offset)
     {
         Anchor = anchor;
         Offset = offset;
     }
 
-    public Position(Anchor anchor) : this(anchor, Point.Zero) { }
+    public Position(Anchor anchor) : this(anchor, Vector2T<int>.Zero) { }
 
-    public Position(Point offset) : this(Anchor.TopLeft, Point.Zero) { }
+    public Position(Vector2T<int> offset) : this(Anchor.TopLeft, Vector2T<int>.Zero) { }
 
     /// <summary>
     /// Calculate the screen position of the UI element.
@@ -32,9 +32,9 @@ public struct Position
     /// <param name="viewport">The bounds that the element will abide by.</param>
     /// <param name="elementSize">The size in pixels of this UI element.</param>
     /// <returns>The calculated position.</returns>
-    public readonly Point CalculatePosition(Rectangle viewport, Size<int> elementSize)
+    public readonly Vector2T<int> CalculatePosition(Rectangle<int> viewport, Size<int> elementSize)
     {
-        Point pos = Point.Zero;
+        Vector2T<int> pos = Vector2T<int>.Zero;
 
         switch (Anchor)
         {

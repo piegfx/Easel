@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Easel.Math;
@@ -31,6 +32,38 @@ public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
         X = x;
         Y = y;
     }
+    
+    #region Operators
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator +(Vector2T<T> left, Vector2T<T> right) =>
+        new Vector2T<T>(left.X + right.X, left.Y + right.Y);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator -(Vector2T<T> left, Vector2T<T> right) =>
+        new Vector2T<T>(left.X - right.X, left.Y - right.Y);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator *(Vector2T<T> left, Vector2T<T> right) =>
+        new Vector2T<T>(left.X * right.X, left.Y * right.Y);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator *(Vector2T<T> left, T right) =>
+        new Vector2T<T>(left.X * right, left.Y * right);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator *(T left, Vector2T<T> right) =>
+        new Vector2T<T>(left * right.X, left * right.Y);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator /(Vector2T<T> left, Vector2T<T> right) =>
+        new Vector2T<T>(left.X / right.X, left.Y / right.Y);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2T<T> operator /(Vector2T<T> left, T right) =>
+        new Vector2T<T>(left.X / right, left.Y / right);
+
+    #endregion
 
     public bool Equals(Vector2T<T> other)
     {

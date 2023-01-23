@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Core;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Interfaces;

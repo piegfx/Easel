@@ -1,4 +1,5 @@
 ﻿using Easel;
+using Easel.Core;
 using Easel.Tests;
 using Easel.Tests.TestScenes;
 using Pie.Windowing;
@@ -10,5 +11,5 @@ GameSettings settings = new GameSettings()
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new TestCanvas());
+using TestGame game = new TestGame(settings, new Test3D());
 game.Run();

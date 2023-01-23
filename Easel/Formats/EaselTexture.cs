@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Easel.Core;
+using Easel.Graphics;
 using Easel.Math;
-using Easel.Utilities;
 using Pie;
 
 namespace Easel.Formats;

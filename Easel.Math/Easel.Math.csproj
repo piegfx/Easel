@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Vector2.cs" />
+      <None Include="Vector2.cs" />
+      <Compile Remove="Vector3.cs" />
+      <None Include="Vector3.cs" />
+      <Compile Remove="Vector4.cs" />
+      <None Include="Vector4.cs" />
+      <Compile Remove="Matrix.cs" />
+      <None Include="Matrix.cs" />
+    </ItemGroup>
+
+</Project>

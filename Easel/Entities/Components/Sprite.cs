@@ -1,8 +1,8 @@
 using System.Numerics;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
-using Easel.Utilities;
 
 namespace Easel.Entities.Components;
 

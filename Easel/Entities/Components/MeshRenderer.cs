@@ -6,13 +6,11 @@ using System.Runtime.InteropServices;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
-using Easel.Primitives;
-using Easel.Utilities;
 using Pie;
 using Pie.Utils;
 using Silk.NET.Assimp;
 using Material = Easel.Graphics.Materials.Material;
-using Mesh = Easel.Utilities.Mesh;
+using Mesh = Easel.Graphics.Mesh;
 using Texture = Pie.Texture;
 using TextureType = Silk.NET.Assimp.TextureType;
 

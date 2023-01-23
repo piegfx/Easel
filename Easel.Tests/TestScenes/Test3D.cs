@@ -6,11 +6,10 @@ using Easel.Entities.Components;
 using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
+using Easel.Graphics.Primitives;
 using Easel.GUI;
 using Easel.Math;
-using Easel.Primitives;
 using Easel.Scenes;
-using Easel.Utilities;
 using Pie.Windowing;
 
 namespace Easel.Tests.TestScenes;
@@ -24,6 +23,8 @@ public class Test3D : Scene
         base.Initialize();
 
         //Input.MouseState = MouseState.Locked;
+        
+        Graphics.ResizeGraphics(new Size(1280, 720));
 
         DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
@@ -31,14 +32,16 @@ public class Test3D : Scene
         texture.SamplerState = SamplerState.AnisotropicRepeat;
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
-        Camera.Main.Skybox = new Skybox(Content.Load<EaselTexture>("Skybox"));
+        Bitmap[] bitmaps = Content.Load<EaselTexture>("Skybox").Cubemap;
+        Camera.Main.Skybox = new Skybox(bitmaps[0], bitmaps[1], bitmaps[2], bitmaps[3], bitmaps[4], bitmaps[5]);
         Camera.Main.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(20), 0, 0);
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
-        /*Camera.Main.AddComponent(new NoClipCamera()
+        Camera.Main.AddComponent(new NoClipCamera()
         {
             MoveSpeed = 10
-        });*/
-        //Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new UnlitMaterial(texture))));
+        });
+        Material mat = new StandardMaterial(texture, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.Black, Texture2D.White);
+        Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
         second.Transform.Position = new Vector3(0, 0, -5);
@@ -67,11 +70,7 @@ public class Test3D : Scene
             Position = new Vector3(0, 0, -3)
         });
 
-        //entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), new StandardMaterial(texture, 32)
-        //{
-        //    Tiling = new Vector2(2),
-        //    Color = Color.Orange with { A = 0.5f }
-        //})));
+        entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
         AddEntity("cube", entity);
 
         Entity thingy = new Entity();

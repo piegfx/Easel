@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Easel.Graphics;
 using Easel.Math;
-using Easel.Utilities;
 
 namespace Easel.GUI;
 

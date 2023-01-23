@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Core;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Graphics.Lighting;
 using Easel.Math;
 using Pie;
+using DirectionalLight = Easel.Entities.Components.DirectionalLight;
 
 namespace Easel.Scenes;
 
@@ -139,7 +141,7 @@ public abstract class Scene : IDisposable
             Graphics.Viewport = viewport;
             Graphics.Renderer.Camera = camera.CameraInfo;
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
-                Graphics.Renderer.Perform3DPass(sun?.ShaderDirLight);
+                Graphics.Renderer.Perform3DPass(sun?.InternalLight.ShaderDirLight);
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
         }

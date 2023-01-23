@@ -6,12 +6,11 @@ using System.Reflection;
 using System.Threading;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Core;
 using Easel.Graphics;
-using Easel.Graphics.Renderers;
 using Easel.GUI;
 using Easel.Math;
 using Easel.Scenes;
-using Easel.Utilities;
 using Pie;
 using Pie.Windowing;
 using Monitor = Pie.Windowing.Monitor;
@@ -116,8 +115,7 @@ public class EaselGame : IDisposable
         Logger.Info("\tLogical threads: " + SystemInfo.LogicalThreads);
         Logger.Info("\tOS: " + Environment.OSVersion.VersionString);
         
-
-        _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource("Easel.EaselLogo.png"));
+        _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.EaselLogo.png"));
         
         Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height, _settings.Icon.Data);
 
@@ -160,7 +158,7 @@ public class EaselGame : IDisposable
         Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
 
         Logger.Debug("Creating window...");
-        Window = Window.CreateWindow(settings, api);
+        Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
         System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
         if (size.Width == -1 && size.Height == -1)
             size = Monitor.PrimaryMonitor.VideoMode.Size;
@@ -168,8 +166,8 @@ public class EaselGame : IDisposable
         Window.Visible = _settings.StartVisible;
         
         Logger.Debug("Creating graphics device...");
-        GraphicsInternal = new EaselGraphics(Window, options);
-        GraphicsInternal.Initialize(_settings.RenderOptions);
+        GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
+        Window.Resize += WindowOnResize;
 
         Logger.Debug("Creating audio device...");
         AudioInternal = new AudioDevice(48000, 256);
@@ -298,5 +296,10 @@ public class EaselGame : IDisposable
         //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
         font.Draw(Graphics.SpriteRenderer, 12, metrics, new Vector2(5), Color.White);
         Graphics.SpriteRenderer.End();
+    }
+    
+    private void WindowOnResize(System.Drawing.Size size)
+    {
+        GraphicsInternal.ResizeGraphics((Size) size);
     }
 }

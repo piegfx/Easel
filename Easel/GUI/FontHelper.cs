@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Math;
 using Pie.Freetype;

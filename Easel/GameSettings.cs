@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
-using Easel.Utilities;
 using Pie;
 using Pie.Windowing;
 

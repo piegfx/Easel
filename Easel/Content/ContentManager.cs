@@ -5,10 +5,11 @@ using System.Linq;
 using System.Timers;
 using Easel.Audio;
 using Easel.Content.Localization;
+using Easel.Core;
+using Easel.Data;
 using Easel.Formats;
 using Easel.Graphics;
 using Easel.GUI;
-using Easel.Utilities;
 
 namespace Easel.Content;
 

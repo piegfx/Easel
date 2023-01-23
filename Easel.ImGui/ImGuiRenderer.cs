@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Math;
 using ImGuiNET;

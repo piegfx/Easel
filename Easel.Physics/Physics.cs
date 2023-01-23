@@ -59,7 +59,7 @@ public static class Physics
 
         hit.WorldPosition = cb.CollisionObject.WorldTransform.Translation;
         hit.HitPosition = cb.HitPointWorld;
-        hit.CubeNormal = (Vector3I) normal;
+        //hit.CubeNormal = (Vector3I) normal;
         hit.RealNormal = cb.HitNormalWorld;
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;

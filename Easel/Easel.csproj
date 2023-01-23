@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -12,6 +12,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
+      <ProjectReference Include="..\Easel.Graphics\Easel.Graphics.csproj" />
+      <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
       <ProjectReference Include="..\Pie\Pie.Freetype\Pie.Freetype.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
@@ -20,9 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Silk.NET.Assimp" Version="2.16.0" />
       <PackageReference Include="Silk.NET.SDL" Version="2.16.0" />
-      <PackageReference Include="StbImageSharp" Version="2.27.11" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
 
@@ -37,6 +38,17 @@
       <None Update="mixr.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Graphics\Lighting" />
+      <Folder Include="Graphics\Materials" />
+      <Folder Include="Graphics\Renderers\Structs" />
+      <Folder Include="Graphics\Shaders\Forward" />
+      <Folder Include="Graphics\Shaders\Skybox" />
+      <Folder Include="Graphics\Shaders\SpriteRenderer" />
+      <Folder Include="Primitives" />
+      <Folder Include="Utilities" />
     </ItemGroup>
 
 </Project>

@@ -4,7 +4,6 @@ using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Math;
 using Easel.Scenes;
-using Easel.Utilities;
 
 namespace Easel.Tests.TestScenes;
 

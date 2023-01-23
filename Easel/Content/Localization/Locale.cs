@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using XmlSerializer = Easel.Utilities.XmlSerializer;
+using XmlSerializer = Easel.Data.XmlSerializer;
 
 namespace Easel.Content.Localization;
 

@@ -8,21 +8,21 @@ namespace Easel.Math;
 [StructLayout(LayoutKind.Sequential)]
 public struct Vector4T<T> where T : INumber<T>
 {
-    public static Vector4T<T> Zero => new Vector4T<T>(T.CreateChecked(0));
+    public static Vector4T<T> Zero => new Vector4T<T>(T.Zero);
 
-    public static Vector4T<T> One => new Vector4T<T>(T.CreateChecked(1));
+    public static Vector4T<T> One => new Vector4T<T>(T.One);
 
     public static Vector4T<T> UnitX =>
-        new Vector4T<T>(T.CreateChecked(1), T.CreateChecked(0), T.CreateChecked(0), T.CreateChecked(0));
+        new Vector4T<T>(T.One, T.Zero, T.Zero, T.Zero);
     
     public static Vector4T<T> UnitY =>
-        new Vector4T<T>(T.CreateChecked(0), T.CreateChecked(1), T.CreateChecked(0), T.CreateChecked(0));
+        new Vector4T<T>(T.Zero, T.One, T.Zero, T.Zero);
     
     public static Vector4T<T> UnitZ =>
-        new Vector4T<T>(T.CreateChecked(0), T.CreateChecked(0), T.CreateChecked(1), T.CreateChecked(0));
+        new Vector4T<T>(T.Zero, T.Zero, T.One, T.Zero);
     
     public static Vector4T<T> UnitW =>
-        new Vector4T<T>(T.CreateChecked(0), T.CreateChecked(0), T.CreateChecked(0), T.CreateChecked(1));
+        new Vector4T<T>(T.Zero, T.Zero, T.Zero, T.One);
 
     public T X;
 

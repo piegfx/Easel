@@ -9,13 +9,13 @@ namespace Easel.Math;
 [StructLayout(LayoutKind.Sequential)]
 public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
 {
-    public static Vector2T<T> Zero => new Vector2T<T>(T.CreateChecked(0));
+    public static Vector2T<T> Zero => new Vector2T<T>(T.Zero);
 
-    public static Vector2T<T> One => new Vector2T<T>(T.CreateChecked(1));
+    public static Vector2T<T> One => new Vector2T<T>(T.One);
 
-    public static Vector2T<T> UnitX => new Vector2T<T>(T.CreateChecked(1), T.CreateChecked(0));
+    public static Vector2T<T> UnitX => new Vector2T<T>(T.One, T.Zero);
 
-    public static Vector2T<T> UnitY => new Vector2T<T>(T.CreateChecked(0), T.CreateChecked(1));
+    public static Vector2T<T> UnitY => new Vector2T<T>(T.Zero, T.One);
 
     public T X;
 

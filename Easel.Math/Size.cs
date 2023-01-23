@@ -5,7 +5,7 @@ namespace Easel.Math;
 
 public struct Size<T> : IEquatable<Size<T>> where T : INumber<T>
 {
-    public static readonly Size<T> Zero = new Size<T>(T.CreateChecked(0));
+    public static readonly Size<T> Zero = new Size<T>(T.Zero);
     
     public T Width;
     

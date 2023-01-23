@@ -16,7 +16,7 @@ public class GaussianBlur : UIElement
     public float Radius;
     public int Iterations;
 
-    public GaussianBlur(Position position, Size size, float radius, int iterations) : base(position, size)
+    public GaussianBlur(Position position, Size<int> size, float radius, int iterations) : base(position, size)
     {
         _effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
             "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");

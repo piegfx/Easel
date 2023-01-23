@@ -18,7 +18,7 @@ public class Button : UIElement
 
     public Texture Image;
 
-    public Button(Position position, Size size, string text, uint fontSize = 24, Justification justification = Justification.Center) : base(position, size)
+    public Button(Position position, Size<int> size, string text, uint fontSize = 24, Justification justification = Justification.Center) : base(position, size)
     {
         Text = text;
         FontSize = fontSize;
@@ -40,7 +40,7 @@ public class Button : UIElement
         }
         
         renderer.DrawRectangle(Image ?? Texture2D.White, (Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
-        Size size = Theme.Font.MeasureStringBBCode(FontSize, Text);
+        Size<int> size = Theme.Font.MeasureStringBBCode(FontSize, Text);
 
         int posX = Justification switch
         {

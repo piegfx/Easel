@@ -12,7 +12,7 @@ public struct EaselTexture
 {
     public TextureType Type;
     
-    public Size Size;
+    public Size<int> Size;
 
     public Dictionary<BitmapLayer, Bitmap> Bitmaps;
 
@@ -76,7 +76,7 @@ public struct EaselTexture
 
         TextureType type = (TextureType) reader.ReadByte();
 
-        Size size = new Size(reader.ReadInt32(), reader.ReadInt32());
+        Size<int> size = new Size<int>(reader.ReadInt32(), reader.ReadInt32());
 
         byte[] compData = reader.ReadBytes((int) (reader.BaseStream.Length - reader.BaseStream.Position));
         using MemoryStream compStream = new MemoryStream(compress ? Utils.Decompress(compData) : compData);

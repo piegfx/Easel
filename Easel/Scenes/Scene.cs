@@ -77,7 +77,7 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-        Size size = (Size) EaselGame.Instance.Window.Size;
+        Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
         Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
         camera.Tag = Tags.MainCamera;
         AddEntity("Main Camera", camera);
@@ -121,7 +121,7 @@ public abstract class Scene : IDisposable
             entity.Draw();
         }
 
-        Size framebufferSize = Graphics.Renderer.MainTarget.Size;
+        Size<int> framebufferSize = Graphics.Renderer.MainTarget.Size;
 
         DirectionalLight sun = null;
         Entity[] lights = GetEntitiesWithComponent<DirectionalLight>();

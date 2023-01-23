@@ -24,7 +24,7 @@ public class Test3D : Scene
 
         //Input.MouseState = MouseState.Locked;
         
-        Graphics.ResizeGraphics(new Size(1280, 720));
+        Graphics.ResizeGraphics(new Size<int>(1280, 720));
 
         DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
@@ -80,7 +80,7 @@ public class Test3D : Scene
         UI.Theme.Font = new Font("/home/ollie/Documents/Roboto-Regular.ttf");
         UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
         
-        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter), new Size(300), 0.5f, 12));
+        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter), new Size<int>(300), 0.5f, 12));
     }
 
     protected override void Update()

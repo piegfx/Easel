@@ -5,7 +5,7 @@ namespace Easel.GUI;
 
 public class Panel : UIElement
 {
-    public Panel(Position position, Size size) : base(position, size) { }
+    public Panel(Position position, Size<int> size) : base(position, size) { }
     
     protected internal override void Draw(SpriteRenderer renderer)
     {

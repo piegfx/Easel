@@ -28,7 +28,7 @@ public class Test2D : Scene
         const uint size = 128;
         const string text = "docs.piegfx.com";
         
-        _rt = new RenderTarget(_font.MeasureString(size, text) + new Size(0, 10));
+        _rt = new RenderTarget(_font.MeasureString(size, text) + new Size<int>(0, 10));
         
         Graphics.SetRenderTarget(_rt);
         Graphics.Clear(Color.Transparent);

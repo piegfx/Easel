@@ -24,7 +24,7 @@ public class TestCanvas : Scene
         
         Camera.Main.UseOrtho2D();
 
-        _canvas = new Canvas(new Size(800, 600));
+        _canvas = new Canvas(new Size<int>(800, 600));
         _canvas.Clear(Color.CornflowerBlue);
 
         _texture = new Texture2D(_canvas.ToBitmap());

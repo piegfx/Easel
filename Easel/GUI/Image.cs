@@ -9,7 +9,7 @@ public class Image : UIElement
 {
     public Texture Texture;
 
-    public Image(Position position, Texture texture, Size? size = null) : base(position, size ?? texture.Size)
+    public Image(Position position, Texture texture, Size<int>? size = null) : base(position, size ?? texture.Size)
     {
         Texture = texture;
     }

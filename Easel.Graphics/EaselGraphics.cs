@@ -61,7 +61,7 @@ public class EaselGraphics : IDisposable
         Logging.DebugLog += PieDebug;
         PieGraphics = pieDevice;
 
-        Viewport = new Rectangle(Point.Zero, (Size) pieDevice.Swapchain.Size);
+        Viewport = new Rectangle(Point.Zero, (Size<int>) pieDevice.Swapchain.Size);
         
         Instance = this;
         Disposables = new List<IDisposable>();
@@ -96,7 +96,7 @@ public class EaselGraphics : IDisposable
     public void SetRenderTarget(RenderTarget target)
     {
         PieGraphics.SetFramebuffer(target?.PieBuffer);
-        Viewport = new Rectangle(Point.Zero, target?.Size ?? (Size) PieGraphics.Swapchain.Size);
+        Viewport = new Rectangle(Point.Zero, target?.Size ?? (Size<int>) PieGraphics.Swapchain.Size);
     }
 
     public void Dispose()
@@ -105,9 +105,9 @@ public class EaselGraphics : IDisposable
         Logger.Debug("Graphics disposed.");
     }
     
-    public void ResizeGraphics(Size size)
+    public void ResizeGraphics(Size<int> size)
     {
-        if (size == Size.Zero)
+        if (size == Size<int>.Zero)
             return;
         PieGraphics.ResizeSwapchain((System.Drawing.Size) size);
         SwapchainResized?.Invoke(size);
@@ -121,7 +121,7 @@ public class EaselGraphics : IDisposable
 
     public delegate void OnViewportResized(Rectangle viewport);
     
-    public delegate void OnSwapchainResized(Size size);
+    public delegate void OnSwapchainResized(Size<int> size);
 
     internal static EaselGraphics Instance;
 }

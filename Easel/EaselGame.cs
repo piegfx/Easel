@@ -278,7 +278,7 @@ public class EaselGame : IDisposable
         string metrics = Metrics.GetString();
         GraphicsInternal.SpriteRenderer.Begin();
         Font font = UI.Theme.Font;
-        Size size = font.MeasureString(12, metrics);
+        Size<int> size = font.MeasureString(12, metrics);
         //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
         font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2(5), Color.White);
         Graphics.SpriteRenderer.End();
@@ -286,6 +286,6 @@ public class EaselGame : IDisposable
     
     private void WindowOnResize(System.Drawing.Size size)
     {
-        GraphicsInternal.ResizeGraphics((Size) size);
+        GraphicsInternal.ResizeGraphics((Size<int>) size);
     }
 }

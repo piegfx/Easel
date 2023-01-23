@@ -11,11 +11,11 @@ public class Canvas
 {
     private byte[] _backBuffer;
 
-    public readonly Size Size;
+    public readonly Size<int> Size;
 
     public Rectangle Scissor;
 
-    public Canvas(Size size)
+    public Canvas(Size<int> size)
     {
         _backBuffer = new byte[size.Width * size.Height * 4];
 
@@ -23,7 +23,7 @@ public class Canvas
         Scissor = new Rectangle(Point.Zero, Size);
     }
 
-    private Canvas(Size size, byte[] data)
+    private Canvas(Size<int> size, byte[] data)
     {
         Size = size;
         _backBuffer = data;

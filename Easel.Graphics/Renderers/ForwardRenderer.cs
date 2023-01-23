@@ -21,7 +21,7 @@ public sealed class ForwardRenderer : IRenderer
 
     private DepthState _depthState;
 
-    public ForwardRenderer(EaselGraphics graphics, Size initialResolution)
+    public ForwardRenderer(EaselGraphics graphics, Size<int> initialResolution)
     {
         _opaques = new List<TransformedRenderable>();
         _opaqueSprites = new List<Sprite>();
@@ -41,7 +41,7 @@ public sealed class ForwardRenderer : IRenderer
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
     }
 
-    private void GraphicsOnSwapchainResized(Size size)
+    private void GraphicsOnSwapchainResized(Size<int> size)
     {
         MainTarget.Dispose();
         MainTarget = new RenderTarget(size);

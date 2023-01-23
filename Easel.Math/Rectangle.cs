@@ -14,7 +14,7 @@ public struct Rectangle : IEquatable<Rectangle>
 
     public Point Location => new Point(X, Y);
 
-    public Size Size => new Size(Width, Height);
+    public Size<int> Size => new Size<int>(Width, Height);
 
     public int Left => X;
 
@@ -32,7 +32,7 @@ public struct Rectangle : IEquatable<Rectangle>
         Height = height;
     }
 
-    public Rectangle(Point location, Size size) : this(location.X, location.Y, size.Width, size.Height) { }
+    public Rectangle(Point location, Size<int> size) : this(location.X, location.Y, size.Width, size.Height) { }
 
     public bool Equals(Rectangle other)
     {

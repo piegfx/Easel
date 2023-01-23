@@ -26,7 +26,7 @@ public static class Data
     {
         if (!LoadConfig<T>())
         {
-            settings.Size = new Size(1280, 720);
+            settings.Size = new Size<int>(1280, 720);
             settings.VSync = true;
 
             return false;

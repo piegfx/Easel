@@ -10,7 +10,7 @@ public class Label : UIElement
 
     public uint FontSize;
     
-    public Label(Position position, string text, uint fontSize) : base(position, Size.Zero)
+    public Label(Position position, string text, uint fontSize) : base(position, Size<int>.Zero)
     {
         Size = Theme.Font.MeasureStringBBCode(fontSize, text);
         Text = text;

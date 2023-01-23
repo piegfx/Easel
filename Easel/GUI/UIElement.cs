@@ -12,7 +12,7 @@ public abstract class UIElement
     
     public Position Position;
 
-    public Size Size;
+    public Size<int> Size;
     
     public bool IsClicked;
 
@@ -26,7 +26,7 @@ public abstract class UIElement
 
     public Tooltip Tooltip;
 
-    protected UIElement(Position position, Size size)
+    protected UIElement(Position position, Size<int> size)
     {
         Position = position;
         Size = size;

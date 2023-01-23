@@ -128,7 +128,7 @@ public class Font : IDisposable
         }
     }
 
-    public Size MeasureString(uint size, string text)
+    public Size<int> MeasureString(uint size, string text)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -146,7 +146,7 @@ public class Font : IDisposable
         }
 
         int pos = 0;
-        Size measuredSize = new Size(0, largestChar);
+        Size<int> measuredSize = new Size<int>(0, largestChar);
 
         int i = 0;
         foreach (char c in text)
@@ -169,7 +169,7 @@ public class Font : IDisposable
         return measuredSize;
     }
 
-    public Size MeasureStringBBCode(uint size, string text)
+    public Size<int> MeasureStringBBCode(uint size, string text)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -187,7 +187,7 @@ public class Font : IDisposable
         }
 
         int pos = 0;
-        Size measuredSize = new Size(0, largestChar);
+        Size<int> measuredSize = new Size<int>(0, largestChar);
 
         foreach (BBCodeInstruction instruction in BBCodeParser.Parse(text))
         {

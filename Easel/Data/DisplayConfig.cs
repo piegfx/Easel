@@ -4,7 +4,7 @@ namespace Easel.Configs;
 
 public struct DisplayConfig
 {
-    public Size Size;
+    public Size<int> Size;
 
     public bool Fullscreen;
 

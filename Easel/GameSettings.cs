@@ -15,7 +15,7 @@ public struct GameSettings
     /// <summary>
     /// The starting size (resolution) of the game view, in pixels. (Default: 1280x720)
     /// </summary>
-    public Size Size;
+    public Size<int> Size;
 
     /// <summary>
     /// If enabled, the window will start in fullscreen mode at the given <see cref="Size"/>. (Default: false)
@@ -81,7 +81,7 @@ public struct GameSettings
     /// </summary>
     public RenderOptions RenderOptions;
 
-    public GameSettings(Size size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
+    public GameSettings(Size<int> size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
         GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
         RenderOptions renderOptions)
     {
@@ -104,7 +104,7 @@ public struct GameSettings
     /// </summary>
     public GameSettings()
     {
-        Size = new Size(1280, 720);
+        Size = new Size<int>(1280, 720);
         Fullscreen = false;
 
         Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
@@ -121,7 +121,7 @@ public struct GameSettings
 
     public static GameSettings StartFullscreen => new GameSettings()
     {
-        Size = new Size(-1, -1),
+        Size = new Size<int>(-1, -1),
         Fullscreen = true
     };
 }

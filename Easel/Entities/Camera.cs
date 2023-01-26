@@ -147,6 +147,8 @@ public class Camera : Entity
 
     #endregion
 
+    public Frustum<float> Frustum => new Frustum<float>((Matrix<float>) (ProjectionMatrix * ViewMatrix));
+
     /// <summary>
     /// Create a new perspective camera for use in 3D scenes.
     /// </summary>

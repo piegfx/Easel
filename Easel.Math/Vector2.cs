@@ -106,6 +106,18 @@ public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
 public static class Vector2T
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Magnitude<T>(Vector2T<T> vector) where T : INumber<T>, IRootFunctions<T>
+    {
+        return T.Sqrt(MagnitudeSquared(vector));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T MagnitudeSquared<T>(Vector2T<T> vector) where T : INumber<T>
+    {
+        return Dot(vector, vector);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Dot<T>(Vector2T<T> left, Vector2T<T> right) where T : INumber<T>
     {
         return T.CreateChecked(left.X * right.X + left.Y * right.Y);

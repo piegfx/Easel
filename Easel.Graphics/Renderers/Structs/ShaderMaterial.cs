@@ -11,9 +11,9 @@ namespace Easel.Graphics.Renderers.Structs;
 [StructLayout(LayoutKind.Sequential)]
 public struct ShaderMaterial
 {
-    public Color Albedo;
-
     public Vector4 Tiling;
+    
+    public Color Albedo;
 
     public float Metallic;
 

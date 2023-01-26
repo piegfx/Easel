@@ -36,55 +36,20 @@ public static class EaselMath
     /// <remarks>The <paramref name="multiplier"/> value can be outside of the 0-1 range, you will just get numbers larger
     /// or smaller than the max/min values respectively.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Lerp(float min, float max, float multiplier) => multiplier * (max - min) + min;
-    
-    /// <summary>
-    /// <b>L</b>inearly int<b>erp</b>olate between two <see langword="float"/> values, from the given <b>normalized</b>
-    /// multiplier value (aka 0 = min, 1 = max)
-    /// </summary>
-    /// <param name="min">The minimum value.</param>
-    /// <param name="max">The maximum value.</param>
-    /// <param name="multiplier">The normalized multiplier</param>
-    /// <returns>The interpolated value.</returns>
-    /// <remarks>The <paramref name="multiplier"/> value can be outside of the 0-1 range, you will just get numbers larger
-    /// or smaller than the max/min values respectively.</remarks>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Lerp(double min, double max, double multiplier) => multiplier * (max - min) + min;
-    
-    /// <summary>
-    /// Clamp the given value between the min and max values.
-    /// </summary>
-    /// <param name="value">The value to clamp.</param>
-    /// <param name="min">The minimum value.</param>
-    /// <param name="max">The maximum value.</param>
-    /// <returns>The clamped value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Clamp(float value, float min, float max) => value <= min ? min : value >= max ? max : value;
-    
-    /// <summary>
-    /// Clamp the given value between the min and max values.
-    /// </summary>
-    /// <param name="value">The value to clamp.</param>
-    /// <param name="min">The minimum value.</param>
-    /// <param name="max">The maximum value.</param>
-    /// <returns>The clamped value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Clamp(int value, int min, int max) => value <= min ? min : value >= max ? max : value;
+    public static T Lerp<T>(T min, T max, T multiplier) where T : INumber<T> => multiplier * (max - min) + min;
 
     /// <summary>
-    /// Similar to <see cref="Clamp(int,int,int)"/>, the given value cannot exceed the bounds of the min and max values.
-    /// If it does, it will wrap around back to the other value. For example, if max is exceeded, the value will wrap
-    /// around back to min. This works both ways.
+    /// Clamp the given value between the min and max values.
     /// </summary>
-    /// <param name="value">The value to wrap.</param>
-    /// <param name="min">The minimum value (inclusive).</param>
-    /// <param name="max">The maximum value (inclusive).</param>
-    /// <returns></returns>
+    /// <param name="value">The value to clamp.</param>
+    /// <param name="min">The minimum value.</param>
+    /// <param name="max">The maximum value.</param>
+    /// <returns>The clamped value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Wrap(int value, int min, int max) => value < min ? max : value > max ? min : value;
-    
+    public static T Clamp<T>(T value, T min, T max) where T : INumber<T> => value <= min ? min : value >= max ? max : value;
+
     /// <summary>
-    /// Similar to <see cref="Clamp(float,float,float)"/>, the given value cannot exceed the bounds of the min and max values.
+    /// Similar to <see cref="Clamp{T}"/>, the given value cannot exceed the bounds of the min and max values.
     /// If it does, it will wrap around back to the other value. For example, if max is exceeded, the value will wrap
     /// around back to min. This works both ways.
     /// </summary>
@@ -93,7 +58,7 @@ public static class EaselMath
     /// <param name="max">The maximum value (inclusive).</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Wrap(float value, float min, float max) => value < min ? max : value > max ? min : value;
+    public static T Wrap<T>(T value, T min, T max) where T : INumber<T> => value < min ? max : value > max ? min : value;
 
     /// <summary>
     /// Calculates a position along a quadratic bezier curve that outputs a value based on the given variable for t
@@ -109,10 +74,9 @@ public static class EaselMath
     /// <param name="p2">A <see cref="Vector2"/> representing the third control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 QuadraticBezierCurve(float t, Vector2 p0, Vector2 p1, Vector2 p2) {
-
-        return p1 + ((1 - t) * (1 - t)) * (p0 - p1) + (t * t) * (p2 - p1);
-
+    public static Vector2T<T> QuadraticBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2) where T : INumber<T> 
+    {
+        return p1 + ((T.One - t) * (T.One - t)) * (p0 - p1) + (t * t) * (p2 - p1);
     }
 
     /// <summary>
@@ -131,9 +95,9 @@ public static class EaselMath
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 CubicBezierCurve(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+    public static Vector2T<T> CubicBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>
     {
-        return (1 - t) * QuadraticBezierCurve(t, p0, p1, p2) + t * QuadraticBezierCurve(t, p1, p2, p3);
+        return (T.One - t) * QuadraticBezierCurve(t, p0, p1, p2) + t * QuadraticBezierCurve(t, p1, p2, p3);
     }
 
     /// <summary>
@@ -151,9 +115,9 @@ public static class EaselMath
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 ExplicitCubicBezierCurve(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+    public static Vector2T<T> ExplicitCubicBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>
     {
-        return ((1 - t) * (1 - t) * (1 - t)) * p0 + 3 * ((1 - t) * (1 - t)) * t * p1 + 3 * ((1 - t) * (1 - t)) * p2 + (t * t * t) * p3;
+        return ((T.One - t) * (T.One - t) * (T.One - t)) * p0 + T.CreateChecked(3) * ((T.One - t) * (T.One - t)) * t * p1 + T.CreateChecked(3) * ((T.One - t) * (T.One - t)) * p2 + (t * t * t) * p3;
     }
 
     /// <summary>
@@ -165,12 +129,12 @@ public static class EaselMath
     /// <param name="p2">A <see cref="Vector2"/> representing the third control point of the curve.</param>
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>An estimated arclength of the bezier curve.</returns>
-    public static float GetBezierArcLength(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+    public static T GetBezierArcLength<T>(Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>, IRootFunctions<T>
     {
-        var chord = (p3 - p0).Length();
-        var controlNet = (p0 - p1).Length() + (p2 - p1).Length() + (p3 - p2).Length();
+        T chord = Vector2T.Magnitude(p3 - p0);
+        T controlNet = Vector2T.Magnitude(p0 - p1) + Vector2T.Magnitude(p2 - p1) + Vector2T.Magnitude(p3 - p2);
 
-        return (controlNet + chord) / 2;
+        return (controlNet + chord) / T.CreateChecked(2);
     }
 
     /// <summary>
@@ -184,7 +148,7 @@ public static class EaselMath
     /// <param name="point">The given point within the interval that is to be normalized.</param>
     /// <returns>A normalized point representing the given point in the interval.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float InverseLerp(float min, float max, float point)
+    public static T InverseLerp<T>(T min, T max, T point) where T : INumber<T>
     {
         return (point - min) / (max - min);
     }

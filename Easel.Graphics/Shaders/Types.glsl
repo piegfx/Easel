@@ -3,8 +3,9 @@
 
 struct Material
 {
-    vec4 albedo;
     vec4 tiling;
+    
+    vec4 albedo;
     float metallic;
     float roughness;
     float ao;

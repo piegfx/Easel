@@ -43,7 +43,7 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
         Y = y;
         Z = z;
     }
-    
+
     #region Operators
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

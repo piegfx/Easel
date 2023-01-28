@@ -13,5 +13,5 @@ layout (binding = 0) uniform CameraInfo
 void main() 
 {
     frag_texCoords = aPosition;
-    gl_Position = uProjection * uView * vec4(aPosition, 1.0);
+    gl_Position = (uProjection * uView * vec4(aPosition, 1.0)).xyww;
 }

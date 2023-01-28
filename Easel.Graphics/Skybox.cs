@@ -53,7 +53,7 @@ public class Skybox : IDisposable
 
         _cameraBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
         
-        _depthState = _device.CreateDepthState(new DepthStateDescription(true, false, DepthComparison.LessEqual));
+        _depthState = _device.CreateDepthState(DepthStateDescription.LessEqual);
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
         _shader = _device.CreateCrossPlatformShader(

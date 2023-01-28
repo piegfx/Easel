@@ -88,7 +88,12 @@ public sealed class ForwardRenderer : IRenderer
     {
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
         
-        Camera.Skybox?.Draw(Camera.Projection, Camera.View);
+        // First perform depth-only shadow pass
+        
+        
+        
+        // Then perform main color pass.
+        
         _projViewModel.Projection = Camera.Projection;
         _projViewModel.View = Camera.View;
 
@@ -101,6 +106,9 @@ public sealed class ForwardRenderer : IRenderer
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
         foreach (TransformedRenderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, Camera.Position)))
             DrawRenderable(device, renderable);
+        
+        // Lastly draw the skybox.
+        Camera.Skybox?.Draw(Camera.Projection, Camera.View);
     }
 
     private void DrawRenderable(GraphicsDevice device, in TransformedRenderable renderable)

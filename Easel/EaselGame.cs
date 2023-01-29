@@ -234,6 +234,7 @@ public class EaselGame : IDisposable
         _actions.Clear();
         
         SceneManager.Draw();
+        UI.Draw(GraphicsInternal);
     }
 
     /// <summary>

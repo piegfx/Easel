@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Math;
 
@@ -15,11 +17,17 @@ public static class UI
 
     public static Tooltip CurrentTooltip;
 
+    internal static Font DefaultFont;
+
     static UI()
     {
         _elements = new Dictionary<string, UIElement>();
 
-        Theme = new UITheme();
+        DefaultFont = new Font(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.Roboto-Regular.ttf"));
+        Theme = new UITheme()
+        {
+            Font = DefaultFont
+        };
     }
 
     public static void Add(string id, UIElement element)

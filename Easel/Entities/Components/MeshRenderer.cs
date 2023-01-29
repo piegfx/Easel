@@ -41,7 +41,7 @@ public class MeshRenderer : Component
         base.Draw();
         Matrix4x4 world = Transform.TransformMatrix *
                           (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
-        Graphics.Renderer.AddOpaque(_renderable, world);
+        Graphics.Renderer.Draw(_renderable, world);
     }
 
     public override void Dispose()

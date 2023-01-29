@@ -110,7 +110,6 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
-        Graphics.Renderer.Camera = ((Camera) cameras[0]).CameraInfo;
         Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
@@ -142,9 +141,8 @@ public abstract class Scene : IDisposable
             viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
 
             Graphics.Viewport = viewport;
-            Graphics.Renderer.Camera = camera.CameraInfo;
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
-                Graphics.Renderer.Perform3DPass();
+                Graphics.Renderer.Perform3DPass(camera.CameraInfo);
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
         }

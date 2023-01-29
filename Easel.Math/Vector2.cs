@@ -47,6 +47,12 @@ public struct Vector2<T> : IEquatable<Vector2<T>> where T : INumber<T>
         new Vector2<T>(left.X - right.X, left.Y - right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2<T> operator -(Vector2<T> negate)
+    {
+        return new Vector2<T>(-negate.X, -negate.Y);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2<T> operator *(Vector2<T> left, Vector2<T> right) =>
         new Vector2<T>(left.X * right.X, left.Y * right.Y);
 

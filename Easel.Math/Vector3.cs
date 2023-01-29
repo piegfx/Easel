@@ -61,6 +61,12 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
         new Vector3T<T>(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector3T<T> operator -(Vector3T<T> negate)
+    {
+        return new Vector3T<T>(-negate.X, -negate.Y, -negate.Z);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3T<T> operator *(Vector3T<T> left, Vector3T<T> right) =>
         new Vector3T<T>(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
 

@@ -16,15 +16,13 @@ namespace Easel.Tests.TestScenes;
 
 public class Test3D : Scene
 {
-    private Font _font;
-    
     protected override void Initialize()
     {
         base.Initialize();
 
         //Input.MouseState = MouseState.Locked;
         
-        Graphics.ResizeGraphics(new Size<int>(1280, 720));
+        //Graphics.ResizeGraphics(new Size<int>(1280, 720));
 
         DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
@@ -76,11 +74,10 @@ public class Test3D : Scene
         Entity thingy = new Entity();
         thingy.AddComponent(new Sprite(texture));
         AddEntity(thingy);
-
-        UI.Theme.Font = new Font("/home/ollie/Documents/Roboto-Regular.ttf");
+        
         UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
         
-        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter), new Size<int>(300), 0.5f, 12));
+        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2T<int>(-150, 0)), new Size<int>(300), 0.9f, 12));
     }
 
     protected override void Update()

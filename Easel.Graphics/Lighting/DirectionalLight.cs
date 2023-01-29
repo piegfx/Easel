@@ -27,13 +27,12 @@ public struct DirectionalLight
     
     public Color Color;
 
-    public bool CastShadows;
+    //public ShadowMap
 
     public DirectionalLight(Vector2 direction, Color color, bool castShadows = true)
     {
         Direction = direction;
         Color = color;
-        CastShadows = castShadows;
     }
 
     public ShaderDirLight ShaderDirLight => new ShaderDirLight()

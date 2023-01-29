@@ -2,17 +2,22 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
 public struct Color
 {
+    [XmlAttribute]
     public float R;
 
+    [XmlAttribute]
     public float G;
 
+    [XmlAttribute]
     public float B;
 
+    [XmlAttribute]
     public float A;
 
     public byte Rb => (byte) (R * 255);

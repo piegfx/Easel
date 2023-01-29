@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
@@ -7,8 +8,10 @@ public struct Size<T> : IEquatable<Size<T>> where T : INumber<T>
 {
     public static readonly Size<T> Zero = new Size<T>(T.Zero);
     
+    [XmlAttribute]
     public T Width;
     
+    [XmlAttribute]
     public T Height;
 
     public Size(T width, T height)

@@ -1,16 +1,21 @@
 using System;
 using System.Numerics;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
 public struct Rectangle<T> : IEquatable<Rectangle<T>> where T : INumber<T>
 {
+    [XmlAttribute]
     public T X;
     
+    [XmlAttribute]
     public T Y;
     
+    [XmlAttribute]
     public T Width;
     
+    [XmlAttribute]
     public T Height;
 
     public Vector2<T> Location => new Vector2<T>(X, Y);

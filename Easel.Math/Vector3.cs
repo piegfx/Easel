@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
@@ -19,8 +20,13 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
 
     public static Vector3T<T> UnitZ => new Vector3T<T>(T.Zero, T.Zero, T.One);
     
+    [XmlAttribute]
     public T X;
+    
+    [XmlAttribute]
     public T Y;
+    
+    [XmlAttribute]
     public T Z;
 
     public Vector3T(T scalar)

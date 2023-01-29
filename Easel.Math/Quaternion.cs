@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
@@ -8,12 +9,16 @@ public struct QuaternionT<T> where T : INumber<T>
 {
     public static QuaternionT<T> Identity => new QuaternionT<T>(T.Zero, T.Zero, T.Zero, T.One);
 
+    [XmlAttribute]
     public T X;
 
+    [XmlAttribute]
     public T Y;
 
+    [XmlAttribute]
     public T Z;
 
+    [XmlAttribute]
     public T W;
 
     public QuaternionT(T x, T y, T z, T w)

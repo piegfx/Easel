@@ -113,9 +113,13 @@ public class EaselGame : IDisposable
         
         Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height, _settings.Icon.Data);
 
+        System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
+        if (size.Width == -1 && size.Height == -1)
+            size = Monitor.PrimaryMonitor.VideoMode.Size;
+        
         WindowSettings settings = new WindowSettings()
         {
-            Size = new System.Drawing.Size(1, 1),
+            Size = size,
             Title = _settings.Title,
             Border = _settings.Border,
             EventDriven = false,
@@ -153,9 +157,6 @@ public class EaselGame : IDisposable
 
         Logger.Debug("Creating window...");
         Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
-        System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
-        if (size.Width == -1 && size.Height == -1)
-            size = Monitor.PrimaryMonitor.VideoMode.Size;
         Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
         Window.Visible = _settings.StartVisible;
         

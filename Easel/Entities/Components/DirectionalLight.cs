@@ -7,7 +7,7 @@ public class DirectionalLight : Component
 {
     internal Graphics.Lighting.DirectionalLight InternalLight;
 
-    public Vector2 Direction
+    public Vector2<float> Direction
     {
         get => InternalLight.Direction;
         set => InternalLight.Direction = value;
@@ -19,7 +19,7 @@ public class DirectionalLight : Component
         set => InternalLight.Color = value;
     }
 
-    public DirectionalLight(Vector2 direction, Color color)
+    public DirectionalLight(Vector2<float> direction, Color color)
     {
         InternalLight = new Graphics.Lighting.DirectionalLight(direction, color);
     }

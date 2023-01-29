@@ -40,23 +40,23 @@ public class GaussianBlur : UIElement
         renderer.End();
         
         graphics.SetRenderTarget(_readBuffer);
-        graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, graphics.Renderer.MainTarget.Size);
+        graphics.Viewport = new Rectangle<int>(Vector2<int>.Zero, graphics.Renderer.MainTarget.Size);
         graphics.Clear(Color.CornflowerBlue);
         renderer.Begin();
-        renderer.Draw(rt, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
+        renderer.Draw(rt, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
         renderer.End();
         graphics.SetRenderTarget(null);
 
         for (int i = 0; i < Iterations; i++)
         {
             float radius = (Iterations - i - 1) * Radius;
-            Vector2 direction = i % 2 == 0 ? new Vector2(radius, 0) : new Vector2(0, radius);
+            Vector2<float> direction = i % 2 == 0 ? new Vector2<float>(radius, 0) : new Vector2<float>(0, radius);
             
             graphics.SetRenderTarget(_writeBuffer);
             renderer.Begin(effect: _effect);
 
-            renderer.Draw(_readBuffer, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One,
-                meta1: new Vector4(direction, graphics.Renderer.MainTarget.Size.Width, graphics.Renderer.MainTarget.Size.Height));
+            renderer.Draw(_readBuffer, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One,
+                meta1: new Vector4((System.Numerics.Vector2) direction, graphics.Renderer.MainTarget.Size.Width, graphics.Renderer.MainTarget.Size.Height));
             
             renderer.End();
             graphics.SetRenderTarget(null);
@@ -66,7 +66,7 @@ public class GaussianBlur : UIElement
         renderer.Begin();
 
         // TODO: Fix whatever the heck is going on here, I just have no idea
-        renderer.Draw(_readBuffer, CalculatedScreenPos, new Rectangle<int>(CalculatedScreenPos, Size), Color.White,
-            0, Vector2.Zero, Vector2.One);
+        renderer.Draw(_readBuffer, (Vector2<float>) CalculatedScreenPos, new Rectangle<int>(CalculatedScreenPos, Size), Color.White,
+            0, Vector2<float>.Zero, Vector2<float>.One);
     }
 }

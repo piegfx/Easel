@@ -36,7 +36,7 @@ public static class FontHelper
         byte[] initialData = new byte[width * height * 4];
         Texture2D texture = new Texture2D(width, height, initialData, autoDispose: false);
         Dictionary<char, Charmap.Character> characters = new Dictionary<char, Charmap.Character>();
-        Vector2T<int> pos = Vector2T<int>.Zero;
+        Vector2<int> pos = Vector2<int>.Zero;
         for (char c = rangeMin; c < rangeMax; c++)
         {
             AddCharacter(face, c, ref pos, ref texture, ref characters, padding);
@@ -50,7 +50,7 @@ public static class FontHelper
         return new Charmap(texture, characters);
     }
 
-    private static void AddCharacter(Face face, char c, ref Vector2T<int> pos, ref Texture2D texture, ref Dictionary<char, Charmap.Character> characters, int padding)
+    private static void AddCharacter(Face face, char c, ref Vector2<int> pos, ref Texture2D texture, ref Dictionary<char, Charmap.Character> characters, int padding)
     {
         Character chr = face.Characters[c];
         if (pos.X + chr.Width >= texture.Size.Width)
@@ -64,7 +64,7 @@ public static class FontHelper
         characters.Add(c, new Charmap.Character()
         {
             Source = new Rectangle<int>(pos.X, pos.Y, chr.Width, chr.Height),
-            Bearing = new Vector2T<int>(chr.BitmapLeft, chr.BitmapTop),
+            Bearing = new Vector2<int>(chr.BitmapLeft, chr.BitmapTop),
             Advance = chr.Advance
         });
         pos.X += chr.Advance + padding;

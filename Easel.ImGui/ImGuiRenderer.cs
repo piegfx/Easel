@@ -36,7 +36,7 @@ public class ImGuiRenderer : IDisposable
 
     private Texture _fontTexture;
 
-    public Vector2 Scale;
+    public Vector2<float> Scale;
 
     private readonly List<char> _pressedChars;
 
@@ -51,7 +51,7 @@ public class ImGuiRenderer : IDisposable
 
     public ImGuiRenderer()
     {
-        Scale = Vector2.One;
+        Scale = Vector2<float>.One;
         _texture2Ds = new List<Texture>();
 
         EaselGraphics graphics = EaselGame.Instance.Graphics;
@@ -190,8 +190,8 @@ void main()
     private void SetPerFrameImGuiData(float deltaTime)
     {
         ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
-        io.DisplaySize = new Vector2(_windowWidth / Scale.X, _windowHeight / Scale.Y);
-        io.DisplayFramebufferScale = Scale;
+        io.DisplaySize = new System.Numerics.Vector2(_windowWidth / Scale.X, _windowHeight / Scale.Y);
+        io.DisplayFramebufferScale = (System.Numerics.Vector2) Scale;
         io.DeltaTime = deltaTime;
     }
 
@@ -203,7 +203,7 @@ void main()
         io.MouseDown[1] = Input.MouseButtonDown(MouseButton.Right);
         io.MouseDown[2] = Input.MouseButtonDown(MouseButton.Middle);
 
-        io.MousePos = Input.MousePosition / Scale;
+        io.MousePos = (System.Numerics.Vector2) (Input.MousePosition / Scale);
 
         io.MouseWheel = Input.ScrollWheelDelta.Y;
         io.MouseWheelH = Input.ScrollWheelDelta.X;

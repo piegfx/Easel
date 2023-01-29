@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Easel.Math;
 using Pie.Windowing;
 using Silk.NET.GLFW;
 using MouseButton = Pie.Windowing.MouseButton;
@@ -92,12 +93,12 @@ public static class Input
     /// <summary>
     /// Get the current mouse position relative to the view (top left = 0, 0)
     /// </summary>
-    public static Vector2 MousePosition { get; private set; }
+    public static Vector2<float> MousePosition { get; private set; }
     
     /// <summary>
     /// Returns the number of pixels the mouse has moved since the last frame.
     /// </summary>
-    public static Vector2 DeltaMousePosition { get; private set; }
+    public static Vector2<float> DeltaMousePosition { get; private set; }
 
     private static MouseState _currentMouseState;
     private static bool _mouseStateChanged;
@@ -115,7 +116,7 @@ public static class Input
         }
     }
     
-    public static Vector2 ScrollWheelDelta { get; private set; }
+    public static Vector2<float> ScrollWheelDelta { get; private set; }
 
     internal static void Initialize(Window window)
     {
@@ -126,7 +127,7 @@ public static class Input
         window.Scroll += WindowOnScroll;
 
         InputState state = window.ProcessEvents();
-        MousePosition = state.MousePosition;
+        MousePosition = (Vector2<float>) state.MousePosition;
     }
 
     internal static void Update(Window window)
@@ -134,11 +135,11 @@ public static class Input
         _newKeys.Clear();
         _newMouseButtons.Clear();
         
-        ScrollWheelDelta = Vector2.Zero;
+        ScrollWheelDelta = Vector2<float>.Zero;
 
         InputState state = window.ProcessEvents();
-        DeltaMousePosition = state.MousePosition - MousePosition;
-        MousePosition = state.MousePosition;
+        DeltaMousePosition = (Vector2<float>) state.MousePosition - MousePosition;
+        MousePosition = (Vector2<float>) state.MousePosition;
 
         if (_mouseStateChanged)
         {
@@ -171,8 +172,8 @@ public static class Input
         _newMouseButtons.Remove(button);
     }
     
-    private static void WindowOnScroll(Vector2 scroll)
+    private static void WindowOnScroll(System.Numerics.Vector2 scroll)
     {
-        ScrollWheelDelta += scroll;
+        ScrollWheelDelta += (Vector2<float>) scroll;
     }
 }

@@ -42,9 +42,9 @@ public static class Utils
         return new Vector3(yaw, pitch, roll);
     }
 
-    public static Vector2 ToVector2(this Vector3 vector3)
+    public static System.Numerics.Vector2 ToVector2(this Vector3 vector3)
     {
-        return new Vector2(vector3.X, vector3.Y);
+        return new System.Numerics.Vector2(vector3.X, vector3.Y);
     }
 
     public static Matrix4x4 To3x3Matrix(this Matrix4x4 matrix)

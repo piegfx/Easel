@@ -80,7 +80,7 @@ public sealed class ForwardRenderer : IRenderer
         
         graphics.Clear(Color.Black);
         graphics.SpriteRenderer.Begin();
-        graphics.SpriteRenderer.Draw(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
+        graphics.SpriteRenderer.Draw(MainTarget, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
         graphics.SpriteRenderer.End();
     }
 
@@ -143,7 +143,7 @@ public sealed class ForwardRenderer : IRenderer
         for (int i = 0; i < _opaqueSprites.Count; i++)
         {
             Sprite sprite = _opaqueSprites[i];
-            graphics.SpriteRenderer.Draw(sprite.Texture, new Vector2(sprite.Position.X, sprite.Position.Y),
+            graphics.SpriteRenderer.Draw(sprite.Texture, new Vector2<float>(sprite.Position.X, sprite.Position.Y),
                 sprite.Source, sprite.Tint, sprite.Rotation, sprite.Origin, sprite.Scale, sprite.Flip);
         }
         

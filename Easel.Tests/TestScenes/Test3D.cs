@@ -77,7 +77,7 @@ public class Test3D : Scene
         
         UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
         
-        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2T<int>(-150, 0)), new Size<int>(300), 0.9f, 12));
+        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2<int>(-150, 0)), new Size<int>(300), 0.9f, 12));
     }
 
     protected override void Update()

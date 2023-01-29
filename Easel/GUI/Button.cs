@@ -3,6 +3,7 @@ using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
+using Vector2 = Easel.Math.Vector2;
 
 namespace Easel.GUI;
 
@@ -12,7 +13,7 @@ public class Button : UIElement
     
     public uint FontSize;
 
-    public Vector2T<int> TextOffset;
+    public Vector2<int> TextOffset;
 
     public Justification Justification;
 
@@ -36,10 +37,10 @@ public class Button : UIElement
         if (Theme.DropShadow.HasValue)
         {
             DropShadow shadow = Theme.DropShadow.Value;
-            renderer.DrawRectangle((Vector2) CalculatedScreenPos + shadow.Offset, Size, 0, Theme.BorderRadius, shadow.Color, Color.Transparent, 0, Vector2.Zero);
+            renderer.DrawRectangle((Vector2<float>) CalculatedScreenPos + shadow.Offset, Size, 0, Theme.BorderRadius, shadow.Color, Color.Transparent, 0, Vector2<float>.Zero);
         }
         
-        renderer.DrawRectangle(Image ?? Texture2D.White, (Vector2) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2.Zero);
+        renderer.DrawRectangle(Image ?? Texture2D.White, (Vector2<float>) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2<float>.Zero);
         Size<int> size = Theme.Font.MeasureStringBBCode(FontSize, Text);
 
         int posX = Justification switch
@@ -49,6 +50,6 @@ public class Button : UIElement
             Justification.Right => CalculatedScreenPos.X + Size.Width - size.Width,
             _ => throw new ArgumentOutOfRangeException()
         };
-        Theme.Font.DrawBBCode(renderer, FontSize, Text, new Vector2(posX, CalculatedScreenPos.Y + Size.Height / 2 - size.Height / 2) + (Vector2) TextOffset, Theme.FontColor);
+        Theme.Font.DrawBBCode(renderer, FontSize, Text, new Vector2<int>(posX, CalculatedScreenPos.Y + Size.Height / 2 - size.Height / 2) + TextOffset, Theme.FontColor);
     }
 }

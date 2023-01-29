@@ -29,7 +29,7 @@ public class Charmap : IDisposable
     public struct Character
     {
         public Rectangle<int> Source;
-        public Vector2T<int> Bearing;
+        public Vector2<int> Bearing;
         public int Advance;
     }
 

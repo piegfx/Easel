@@ -83,7 +83,7 @@ public abstract class Scene : IDisposable
         AddEntity("Main Camera", camera);
 
         Entity directionalLight = new Entity();
-        directionalLight.AddComponent(new DirectionalLight(new Vector2(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
+        directionalLight.AddComponent(new DirectionalLight(new Vector2<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
             Color.White));
         AddEntity("Sun", directionalLight);
     }

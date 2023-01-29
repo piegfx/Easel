@@ -7,27 +7,27 @@ using System.Runtime.InteropServices;
 namespace Easel.Math;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
+public struct Vector2<T> : IEquatable<Vector2<T>> where T : INumber<T>
 {
-    public static Vector2T<T> Zero => new Vector2T<T>(T.Zero);
+    public static Vector2<T> Zero => new Vector2<T>(T.Zero);
 
-    public static Vector2T<T> One => new Vector2T<T>(T.One);
+    public static Vector2<T> One => new Vector2<T>(T.One);
 
-    public static Vector2T<T> UnitX => new Vector2T<T>(T.One, T.Zero);
+    public static Vector2<T> UnitX => new Vector2<T>(T.One, T.Zero);
 
-    public static Vector2T<T> UnitY => new Vector2T<T>(T.Zero, T.One);
+    public static Vector2<T> UnitY => new Vector2<T>(T.Zero, T.One);
 
     public T X;
 
     public T Y;
 
-    public Vector2T(T scalar)
+    public Vector2(T scalar)
     {
         X = scalar;
         Y = scalar;
     }
 
-    public Vector2T(T x, T y)
+    public Vector2(T x, T y)
     {
         X = x;
         Y = y;
@@ -36,43 +36,47 @@ public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
     #region Operators
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator +(Vector2T<T> left, Vector2T<T> right) =>
-        new Vector2T<T>(left.X + right.X, left.Y + right.Y);
+    public static Vector2<T> operator +(Vector2<T> left, Vector2<T> right) =>
+        new Vector2<T>(left.X + right.X, left.Y + right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator -(Vector2T<T> left, Vector2T<T> right) =>
-        new Vector2T<T>(left.X - right.X, left.Y - right.Y);
+    public static Vector2<T> operator -(Vector2<T> left, Vector2<T> right) =>
+        new Vector2<T>(left.X - right.X, left.Y - right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator *(Vector2T<T> left, Vector2T<T> right) =>
-        new Vector2T<T>(left.X * right.X, left.Y * right.Y);
+    public static Vector2<T> operator *(Vector2<T> left, Vector2<T> right) =>
+        new Vector2<T>(left.X * right.X, left.Y * right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator *(Vector2T<T> left, T right) =>
-        new Vector2T<T>(left.X * right, left.Y * right);
+    public static Vector2<T> operator *(Vector2<T> left, T right) =>
+        new Vector2<T>(left.X * right, left.Y * right);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator *(T left, Vector2T<T> right) =>
-        new Vector2T<T>(left * right.X, left * right.Y);
+    public static Vector2<T> operator *(T left, Vector2<T> right) =>
+        new Vector2<T>(left * right.X, left * right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator /(Vector2T<T> left, Vector2T<T> right) =>
-        new Vector2T<T>(left.X / right.X, left.Y / right.Y);
+    public static Vector2<T> operator /(Vector2<T> left, Vector2<T> right) =>
+        new Vector2<T>(left.X / right.X, left.Y / right.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> operator /(Vector2T<T> left, T right) =>
-        new Vector2T<T>(left.X / right, left.Y / right);
+    public static Vector2<T> operator /(Vector2<T> left, T right) =>
+        new Vector2<T>(left.X / right, left.Y / right);
 
     #endregion
 
-    public bool Equals(Vector2T<T> other)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2<TOther> As<TOther>() where TOther : INumber<TOther> =>
+        Vector2.Cast<T, TOther>(this);
+
+    public bool Equals(Vector2<T> other)
     {
         return EqualityComparer<T>.Default.Equals(X, other.X) && EqualityComparer<T>.Default.Equals(Y, other.Y);
     }
 
     public override bool Equals(object obj)
     {
-        return obj is Vector2T<T> other && Equals(other);
+        return obj is Vector2<T> other && Equals(other);
     }
 
     public override int GetHashCode()
@@ -80,45 +84,70 @@ public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
         return HashCode.Combine(X, Y);
     }
 
-    public static bool operator ==(Vector2T<T> left, Vector2T<T> right)
+    public static bool operator ==(Vector2<T> left, Vector2<T> right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(Vector2T<T> left, Vector2T<T> right)
+    public static bool operator !=(Vector2<T> left, Vector2<T> right)
     {
         return !left.Equals(right);
     }
 
-    public static implicit operator Vector2(Vector2T<T> vector)
+    public static explicit operator System.Numerics.Vector2(Vector2<T> vector)
     {
         float x = Convert.ToSingle(vector.X);
         float y = Convert.ToSingle(vector.Y);
-        return new Vector2(x, y);
+        return new System.Numerics.Vector2(x, y);
     }
     
-    public static implicit operator Vector2T<T>(Vector2 vector)
+    public static explicit operator Vector2<T>(System.Numerics.Vector2 vector)
     {
-        return new Vector2T<T>(T.CreateChecked(vector.X), T.CreateChecked(vector.Y));
+        return new Vector2<T>(T.CreateChecked(vector.X), T.CreateChecked(vector.Y));
     }
+    
+    #region Quick conversions
+
+    public static explicit operator Vector2<float>(Vector2<T> value)
+    {
+        return Vector2.Cast<T, float>(value);
+    }
+
+    public static explicit operator Vector2<int>(Vector2<T> value)
+    {
+        return Vector2.Cast<T, int>(value);
+    }
+
+    public static explicit operator Vector2<double>(Vector2<T> value)
+    {
+        return Vector2.Cast<T, double>(value);
+    }
+    
+    #endregion
 }
 
-public static class Vector2T
+public static class Vector2
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Magnitude<T>(Vector2T<T> vector) where T : INumber<T>, IRootFunctions<T>
+    public static Vector2<TOther> Cast<T, TOther>(Vector2<T> vector) where T : INumber<T> where TOther : INumber<TOther>
+    {
+        return new Vector2<TOther>(TOther.CreateChecked(vector.X), TOther.CreateChecked(vector.Y));
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Magnitude<T>(Vector2<T> vector) where T : INumber<T>, IRootFunctions<T>
     {
         return T.Sqrt(MagnitudeSquared(vector));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T MagnitudeSquared<T>(Vector2T<T> vector) where T : INumber<T>
+    public static T MagnitudeSquared<T>(Vector2<T> vector) where T : INumber<T>
     {
         return Dot(vector, vector);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Dot<T>(Vector2T<T> left, Vector2T<T> right) where T : INumber<T>
+    public static T Dot<T>(Vector2<T> left, Vector2<T> right) where T : INumber<T>
     {
         return T.CreateChecked(left.X * right.X + left.Y * right.Y);
     }

@@ -40,7 +40,7 @@ public struct Vector4T<T> where T : INumber<T>
         W = scalar;
     }
 
-    public Vector4T(Vector2T<T> xy, T z, T w)
+    public Vector4T(Vector2<T> xy, T z, T w)
     {
         X = xy.X;
         Y = xy.Y;

@@ -46,7 +46,7 @@ public class StandardMaterial : Material
         Metallic = 0,
         Roughness = 0,
         Ao = 1,
-        Tiling = new Vector4(Tiling, 0, 0)
+        Tiling = new Vector4((System.Numerics.Vector2) Tiling, 0, 0)
     };
 
     protected internal override void ApplyTextures(GraphicsDevice device)

@@ -30,7 +30,7 @@ public class Font : IDisposable
         _charmaps = new Dictionary<uint, Charmap>();
     }
 
-    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2 position, Color color)
+    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color color)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -39,7 +39,7 @@ public class Font : IDisposable
             _charmaps.Add(size, charmap);
         }
 
-        Vector2 pos = position;
+        Vector2<int> pos = position;
         int largestChar = 0;
         foreach (char c in text)
         {
@@ -54,20 +54,20 @@ public class Font : IDisposable
             switch (c)
             {
                 case '\n':
-                    pos.Y += size;
+                    pos.Y += (int) size;
                     pos.X = position.X;
                     continue;
             }
             
             Charmap.Character chr = charmap.GetCharacter(c);
-            Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
+            Vector2<int> charPos = new Vector2<int>(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            renderer.Draw(charmap.Texture, charPos, chr.Source, color, 0, Vector2.Zero, Vector2.One);
+            renderer.Draw(charmap.Texture, (Vector2<float>) charPos, chr.Source, color, 0, Vector2<float>.Zero, Vector2<float>.One);
             pos.X += chr.Advance;
         }
     }
 
-    public void DrawBBCode(SpriteRenderer renderer, uint size, string text, Vector2 position, Color initialColor)
+    public void DrawBBCode(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color initialColor)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -78,7 +78,7 @@ public class Font : IDisposable
 
         BBCodeInstruction[] bbCode = BBCodeParser.Parse(text);
 
-        Vector2 pos = position;
+        Vector2<int> pos = position;
         int largestChar = 0;
         foreach (char c in text)
         {
@@ -104,15 +104,16 @@ public class Font : IDisposable
                         switch (c)
                         {
                             case '\n':
-                                pos.Y += size;
+                                pos.Y += (int) size;
                                 pos.X = position.X;
                                 continue;
                         }
 
                         Charmap.Character chr = charmap.GetCharacter(c);
-                        Vector2 charPos = new Vector2(pos.X + chr.Bearing.X,
+                        Vector2<int> charPos = new Vector2<int>(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        renderer.Draw(charmap.Texture, charPos, chr.Source, currentColor, 0, Vector2.Zero, Vector2.One);
+                        renderer.Draw(charmap.Texture, (Vector2<float>) charPos, chr.Source, currentColor, 0,
+                            Vector2<float>.Zero, Vector2<float>.One);
                         pos.X += chr.Advance;
                     }
 

@@ -16,7 +16,7 @@ public class Image : UIElement
     
     protected internal override void Draw(SpriteRenderer renderer)
     {
-        renderer.Draw(Texture, (Vector2) CalculatedScreenPos, null, Color.White, 0, Vector2.Zero,
-            new Vector2(Size.Width / (float) Texture.Size.Width, Size.Height / (float) Texture.Size.Height));
+        renderer.Draw(Texture, (Vector2<float>) CalculatedScreenPos, null, Color.White, 0, Vector2<float>.Zero,
+            new Vector2<float>(Size.Width / (float) Texture.Size.Width, Size.Height / (float) Texture.Size.Height));
     }
 }

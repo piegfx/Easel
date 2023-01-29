@@ -74,7 +74,7 @@ public static class EaselMath
     /// <param name="p2">A <see cref="Vector2"/> representing the third control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> QuadraticBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2) where T : INumber<T> 
+    public static Vector2<T> QuadraticBezierCurve<T>(T t, Vector2<T> p0, Vector2<T> p1, Vector2<T> p2) where T : INumber<T> 
     {
         return p1 + ((T.One - t) * (T.One - t)) * (p0 - p1) + (t * t) * (p2 - p1);
     }
@@ -95,7 +95,7 @@ public static class EaselMath
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> CubicBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>
+    public static Vector2<T> CubicBezierCurve<T>(T t, Vector2<T> p0, Vector2<T> p1, Vector2<T> p2, Vector2<T> p3) where T : INumber<T>
     {
         return (T.One - t) * QuadraticBezierCurve(t, p0, p1, p2) + t * QuadraticBezierCurve(t, p1, p2, p3);
     }
@@ -115,7 +115,7 @@ public static class EaselMath
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>A <see cref="Vector2"/> result position along the curve, based on t.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2T<T> ExplicitCubicBezierCurve<T>(T t, Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>
+    public static Vector2<T> ExplicitCubicBezierCurve<T>(T t, Vector2<T> p0, Vector2<T> p1, Vector2<T> p2, Vector2<T> p3) where T : INumber<T>
     {
         return ((T.One - t) * (T.One - t) * (T.One - t)) * p0 + T.CreateChecked(3) * ((T.One - t) * (T.One - t)) * t * p1 + T.CreateChecked(3) * ((T.One - t) * (T.One - t)) * p2 + (t * t * t) * p3;
     }
@@ -129,10 +129,10 @@ public static class EaselMath
     /// <param name="p2">A <see cref="Vector2"/> representing the third control point of the curve.</param>
     /// <param name="p3">A <see cref="Vector2"/> representing the fourth control point of the curve.</param>
     /// <returns>An estimated arclength of the bezier curve.</returns>
-    public static T GetBezierArcLength<T>(Vector2T<T> p0, Vector2T<T> p1, Vector2T<T> p2, Vector2T<T> p3) where T : INumber<T>, IRootFunctions<T>
+    public static T GetBezierArcLength<T>(Vector2<T> p0, Vector2<T> p1, Vector2<T> p2, Vector2<T> p3) where T : INumber<T>, IRootFunctions<T>
     {
-        T chord = Vector2T.Magnitude(p3 - p0);
-        T controlNet = Vector2T.Magnitude(p0 - p1) + Vector2T.Magnitude(p2 - p1) + Vector2T.Magnitude(p3 - p2);
+        T chord = Vector2.Magnitude(p3 - p0);
+        T controlNet = Vector2.Magnitude(p0 - p1) + Vector2.Magnitude(p2 - p1) + Vector2.Magnitude(p3 - p2);
 
         return (controlNet + chord) / T.CreateChecked(2);
     }

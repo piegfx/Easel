@@ -104,14 +104,14 @@ public sealed class SpriteRenderer : IDisposable
         _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
     }
 
-    public void DrawRectangle(Vector2 position, Size<float> size, int borderWidth, float radius, Color color,
-        Color borderColor, float rotation, Vector2 origin)
+    public void DrawRectangle(Vector2<float> position, Size<float> size, int borderWidth, float radius, Color color,
+        Color borderColor, float rotation, Vector2<float> origin)
     {
         DrawRectangle(Texture2D.White, position, size, borderWidth, radius, color, borderColor, rotation, origin);
     }
     
-    public void DrawRectangle(Texture texture, Vector2 position, Size<float> size, int borderWidth, float radius, 
-        Color color, Color borderColor, float rotation, Vector2 origin)
+    public void DrawRectangle(Texture texture, Vector2<float> position, Size<float> size, int borderWidth, float radius, 
+        Color color, Color borderColor, float rotation, Vector2<float> origin)
     {
         if (!_begun)
             throw new EaselException("No current active sprite renderer session.");
@@ -133,10 +133,10 @@ public sealed class SpriteRenderer : IDisposable
         Vector4 meta1 = new Vector4(borderWidth, radius, size.Width, size.Height);
         Vector4 meta2 = (Vector4) borderColor;
         
-        _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(1, 1), color, rotation, origin, Vector2.One, meta1, meta2);
-        _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(1, 0), color, rotation, origin, Vector2.One, meta1, meta2);
-        _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(0, 0), color, rotation, origin, Vector2.One, meta1, meta2);
-        _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(0, 1), color, rotation, origin, Vector2.One, meta1, meta2);
+        _verticesCache[0] = new SpriteVertex(new Vector2<float>(posX + width, posY + height), new Vector2<float>(1, 1), color, rotation, origin, Vector2<float>.One, meta1, meta2);
+        _verticesCache[1] = new SpriteVertex(new Vector2<float>(posX + width, posY), new Vector2<float>(1, 0), color, rotation, origin, Vector2<float>.One, meta1, meta2);
+        _verticesCache[2] = new SpriteVertex(new Vector2<float>(posX, posY), new Vector2<float>(0, 0), color, rotation, origin, Vector2<float>.One, meta1, meta2);
+        _verticesCache[3] = new SpriteVertex(new Vector2<float>(posX, posY + height), new Vector2<float>(0, 1), color, rotation, origin, Vector2<float>.One, meta1, meta2);
 
         uint dc = _totalVertices;
         _indicesCache[0] = 0u + dc;
@@ -162,7 +162,7 @@ public sealed class SpriteRenderer : IDisposable
         Flush();
     }
 
-    public void Draw(Texture texture, Vector2 position, Rectangle<int>? source, Color tint, float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip = SpriteFlip.None, Vector4 meta1 = default, Vector4 meta2 = default)
+    public void Draw(Texture texture, Vector2<float> position, Rectangle<int>? source, Color tint, float rotation, Vector2<float> origin, Vector2<float> scale, SpriteFlip flip = SpriteFlip.None, Vector4 meta1 = default, Vector4 meta2 = default)
     {
         // TODO: Remove maximum sprites and implement buffer resizing
         if (texture != _currentTexture || _currentType != SpriteType.Bitmap || _totalVertices >= MaxVertices || _totalIndices >= MaxIndices)
@@ -171,7 +171,7 @@ public sealed class SpriteRenderer : IDisposable
         _currentTexture = texture;
         _currentType = SpriteType.Bitmap;
 
-        Rectangle<int> src = source ?? new Rectangle<int>(Vector2T<int>.Zero, texture.Size);
+        Rectangle<int> src = source ?? new Rectangle<int>(Vector2<int>.Zero, texture.Size);
 
         int rectX = src.X;
         int rectY = src.Y;
@@ -231,10 +231,10 @@ public sealed class SpriteRenderer : IDisposable
         width = rectWidth * scale.X;
         height = rectHeight * scale.Y;
 
-        _verticesCache[0] = new SpriteVertex(new Vector2(posX + width, posY + height), new Vector2(texX + texW, texY + texH), tint, rotation, origin, scale, meta1, meta2);
-        _verticesCache[1] = new SpriteVertex(new Vector2(posX + width, posY), new Vector2(texX + texW, texY), tint, rotation, origin, scale, meta1, meta2);
-        _verticesCache[2] = new SpriteVertex(new Vector2(posX, posY), new Vector2(texX, texY), tint, rotation, origin, scale, meta1, meta2);
-        _verticesCache[3] = new SpriteVertex(new Vector2(posX, posY + height), new Vector2(texX, texY + texH), tint, rotation, origin, scale, meta1, meta2);
+        _verticesCache[0] = new SpriteVertex(new Vector2<float>(posX + width, posY + height), new Vector2<float>(texX + texW, texY + texH), tint, rotation, origin, scale, meta1, meta2);
+        _verticesCache[1] = new SpriteVertex(new Vector2<float>(posX + width, posY), new Vector2<float>(texX + texW, texY), tint, rotation, origin, scale, meta1, meta2);
+        _verticesCache[2] = new SpriteVertex(new Vector2<float>(posX, posY), new Vector2<float>(texX, texY), tint, rotation, origin, scale, meta1, meta2);
+        _verticesCache[3] = new SpriteVertex(new Vector2<float>(posX, posY + height), new Vector2<float>(texX, texY + texH), tint, rotation, origin, scale, meta1, meta2);
 
         uint dc = _totalVertices;
         _indicesCache[0] = 0u + dc;
@@ -309,16 +309,16 @@ public sealed class SpriteRenderer : IDisposable
     [StructLayout(LayoutKind.Sequential)]
     public struct SpriteVertex
     {
-        public Vector2 Position;
-        public Vector2 TexCoord;
+        public Vector2<float> Position;
+        public Vector2<float> TexCoord;
         public Color Tint;
         public float Rotation;
-        public Vector2 Origin;
-        public Vector2 Scale;
+        public Vector2<float> Origin;
+        public Vector2<float> Scale;
         public Vector4 Meta1;
         public Vector4 Meta2;
         
-        public SpriteVertex(Vector2 position, Vector2 texCoord, Color tint, float rotation, Vector2 origin, Vector2 scale, Vector4 meta1, Vector4 meta2)
+        public SpriteVertex(Vector2<float> position, Vector2<float> texCoord, Color tint, float rotation, Vector2<float> origin, Vector2<float> scale, Vector4 meta1, Vector4 meta2)
         {
             Position = position;
             TexCoord = texCoord;
@@ -330,7 +330,7 @@ public sealed class SpriteRenderer : IDisposable
             Meta2 = meta2;
         }
 
-        public SpriteVertex(Vector2 position, Vector2 texCoord, Color tint) : this()
+        public SpriteVertex(Vector2<float> position, Vector2<float> texCoord, Color tint) : this()
         {
             Position = position;
             TexCoord = texCoord;

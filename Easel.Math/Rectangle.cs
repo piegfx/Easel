@@ -13,7 +13,7 @@ public struct Rectangle<T> : IEquatable<Rectangle<T>> where T : INumber<T>
     
     public T Height;
 
-    public Vector2T<T> Location => new Vector2T<T>(X, Y);
+    public Vector2<T> Location => new Vector2<T>(X, Y);
 
     public Size<T> Size => new Size<T>(Width, Height);
 
@@ -33,7 +33,7 @@ public struct Rectangle<T> : IEquatable<Rectangle<T>> where T : INumber<T>
         Height = height;
     }
 
-    public Rectangle(Vector2T<T> location, Size<T> size) : this(location.X, location.Y, size.Width, size.Height) { }
+    public Rectangle(Vector2<T> location, Size<T> size) : this(location.X, location.Y, size.Width, size.Height) { }
 
     public bool Equals(Rectangle<T> other)
     {

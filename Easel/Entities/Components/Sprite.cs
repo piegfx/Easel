@@ -29,6 +29,6 @@ public class Sprite : Component
         base.Draw();
 
         Graphics.Renderer.AddSpriteOpaque(new Graphics.Renderers.Sprite(Texture, Transform.Position, SourceRectangle,
-            Tint, Transform.SpriteRotation, Transform.Origin.ToVector2(), Transform.Scale.ToVector2(), Flip));
+            Tint, Transform.SpriteRotation, (Vector2<float>) Transform.Origin.ToVector2(), (Vector2<float>) Transform.Scale.ToVector2(), Flip));
     }
 }

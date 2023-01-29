@@ -28,7 +28,7 @@ public abstract class Material
     /// <summary>
     /// How much the texture will tile. (Default: 1)
     /// </summary>
-    public Vector2 Tiling;
+    public Vector2<float> Tiling;
 
     /// <summary>
     /// The rasterizer state of this material. (Default: CullClockwise)
@@ -38,7 +38,7 @@ public abstract class Material
     protected Material()
     {
         Tint = Color.White;
-        Tiling = Vector2.One;
+        Tiling = Vector2<float>.One;
         RasterizerState = RasterizerState.CullClockwise;
     }
 

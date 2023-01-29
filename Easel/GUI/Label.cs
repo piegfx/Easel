@@ -21,6 +21,6 @@ public class Label : UIElement
     {
         Size = Theme.Font.MeasureStringBBCode(FontSize, Text);
         
-        Theme.Font.DrawBBCode(renderer, FontSize, Text, (Vector2) CalculatedScreenPos, Color.White);
+        Theme.Font.DrawBBCode(renderer, FontSize, Text, CalculatedScreenPos, Color.White);
     }
 }

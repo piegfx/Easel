@@ -20,7 +20,7 @@ public abstract class UIElement
 
     protected bool IsMouseButtonHeld;
 
-    protected Vector2T<int> CalculatedScreenPos;
+    protected Vector2<int> CalculatedScreenPos;
 
     public UITheme Theme;
 
@@ -36,7 +36,7 @@ public abstract class UIElement
 
     protected internal virtual void Update(ref bool mouseTaken, Rectangle<int> viewport)
     {
-        Vector2 mousePos = Input.MousePosition;
+        Vector2<float> mousePos = Input.MousePosition;
 
         CalculatedScreenPos = Position.CalculatePosition(viewport, Size);
 

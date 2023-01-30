@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Easel.Math;
 using Vector3 = System.Numerics.Vector3;
+using Mth = System.Math;
 
 namespace Easel.Core;
 
@@ -28,18 +29,36 @@ public static class Utils
     
     public static Vector3 ToEulerAngles(this Quaternion quat)
     {
-        // Convert our values to euler angles.
-        // https://math.stackexchange.com/questions/2975109/how-to-convert-euler-angles-to-quaternions-and-get-the-same-euler-angles-back-fr
+        double test = quat.X * quat.Y + quat.Z * quat.W;
 
-        float yaw = MathF.Asin(EaselMath.Clamp(2f * (quat.W * quat.Y - quat.Z * quat.X), -1f, 1f));
+        double yaw, pitch, roll;
         
-        float pitch = MathF.Atan2(2f * (quat.W * quat.X + quat.Y * quat.Z),
-            1f - 2f * (quat.X * quat.X + quat.Y * quat.Y));
+        const double accuracy = 0.4999;
+        
+        if (test > accuracy)
+        {
+            yaw = 2 * Mth.Atan2(quat.X, quat.W);
+            pitch = Mth.PI / 2;
+            roll = 0;
+        }
+        else if (test < -accuracy)
+        {
+            yaw = -2 * Mth.Atan2(quat.X, quat.W);
+            pitch = -Mth.PI / 2;
+            roll = 0;
+        }
+        else
+        {
+            double xx = quat.X * quat.X;
+            double yy = quat.Y * quat.Y;
+            double zz = quat.Z * quat.Z;
 
-        float roll = MathF.Atan2(2f * (quat.W * quat.Z + quat.X * quat.Y),
-            1f - 2f * (quat.Y * quat.Y + quat.Z * quat.Z));
+            yaw = Mth.Atan2(2 * quat.Y * quat.W - 2 * quat.X * quat.Z, 1 - 2 * yy - 2 * zz);
+            pitch = Mth.Asin(2 * test);
+            roll = Mth.Atan2(2 * quat.X * quat.W - 2 * quat.Y * quat.Z, 1 - 2 * xx - 2 * zz);
+        }
 
-        return new Vector3(yaw, pitch, roll);
+        return new Vector3((float) yaw, (float) pitch, (float) roll);
     }
 
     public static System.Numerics.Vector2 ToVector2(this Vector3 vector3)

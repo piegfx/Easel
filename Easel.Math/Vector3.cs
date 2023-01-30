@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 
 namespace Easel.Math;
 
@@ -19,8 +20,13 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
 
     public static Vector3T<T> UnitZ => new Vector3T<T>(T.Zero, T.Zero, T.One);
     
+    [XmlAttribute]
     public T X;
+    
+    [XmlAttribute]
     public T Y;
+    
+    [XmlAttribute]
     public T Z;
 
     public Vector3T(T scalar)
@@ -53,6 +59,12 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3T<T> operator -(Vector3T<T> left, Vector3T<T> right) =>
         new Vector3T<T>(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector3T<T> operator -(Vector3T<T> negate)
+    {
+        return new Vector3T<T>(-negate.X, -negate.Y, -negate.Z);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3T<T> operator *(Vector3T<T> left, Vector3T<T> right) =>

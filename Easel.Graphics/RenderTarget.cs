@@ -9,7 +9,7 @@ public class RenderTarget : Texture
     private Pie.Texture _depth;
     
     public RenderTarget(Size<int> size, SamplerState samplerState = null, bool autoDispose = true) 
-        : base(samplerState ?? SamplerState.LinearRepeat, autoDispose)
+        : base(samplerState ?? SamplerState.LinearClamp, autoDispose)
     {
         // TODO: RGB render targets that draw by ignoring the alpha value in the frag shader (since D3D doesn't support RGB)
         

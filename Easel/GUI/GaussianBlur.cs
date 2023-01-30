@@ -25,8 +25,8 @@ public class GaussianBlur : UIElement
         
         // TODO TODO TODO This is incredibly wasteful, fix the damn render target stuff so we only need to create a 
         // render target of the right size instead of blurring the *entire* target.
-        _readBuffer = new RenderTarget(graphics.Renderer.MainTarget.Size);
-        _writeBuffer = new RenderTarget(graphics.Renderer.MainTarget.Size);
+        _readBuffer = new RenderTarget(size);
+        _writeBuffer = new RenderTarget(size);
 
         Radius = radius;
         Iterations = iterations;
@@ -40,10 +40,10 @@ public class GaussianBlur : UIElement
         renderer.End();
         
         graphics.SetRenderTarget(_readBuffer);
-        graphics.Viewport = new Rectangle<int>(Vector2<int>.Zero, graphics.Renderer.MainTarget.Size);
+        graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
         graphics.Clear(Color.CornflowerBlue);
         renderer.Begin();
-        renderer.Draw(rt, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
+        renderer.Draw(rt, new Vector2<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
         renderer.End();
         graphics.SetRenderTarget(null);
 
@@ -53,10 +53,11 @@ public class GaussianBlur : UIElement
             Vector2<float> direction = i % 2 == 0 ? new Vector2<float>(radius, 0) : new Vector2<float>(0, radius);
             
             graphics.SetRenderTarget(_writeBuffer);
+            graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
             renderer.Begin(effect: _effect);
 
             renderer.Draw(_readBuffer, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One,
-                meta1: new Vector4((System.Numerics.Vector2) direction, graphics.Renderer.MainTarget.Size.Width, graphics.Renderer.MainTarget.Size.Height));
+                meta1: new Vector4((System.Numerics.Vector2) direction, Size.Width, Size.Height));
             
             renderer.End();
             graphics.SetRenderTarget(null);
@@ -66,7 +67,9 @@ public class GaussianBlur : UIElement
         renderer.Begin();
 
         // TODO: Fix whatever the heck is going on here, I just have no idea
-        renderer.Draw(_readBuffer, (Vector2<float>) CalculatedScreenPos, new Rectangle<int>(CalculatedScreenPos, Size), Color.White,
+        renderer.Draw(_readBuffer, (Vector2<float>) CalculatedScreenPos, null, Color.White,
             0, Vector2<float>.Zero, Vector2<float>.One);
+        
+        renderer.DrawRectangle((Vector2<float>) CalculatedScreenPos, Size, 0, 0, new Color(Color.White, 0.15f), Color.Transparent, 0, Vector2<float>.Zero);
     }
 }

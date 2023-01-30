@@ -31,20 +31,21 @@ layout (binding = 6) uniform sampler2D uAo;
 void main()
 {
     // convert albedo texture to linear space
-    vec3 albedo = pow(texture(uAlbedo, in_data.texCoords).rgb, vec3(2.2));
+    vec4 albedo = pow(texture(uAlbedo, in_data.texCoords), vec4(2.2)) * uMaterial.albedo;
     vec3 normal = TempNormal(uNormal, in_data.fragPosition, in_data.texCoords, in_data.normal);
     #if COMBINE_TEXTURES
-    float metallic = texture(uMraTex, in_data.texCoords).r;
-    float roughness = texture(uMraTex, in_data.texCoords).g;
-    float ao = texture(uMraTex, in_data.texCoords).b;
+    float metallic = texture(uMraTex, in_data.texCoords).r * uMaterial.metallic;
+    float roughness = texture(uMraTex, in_data.texCoords).g * uMaterial.roughness;
+    float ao = texture(uMraTex, in_data.texCoords).b * uMaterial.ao;
     #else
-    float metallic = texture(uMetallic, in_data.texCoords).r;
-    float roughness = texture(uRoughness, in_data.texCoords).r;
-    float ao = texture(uAo, in_data.texCoords).r;
+    float metallic = texture(uMetallic, in_data.texCoords).r * uMaterial.metallic;
+    float roughness = texture(uRoughness, in_data.texCoords).r * uMaterial.roughness;
+    float ao = texture(uAo, in_data.texCoords).r * uMaterial.ao;
+    
     #endif
     
     vec3 viewDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
-    vec3 result = ProcessDirLight(uSun, viewDir, albedo, normal, metallic, roughness);
+    vec3 result = ProcessDirLight(uSun, viewDir, albedo.rgb, normal, metallic, roughness);
     
     vec3 ambient = vec3(0.03) * albedo.rgb * ao;
     vec3 color = ambient + result;

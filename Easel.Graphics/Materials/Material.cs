@@ -19,11 +19,6 @@ public abstract class Material
     public EffectLayout EffectLayout { get; protected set; }
     
     public abstract ShaderMaterial ShaderMaterial { get; }
-    
-    /// <summary>
-    /// The tint color of this material. (Default: White)
-    /// </summary>
-    public Color Tint;
 
     /// <summary>
     /// How much the texture will tile. (Default: 1)
@@ -37,7 +32,6 @@ public abstract class Material
 
     protected Material()
     {
-        Tint = Color.White;
         Tiling = Vector2<float>.One;
         RasterizerState = RasterizerState.CullClockwise;
     }

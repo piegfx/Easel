@@ -45,8 +45,14 @@ public class StandardMaterial : Material
     /// </summary>
     public float MetallicValue;
 
+    /// <summary>
+    /// The roughness value of this material. If <see cref="Roughness"/> is set, this value has no effect.
+    /// </summary>
     public float RoughnessValue;
 
+    /// <summary>
+    /// The ambient occlusion value of this material. If <see cref="Ao"/> is set, this value has no effect.
+    /// </summary>
     public float AoValue;
 
     public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao)

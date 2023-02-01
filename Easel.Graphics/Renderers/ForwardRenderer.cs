@@ -134,12 +134,15 @@ public sealed class ForwardRenderer : IRenderer
         device.DrawIndexed(renderable.Renderable.NumIndices);
     }
 
-    public void Perform2DPass()
+    public void Perform2DPass(CameraInfo camera)
     {
+        if (camera.ClearColor.HasValue)
+            EaselGraphics.Instance.Clear(camera.ClearColor.Value);
+        
         EaselGraphics graphics = EaselGraphics.Instance;
         _opaqueSprites.Sort((sprite, sprite1) => sprite.Position.Z.CompareTo(sprite1.Position.Z));
         
-        graphics.SpriteRenderer.Begin();
+        graphics.SpriteRenderer.Begin(projection: camera.Projection, transform: camera.View);
 
         for (int i = 0; i < _opaqueSprites.Count; i++)
         {

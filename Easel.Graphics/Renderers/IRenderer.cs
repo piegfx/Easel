@@ -36,5 +36,5 @@ public interface IRenderer : IDisposable
     /// </summary>
     public void Perform3DPass(CameraInfo cameraInfo);
 
-    public void Perform2DPass();
+    public void Perform2DPass(CameraInfo cameraInfo);
 }

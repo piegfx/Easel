@@ -145,7 +145,7 @@ public abstract class Scene : IDisposable
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
                 Graphics.Renderer.Perform3DPass(j == 0 ? camera.CameraInfo : camera.CameraInfo with { ClearColor = null });
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
-                Graphics.Renderer.Perform2DPass();
+                Graphics.Renderer.Perform2DPass(j == 0 ? camera.CameraInfo : camera.CameraInfo with { ClearColor = null });
 
             j++;
         }

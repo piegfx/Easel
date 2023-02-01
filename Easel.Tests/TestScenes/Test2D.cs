@@ -59,6 +59,8 @@ public class Test2D : Scene
         Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));
         AddEntity(sprite);
+        
+        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));
     }
 
     private float _f;
@@ -71,7 +73,7 @@ public class Test2D : Scene
         Graphics.SpriteRenderer.DrawVertices(_rt, _vertices, _indices);
         Graphics.SpriteRenderer.End();*/
 
-        Camera.Main.ClearColor = Color.FromHsv(_f++, 1, 1);
+        Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);
         Camera.Main.Transform.Position.X += 1;
     }
 }

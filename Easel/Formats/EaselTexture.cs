@@ -94,7 +94,7 @@ public struct EaselTexture
                         throw new EaselException("\"TEXB\" expected, was not found.");
                     
                     BitmapLayer layer = (BitmapLayer) compReader.ReadByte();
-                    PixelFormat format = (PixelFormat) compReader.ReadByte();
+                    Format format = (Format) compReader.ReadByte();
 
                     int length = compReader.ReadInt32();
                     byte[] bData = compReader.ReadBytes(length);
@@ -104,7 +104,7 @@ public struct EaselTexture
                 return new EaselTexture(bitmaps);
 
             case TextureType.Cubemap:
-                PixelFormat cFmt = (PixelFormat) compReader.ReadByte();
+                Format cFmt = (Format) compReader.ReadByte();
 
                 byte cLength = compReader.ReadByte();
 

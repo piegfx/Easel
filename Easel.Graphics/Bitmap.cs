@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Easel.Core;
 using Easel.Math;
 using Pie;
@@ -26,7 +27,7 @@ public class Bitmap
     /// <summary>
     /// The pixel format of this bitmap.
     /// </summary>
-    public readonly PixelFormat Format;
+    public readonly Format Format;
 
     public Bitmap(string path)
     {
@@ -34,7 +35,7 @@ public class Bitmap
         {
             Data = GetMissingBitmap(128, 128);
             Size = new Size<int>(128, 128);
-            Format = PixelFormat.R8G8B8A8_UNorm;
+            Format = Format.R8G8B8A8_UNorm;
             Logger.Error($"Failed to find path \"{path}\".");
             return;
         }
@@ -44,7 +45,7 @@ public class Bitmap
         ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;
         Size = new Size<int>(result.Width, result.Height);
-        Format = PixelFormat.R8G8B8A8_UNorm;
+        Format = Format.R8G8B8A8_UNorm;
     }
 
     public Bitmap(byte[] fileData)
@@ -52,10 +53,10 @@ public class Bitmap
         ImageResult result = ImageResult.FromMemory(fileData, ColorComponents.RedGreenBlueAlpha);
         Data = result.Data;
         Size = new Size<int>(result.Width, result.Height);
-        Format = PixelFormat.R8G8B8A8_UNorm;
+        Format = Format.R8G8B8A8_UNorm;
     }
 
-    public Bitmap(int width, int height, PixelFormat format, byte[] data)
+    public Bitmap(int width, int height, Format format, byte[] data)
     {
         Size = new Size<int>(width, height);
         Format = format;

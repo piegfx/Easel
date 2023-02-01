@@ -121,7 +121,7 @@ public class Canvas
         }
     }
 
-    public Bitmap ToBitmap() => new Bitmap(Size.Width, Size.Height, PixelFormat.R8G8B8A8_UNorm, _backBuffer);
+    public Bitmap ToBitmap() => new Bitmap(Size.Width, Size.Height, Format.R8G8B8A8_UNorm, _backBuffer);
     
     public static Canvas FromBitmap(Bitmap bitmap)
     {

@@ -145,9 +145,9 @@ void main()
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
         _inputLayout = device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", AttributeType.Float2, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 8, 0, InputType.PerVertex),
-            new InputLayoutDescription("aColor", AttributeType.NByte4, 16, 0, InputType.PerVertex));
+            new InputLayoutDescription("aPosition", Format.R32G32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription("aColor", Format.R8G8B8A8_UNorm, 16, 0, InputType.PerVertex));
     }
 
     public void RecreateFontDeviceTexture()
@@ -158,7 +158,7 @@ void main()
         _fontTexture?.Dispose();
         _fontTexture =
             device.CreateTexture(
-                new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
+                new TextureDescription(TextureType.Texture2D, width, height, Format.R8G8B8A8_UNorm, 1, 1,
                     TextureUsage.ShaderResource), pixels);
         device.GenerateMipmaps(_fontTexture);
 

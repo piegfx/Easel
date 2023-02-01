@@ -128,7 +128,8 @@ public abstract class Scene : IDisposable
             sun = lights[0].GetComponent<DirectionalLight>();
         
         Graphics.Renderer.DirectionalLight = sun?.InternalLight;
-        
+
+        int j = 0;
         foreach (Camera camera in cameras)
         {
             Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
@@ -142,9 +143,11 @@ public abstract class Scene : IDisposable
 
             Graphics.Viewport = viewport;
             if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
-                Graphics.Renderer.Perform3DPass(camera.CameraInfo);
+                Graphics.Renderer.Perform3DPass(j == 0 ? camera.CameraInfo : camera.CameraInfo with { ClearColor = null });
             if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
                 Graphics.Renderer.Perform2DPass();
+
+            j++;
         }
         
         Graphics.Renderer.DoneFrame();

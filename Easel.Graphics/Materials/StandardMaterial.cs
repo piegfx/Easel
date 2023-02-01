@@ -73,10 +73,10 @@ public class StandardMaterial : Material
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
 
         InputLayout layout = device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 12, 0, InputType.PerVertex),
-            new InputLayoutDescription("aNormals", AttributeType.Float3, 20, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTangents", AttributeType.Float3, 32, 0, InputType.PerVertex)
+            new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
+            new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
         );
 
         EffectLayout =

@@ -30,8 +30,13 @@ public class Test3D : Scene
         texture.SamplerState = SamplerState.AnisotropicRepeat;
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
-        Bitmap[] bitmaps = Content.Load<EaselTexture>("Skybox").Cubemap;
-        Camera.Main.Skybox = new Skybox(bitmaps[0], bitmaps[1], bitmaps[2], bitmaps[3], bitmaps[4], bitmaps[5]);
+        Bitmap right = Content.Load<Bitmap>("right");
+        Bitmap left = Content.Load<Bitmap>("left");
+        Bitmap top = Content.Load<Bitmap>("top");
+        Bitmap bottom = Content.Load<Bitmap>("bottom");
+        Bitmap front = Content.Load<Bitmap>("front");
+        Bitmap back = Content.Load<Bitmap>("back");
+        Camera.Main.Skybox = new Skybox(right, left, top, bottom, front, back);
         Camera.Main.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(20), 0, 0);
         Camera.Main.Viewport = new Vector4T<float>(0, 0, 0.5f, 1f);
         Camera.Main.AddComponent(new NoClipCamera()

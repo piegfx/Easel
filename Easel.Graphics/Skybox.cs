@@ -61,7 +61,7 @@ public class Skybox : IDisposable
             new ShaderAttachment(ShaderStage.Fragment, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Skybox.Skybox.frag")));
 
         _inputLayout =
-            _device.CreateInputLayout(new InputLayoutDescription("aPosition", AttributeType.Float3, 0, 0,
+            _device.CreateInputLayout(new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0,
                 InputType.PerVertex));
 
         SamplerState = samplerState ?? SamplerState.LinearClamp;

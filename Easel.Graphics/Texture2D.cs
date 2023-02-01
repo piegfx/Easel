@@ -26,7 +26,7 @@ public class Texture2D : Texture
         : this(bitmap.Size.Width, bitmap.Size.Height, bitmap.Data, samplerState, bitmap.Format, autoDispose) { }
 
     public Texture2D(int width, int height, byte[] data, SamplerState samplerState = null, 
-        PixelFormat format = PixelFormat.R8G8B8A8_UNorm, bool autoDispose = true) 
+        Format format = Format.R8G8B8A8_UNorm, bool autoDispose = true) 
         : base(samplerState ?? SamplerState.AnisotropicRepeat, autoDispose)
     {
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;

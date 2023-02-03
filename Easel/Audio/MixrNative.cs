@@ -54,9 +54,6 @@ public static unsafe class MixrNative
     public static extern bool mxIsPlaying(IntPtr system, ushort channel);
 
     [DllImport(MixrName)]
-    public static extern ushort mxGetAvailableChannel(IntPtr system);
-
-    [DllImport(MixrName)]
     public static extern PCM* mxPCMLoadWav(byte* data, nuint dataLength);
 
     [DllImport(MixrName)]

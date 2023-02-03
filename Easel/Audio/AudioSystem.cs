@@ -72,7 +72,16 @@ public unsafe class AudioDevice : IDisposable
 
     public bool IsPlaying(ushort channel) => mxIsPlaying(_system, channel);
 
-    public ushort GetAvailableChannel() => mxGetAvailableChannel(_system);
+    public ushort GetAvailableChannel()
+    {
+        for (ushort i = 0; i < NumChannels; i++)
+        {
+            if (!mxIsPlaying(_system, i))
+                return i;
+        }
+
+        return 0;
+    }
 
     private void AudioCallback(void* arg0, byte* bData, int len)
     {

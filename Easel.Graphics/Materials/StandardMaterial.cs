@@ -85,10 +85,9 @@ public class StandardMaterial : Material
                     defines: "LIGHTING"), layout, VertexPositionTextureNormalTangent.SizeInBytes);
     }
 
-    public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White)
-    {
-        
-    }
+    public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
+
+    public StandardMaterial() : this(Texture2D.White) { }
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {

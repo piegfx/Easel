@@ -35,7 +35,7 @@ public class ContentManager
         _contentTypes = new Dictionary<Type, IContentTypeReader>();
         AddNewTypeReader(typeof(Bitmap), new BitmapContentTypeReader());
         AddNewTypeReader(typeof(Texture2D), new Texture2DContentTypeReader());
-        AddNewTypeReader(typeof(Mesh[]), new MeshContentTypeReader());
+        AddNewTypeReader(typeof(Model), new ModelContentTypeReader());
         AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
         AddNewTypeReader(typeof(Font), new FontContentTypeReader());
         AddNewTypeReader(typeof(Sound), new SoundContentTypeReader());

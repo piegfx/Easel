@@ -13,7 +13,7 @@ namespace Easel.Entities;
 /// <summary>
 /// An entity, sometimes known as a game object, is the base object in the Entity-Component (EC) system. (Note, this is
 /// <b>NOT</b> an ECS, which is very different). These entities can both have components added to them, such as
-/// <see cref="MeshRenderer"/>, and can be inherited from, such as <see cref="Camera"/>. Most of the time, you will be
+/// <see cref="ModelRenderer"/>, and can be inherited from, such as <see cref="Camera"/>. Most of the time, you will be
 /// adding components to the entity instead of inheriting, but the choice is yours.
 /// </summary>
 public class Entity : InheritableEntity, IDisposable

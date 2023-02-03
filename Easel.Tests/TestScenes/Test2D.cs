@@ -22,8 +22,11 @@ public class Test2D : Scene
     protected override void Initialize()
     {
         base.Initialize();
+        
+        Camera.Main.UseOrtho2D();
+        Camera.Main.ClearColor = Color.CornflowerBlue;
 
-        _font = Content.Load<Font>("Abel-Regular");
+        /*_font = Content.Load<Font>("Abel-Regular");
 
         const uint size = 128;
         const string text = "docs.piegfx.com";
@@ -49,21 +52,28 @@ public class Test2D : Scene
         {
             0u, 1u, 3u,
             1u, 2u, 3u
-        };
+        };*/
 
         Texture2D texture = Content.Load<Texture2D>("awesomeface");
         
         Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));
-        Console.WriteLine(sprite.TryAddComponent(new Sprite(texture)));
+        AddEntity(sprite);
+        
+        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));
     }
 
+    private float _f;
+    
     protected override void Draw()
     {
         base.Draw();
 
-        Graphics.SpriteRenderer.Begin();
+        /*Graphics.SpriteRenderer.Begin();
         Graphics.SpriteRenderer.DrawVertices(_rt, _vertices, _indices);
-        Graphics.SpriteRenderer.End();
+        Graphics.SpriteRenderer.End();*/
+
+        Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);
+        Camera.Main.Transform.Position.X += 1;
     }
 }

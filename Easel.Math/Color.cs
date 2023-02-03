@@ -2,10 +2,12 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
 namespace Easel.Math;
 
+[StructLayout(LayoutKind.Sequential)]
 public struct Color
 {
     [XmlAttribute]

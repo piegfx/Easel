@@ -28,6 +28,8 @@ public class Button : UIElement
     
     protected internal override void Draw(SpriteRenderer renderer)
     {
+        base.Draw(renderer);
+        
         Color color = Theme.BackgroundColor;
         if (IsHovering)
             color = Theme.HoverColor;
@@ -39,7 +41,10 @@ public class Button : UIElement
             DropShadow shadow = Theme.DropShadow.Value;
             renderer.DrawRectangle((Vector2<float>) CalculatedScreenPos + shadow.Offset, Size, 0, Theme.BorderRadius, shadow.Color, Color.Transparent, 0, Vector2<float>.Zero);
         }
-        
+
+        if (BlurTexture != null)
+            renderer.DrawRectangle(BlurTexture, (Vector2<float>) CalculatedScreenPos, Size, 0, Theme.BorderRadius, Color.White, Color.Transparent, 0, Vector2<float>.Zero);
+
         renderer.DrawRectangle(Image ?? Texture2D.White, (Vector2<float>) CalculatedScreenPos, Size, Theme.BorderWidth, Theme.BorderRadius, color, Theme.BorderColor, 0, Vector2<float>.Zero);
         Size<int> size = Theme.Font.MeasureStringBBCode(FontSize, Text);
 

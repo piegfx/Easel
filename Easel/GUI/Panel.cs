@@ -9,6 +9,9 @@ public class Panel : UIElement
     
     protected internal override void Draw(SpriteRenderer renderer)
     {
-        throw new System.NotImplementedException();
+        base.Draw(renderer);
+
+        renderer.DrawRectangle(BlurTexture, (Vector2<float>) CalculatedScreenPos, Size, 0, Theme.BorderRadius,
+            Color.White, Color.White, 0, Vector2<float>.Zero);
     }
 }

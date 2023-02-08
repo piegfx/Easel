@@ -33,14 +33,15 @@ void main()
     // convert albedo texture to linear space
     vec4 albedo = pow(texture(uAlbedo, in_data.texCoords), vec4(2.2)) * uMaterial.albedo;
     vec3 normal = TempNormal(uNormal, in_data.fragPosition, in_data.texCoords, in_data.normal);
-    #if COMBINE_TEXTURES
+    #ifdef COMBINE_TEXTURES
     float metallic = texture(uMraTex, in_data.texCoords).r * uMaterial.metallic;
     float roughness = texture(uMraTex, in_data.texCoords).g * uMaterial.roughness;
     float ao = texture(uMraTex, in_data.texCoords).b * uMaterial.ao;
     #else
     float metallic = texture(uMetallic, in_data.texCoords).r * uMaterial.metallic;
     float roughness = texture(uRoughness, in_data.texCoords).r * uMaterial.roughness;
-    float ao = texture(uAo, in_data.texCoords).r * uMaterial.ao;
+    //float ao = texture(uAo, in_data.texCoords).r * uMaterial.ao;
+    float ao = 1.0;
     
     #endif
     

@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Easel.Graphics;
+using Easel.Graphics.Primitives;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie;
@@ -21,23 +22,15 @@ namespace Easel.Entities.Components;
 /// </summary>
 public class ModelRenderer : Component
 {
-    private Model _model;
     private Renderable[] _renderables;
     private Matrix4x4[] _transforms;
 
     public ModelRenderer(Model model)
     {
-        _model = model;
-    }
-
-    protected internal override void Initialize()
-    {
-        base.Initialize();
-
         List<Renderable> renderables = new List<Renderable>();
         List<Matrix4x4> transforms = new List<Matrix4x4>();
 
-        foreach (ModelMesh mmesh in _model.Meshes)
+        foreach (ModelMesh mmesh in model.Meshes)
         {
             foreach (Mesh mesh in mmesh.Meshes)
             {
@@ -48,6 +41,12 @@ public class ModelRenderer : Component
 
         _renderables = renderables.ToArray();
         _transforms = transforms.ToArray();
+    }
+
+    public ModelRenderer(IPrimitive primitive, Material material)
+    {
+        _renderables = new[] { Renderable.CreateFromMesh(new Mesh(primitive.Vertices, primitive.Indices, material)) };
+        _transforms = new[] { Matrix4x4.Identity };
     }
 
     protected internal override void Draw()

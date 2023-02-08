@@ -6,7 +6,6 @@ public class ModelContentTypeReader : IContentTypeReader
 {
     public object LoadContentItem(string path)
     {
-        return null;
-        //return Mesh.FromFile(path);
+        return new Model(path);
     }
 }

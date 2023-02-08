@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie.Windowing;
@@ -62,7 +63,63 @@ public abstract class UIElement
         }
     }
 
-    protected internal abstract void Draw(SpriteRenderer renderer);
+    protected internal virtual void Draw(SpriteRenderer renderer)
+    {
+        if (Theme.Blur != null)
+        {
+            _effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
+                "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");
+
+            if (BlurTexture == null || Size != BlurTexture.Size)
+            {
+                BlurTexture?.Dispose();
+                _writeBuffer?.Dispose();
+                BlurTexture = new RenderTarget(Size);
+                _writeBuffer = new RenderTarget(Size);
+            }
+            
+            EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
+            RenderTarget rt = graphics.Renderer.MainTarget;
+        
+            renderer.End();
+        
+            graphics.SetRenderTarget(BlurTexture);
+            graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
+            renderer.Begin();
+            renderer.Draw(rt, new Vector2<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
+            renderer.End();
+            graphics.SetRenderTarget(null);
+
+            for (int i = 0; i < Theme.Blur.Iterations; i++)
+            {
+                float radius = (Theme.Blur.Iterations - i - 1) * Theme.Blur.Radius;
+                Vector2<float> direction = i % 2 == 0 ? new Vector2<float>(radius, 0) : new Vector2<float>(0, radius);
+            
+                graphics.SetRenderTarget(_writeBuffer);
+                graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
+                renderer.Begin(effect: _effect);
+
+                renderer.Draw(BlurTexture, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One,
+                    meta1: new Vector4((System.Numerics.Vector2) direction, Size.Width, Size.Height));
+            
+                renderer.End();
+                graphics.SetRenderTarget(null);
+                (BlurTexture, _writeBuffer) = (_writeBuffer, BlurTexture);
+            }
+
+            renderer.Begin();
+        }
+    }
 
     public delegate void OnClick(UIElement element);
+
+    #region Blur
+
+    protected RenderTarget BlurTexture;
+
+    private static Effect _effect;
+    
+    private RenderTarget _writeBuffer;
+
+    #endregion
 }

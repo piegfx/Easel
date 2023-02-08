@@ -42,6 +42,8 @@ public struct UITheme
 
     public Color FontColor;
 
+    public GaussianBlur Blur;
+
     public UITheme()
     {
         BorderWidth = 1;
@@ -55,5 +57,6 @@ public struct UITheme
         DropShadow = null;
         Font = null;
         FontColor = Color.Black;
+        Blur = null;
     }
 }

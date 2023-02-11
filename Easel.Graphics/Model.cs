@@ -101,7 +101,7 @@ public unsafe class Model
             Silk.NET.Assimp.Mesh* mesh = scene->MMeshes[i];
 
             for (int v = 0; v < mesh->MNumVertices; v++)
-                vptnts.Add(new VertexPositionTextureNormalTangent(mesh->MVertices[v], mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals[v], mesh->MTangents == null ? Vector3.Zero : mesh->MTangents[0]));
+                vptnts.Add(new VertexPositionTextureNormalTangent(mesh->MVertices[v], mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals == null ? Vector3.Zero : mesh->MNormals[v], mesh->MTangents == null ? Vector3.Zero : mesh->MTangents[0]));
 
             for (int f = 0; f < mesh->MNumFaces; f++)
             {

@@ -12,7 +12,7 @@ GameSettings settings = new GameSettings()
     Border = WindowBorder.Resizable
 };
 
-//Logger.UseConsoleLogs();
+Logger.UseConsoleLogs();
 
 using TestGame game = new TestGame(settings, new Test2D());
 game.Run();

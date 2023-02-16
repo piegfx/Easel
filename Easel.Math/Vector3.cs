@@ -78,6 +78,15 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
     public static Vector3T<T> operator *(T left, Vector3T<T> right) =>
         new Vector3T<T>(left * right.X, left * right.Y, left * right.Z);
 
+    public static Vector3T<T> operator *(Vector3T<T> left, Matrix<T> right)
+    {
+        return new Vector3T<T>(
+            (left.X * right.Row0.X) + (left.Y * right.Row1.X) + (left.Z * right.Row2.X) + right.Row3.X,
+            (left.X * right.Row0.Y) + (left.Y * right.Row1.Y) + (left.Z * right.Row2.Y) + right.Row3.Y,
+            (left.X * right.Row0.Z) + (left.Y * right.Row1.Z) + (left.Z * right.Row2.Z) + right.Row3.Z
+        );
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3T<T> operator /(Vector3T<T> left, Vector3T<T> right) =>
         new Vector3T<T>(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
@@ -124,15 +133,15 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
         return "Vector3T<" + typeof(T) + ">(X: " + X + ", Y: " + Y + ", Z: " + Z + ")";
     }
     
-    public static implicit operator Vector3(Vector3T<T> vector)
+    public static explicit operator System.Numerics.Vector3(Vector3T<T> vector)
     {
         float x = Convert.ToSingle(vector.X);
         float y = Convert.ToSingle(vector.Y);
         float z = Convert.ToSingle(vector.Z);
-        return new Vector3(x, y, z);
+        return new System.Numerics.Vector3(x, y, z);
     }
     
-    public static implicit operator Vector3T<T>(Vector3 vector)
+    public static explicit operator Vector3T<T>(System.Numerics.Vector3 vector)
     {
         return new Vector3T<T>(T.CreateChecked(vector.X), T.CreateChecked(vector.Y), T.CreateChecked(vector.Z));
     }
@@ -176,5 +185,11 @@ public static class Vector3T
     {
         Vector3T<T> dist = vector2 - vector1;
         return Dot(dist, dist);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector3T<T> Abs<T>(Vector3T<T> vector) where T : INumber<T>
+    {
+        return new Vector3T<T>(T.Abs(vector.X), T.Abs(vector.Y), T.Abs(vector.Z));
     }
 }

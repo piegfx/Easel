@@ -44,10 +44,10 @@ public class Test3D : Scene
             MoveSpeed = 10
         });
         Material mat = new StandardMaterial(texture, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.Black, Texture2D.White);
-        Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
+        //Camera.Main.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
 
         Camera second = new Camera(EaselMath.ToRadians(75), 640 / 360f);
-        second.Transform.Position = new Vector3T<float>(0, 0, -5);
+        second.Transform.Position = new Vector3(0, 0, -5);
         second.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(180), 0, 0);
         second.ClearColor = Color.RebeccaPurple;
         //Bitmap awesomeface = Content.Load<Bitmap>("awesomeface");
@@ -59,7 +59,7 @@ public class Test3D : Scene
         AddEntity("second", second);
 
         Camera third = new Camera(EaselMath.ToRadians(75), 640 / 360f);
-        third.Transform.Position = new Vector3T<float>(-3.5f, 1f, 0f);
+        third.Transform.Position = new Vector3(-3.5f, 1f, 0f);
         third.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(-20), 0, 0);
         third.ClearColor = Color.Orange;
         // TODO: Better camera solution than forcing every camera to use main camera tag.
@@ -70,10 +70,10 @@ public class Test3D : Scene
 
         Entity entity = new Entity(new Transform()
         {
-            Position = new Vector3T<float>(0, 0, -3)
+            Position = new Vector3(0, 0, -3)
         });
 
-        entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
+        //entity.AddComponent(new MeshRenderer(new MaterialMesh(Mesh.FromPrimitive(new Cube()), mat)));
         AddEntity("cube", entity);
 
         Entity thingy = new Entity();
@@ -82,7 +82,7 @@ public class Test3D : Scene
         
         UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
         
-        UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2<int>(0, 0)), new Size<int>(300), 0.9f, 12));
+        //UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2<int>(0, 0)), new Size<int>(300), 0.9f, 12));
     }
 
     protected override void Update()
@@ -96,8 +96,8 @@ public class Test3D : Scene
         //GetEntity<Camera>("second").Transform.Rotation *= Quaternion.CreateFromAxisAngle(-Vector3.UnitY, 1 * Time.DeltaTime)
 
         GetEntity("cube").Transform.Rotation *=
-            Quaternion.CreateFromAxisAngle(Vector3T<float>.UnitX, 1 * Time.DeltaTime) *
-            Quaternion.CreateFromAxisAngle(Vector3T<float>.UnitY, 0.75f * Time.DeltaTime) *
-            Quaternion.CreateFromAxisAngle(Vector3T<float>.UnitZ, 0.34f * Time.DeltaTime);
+            Quaternion.CreateFromAxisAngle(Vector3.UnitX, 1 * Time.DeltaTime) *
+            Quaternion.CreateFromAxisAngle(Vector3.UnitY, 0.75f * Time.DeltaTime) *
+            Quaternion.CreateFromAxisAngle(Vector3.UnitZ, 0.34f * Time.DeltaTime);
     }
 }

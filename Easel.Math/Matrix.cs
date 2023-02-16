@@ -127,7 +127,7 @@ public static class Matrix
         return result;
     }
 
-    public static Matrix<T> FromQuaternion<T>(Quaternion<T> quaternion) where T : INumber<T>
+    public static Matrix<T> FromQuaternion<T>(QuaternionT<T> quaternion) where T : INumber<T>
     {
         T x = quaternion.X;
         T y = quaternion.Y;

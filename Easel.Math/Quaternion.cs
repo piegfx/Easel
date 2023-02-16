@@ -5,9 +5,9 @@ using System.Xml.Serialization;
 namespace Easel.Math;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct Quaternion<T> where T : INumber<T>
+public struct QuaternionT<T> where T : INumber<T>
 {
-    public static Quaternion<T> Identity => new Quaternion<T>(T.Zero, T.Zero, T.Zero, T.One);
+    public static QuaternionT<T> Identity => new QuaternionT<T>(T.Zero, T.Zero, T.Zero, T.One);
 
     [XmlAttribute]
     public T X;
@@ -21,7 +21,7 @@ public struct Quaternion<T> where T : INumber<T>
     [XmlAttribute]
     public T W;
 
-    public Quaternion(T x, T y, T z, T w)
+    public QuaternionT(T x, T y, T z, T w)
     {
         X = x;
         Y = y;
@@ -31,18 +31,18 @@ public struct Quaternion<T> where T : INumber<T>
 
     public override string ToString()
     {
-        return "Quaternion<" + typeof(T) + ">(X: " + X + ", Y: " + Y + ", Z: " + Z + ", W: " + W + ")";
+        return "QuaternionT<" + typeof(T) + ">(X: " + X + ", Y: " + Y + ", Z: " + Z + ", W: " + W + ")";
     }
 }
 
-public static class Quaternion
+public static class QuaternionT
 {
-    public static Quaternion<T> FromEuler<T>(Vector3T<T> euler) where T : INumber<T>, ITrigonometricFunctions<T>
+    public static QuaternionT<T> FromEuler<T>(Vector3T<T> euler) where T : INumber<T>, ITrigonometricFunctions<T>
     {
         return FromEuler(euler.X, euler.Y, euler.Z);
     }
 
-    public static Quaternion<T> FromEuler<T>(T yaw, T pitch, T roll) where T : INumber<T>, ITrigonometricFunctions<T>
+    public static QuaternionT<T> FromEuler<T>(T yaw, T pitch, T roll) where T : INumber<T>, ITrigonometricFunctions<T>
     {
         T half = T.CreateChecked(0.5);
         T cy = T.Cos(yaw * half);
@@ -56,6 +56,6 @@ public static class Quaternion
         T y = cr * cp * sy - sr * sp * cy;
         T z = sr * cp * cy - cr * sp * sy;
         T w = cr * cp * cy + sr * sp * sy;
-        return new Quaternion<T>(x, y, z, w);
+        return new QuaternionT<T>(x, y, z, w);
     }
 }

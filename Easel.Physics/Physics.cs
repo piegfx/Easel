@@ -57,10 +57,10 @@ public static class Physics
         //Vector3 normal = cb.HitNormalWorld;
         //Vector3 normal = Vector3.TransformNormal(cb.HitNormalWorld, Matrix4x4.CreateFromQuaternion(invert));
 
-        hit.WorldPosition = cb.CollisionObject.WorldTransform.Translation;
-        hit.HitPosition = cb.HitPointWorld;
-        hit.CubeNormal = normal;
-        hit.RealNormal = cb.HitNormalWorld;
+        hit.WorldPosition = (Vector3T<float>) cb.CollisionObject.WorldTransform.Translation;
+        hit.HitPosition = (Vector3T<float>) cb.HitPointWorld;
+        hit.CubeNormal = (Vector3T<int>) normal;
+        hit.RealNormal = (Vector3T<float>) cb.HitNormalWorld;
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;
         hit.ChildIndex = cb.ChildIndex;

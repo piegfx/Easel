@@ -23,9 +23,9 @@ public class TestManyEntities : Scene
         {
             Entity entity = new Entity(new Transform()
             {
-                Position = new Vector3T<float>(random.Next(0, 1280), random.Next(0, 720), 0),
+                Position = new Vector3(random.Next(0, 1280), random.Next(0, 720), 0),
                 SpriteRotation = random.NextSingle() * MathF.PI * 2,
-                Scale = new Vector3T<float>(random.NextSingle() * 0.5f, random.NextSingle() * 0.5f, 1.0f)
+                Scale = new Vector3(random.NextSingle() * 0.5f, random.NextSingle() * 0.5f, 1.0f)
             });
             entity.AddComponent(new Sprite(texture));
             AddEntity(entity);

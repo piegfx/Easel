@@ -29,11 +29,15 @@ public class Texture2D : Texture
         Format format = Format.R8G8B8A8_UNorm, bool autoDispose = true) 
         : base(samplerState ?? SamplerState.AnisotropicRepeat, autoDispose)
     {
+        bool compressed = format >= Format.BC1_UNorm && format <= Format.BC7_UNorm_SRgb;
+        
+        // TODO: Better texture management for DDS.
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
         TextureDescription description =
-            new TextureDescription(TextureType.Texture2D, width, height, format, 0, 1, TextureUsage.ShaderResource);
+            new TextureDescription(TextureType.Texture2D, width, height, format, compressed ? 1 : 0, 1, TextureUsage.ShaderResource);
         PieTexture = device.CreateTexture(description, data);
-        device.GenerateMipmaps(PieTexture);
+        if (!compressed)
+            device.GenerateMipmaps(PieTexture);
     }
 
     public void SetData<T>(int x, int y, int width, int height, T[] data) where T : unmanaged

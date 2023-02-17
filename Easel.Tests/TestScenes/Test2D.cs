@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Numerics;
 using Easel.Entities;
 using Easel.Entities.Components;
+using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.GUI;
@@ -22,6 +24,10 @@ public class Test2D : Scene
     protected override void Initialize()
     {
         base.Initialize();
+        
+        Console.WriteLine("loading dds");
+
+        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/awesomeface.dds"));
         
         Camera.Main.UseOrtho2D();
         Camera.Main.ClearColor = Color.CornflowerBlue;
@@ -54,7 +60,7 @@ public class Test2D : Scene
             1u, 2u, 3u
         };*/
 
-        Texture2D texture = Content.Load<Texture2D>("awesomeface");
+        Texture2D texture = new Texture2D(dds.Test);
         
         Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));

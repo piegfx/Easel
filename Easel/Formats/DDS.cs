@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Easel.Core;
 using Easel.Graphics;
@@ -42,29 +43,236 @@ public class DDS
             throw new EaselException("An error occurred while reading the DDS file (invalid pixel format).");
 
         uint fFlags = reader.ReadUInt32();
-        bool isCompressed = (fFlags & 0x4) == 0x4;
-
+        bool validFourCc = (fFlags & 0x4) == 0x4;
+        
         uint fourCc = reader.ReadUInt32();
 
-        bool containsDx10Header = fourCc == 0x30315844;
-
-        // TODO: The rest of the pixel format.
-        reader.ReadBytes(5 * sizeof(uint));
+        uint rgbBitCount = reader.ReadUInt32();
+        uint rBitMask = reader.ReadUInt32();
+        uint gBitMask = reader.ReadUInt32();
+        uint bBitMask = reader.ReadUInt32();
+        uint aBitMask = reader.ReadUInt32();
+        
+        Console.WriteLine(rgbBitCount);
+        Console.WriteLine(Convert.ToString(rBitMask, 16));
+        Console.WriteLine(Convert.ToString(gBitMask, 16));
+        Console.WriteLine(Convert.ToString(bBitMask, 16));
+        Console.WriteLine(Convert.ToString(aBitMask, 16));
         
         // TODO: The rest of the header.
         reader.ReadBytes(5 * sizeof(uint));
+
+        Format format = Format.R8G8B8A8_UNorm;
+
+        if (validFourCc)
+        {
+            FourCCType fourCcType = (FourCCType) fourCc;
+            switch (fourCcType)
+            {
+                case FourCCType.Dxt1:
+                    format = Format.BC1_UNorm;
+                    break;
+                case FourCCType.Dxt2:
+                    throw new NotSupportedException();
+                    break;
+                case FourCCType.Dxt3:
+                    format = Format.BC2_UNorm;
+                    break;
+                case FourCCType.Dxt4:
+                    throw new NotSupportedException();
+                    break;
+                case FourCCType.Dxt5:
+                    format = Format.BC3_UNorm;
+                    break;
+                case FourCCType.Bc4U:
+                    format = Format.BC4_UNorm;
+                    break;
+                case FourCCType.Bc4S:
+                    format = Format.BC4_SNorm;
+                    break;
+                case FourCCType.Bc5U:
+                    format = Format.BC5_UNorm;
+                    break;
+                case FourCCType.Bc5S:
+                    format = Format.BC5_SNorm;
+                    break;
+                case FourCCType.Dx10:
+                    uint dxgiFormat = reader.ReadUInt32();
+
+                    format = dxgiFormat switch
+                    {
+                        2 => Format.R32G32B32A32_Float,
+                        3 => Format.R32G32B32A32_UInt,
+                        4 => Format.R32G32B32A32_SInt,
+                        6 => Format.R32G32B32_Float,
+                        7 => Format.R32G32B32_UInt,
+                        8 => Format.R32G32B32_SInt,
+                        10 => Format.R16G16B16A16_Float,
+                        11 => Format.R16G16B16A16_UNorm,
+                        12 => Format.R16G16B16A16_UInt,
+                        13 => Format.R16G16B16A16_SNorm,
+                        14 => Format.R16G16B16A16_SInt,
+                        16 => Format.R32G32_Float,
+                        17 => Format.R32G32_UInt,
+                        18 => Format.R32G32_SInt,
+                        28 => Format.R8G8B8A8_UNorm,
+                        29 => Format.R8G8B8A8_UNorm_SRgb,
+                        30 => Format.R8G8B8A8_UInt,
+                        31 => Format.R8G8B8A8_SNorm,
+                        32 => Format.R8G8B8A8_SInt,
+                        34 => Format.R16G16_Float,
+                        35 => Format.R16G16_UNorm,
+                        36 => Format.R16G16_UInt,
+                        37 => Format.R16G16_SNorm,
+                        38 => Format.R16G16_SInt,
+                        40 => Format.D32_Float,
+                        41 => Format.R32_Float,
+                        42 => Format.R32_UInt,
+                        43 => Format.R32_SInt,
+                        45 => Format.D24_UNorm_S8_UInt,
+                        49 => Format.R8G8_UNorm,
+                        50 => Format.R8G8_UInt,
+                        51 => Format.R8G8_SNorm,
+                        52 => Format.R8G8_SInt,
+                        54 => Format.R16_Float,
+                        55 => Format.D16_UNorm,
+                        56 => Format.R16_UNorm,
+                        57 => Format.R16_UInt,
+                        58 => Format.R16_SNorm,
+                        59 => Format.R16_SInt,
+                        61 => Format.R8_UNorm,
+                        62 => Format.R8_UInt,
+                        63 => Format.R8_SNorm,
+                        64 => Format.R8_SInt,
+                        71 => Format.BC1_UNorm,
+                        72 => Format.BC1_UNorm_SRgb,
+                        74 => Format.BC2_UNorm,
+                        75 => Format.BC2_UNorm_SRgb,
+                        77 => Format.BC3_UNorm,
+                        78 => Format.BC3_UNorm_SRgb,
+                        80 => Format.BC4_UNorm,
+                        81 => Format.BC4_SNorm,
+                        83 => Format.BC5_UNorm,
+                        84 => Format.BC5_SNorm,
+                        87 => Format.B8G8R8A8_UNorm,
+                        91 => Format.B8G8R8A8_UNorm_SRgb,
+                        95 => Format.BC6H_UF16,
+                        96 => Format.BC6H_SF16,
+                        98 => Format.BC7_UNorm,
+                        99 => Format.BC7_UNorm_SRgb,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    uint resourceDimension = reader.ReadUInt32();
+                    uint miscFlag = reader.ReadUInt32();
+                    uint arraySize = reader.ReadUInt32();
+                    uint miscFlags2 = reader.ReadUInt32();
+                    break;
+                case FourCCType.Rgba16UNorm:
+                    format = Format.R16G16B16A16_UNorm;
+                    break;
+                case FourCCType.Rgba16SNorm:
+                    format = Format.R16G16B16A16_SNorm;
+                    break;
+                case FourCCType.R16Float:
+                    format = Format.R16_Float;
+                    break;
+                case FourCCType.R16G16Float:
+                    format = Format.R16G16_Float;
+                    break;
+                case FourCCType.R16G16B16A16Float:
+                    format = Format.R16G16B16A16_Float;
+                    break;
+                case FourCCType.R32Float:
+                    format = Format.R32_Float;
+                    break;
+                case FourCCType.R32G32Float:
+                    format = Format.R32G32_Float;
+                    break;
+                case FourCCType.R32G32B32A32Float:
+                    format = Format.R32G32B32A32_Float;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("fourCcType", fourCcType, null);
+            }
+        }
+        else
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            bool IsBitmask(uint r, uint g, uint b, uint a) =>
+                rBitMask == r && gBitMask == g && bBitMask == b && aBitMask == a;
+
+            NotSupportedException InvalidRgbException() => new NotSupportedException(
+                $"{rgbBitCount} bpp bitmask R: {Convert.ToString(rBitMask, 16)}, G: {Convert.ToString(bBitMask, 16)}, B: {Convert.ToString(gBitMask, 16)}, A: {Convert.ToString(aBitMask, 16)} is not supported.");
+            
+            switch (rgbBitCount)
+            {
+                case 32:
+                    if (IsBitmask(0xFF, 0xFF00, 0xFF0000, 0xFF000000))
+                        format = Format.R8G8B8A8_UNorm;
+                    else if (IsBitmask(0xFF0000, 0xFF00, 0xFF, 0xFF000000))
+                        format = Format.B8G8R8A8_UNorm;
+                    else
+                        throw InvalidRgbException();
+
+                    break;
+                default:
+                    throw InvalidRgbException();
+            }
+        }
+
+        bool isCompressed = format is >= Format.BC1_UNorm and <= Format.BC7_UNorm_SRgb;
         
         #endregion
         
         if (isCompressed)
         {
             byte[] initData = reader.ReadBytes((int) (pitchOrLinearSize));
-            Test = new Bitmap((int) width, (int) height, Format.BC3_UNorm, initData);
+            Test = new Bitmap((int) width, (int) height, format, initData);
         }
         else
         {
             byte[] initData = reader.ReadBytes((int) (pitchOrLinearSize * width));
-            Test = new Bitmap((int) width, (int) height, Format.B8G8R8A8_UNorm, initData);
+            Test = new Bitmap((int) width, (int) height, format, initData);
         }
+    }
+
+    private enum FourCCType : uint
+    {
+        Dxt1 = 0x31545844,
+        
+        Dxt2 = 0x32545844,
+        
+        Dxt3 = 0x33545844,
+        
+        Dxt4 = 0x34545844,
+        
+        Dxt5 = 0x35545844,
+        
+        Bc4U = 0x55344342,
+        
+        Bc4S = 0x53344342,
+        
+        Bc5U = 0x55354342,
+        
+        Bc5S = 0x53354342,
+
+        Dx10 = 0x30315844,
+        
+        Rgba16UNorm = 36,
+        
+        Rgba16SNorm = 110,
+        
+        R16Float = 111,
+        
+        R16G16Float = 112,
+        
+        R16G16B16A16Float = 113,
+        
+        R32Float = 114,
+        
+        R32G32Float = 115,
+        
+        R32G32B32A32Float = 116
     }
 }

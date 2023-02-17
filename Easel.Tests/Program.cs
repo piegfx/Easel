@@ -9,7 +9,8 @@ using Pie.Windowing;
 
 GameSettings settings = new GameSettings()
 {
-    Border = WindowBorder.Resizable
+    Border = WindowBorder.Resizable,
+    Size = new Size<int>(1024, 1024)
 };
 
 Logger.UseConsoleLogs();

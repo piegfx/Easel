@@ -27,7 +27,7 @@ public class Test2D : Scene
         
         Console.WriteLine("loading dds");
 
-        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/awesomeface.dds"));
+        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/DDS/24bitcolor-BGRA8.dds"));
         
         Camera.Main.UseOrtho2D();
         Camera.Main.ClearColor = Color.CornflowerBlue;
@@ -79,7 +79,7 @@ public class Test2D : Scene
         Graphics.SpriteRenderer.DrawVertices(_rt, _vertices, _indices);
         Graphics.SpriteRenderer.End();*/
 
-        Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);
-        Camera.Main.Transform.Position.X += 1;
+        //Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);
+        //Camera.Main.Transform.Position.X += 1;
     }
 }

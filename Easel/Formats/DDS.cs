@@ -4,13 +4,21 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Easel.Core;
 using Easel.Graphics;
+using Easel.Math;
 using Pie;
 
 namespace Easel.Formats;
 
 public class DDS
 {
-    public Bitmap Test;
+    /// <summary>
+    /// The number of mipmap levels in this texture.
+    /// </summary>
+    public readonly int MipLevels;
+
+    public readonly Size<int> Size;
+
+    public readonly Bitmap[][] Bitmaps;
     
     public DDS(byte[] file)
     {
@@ -19,12 +27,21 @@ public class DDS
         
         // 'DDS '
         if (reader.ReadUInt32() != 0x20534444)
-            throw new EaselException("Given file is not a DDS file (identifier missing).");
+            throw new InvalidDataException("Given file is not a DDS file (identifier missing).");
 
         if (reader.ReadUInt32() != 124)
-            throw new EaselException("Invalid DDS file (size of structure is not 124).");
+            throw new InvalidDataException("Invalid DDS file (size of structure is not 124).");
 
         uint flags = reader.ReadUInt32();
+        if ((flags & 0x1) != 0x1 || (flags & 0x2) != 0x2 || (flags & 0x4) != 0x4 || (flags & 0x1000) != 0x1000)
+        {
+            throw new InvalidDataException(
+                "Malformed DDS file, flags did not contain required flags (flags were actually " +
+                Convert.ToString(flags, 2) + ")");
+        }
+
+        bool containsMipmaps = (flags & 0x20000) == 0x20000;
+        bool usePitch = (flags & 0x8) == 0x8;
 
         uint height = reader.ReadUInt32();
         uint width = reader.ReadUInt32();
@@ -40,7 +57,7 @@ public class DDS
         reader.ReadBytes(11 * sizeof(uint)); // 11 byte DWORD reserved
 
         if (reader.ReadUInt32() != 32)
-            throw new EaselException("An error occurred while reading the DDS file (invalid pixel format).");
+            throw new InvalidDataException("An error occurred while reading the DDS file (invalid pixel format).");
 
         uint fFlags = reader.ReadUInt32();
         bool validFourCc = (fFlags & 0x4) == 0x4;
@@ -52,13 +69,7 @@ public class DDS
         uint gBitMask = reader.ReadUInt32();
         uint bBitMask = reader.ReadUInt32();
         uint aBitMask = reader.ReadUInt32();
-        
-        Console.WriteLine(rgbBitCount);
-        Console.WriteLine(Convert.ToString(rBitMask, 16));
-        Console.WriteLine(Convert.ToString(gBitMask, 16));
-        Console.WriteLine(Convert.ToString(bBitMask, 16));
-        Console.WriteLine(Convert.ToString(aBitMask, 16));
-        
+
         // TODO: The rest of the header.
         reader.ReadBytes(5 * sizeof(uint));
 
@@ -73,13 +84,13 @@ public class DDS
                     format = Format.BC1_UNorm;
                     break;
                 case FourCCType.Dxt2:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException("DXT2 compressed textures are not supported.");
                     break;
                 case FourCCType.Dxt3:
                     format = Format.BC2_UNorm;
                     break;
                 case FourCCType.Dxt4:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException("DXT4 compressed textures are not supported.");
                     break;
                 case FourCCType.Dxt5:
                     format = Format.BC3_UNorm;
@@ -221,19 +232,32 @@ public class DDS
             }
         }
 
-        bool isCompressed = format is >= Format.BC1_UNorm and <= Format.BC7_UNorm_SRgb;
+        //bool isCompressed = format is >= Format.BC1_UNorm and <= Format.BC7_UNorm_SRgb;
         
         #endregion
+
+        uint size = uint.Max(1, (width + 3) / 4) * uint.Max(1, (height + 3) / 4) * 16;
+
+        MipLevels = (int) numMipmaps;
+        Size = new Size<int>((int) width, (int) height);
         
-        if (isCompressed)
+        Bitmaps = new Bitmap[1][];
+
+        for (int i = 0; i < Bitmaps.Length; i++)
         {
-            byte[] initData = reader.ReadBytes((int) (pitchOrLinearSize));
-            Test = new Bitmap((int) width, (int) height, format, initData);
-        }
-        else
-        {
-            byte[] initData = reader.ReadBytes((int) (pitchOrLinearSize * width));
-            Test = new Bitmap((int) width, (int) height, format, initData);
+            Bitmaps[i] = new Bitmap[numMipmaps];
+
+            uint w = width;
+            uint h = height;
+            uint pLs = usePitch ? pitchOrLinearSize * width : pitchOrLinearSize;
+            for (int m = 0; m < numMipmaps; m++)
+            {
+                Bitmaps[i][m] = new Bitmap((int) w, (int) h, format, reader.ReadBytes((int) pLs));
+
+                w /= 2;
+                h /= 2;
+                pLs /= 4;
+            }
         }
     }
 

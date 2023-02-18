@@ -191,7 +191,7 @@ public sealed class SpriteRenderer : IDisposable
         float texW = rectWidth / width;
         float texH = rectHeight / height;
 
-        bool isRenderTarget = _currentTexture is RenderTarget && _device.Api == GraphicsApi.OpenGl33;
+        bool isRenderTarget = _currentTexture is RenderTarget && _device.Api == GraphicsApi.OpenGL;
         if (isRenderTarget && flip != SpriteFlip.FlipY)
             flip = SpriteFlip.FlipY;
         else if (isRenderTarget && flip == SpriteFlip.FlipY)

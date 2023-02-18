@@ -19,7 +19,7 @@ public class TestGameScene : Scene
         
         Entity entity = new Entity(new Transform()
         {
-            Position = new Vector3T<float>(100, 100, 0)
+            Position = new Vector3(100, 100, 0)
         });
         entity.AddComponent(new Sprite(Content.Load<Texture2D>("awesomeface")));
         AddEntity("thing", entity);

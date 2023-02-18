@@ -36,7 +36,7 @@ public class ContentManager
         AddNewTypeReader(typeof(Bitmap), new BitmapContentTypeReader());
         AddNewTypeReader(typeof(Texture2D), new Texture2DContentTypeReader());
         AddNewTypeReader(typeof(Model), new ModelContentTypeReader());
-        AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
+        //AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
         AddNewTypeReader(typeof(Font), new FontContentTypeReader());
         AddNewTypeReader(typeof(Sound), new SoundContentTypeReader());
 

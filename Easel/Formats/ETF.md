@@ -29,6 +29,8 @@ struct EtfHeader {
     width: u32,
     height: u32,
     flags: u8,
+    reserved_len: Option<u32>,
+    reserved: Vec<u8>,
     format: PieFormat,
     mip_levels: Option<u8>,
     array_size: Option<u32>,
@@ -45,10 +47,17 @@ The height of the texture in pixels.
 ### flags
 Various flags.
 
-| Flag | Description                       |
-|------|-----------------------------------|
-| 0x1  | This texture contains mipmaps.    |
-| 0x2  | This texture is an array texture. |
+| Name     | Value | Description                                 |
+|----------|-------|---------------------------------------------|
+| Mipmaps  | 0x1   | This texture contains mipmaps.              |
+| Array    | 0x2   | This texture is an array texture.           |
+| Reserved | 0x4   | This texture contains reserved/custom data. |
+
+### reserved_len
+The length, in bytes, of the reserved data. **Only read this value if the reserved flag is set.**
+
+### reserved
+The reserved/custom data itself. Custom data may be contained here, but can be ignored by most implementations. **Only read this value if the reserved flag is set.**
 
 ### format
 The pie format.

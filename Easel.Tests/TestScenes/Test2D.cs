@@ -23,11 +23,12 @@ public class Test2D : Scene
     {
         base.Initialize();
         
-        File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png")));
-        
-        Console.WriteLine("loading dds");
+        //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));
 
-        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Downloads/RubberCuboidFloor/RubberCuboidFloor_4K_BaseColor.dds"));
+        ETF tex = new ETF(File.ReadAllBytes("/home/ollie/Pictures/ETF/test.etf"));
+        
+        //Console.WriteLine("loading dds");
+        //DDS tex = new DDS(File.ReadAllBytes("/home/ollie/Downloads/RubberCuboidFloor/RubberCuboidFloor_4K_BaseColor.dds"));
         
         Camera.Main.UseOrtho2D();
         Camera.Main.ClearColor = Color.CornflowerBlue;
@@ -62,7 +63,7 @@ public class Test2D : Scene
 
         */
 
-        _texture = new Texture2D(dds.Bitmaps[0][0], SamplerState.LinearClamp);
+        _texture = new Texture2D(tex.Bitmaps[0][0], SamplerState.LinearClamp);
         
         /*Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));

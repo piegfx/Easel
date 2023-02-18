@@ -28,7 +28,7 @@ public unsafe class Model
             (uint) PostProcessSteps.Triangulate |
             (uint) PostProcessSteps.GenerateUVCoords | (uint) PostProcessSteps.JoinIdenticalVertices |
             (uint) PostProcessSteps.CalculateTangentSpace | (uint) PostProcessSteps.PreTransformVertices |
-            (uint) PostProcessSteps.MakeLeftHanded | (uint) PostProcessSteps.FlipUVs);
+            (uint) PostProcessSteps.MakeLeftHanded | (uint) PostProcessSteps.FlipUVs | (uint) PostProcessSteps.GenerateSmoothNormals);
 
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 ||
             scene->MRootNode == null)

@@ -77,10 +77,13 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-        Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
-        Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
-        camera.Tag = Tags.MainCamera;
-        AddEntity("Main Camera", camera);
+        if (!EaselGame.Instance.IsServer)
+        {
+            Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
+            Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
+            camera.Tag = Tags.MainCamera;
+            AddEntity("Main Camera", camera);
+        }
 
         Entity directionalLight = new Entity();
         directionalLight.AddComponent(new DirectionalLight(new Vector2<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),

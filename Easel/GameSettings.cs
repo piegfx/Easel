@@ -81,9 +81,14 @@ public struct GameSettings
     /// </summary>
     public RenderOptions RenderOptions;
 
+    /// <summary>
+    /// Run the game in a configuration where no graphics device or window is created.
+    /// </summary>
+    public bool Server;
+
     public GameSettings(Size<int> size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
         GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
-        RenderOptions renderOptions)
+        RenderOptions renderOptions, bool server)
     {
         Size = size;
         Fullscreen = fullscreen;
@@ -97,6 +102,7 @@ public struct GameSettings
         TitleBarFlags = titleBarFlags;
         StartVisible = startVisible;
         RenderOptions = renderOptions;
+        Server = server;
     }
 
     /// <summary>
@@ -117,6 +123,7 @@ public struct GameSettings
         TitleBarFlags = TitleBarFlags.ShowEasel;
         StartVisible = true;
         RenderOptions = RenderOptions.Default;
+        Server = false;
     }
 
     public static GameSettings StartFullscreen => new GameSettings()

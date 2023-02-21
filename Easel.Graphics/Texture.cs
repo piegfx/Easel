@@ -24,7 +24,7 @@ public abstract class Texture : IDisposable
     /// <summary>
     /// The size (resolution), in pixels of the texture.
     /// </summary>
-    public Size<int> Size => (Size<int>) PieTexture.Size;
+    public Size<int> Size => (Size<int>) new Size<int>(PieTexture.Description.Width, PieTexture.Description.Height);
 
     protected Texture(SamplerState state, bool autoDispose)
     {

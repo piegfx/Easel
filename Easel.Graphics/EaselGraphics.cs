@@ -58,7 +58,7 @@ public class EaselGraphics : IDisposable
 
     public EaselGraphics(GraphicsDevice pieDevice, RenderOptions options)
     {
-        Logging.DebugLog += PieDebug;
+        PieLog.DebugLog += PieDebug;
         PieGraphics = pieDevice;
 
         Viewport = new Rectangle<int>(Vector2<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);

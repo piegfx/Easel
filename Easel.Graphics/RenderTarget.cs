@@ -13,7 +13,7 @@ public class RenderTarget : Texture
     {
         // TODO: RGB render targets that draw by ignoring the alpha value in the frag shader (since D3D doesn't support RGB)
         
-        TextureDescription description = new TextureDescription(TextureType.Texture2D, size.Width, size.Height,
+        TextureDescription description = new TextureDescription(size.Width, size.Height,
             Format.B8G8R8A8_UNorm, 1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer);
 
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;

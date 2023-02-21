@@ -158,7 +158,7 @@ void main()
         _fontTexture?.Dispose();
         _fontTexture =
             device.CreateTexture(
-                new TextureDescription(TextureType.Texture2D, width, height, Format.R8G8B8A8_UNorm, 1, 1,
+                new TextureDescription(width, height, Format.R8G8B8A8_UNorm, 1, 1,
                     TextureUsage.ShaderResource), pixels);
         device.GenerateMipmaps(_fontTexture);
 

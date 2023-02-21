@@ -123,7 +123,7 @@ public class ETF
         if (arraySize > 1)
             writer.Write(arraySize);
         
-        writer.Write(bitmap.Size.Width * bitmap.Size.Height * PieUtils.CalculateBitsPerPixel(format));
+        writer.Write(bitmap.Size.Width * bitmap.Size.Height * format.BitsPerPixel());
 
         #endregion
 

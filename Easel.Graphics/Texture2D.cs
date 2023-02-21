@@ -43,7 +43,7 @@ public class Texture2D : Texture
     public void SetData<T>(int x, int y, int width, int height, T[] data) where T : unmanaged
     {
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
-        device.UpdateTexture(PieTexture, x, y, (uint) width, (uint) height, data);
+        device.UpdateTexture(PieTexture, 0, 0, x, y, 0, width, height, 0, data);
     }
 
     public static readonly Texture2D White = new Texture2D(1, 1, new byte[] { 255, 255, 255, 255 }, autoDispose: false);

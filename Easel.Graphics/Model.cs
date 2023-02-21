@@ -20,7 +20,7 @@ public unsafe class Model
 
     public Material[] Materials;
 
-    public Model(string path)
+    public Model(string path, bool flipUvs = true)
     {
         _assimp ??= Assimp.GetApi();
 
@@ -28,7 +28,7 @@ public unsafe class Model
             (uint) PostProcessSteps.Triangulate |
             (uint) PostProcessSteps.GenerateUVCoords | (uint) PostProcessSteps.JoinIdenticalVertices |
             (uint) PostProcessSteps.CalculateTangentSpace | (uint) PostProcessSteps.PreTransformVertices |
-            (uint) PostProcessSteps.MakeLeftHanded | (uint) PostProcessSteps.FlipUVs | (uint) PostProcessSteps.GenerateSmoothNormals);
+            (uint) PostProcessSteps.MakeLeftHanded | (flipUvs ? (uint) PostProcessSteps.FlipUVs : 0) | (uint) PostProcessSteps.GenerateSmoothNormals);
 
         if (scene == null || (scene->MFlags & Assimp.SceneFlagsIncomplete) != 0 ||
             scene->MRootNode == null)

@@ -67,9 +67,10 @@ public class Test2D : Scene
         
         /*Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));
-        AddEntity(sprite);
-        
-        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));*/
+        AddEntity(sprite);*/
+
+        UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf");
+        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));
     }
 
     private float _f;

@@ -16,9 +16,9 @@ public unsafe class Model
 {
     private static Assimp _assimp;
 
-    public readonly ModelMesh[] Meshes;
+    public ModelMesh[] Meshes;
 
-    public readonly Material[] Materials;
+    public Material[] Materials;
 
     public Model(string path)
     {

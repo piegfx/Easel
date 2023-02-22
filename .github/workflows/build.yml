@@ -11,13 +11,7 @@ on:
 jobs:
 
   build:
-
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest
 
     steps:
     - name: Checkout
@@ -26,8 +20,7 @@ jobs:
         fetch-depth: 0
         submodules: 'recursive'
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
+    - name: Install .NET 7
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x

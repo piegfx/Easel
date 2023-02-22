@@ -48,10 +48,13 @@ public class EaselGraphics : IDisposable
         get => _viewport;
         set
         {
-            if (value == _viewport)
-                return;
+            // TODO: ????????
+            //if (value == _viewport)
+            //    return;
             _viewport = new Rectangle<int>(value.X, value.Y, value.Width, value.Height);
             PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
+            if (value == _viewport)
+                return;
             ViewportResized?.Invoke(_viewport);
         }
     }

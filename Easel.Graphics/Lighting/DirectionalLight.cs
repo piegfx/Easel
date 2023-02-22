@@ -27,12 +27,14 @@ public struct DirectionalLight
     
     public Color Color;
 
-    //public ShadowMap
+    public ShadowMap ShadowMap;
 
-    public DirectionalLight(Vector2<float> direction, Color color, bool castShadows = true)
+    public DirectionalLight(Vector2<float> direction, Color color, int numShadowCascades = 4)
     {
         Direction = direction;
         Color = color;
+        if (numShadowCascades > 0)
+            ShadowMap = new ShadowMap(new Size<int>(1024), numShadowCascades);
     }
 
     public ShaderDirLight ShaderDirLight => new ShaderDirLight()

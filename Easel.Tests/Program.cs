@@ -10,12 +10,11 @@ using Pie.Windowing;
 GameSettings settings = new GameSettings()
 {
     Border = WindowBorder.Resizable,
-    Size = new Size<int>(1024, 1024),
 };
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new Test2D());
+using TestGame game = new TestGame(settings, new TestShadow());
 game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);

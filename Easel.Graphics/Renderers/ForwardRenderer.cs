@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using Easel.Graphics.Lighting;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Pie;
+using Color = Easel.Math.Color;
 
 namespace Easel.Graphics.Renderers;
 
@@ -84,28 +87,55 @@ public sealed class ForwardRenderer : IRenderer
 
     public void Perform3DPass(CameraInfo camera)
     {
-        GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
+        EaselGraphics graphics = EaselGraphics.Instance;
+        GraphicsDevice device = graphics.PieGraphics;
+        
+        _sceneInfo.Sun = DirectionalLight?.ShaderDirLight ?? new ShaderDirLight();
+
+        // TODO: Optimize this if possible
+        IOrderedEnumerable<TransformedRenderable> frontToBack =
+            _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, camera.Position));
         
         // First perform depth-only shadow pass
-        
-        
+
+        if (DirectionalLight?.ShadowMap != null)
+        {
+            Matrix4x4 proj = Matrix4x4.CreateOrthographicOffCenter(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 10.0f);
+            Matrix4x4 view = Matrix4x4.CreateLookAt(
+                new Vector3(_sceneInfo.Sun.Direction.X, _sceneInfo.Sun.Direction.Y, _sceneInfo.Sun.Direction.Z),
+                Vector3.Zero, Vector3.UnitY);
+            Matrix4x4 lightSpace = proj * view;
+            device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffer);
+            device.Clear(ClearFlags.Depth);
+            // TODO: Optimize and set viewport to FB size.
+            device.Viewport = new Rectangle(0, 0, 1024, 1024);
+
+            CameraInfo info = new CameraInfo(proj, view); 
+            _projViewModel.Projection = info.Projection;
+            _projViewModel.View = info.View;
+            device.SetDepthState(_depthState);
+            
+            foreach (TransformedRenderable renderable in frontToBack)
+                DrawRenderable(device, info, renderable);
+        }
         
         // Then perform main color pass.
         
+        graphics.SetRenderTarget(MainTarget);
+        //device.Viewport = new Rectangle(0, 0, 1280, 720);
+
         if (camera.ClearColor.HasValue)
             EaselGraphics.Instance.Clear(camera.ClearColor.Value);
         
         _projViewModel.Projection = camera.Projection;
         _projViewModel.View = camera.View;
 
-        _sceneInfo.Sun = DirectionalLight?.ShaderDirLight ?? new ShaderDirLight();
-        
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetDepthState(_depthState);
         
         // Draw front-to-back for opaques.
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
-        foreach (TransformedRenderable renderable in _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, camera.Position)))
+        foreach (TransformedRenderable renderable in frontToBack)
             DrawRenderable(device, camera, renderable);
         
         // Lastly draw the skybox.

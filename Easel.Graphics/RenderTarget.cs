@@ -24,8 +24,7 @@ public class RenderTarget : Texture
 
         _depth = device.CreateTexture(description);
 
-        PieBuffer = device.CreateFramebuffer(new FramebufferAttachment(PieTexture, AttachmentType.Color),
-            new FramebufferAttachment(_depth, AttachmentType.DepthStencil));
+        PieBuffer = device.CreateFramebuffer(new FramebufferAttachment(PieTexture), new FramebufferAttachment(_depth));
     }
 
     public override void Dispose()

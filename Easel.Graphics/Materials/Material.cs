@@ -33,7 +33,7 @@ public abstract class Material
     protected Material()
     {
         Tiling = Vector2<float>.One;
-        RasterizerState = RasterizerState.CullClockwise;
+        RasterizerState = RasterizerState.CullCounterClockwise;
     }
 
     protected internal abstract void ApplyTextures(GraphicsDevice device);

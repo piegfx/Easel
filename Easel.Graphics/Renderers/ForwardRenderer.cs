@@ -14,6 +14,7 @@ namespace Easel.Graphics.Renderers;
 public sealed class ForwardRenderer : IRenderer
 {
     private List<TransformedRenderable> _opaques;
+    private List<TransformedRenderable> _translucents;
     private List<Sprite> _opaqueSprites;
 
     private ProjViewModel _projViewModel;
@@ -27,6 +28,7 @@ public sealed class ForwardRenderer : IRenderer
     public ForwardRenderer(EaselGraphics graphics, Size<int> initialResolution)
     {
         _opaques = new List<TransformedRenderable>();
+        _translucents = new List<TransformedRenderable>();
         _opaqueSprites = new List<Sprite>();
         _projViewModel = new ProjViewModel();
 
@@ -55,7 +57,10 @@ public sealed class ForwardRenderer : IRenderer
 
     public void Draw(in Renderable renderable, in Matrix4x4 world)
     {
-        _opaques.Add(new TransformedRenderable(renderable, world));
+        if (renderable.Material.IsTranslucent)
+            _translucents.Add(new TransformedRenderable(renderable, world));
+        else
+            _opaques.Add(new TransformedRenderable(renderable, world));
     }
 
     public void DrawSprite(in Sprite sprite)
@@ -66,6 +71,7 @@ public sealed class ForwardRenderer : IRenderer
     public void NewFrame()
     {
         _opaques.Clear();
+        _translucents.Clear();
         _opaqueSprites.Clear();
 
         EaselGraphics graphics = EaselGraphics.Instance;
@@ -93,8 +99,11 @@ public sealed class ForwardRenderer : IRenderer
         _sceneInfo.Sun = DirectionalLight?.ShaderDirLight ?? new ShaderDirLight();
 
         // TODO: Optimize this if possible
-        IOrderedEnumerable<TransformedRenderable> frontToBack =
+        IOrderedEnumerable<TransformedRenderable> opaques =
             _opaques.OrderBy(renderable => Vector3.Distance(renderable.Transform.Translation, camera.Position));
+        
+        IOrderedEnumerable<TransformedRenderable> translucents =
+            _translucents.OrderBy(renderable => -Vector3.Distance(renderable.Transform.Translation, camera.Position));
         
         // First perform depth-only shadow pass
 
@@ -115,7 +124,7 @@ public sealed class ForwardRenderer : IRenderer
             _projViewModel.View = info.View;
             device.SetDepthState(_depthState);
             
-            foreach (TransformedRenderable renderable in frontToBack)
+            foreach (TransformedRenderable renderable in opaques)
                 DrawRenderable(device, info, renderable);
         }
         
@@ -135,11 +144,14 @@ public sealed class ForwardRenderer : IRenderer
         
         // Draw front-to-back for opaques.
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
-        foreach (TransformedRenderable renderable in frontToBack)
+        foreach (TransformedRenderable renderable in opaques)
             DrawRenderable(device, camera, renderable);
         
         // Lastly draw the skybox.
         camera.Skybox?.Draw(camera.Projection, camera.View);
+        
+        foreach (TransformedRenderable renderable in translucents)
+            DrawRenderable(device, camera, renderable);
     }
 
     private void DrawRenderable(GraphicsDevice device, in CameraInfo camera, in TransformedRenderable renderable)

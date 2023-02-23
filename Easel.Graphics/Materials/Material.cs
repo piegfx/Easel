@@ -81,7 +81,6 @@ public abstract class Material : IDisposable
     {
         MaterialCache cache = _cache[_hash];
         cache.NumReferences--;
-        Console.WriteLine(cache.NumReferences);
         if (cache.NumReferences <= 0)
         {
             Logger.Debug($"Disposing of material cache. (ID: {_hash})");

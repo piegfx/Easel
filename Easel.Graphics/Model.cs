@@ -22,6 +22,8 @@ public unsafe class Model : IDisposable
 
     public Model(string path, bool flipUvs = true)
     {
+        // TODO: IMPORTANT! Transparent material support in model, loading embedded textures
+        
         _assimp ??= Assimp.GetApi();
 
         Scene* scene = _assimp.ImportFile(path,

@@ -12,6 +12,8 @@ namespace Easel.Tests.TestScenes;
 
 public class TestShadow : Scene
 {
+    private Model _model;
+    
     protected override void Initialize()
     {
         base.Initialize();
@@ -31,7 +33,7 @@ public class TestShadow : Scene
             Position = new Vector3(0, 0, -3),
         });
         //entity.AddComponent(new ModelRenderer(new Cube(), new StandardMaterial()));
-        Model model = new Model("/home/ollie/Downloads/Fox.gltf");
+        _model = new Model("/home/ollie/Downloads/Fox.gltf");
         /*Material material = new StandardMaterial(new Texture2D("/home/ollie/Downloads/Cubebs/no parking.jpg"));
         for (int i = 0; i < model.Meshes.Length; i++)
         {
@@ -41,7 +43,32 @@ public class TestShadow : Scene
                 mMesh.Meshes[j].Material = material;
             }
         }*/
-        entity.AddComponent(new ModelRenderer(model));
+        entity.AddComponent(new ModelRenderer(_model));
         AddEntity(entity);
+
+        Material material0 = new StandardMaterial(Texture2D.Black);
+        Material material1 = new StandardMaterial(Texture2D.Black);
+        Material material2 = new StandardMaterial(Texture2D.Black);
+        Material material3 = new StandardMaterial(Texture2D.Black);
+        Material material4 = new StandardMaterial(Texture2D.Black);
+        Material material5 = new StandardMaterial(Texture2D.Black);
+        Material material6 = new StandardMaterial(Texture2D.Black);
+        Material material7 = new StandardMaterial(Texture2D.Black);
+        
+        material0.Dispose();
+        material1.Dispose();
+        material2.Dispose();
+        material3.Dispose();
+        material4.Dispose();
+        material5.Dispose();
+        material6.Dispose();
+        material7.Dispose();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        
+        _model.Dispose();
     }
 }

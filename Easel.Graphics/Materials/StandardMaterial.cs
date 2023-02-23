@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Pie;
@@ -54,7 +55,34 @@ public class StandardMaterial : Material
     /// The ambient occlusion value of this material. If <see cref="Ao"/> is set, this value has no effect.
     /// </summary>
     public float AoValue;
+    
+    public StandardMaterial() : this(Texture2D.White) { }
+    
+    public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
 
+    public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo)
+    {
+        Albedo = albedo;
+        Normal = normal;
+        Metallic = metallicRoughnessAo;
+        Roughness = metallicRoughnessAo;
+        Ao = metallicRoughnessAo;
+        
+        AlbedoColor = Color.White;
+        
+        InputLayoutDescription[] descriptions = new[]
+        {
+            new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
+            new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
+            new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
+        };
+        
+        EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",
+            "Easel.Graphics.Shaders.Forward.Standard.frag", new[] { "LIGHTING", "COMBINE_TEXTURES" },
+            descriptions, VertexPositionTextureNormalTangent.SizeInBytes);
+    }
+    
     public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao)
     {
         // TODO: Dynamic recompilation of shader based on the values?
@@ -69,55 +97,18 @@ public class StandardMaterial : Material
         
         AlbedoColor = Color.White;
 
-        // TODO hey do the darn caching!!!
-        GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
-
-        InputLayout layout = device.CreateInputLayout(
+        InputLayoutDescription[] descriptions = new[]
+        {
             new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
             new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
             new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
             new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
-        );
+        };
 
-        EffectLayout =
-            new EffectLayout(
-                new Effect("Easel.Graphics.Shaders.Standard.vert", "Easel.Graphics.Shaders.Forward.Standard.frag",
-                    defines: "LIGHTING"), layout, VertexPositionTextureNormalTangent.SizeInBytes);
+        EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",
+            "Easel.Graphics.Shaders.Forward.Standard.frag", new[] { "LIGHTING" }, descriptions,
+            VertexPositionTextureNormalTangent.SizeInBytes);
     }
-
-    public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo)
-    {
-        // TODO: Dynamic recompilation of shader based on the values?
-        // Aka: If metallic texture is set to null, recompile the shader to remove the texture altogether, instead of
-        // checking to see if it is null, at which point the MetallicValue is used.
-        
-        Albedo = albedo;
-        Normal = normal;
-        Metallic = metallicRoughnessAo;
-        Roughness = metallicRoughnessAo;
-        Ao = metallicRoughnessAo;
-        
-        AlbedoColor = Color.White;
-
-        // TODO hey do the darn caching!!!
-        GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
-
-        InputLayout layout = device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
-            new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
-        );
-
-        EffectLayout =
-            new EffectLayout(
-                new Effect("Easel.Graphics.Shaders.Standard.vert", "Easel.Graphics.Shaders.Forward.Standard.frag",
-                    defines: new string[] { "LIGHTING", "COMBINE_TEXTURES" }), layout, VertexPositionTextureNormalTangent.SizeInBytes);
-    }
-
-    public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
-
-    public StandardMaterial() : this(Texture2D.White) { }
 
     public override ShaderMaterial ShaderMaterial => new ShaderMaterial()
     {

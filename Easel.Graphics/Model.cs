@@ -12,7 +12,7 @@ namespace Easel.Graphics;
 /// <summary>
 /// Represents a model and scene graph.
 /// </summary>
-public unsafe class Model
+public unsafe class Model : IDisposable
 {
     private static Assimp _assimp;
 
@@ -128,5 +128,11 @@ public unsafe class Model
         
         for (int i = 0; i < node->MNumChildren; i++)
             ProcessNode(node->MChildren[i], mmeshes, allMeshes, transform);
+    }
+
+    public void Dispose()
+    {
+        foreach (Material material in Materials)
+            material.Dispose();
     }
 }

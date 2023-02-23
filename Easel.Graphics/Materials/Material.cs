@@ -29,6 +29,11 @@ public abstract class Material : IDisposable
     /// </summary>
     public EffectLayout EffectLayout { get; protected set; }
     
+    /// <summary>
+    /// Is <see langword="true" /> when using a translucent material, such as <see cref="TranslucentStandardMaterial"/>.
+    /// </summary>
+    public bool IsTranslucent { get; protected set; }
+    
     public abstract ShaderMaterial ShaderMaterial { get; }
 
     /// <summary>

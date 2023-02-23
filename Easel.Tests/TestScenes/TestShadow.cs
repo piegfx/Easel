@@ -34,15 +34,19 @@ public class TestShadow : Scene
         });
         //entity.AddComponent(new ModelRenderer(new Cube(), new StandardMaterial()));
         _model = new Model("/home/ollie/Downloads/Fox.gltf");
-        /*Material material = new StandardMaterial(new Texture2D("/home/ollie/Downloads/Cubebs/no parking.jpg"));
-        for (int i = 0; i < model.Meshes.Length; i++)
+        Material material = new TranslucentStandardMaterial(new Texture2D("/home/ollie/Downloads/Texture.png"))
         {
-            ref ModelMesh mMesh = ref model.Meshes[i];
+            AlbedoColor = new Color(1.0f, 1.0f, 1.0f, 0.5f)
+        };
+        
+        for (int i = 0; i < _model.Meshes.Length; i++)
+        {
+            ref ModelMesh mMesh = ref _model.Meshes[i];
             for (int j = 0; j < mMesh.Meshes.Length; j++)
             {
                 mMesh.Meshes[j].Material = material;
             }
-        }*/
+        }
         entity.AddComponent(new ModelRenderer(_model));
         AddEntity(entity);
 

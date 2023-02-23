@@ -60,30 +60,14 @@ public class StandardMaterial : Material
     
     public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
 
-    public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo)
-    {
-        Albedo = albedo;
-        Normal = normal;
-        Metallic = metallicRoughnessAo;
-        Roughness = metallicRoughnessAo;
-        Ao = metallicRoughnessAo;
-        
-        AlbedoColor = Color.White;
-        
-        InputLayoutDescription[] descriptions = new[]
-        {
-            new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
-            new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
-        };
-        
-        EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",
-            "Easel.Graphics.Shaders.Forward.Standard.frag", new[] { "LIGHTING", "COMBINE_TEXTURES" },
-            descriptions, VertexPositionTextureNormalTangent.SizeInBytes);
-    }
+    public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo) : this(albedo, normal,
+        metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo, new[] { "LIGHTING", "COMBINE_TEXTURES" }) { }
     
-    public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao)
+    public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao) : this(
+        albedo, normal, metallic, roughness, ao, new[] { "LIGHTING" }) { }
+
+    protected StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao,
+        string[] shaderDefines)
     {
         // TODO: Dynamic recompilation of shader based on the values?
         // Aka: If metallic texture is set to null, recompile the shader to remove the texture altogether, instead of
@@ -106,7 +90,7 @@ public class StandardMaterial : Material
         };
 
         EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",
-            "Easel.Graphics.Shaders.Forward.Standard.frag", new[] { "LIGHTING" }, descriptions,
+            "Easel.Graphics.Shaders.Forward.Standard.frag", shaderDefines, descriptions,
             VertexPositionTextureNormalTangent.SizeInBytes);
     }
 

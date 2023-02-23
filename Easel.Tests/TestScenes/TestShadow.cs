@@ -33,7 +33,7 @@ public class TestShadow : Scene
 
         for (int f = 0; f < 9; f++)
         {
-            Entity entity = new Entity(new Transform()
+            Entity entity = new Entity($"fox{f}", new Transform()
             {
                 Position = new Vector3(f * 0.5f, 0, 0),
                 Scale = new Vector3(1 / 100f)
@@ -56,7 +56,7 @@ public class TestShadow : Scene
                 }
             }
             entity.AddComponent(new ModelRenderer(_model));
-            AddEntity($"fox{f}", entity);
+            AddEntity(entity);
         }
 
         Material material0 = new StandardMaterial(Texture2D.Black);

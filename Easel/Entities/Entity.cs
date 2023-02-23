@@ -67,7 +67,7 @@ public class Entity : InheritableEntity, IDisposable
     /// </summary>
     /// <param name="initialCapacity">The starting capacity of the <see cref="Component"/> array. This array doubles
     /// in size if you exceed its size.</param>
-    public Entity(int initialCapacity = 16) : this(new Transform(), initialCapacity) { }
+    public Entity(string name, int initialCapacity = 16) : this(name, new Transform(), initialCapacity) { }
 
     /// <summary>
     /// Create a new <see cref="Entity"/>.
@@ -75,9 +75,10 @@ public class Entity : InheritableEntity, IDisposable
     /// <param name="transform">The starting <see cref="Entities.Transform"/> of this entity.</param>
     /// <param name="initialCapacity">The starting capacity of the <see cref="Component"/> array. This array doubles
     /// in size if you exceed its size.</param>
-    public Entity(Transform transform, int initialCapacity = 16)
+    public Entity(string name, Transform transform, int initialCapacity = 16)
     {
         Transform = transform;
+        Name = name;
         Enabled = true;
         _components = new Component[initialCapacity];
         _componentPointers = new Dictionary<Type, int>(initialCapacity);
@@ -177,8 +178,6 @@ public class Entity : InheritableEntity, IDisposable
     {
         return GetComponent<T>() != null;
     }
-
-    protected override void AddEntity(string name, Entity entity) => SceneManager.ActiveScene.AddEntity(name, entity);
 
     protected override void AddEntity(Entity entity) => SceneManager.ActiveScene.AddEntity(entity);
 

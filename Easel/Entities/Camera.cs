@@ -156,7 +156,7 @@ public class Camera : Entity
     /// <param name="aspectRatio">The aspect ratio of this camera (typically width / height).</param>
     /// <param name="near">The near plane distance of this camera.</param>
     /// <param name="far">The far plane distance of this camera.</param>
-    public Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000f, CameraType type = CameraType.Camera3D)
+    public Camera(string name, float fov, float aspectRatio, float near = 0.1f, float far = 1000f, CameraType type = CameraType.Camera3D) : base(name)
     {
         _projectionType = ProjectionType.Perspective;
         _fov = fov;
@@ -172,7 +172,7 @@ public class Camera : Entity
         GenerateProjectionMatrix();
     }
 
-    public Camera(Vector2<float>? orthoSize = null, CameraType type = CameraType.Camera3D)
+    public Camera(string name, Vector2<float>? orthoSize = null, CameraType type = CameraType.Camera3D) : base(name)
     {
         _projectionType = ProjectionType.Orthographic;
         CameraType = type;

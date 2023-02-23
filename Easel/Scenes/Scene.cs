@@ -80,15 +80,15 @@ public abstract class Scene : IDisposable
         if (!EaselGame.Instance.IsServer)
         {
             Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
-            Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
+            Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
             camera.Tag = Tags.MainCamera;
-            AddEntity("Main Camera", camera);
+            AddEntity(camera);
         }
 
-        Entity directionalLight = new Entity();
+        Entity directionalLight = new Entity("Sun");
         directionalLight.AddComponent(new DirectionalLight(new Vector2<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
             Color.White));
-        AddEntity("Sun", directionalLight);
+        AddEntity(directionalLight);
     }
 
     /// <summary>
@@ -175,29 +175,17 @@ public abstract class Scene : IDisposable
     /// <summary>
     /// Add an entity to the scene.
     /// </summary>
-    /// <param name="name">The name of the entity.</param>
     /// <param name="entity">The entity to add.</param>
-    public void AddEntity(string name, Entity entity)
+    public void AddEntity(Entity entity)
     {
-        entity.Name = name;
+        entity.Name ??= _unnamedEntityId++.ToString();
         entity.Initialize();
         
         int count = _entityCount++;
         if (count >= _entities.Length)
             Array.Resize(ref _entities, _entities.Length << 1);
         _entities[count] = entity;
-        _entityPointers.Add(name, count);
-    }
-
-    /// <summary>
-    /// Add an entity to the scene. Use this overload if you don't plan on referencing the entity, or you are
-    /// keeping a reference to the entity directly in your code. It will be automatically assigned a name.
-    /// </summary>
-    /// <param name="entity">The entity to add.</param>
-    public void AddEntity(Entity entity)
-    {
-        entity.Name = _unnamedEntityId++.ToString();
-        AddEntity(entity.Name, entity);
+        _entityPointers.Add(entity.Name, count);
     }
 
     /// <summary>

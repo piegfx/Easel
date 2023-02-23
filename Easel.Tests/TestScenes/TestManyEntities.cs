@@ -21,7 +21,7 @@ public class TestManyEntities : Scene
         
         for (int i = 0; i < 13457; i++)
         {
-            Entity entity = new Entity(new Transform()
+            Entity entity = new Entity(null, new Transform()
             {
                 Position = new Vector3(random.Next(0, 1280), random.Next(0, 720), 0),
                 SpriteRotation = random.NextSingle() * MathF.PI * 2,

@@ -29,7 +29,7 @@ public class TestCanvas : Scene
 
         _texture = new Texture2D(_canvas.ToBitmap());
 
-        Entity drawEntity = new Entity();
+        Entity drawEntity = new Entity(null);
         drawEntity.AddComponent(new Sprite(_texture));
         AddEntity(drawEntity);
     }

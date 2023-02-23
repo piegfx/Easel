@@ -17,12 +17,12 @@ public class TestGameScene : Scene
 
         Camera.Main.UseOrtho2D();
         
-        Entity entity = new Entity(new Transform()
+        Entity entity = new Entity("thing", new Transform()
         {
             Position = new Vector3(100, 100, 0)
         });
         entity.AddComponent(new Sprite(Content.Load<Texture2D>("awesomeface")));
-        AddEntity("thing", entity);
+        AddEntity(entity);
     }
 
     protected override void Update()

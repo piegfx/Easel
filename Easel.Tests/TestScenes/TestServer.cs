@@ -10,8 +10,8 @@ public class TestServer : Scene
     {
         base.Initialize();
 
-        Entity entity = new Entity();
-        AddEntity("test", entity);
+        Entity entity = new Entity("test");
+        AddEntity(entity);
     }
 
     protected override void Update()

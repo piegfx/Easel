@@ -91,13 +91,13 @@ float ProcessShadow(vec4 lightSpace, sampler2D shadowMap)
 {
     vec3 proj = lightSpace.xyz / lightSpace.w;
     proj = proj * 0.5 + 0.5;
-    //if (proj.z > 1.0)
-    //    return 0.0;
+    if (proj.z > 1.0)
+        return 0.0;
     float closestDepth = texture(shadowMap, proj.xy).r;
     float currentDepth = proj.z;
     
     const float bias = 0.005;
-    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     return shadow;
 }
 

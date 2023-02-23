@@ -6,6 +6,7 @@ layout (location = 0) in VertexInfo
     vec2 texCoords;
     vec3 normal;
     vec3 fragPosition;
+    vec4 lightSpace;
 } in_data;
 
 layout (location = 0) out vec4 out_color;
@@ -17,15 +18,16 @@ layout (binding = 1) uniform SceneInfo
     DirectionalLight uSun;
 };
 
-layout (binding = 2) uniform sampler2D uAlbedo;
-layout (binding = 3) uniform sampler2D uNormal;
+layout (binding = 2) uniform sampler2D uShadow;
+layout (binding = 3) uniform sampler2D uAlbedo;
+layout (binding = 4) uniform sampler2D uNormal;
 #ifdef COMBINE_TEXTURES
 // Combined metallic, roughness, and ambient occlusion textures.
-layout (binding = 4) uniform sampler2D uMraTex;
+layout (binding = 5) uniform sampler2D uMraTex;
 #else
-layout (binding = 4) uniform sampler2D uMetallic;
-layout (binding = 5) uniform sampler2D uRoughness;
-layout (binding = 6) uniform sampler2D uAo;
+layout (binding = 5) uniform sampler2D uMetallic;
+layout (binding = 6) uniform sampler2D uRoughness;
+layout (binding = 7) uniform sampler2D uAo;
 #endif
 
 void main()
@@ -48,8 +50,10 @@ void main()
     vec3 viewDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
     vec3 result = ProcessDirLight(uSun, viewDir, albedo.rgb, normal, metallic, roughness);
     
+    float shadow = ProcessShadow(in_data.lightSpace, uShadow);
+    
     vec3 ambient = vec3(0.03) * albedo.rgb * ao;
-    vec3 color = ambient + result;
+    vec3 color = ambient + (1.0 - shadow) * result;
     
     // HDR and gamma correction
     color = color / (color + vec3(1.0));

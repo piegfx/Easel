@@ -87,6 +87,20 @@ vec3 ProcessLight(vec3 albedo, vec3 normal, float metallic, float roughness, vec
     return (kD * albedo.rgb / PI + specular) * radiance * NdotL;
 }
 
+float ProcessShadow(vec4 lightSpace, sampler2D shadowMap)
+{
+    vec3 proj = lightSpace.xyz / lightSpace.w;
+    proj = proj * 0.5 + 0.5;
+    //if (proj.z > 1.0)
+    //    return 0.0;
+    float closestDepth = texture(shadowMap, proj.xy).r;
+    float currentDepth = proj.z;
+    
+    const float bias = 0.005;
+    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+    return shadow;
+}
+
 vec3 ProcessDirLight(DirectionalLight dirLight, vec3 viewDir, vec3 albedo, vec3 normal, float metallic, float roughness)
 {
     // Do I even need this?

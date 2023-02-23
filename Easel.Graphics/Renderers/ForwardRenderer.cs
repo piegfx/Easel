@@ -25,6 +25,9 @@ public sealed class ForwardRenderer : IRenderer
 
     private DepthState _depthState;
 
+    private EffectLayout _shadowEffect;
+    private Pie.RasterizerState _shadowRasterizer;
+
     public ForwardRenderer(EaselGraphics graphics, Size<int> initialResolution)
     {
         _opaques = new List<TransformedRenderable>();
@@ -44,6 +47,17 @@ public sealed class ForwardRenderer : IRenderer
         _sceneInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _sceneInfo, true);
 
         _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
+
+        InputLayout layout =
+            device.CreateInputLayout(new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0,
+                InputType.PerVertex));
+
+        _shadowEffect =
+            new EffectLayout(new Effect("Easel.Graphics.Shaders.Shadow.vert", "Easel.Graphics.Shaders.Shadow.frag"),
+                layout, VertexPositionTextureNormalTangent.SizeInBytes);
+
+        _shadowRasterizer = device.CreateRasterizerState(new RasterizerStateDescription(CullFace.Front,
+            CullDirection.CounterClockwise, FillMode.Solid, false));
     }
 
     private void GraphicsOnSwapchainResized(Size<int> size)
@@ -109,9 +123,9 @@ public sealed class ForwardRenderer : IRenderer
 
         if (DirectionalLight?.ShadowMap != null)
         {
-            Matrix4x4 proj = Matrix4x4.CreateOrthographicOffCenter(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 10.0f);
+            Matrix4x4 proj = Matrix4x4.CreateOrthographicOffCenter(-5.0f, 5.0f, -5.0f, 5.0f, 1.0f, 10.0f);
             Matrix4x4 view = Matrix4x4.CreateLookAt(
-                new Vector3(_sceneInfo.Sun.Direction.X, _sceneInfo.Sun.Direction.Y, _sceneInfo.Sun.Direction.Z),
+                -new Vector3(_sceneInfo.Sun.Direction.X, _sceneInfo.Sun.Direction.Y, _sceneInfo.Sun.Direction.Z),
                 Vector3.Zero, Vector3.UnitY);
             Matrix4x4 lightSpace = proj * view;
             device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffer);
@@ -122,10 +136,16 @@ public sealed class ForwardRenderer : IRenderer
             CameraInfo info = new CameraInfo(proj, view); 
             _projViewModel.Projection = info.Projection;
             _projViewModel.View = info.View;
+            _projViewModel.LightSpace = lightSpace;
             device.SetDepthState(_depthState);
+            device.SetShader(_shadowEffect.Effect.PieShader);
+            device.SetRasterizerState(_shadowRasterizer);
             
-            foreach (TransformedRenderable renderable in opaques)
-                DrawRenderable(device, info, renderable);
+            foreach (TransformedRenderable renderable in _opaques)
+                DrawShadowedRenderable(device, renderable);
+            
+            foreach (TransformedRenderable renderable in _translucents)
+                DrawShadowedRenderable(device, renderable);
         }
         
         // Then perform main color pass.
@@ -153,7 +173,7 @@ public sealed class ForwardRenderer : IRenderer
         foreach (TransformedRenderable renderable in translucents)
             DrawRenderable(device, camera, renderable);
     }
-
+    
     private void DrawRenderable(GraphicsDevice device, in CameraInfo camera, in TransformedRenderable renderable)
     {
         _projViewModel.Model = renderable.Transform;
@@ -166,6 +186,8 @@ public sealed class ForwardRenderer : IRenderer
         device.SetShader(renderable.Renderable.Material.EffectLayout.Effect.PieShader);
         device.SetUniformBuffer(0, _projViewModelBuffer);
         device.SetUniformBuffer(1, _sceneInfoBuffer);
+        if (DirectionalLight?.ShadowMap != null)
+            device.SetTexture(2, DirectionalLight.Value.ShadowMap.Texture, DirectionalLight.Value.ShadowMap.SamplerState);
         renderable.Renderable.Material.ApplyTextures(device);
         device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
 
@@ -176,6 +198,18 @@ public sealed class ForwardRenderer : IRenderer
         device.DrawIndexed(renderable.Renderable.NumIndices);
     }
 
+    private void DrawShadowedRenderable(GraphicsDevice device, in TransformedRenderable renderable)
+    {
+        _projViewModel.Model = renderable.Transform;
+        device.UpdateBuffer(_projViewModelBuffer, 0, _projViewModel);
+        
+        device.SetUniformBuffer(0, _projViewModelBuffer);
+
+        device.SetVertexBuffer(0, renderable.Renderable.VertexBuffer, _shadowEffect.Stride, _shadowEffect.Layout);
+        device.SetIndexBuffer(renderable.Renderable.IndexBuffer, IndexType.UInt);
+        device.DrawIndexed(renderable.Renderable.NumIndices);
+    }
+    
     public void Perform2DPass(CameraInfo camera)
     {
         if (camera.ClearColor.HasValue)

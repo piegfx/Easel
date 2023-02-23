@@ -39,6 +39,7 @@ public class ContentManager
         //AddNewTypeReader(typeof(EaselTexture), new EaselTextureContentTypeReader());
         AddNewTypeReader(typeof(Font), new FontContentTypeReader());
         AddNewTypeReader(typeof(Sound), new SoundContentTypeReader());
+        AddNewTypeReader(typeof(DDS), new DDSContentTypeReader());
 
         ContentRootDir = contentRootDir;
 

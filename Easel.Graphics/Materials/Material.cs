@@ -13,7 +13,7 @@ namespace Easel.Graphics.Materials;
 /// </summary>
 public abstract class Material : IDisposable
 {
-    public const int TextureBindingLoc = 2;
+    public const int TextureBindingLoc = 3;
 
     private static Dictionary<int, MaterialCache> _cache;
     private int _hash;

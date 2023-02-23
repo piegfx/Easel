@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Numerics;
 using Easel.Entities;
 using Easel.Entities.Components;
+using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
 using Easel.Graphics.Primitives;
@@ -28,8 +30,8 @@ public class TestShadow : Scene
 
         GetEntity("Sun").GetComponent<DirectionalLight>().Direction = new Vector2<float>(0, 1);
 
-        Texture2D texture2D = new Texture2D("/home/ollie/Downloads/Texture.png");
-        _model = new Model("/home/ollie/Downloads/Fox.gltf");
+        Texture2D texture2D = Content.Load<Texture2D>("Texture.png");
+        _model = Content.Load<Model>("Fox.gltf");
 
         for (int f = 0; f < 9; f++)
         {
@@ -59,6 +61,19 @@ public class TestShadow : Scene
             AddEntity(entity);
         }
 
+        DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
+        Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);
+        
+        Entity cube = new Entity("cube", new Transform()
+        {
+            Position = new Vector3(2f, -0.05f, 0),
+            Scale = new Vector3(10, 0.1f, 10)
+        });
+        cube.AddComponent(new ModelRenderer(new Cube(),
+            new StandardMaterial(ddsTexture)
+                { RasterizerState = RasterizerState.CullClockwise }));
+        AddEntity(cube);
+
         Material material0 = new StandardMaterial(Texture2D.Black);
         Material material1 = new StandardMaterial(Texture2D.Black);
         Material material2 = new StandardMaterial(Texture2D.Black);
@@ -76,6 +91,11 @@ public class TestShadow : Scene
         material5.Dispose();
         material6.Dispose();
         material7.Dispose();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
     }
 
     public override void Dispose()

@@ -50,7 +50,8 @@ void main()
     vec3 viewDir = normalize(vec3(uCameraPos) - in_data.fragPosition);
     vec3 result = ProcessDirLight(uSun, viewDir, albedo.rgb, normal, metallic, roughness);
     
-    float shadow = ProcessShadow(in_data.lightSpace, uShadow);
+    //float shadow = ProcessShadow(in_data.lightSpace, uShadow);
+    float shadow = 0.0;
     
     vec3 ambient = vec3(0.03) * albedo.rgb * ao;
     vec3 color = ambient + (1.0 - shadow) * result;

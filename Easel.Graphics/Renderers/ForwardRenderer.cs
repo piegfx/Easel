@@ -121,7 +121,7 @@ public sealed class ForwardRenderer : IRenderer
         
         // First perform depth-only shadow pass
 
-        if (DirectionalLight?.ShadowMap != null)
+        /*if (DirectionalLight?.ShadowMap != null)
         {
             Matrix4x4 proj = Matrix4x4.CreateOrthographicOffCenter(-5.0f, 5.0f, -5.0f, 5.0f, 1.0f, 10.0f);
             Matrix4x4 view = Matrix4x4.CreateLookAt(
@@ -146,11 +146,11 @@ public sealed class ForwardRenderer : IRenderer
             
             foreach (TransformedRenderable renderable in _translucents)
                 DrawShadowedRenderable(device, renderable);
-        }
+        }*/
         
         // Then perform main color pass.
         
-        graphics.SetRenderTarget(MainTarget);
+        //graphics.SetRenderTarget(MainTarget);
         //device.Viewport = new Rectangle(0, 0, 1280, 720);
 
         if (camera.ClearColor.HasValue)

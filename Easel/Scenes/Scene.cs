@@ -30,6 +30,8 @@ public abstract class Scene : IDisposable
     // index to the entity which gets returned instead.
     private Dictionary<string, int> _entityPointers;
 
+    public string Name;
+
     /// <summary>
     /// Contains a list of disposable objects that will be automatically disposed when the scene is disposed. Engine
     /// objects, such as textures, will be automatically added to this list on creation (unless you tell them not to).
@@ -70,6 +72,11 @@ public abstract class Scene : IDisposable
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
         GarbageCollections = new List<IDisposable>();
+    }
+    
+    protected Scene(string name, int initialCapacity = 128) : this(initialCapacity)
+    {
+        Name = name;
     }
 
     /// <summary>

@@ -84,9 +84,6 @@ public class Effect : IDisposable
         
         Logger.Debug("Compiling shader...");
 
-        CompilerResult result = Compiler.TranspileShader(ShaderStage.Fragment, GraphicsApi.D3D11, Encoding.UTF8.GetBytes(fragment), "main");
-        Console.WriteLine(Encoding.UTF8.GetString(result.Result));
-        
         PieShader = device.CreateCrossPlatformShader(
             new ShaderAttachment(ShaderStage.Vertex, vertex),
             new ShaderAttachment(ShaderStage.Fragment, fragment));

@@ -60,12 +60,29 @@ public unsafe class Model : IDisposable
                 _assimp.GetMaterialTexture(material, type, (uint) i, &aPath, &mapping, &uvIndex, &blend, &op, &mode,
                     &flags);
 
-                if (!textures.TryGetValue(aPath.AsString, out Texture2D texture))
+                string assimpPath = aPath.AsString;
+                if (!textures.TryGetValue(assimpPath, out Texture2D texture))
                 {
-                    string fullPath = Path.Combine(Path.GetDirectoryName(path), aPath.AsString);
-                    Console.WriteLine(fullPath);
-                    texture = new Texture2D(fullPath);
-                    textures.Add(aPath.AsString, texture);
+                    if (assimpPath[0] == '*')
+                    {
+                        Silk.NET.Assimp.Texture* aTexture = scene->MTextures[int.Parse(assimpPath[1..])];
+                        // Texture is in a png/jpeg/whatever format, instead of raw data.
+                        if (aTexture->MHeight == 0)
+                        {
+                            // The width gives the size of the file in bytes.
+                            ReadOnlySpan<byte> tData = new ReadOnlySpan<byte>((void*) aTexture->PcData, (int) aTexture->MWidth); 
+                            byte[] texData = tData.ToArray();
+                            Bitmap bitmap = new Bitmap(texData);
+                            texture = new Texture2D(bitmap);
+                        }
+                    }
+                    else
+                    {
+                        string fullPath = Path.Combine(Path.GetDirectoryName(path), assimpPath);
+                        texture = new Texture2D(fullPath);
+                    }
+
+                    textures.Add(assimpPath, texture);
                 }
 
                 texts[i] = texture;
@@ -85,6 +102,12 @@ public unsafe class Model : IDisposable
             Texture2D[] roughness = LoadTexturesForMatType(material, TextureType.DiffuseRoughness);
             Texture2D[] ao = LoadTexturesForMatType(material, TextureType.AmbientOcclusion);
 
+            MaterialProperty* property;
+            _assimp.GetMaterialProperty(material, Assimp.MatkeyTexblendBase, 0, 0, &property);
+            
+            if (property != null)
+                Console.WriteLine((BlendMode) BitConverter.ToInt32(new ReadOnlySpan<byte>(property->MData, (int) property->MDataLength)));
+            
             Materials[i] = new StandardMaterial(albedo.Length > 0 ? albedo[0] : Texture2D.White,
                 normal.Length > 0 ? normal[0] : Texture2D.EmptyNormal,
                 metallic.Length > 0 ? metallic[0] : Texture2D.Black,

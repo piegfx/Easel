@@ -30,7 +30,7 @@ public class TestShadow : Scene
 
         GetEntity("Sun").GetComponent<DirectionalLight>().Direction = new Vector2<float>(0, 1);
 
-        Texture2D texture2D = Content.Load<Texture2D>("Texture.png");
+        /*Texture2D texture2D = Content.Load<Texture2D>("Texture.png");
         _model = Content.Load<Model>("Fox.gltf");
 
         for (int f = 0; f < 9; f++)
@@ -59,7 +59,12 @@ public class TestShadow : Scene
             }
             entity.AddComponent(new ModelRenderer(_model));
             AddEntity(entity);
-        }
+        }*/
+
+        _model = new Model("/home/ollie/Downloads/cyber_car(1).gltf");
+        Entity test = new Entity("test");
+        test.AddComponent(new ModelRenderer(_model));
+        AddEntity(test);
 
         DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
         Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);

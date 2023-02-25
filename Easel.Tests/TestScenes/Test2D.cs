@@ -7,6 +7,7 @@ using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.GUI;
+using Easel.Imgui;
 using Easel.Math;
 using Easel.Scenes;
 using Sprite = Easel.Entities.Components.Sprite;
@@ -18,6 +19,8 @@ public class Test2D : Scene
     private SpriteRenderer.SpriteVertex[] _vertices;
     private uint[] _indices;
     private Texture2D _texture;
+
+    private FilePicker _filePicker;
 
     protected override void Initialize()
     {
@@ -71,10 +74,19 @@ public class Test2D : Scene
 
         UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf");
         UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));
+
+        _filePicker = new FilePicker(FilePickerType.Open);
     }
 
     private float _f;
-    
+
+    protected override void Update()
+    {
+        base.Update();
+        
+        _filePicker.Update();
+    }
+
     protected override void Draw()
     {
         base.Draw();

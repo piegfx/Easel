@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Formats;
@@ -9,6 +11,8 @@ using Easel.Graphics.Materials;
 using Easel.Graphics.Primitives;
 using Easel.Math;
 using Easel.Scenes;
+using Pie.Utils;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Easel.Tests.TestScenes;
 
@@ -16,9 +20,34 @@ public class TestShadow : Scene
 {
     private Model _model;
     
-    protected override void Initialize()
+    protected override unsafe void Initialize()
     {
         base.Initialize();
+
+        Scene* scene;
+        ImpasseNative.iaLoadScene("/home/ollie/Downloads/Fox.gltf", &scene);
+
+        List<ModelMesh> meshes = new List<ModelMesh>();
+        Material material = new StandardMaterial(new Texture2D("/home/ollie/Downloads/Texture.png"));
+        
+        List<VertexPositionTextureNormalTangent> vptnts = new List<VertexPositionTextureNormalTangent>();
+
+        for (int i = 0; i < (int) scene->NumMeshes; i++)
+        {
+            for (int j = 0; j < (int) scene->Meshes[i]->NumVertices; j++)
+            {
+                Mesh* mesh = scene->Meshes[i];
+                vptnts.Add(new VertexPositionTextureNormalTangent(mesh->Vertices[j].Position, mesh->Vertices[j].TexCoord,
+                    mesh->Vertices[j].Normal, mesh->Vertices[j].Tangent));
+            }
+            
+            uint[] indices = new ReadOnlySpan<uint>(scene->Meshes[i]->Indices, (int) scene->Meshes[i]->NumIndices).ToArray();
+            
+            meshes.Add(new ModelMesh(new Graphics.Mesh[] { new Graphics.Mesh(vptnts.ToArray(), indices, material) }, Matrix4x4.Identity));
+            vptnts.Clear();
+        }
+
+        _model = new Model(meshes.ToArray(), new[] { material });
 
         Camera.Main.ClearColor = Color.RebeccaPurple;
         //Bitmap bitmap = new Bitmap("/home/ollie/Pictures/ball.png");
@@ -61,7 +90,7 @@ public class TestShadow : Scene
             AddEntity(entity);
         }*/
 
-        _model = new Model("/home/ollie/Downloads/cyber_car(1).gltf");
+        //_model = new Model("/home/ollie/Downloads/cyber_car(1).gltf");
         Entity test = new Entity("test");
         test.AddComponent(new ModelRenderer(_model));
         AddEntity(test);
@@ -108,5 +137,40 @@ public class TestShadow : Scene
         base.Dispose();
         
         _model.Dispose();
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct VertexPositionColorTextureNormalTangentBitangent
+    {
+        public Vector3 Position;
+        public Vector4 Color;
+        public Vector2 TexCoord;
+        public Vector3 Normal;
+        public Vector3 Tangent;
+        public Vector3 Bitangent;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private unsafe struct Mesh
+    {
+        public VertexPositionColorTextureNormalTangentBitangent* Vertices;
+        public nuint NumVertices;
+        public uint* Indices;
+        public nuint NumIndices;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private unsafe struct Scene
+    {
+        public Mesh** Meshes;
+        public nuint NumMeshes;
+    }
+
+    private static class ImpasseNative
+    {
+        public const string ImpasseName = "libimpasse";
+        
+        [DllImport(ImpasseName)]
+        public static extern unsafe void iaLoadScene(string path, Scene** scene);
     }
 }

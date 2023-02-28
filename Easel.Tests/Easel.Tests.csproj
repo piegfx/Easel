@@ -21,4 +21,14 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="libimpasse.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Content\Audio" />
+    </ItemGroup>
+
 </Project>

@@ -7,12 +7,8 @@ namespace Easel.Content.Localization;
 public class Locale
 {
     public string Name;
-
-    [XmlIgnore]
+    
     public Dictionary<string, string> Strings;
-
-    [XmlElement(ElementName = "String")]
-    public XmlLocale[] XmlStrings;
 
     public Locale()
     {
@@ -36,24 +32,5 @@ public class Locale
         return text;
     }
 
-    public string ToXml()
-    {
-        XmlStrings = new XmlLocale[Strings.Count];
-        int i = 0;
-        foreach ((string key, string value) in Strings)
-        {
-            XmlStrings[i].Key = key;
-            XmlStrings[i++].Value = value;
-        }
-
-        return XmlSerializer.Serialize(this);
-    }
-
-    public struct XmlLocale
-    {
-        [XmlAttribute] public string Key;
-        
-        [XmlText]
-        public string Value;
-    }
+    public string this[string key] => GetString(key, null);
 }

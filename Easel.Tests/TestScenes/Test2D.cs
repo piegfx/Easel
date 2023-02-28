@@ -1,6 +1,10 @@
 using System;
 using System.IO;
 using System.Numerics;
+using Easel.Audio;
+using Easel.Content;
+using Easel.Content.Builder;
+using Easel.Content.ContentFile;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Formats;
@@ -25,10 +29,36 @@ public class Test2D : Scene
     protected override void Initialize()
     {
         base.Initialize();
+
+        // Create a new content definition, using the content directory named "Content".
+        // This creates it from a builder, so we can add content as we please.
+        // When providing a path to the content, it only needs to be relative.
+        // No need to include the "Content/" or anything like that. It will work that out automatically.
+        ContentDefinition definition = new ContentBuilder("Content")
+            // Load an image as is. Its name will be "front"
+            .Add(new ImageContent("front.jpg"))
+            // Directories are supported too. This one's name will be "DDS/24bitcolor-BC7"
+            .Add(new ImageContent("DDS/24bitcolor-BC7.dds"))
+            // Duplicates are not allowed (aka they have the same name, but different file extension).
+            // To get around this, assign them a custom name.
+            .Add(new SoundContent("Audio/help.ogg", "Audio/helpogg"))
+            .Add(new SoundContent("Audio/help.wav", "Audio/helpwav"))
+            // Some content types, such as model, allow for extra parameters.
+            .Add(new ModelContent("Fox.gltf", true))
+            .Build();
+        
+        // Before we can use the content, we must add the definition.
+        Content.AddContent(definition);
+
+        // Load as usual!
+        _texture = Content.Load<Texture2D>("DDS/24bitcolor-BC7");
+
+        Sound sound = Content.Load<Sound>("Audio/helpogg");
+        sound.Play();
         
         //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));
 
-        ETF tex = new ETF(File.ReadAllBytes("/home/ollie/Pictures/ETF/test.etf"));
+        //ETF tex = new ETF(File.ReadAllBytes("/home/ollie/Pictures/ETF/test.etf"));
         
         //Console.WriteLine("loading dds");
         //DDS tex = new DDS(File.ReadAllBytes("/home/ollie/Downloads/RubberCuboidFloor/RubberCuboidFloor_4K_BaseColor.dds"));
@@ -66,7 +96,7 @@ public class Test2D : Scene
 
         */
 
-        _texture = new Texture2D(tex.Bitmaps[0][0], SamplerState.LinearClamp);
+        //_texture = new Texture2D(tex.Bitmaps[0][0], SamplerState.LinearClamp);
         
         /*Entity sprite = new Entity();
         sprite.AddComponent(new Sprite(texture));

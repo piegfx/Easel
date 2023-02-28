@@ -20,6 +20,12 @@ public unsafe class Model : IDisposable
 
     public Material[] Materials;
 
+    public Model(ModelMesh[] meshes, Material[] materials)
+    {
+        Meshes = meshes;
+        Materials = materials;
+    }
+
     public Model(string path, bool flipUvs = true)
     {
         // TODO: IMPORTANT! Transparent material support in model, loading embedded textures

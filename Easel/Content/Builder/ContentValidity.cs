@@ -1,6 +1,6 @@
 using System;
 
-namespace Easel.Content;
+namespace Easel.Content.Builder;
 
 public class ContentValidity
 {

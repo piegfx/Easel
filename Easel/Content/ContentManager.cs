@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Timers;
 using Easel.Audio;
 using Easel.Content.Builder;
-using Easel.Content.ContentFile;
 using Easel.Content.Localization;
 using Easel.Core;
 using Easel.Data;

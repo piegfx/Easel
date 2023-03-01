@@ -1,5 +1,4 @@
 using System.IO;
-using Easel.Content.ContentFile;
 
 namespace Easel.Content.Builder;
 

@@ -4,7 +4,6 @@ using System.Numerics;
 using Easel.Audio;
 using Easel.Content;
 using Easel.Content.Builder;
-using Easel.Content.ContentFile;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Formats;

@@ -1,4 +1,4 @@
-using Easel.Content.ContentFile;
+using Easel.Content.Builder;
 
 namespace Easel.Content;
 

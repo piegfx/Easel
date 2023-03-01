@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Easel.Content.Builder;
 using Easel.Core;
 
-namespace Easel.Content.ContentFile;
+namespace Easel.Content.Builder;
 
 public class ContentBuilder
 {

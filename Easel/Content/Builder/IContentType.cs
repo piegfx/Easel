@@ -1,7 +1,4 @@
-using System;
-using Easel.Core;
-
-namespace Easel.Content.ContentFile;
+namespace Easel.Content.Builder;
 
 public interface IContentType
 {

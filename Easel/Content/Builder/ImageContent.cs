@@ -1,7 +1,6 @@
 using System.IO;
-using Easel.Content.ContentFile;
 
-namespace Easel.Content;
+namespace Easel.Content.Builder;
 
 public class ImageContent : IContentType
 {

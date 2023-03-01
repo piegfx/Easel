@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Easel.Content.ContentFile;
 
 namespace Easel.Content.Builder;
 

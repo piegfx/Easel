@@ -1,7 +1,6 @@
 using System.IO;
 using Easel.Audio;
 using Easel.Content.Builder;
-using Easel.Content.ContentFile;
 
 namespace Easel.Content;
 

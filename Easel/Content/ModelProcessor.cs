@@ -1,6 +1,5 @@
 using System.IO;
 using Easel.Content.Builder;
-using Easel.Content.ContentFile;
 using Easel.Graphics;
 
 namespace Easel.Content;

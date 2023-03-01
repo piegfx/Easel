@@ -53,8 +53,8 @@ public class EaselGraphics : IDisposable
             //    return;
             _viewport = new Rectangle<int>(value.X, value.Y, value.Width, value.Height);
             PieGraphics.Viewport = (System.Drawing.Rectangle) _viewport;
-            if (value == _viewport)
-                return;
+            //if (value == _viewport)
+            //    return;
             ViewportResized?.Invoke(_viewport);
         }
     }

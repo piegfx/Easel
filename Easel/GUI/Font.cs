@@ -7,6 +7,7 @@ using Easel.Graphics.Renderers;
 using Easel.GUI.BBCode;
 using Easel.Math;
 using Pie.Freetype;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Easel.GUI;
 
@@ -41,7 +42,7 @@ public class Font : IDisposable
         _charmaps = new Dictionary<uint, Charmap>();
     }
 
-    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color color)
+    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color color, float rotation, Vector2<float> origin, Vector2<float> scale)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -73,7 +74,10 @@ public class Font : IDisposable
             Charmap.Character chr = charmap.GetCharacter(c);
             Vector2<int> charPos = new Vector2<int>(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-            renderer.Draw(charmap.Texture, (Vector2<float>) charPos, chr.Source, color, 0, Vector2<float>.Zero, Vector2<float>.One);
+
+            Vector2 transformedChar = Vector2.Transform((Vector2) charPos, Matrix4x4.CreateScale(scale.X, scale.Y, 1.0f) * Matrix4x4.CreateRotationZ(rotation));
+            
+            renderer.Draw(charmap.Texture, (Vector2<float>) transformedChar, chr.Source, color, rotation, Vector2<float>.Zero, scale);
             pos.X += chr.Advance;
         }
     }

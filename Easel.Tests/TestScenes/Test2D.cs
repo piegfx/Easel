@@ -56,7 +56,7 @@ public class Test2D : Scene
         _texture = Content.Load<Texture2D>("DDS/24bitcolor-BC7");
 
         Sound sound = Content.Load<Sound>("Audio/help");
-        sound.Play();
+        //sound.Play();
 
         //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));
 
@@ -104,8 +104,8 @@ public class Test2D : Scene
         sprite.AddComponent(new Sprite(texture));
         AddEntity(sprite);*/
 
-        UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf", new FontOptions() { IsAntialiased = false });
-        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 200, Color.Red));
+        UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf", new FontOptions() { IsAntialiased = true });
+        //UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 200, Color.Red));
 
         _filePicker = new FilePicker(FilePickerType.Open);
     }
@@ -125,6 +125,15 @@ public class Test2D : Scene
 
         Graphics.SpriteRenderer.Begin();
         Graphics.SpriteRenderer.DrawVertices(_texture, _vertices, _indices);
+        Graphics.SpriteRenderer.End();
+
+        string text = "What??";
+        uint size = 100;
+
+        Graphics.SpriteRenderer.Begin();
+        Position position = new Position(Anchor.TopLeft);
+        Vector2<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.Theme.Font.MeasureString(size, text));
+        UI.Theme.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2<float>.Zero, new Vector2<float>(5, 1));
         Graphics.SpriteRenderer.End();
 
         //Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);

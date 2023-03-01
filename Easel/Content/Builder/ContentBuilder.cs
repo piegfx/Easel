@@ -24,7 +24,7 @@ public class ContentBuilder
         return this;
     }
 
-    public ContentDefinition Build()
+    public ContentDefinition Build(DuplicateHandling duplicateHandling = DuplicateHandling.Error)
     {
         Logger.Debug("Building content...");
         
@@ -35,7 +35,15 @@ public class ContentBuilder
             string name = type.FriendlyName;
             Logger.Debug($"Building \"{name}\"...");
             if (contentTypes.ContainsKey(name))
-                Logger.Fatal($"Duplicate content definition \"{name}\".");
+            {
+                if (duplicateHandling == DuplicateHandling.Error)
+                    Logger.Fatal($"Duplicate content definition \"{name}\".");
+                else if (duplicateHandling == DuplicateHandling.Ignore)
+                {
+                    Logger.Warn($"Duplicate content definition \"{name}\" found. This file will be ignored.");
+                    continue;
+                }
+            }
 
             ContentValidity validity = type.CheckValidity(_directory);
             if (!validity.IsValid)
@@ -43,7 +51,63 @@ public class ContentBuilder
             
             contentTypes.Add(name, type);
         }
+        
+        Logger.Debug("Building done!");
 
-        return new ContentDefinition(_directory, contentTypes);
+        return new ContentDefinition(_name, contentTypes);
+    }
+
+    public static ContentBuilder FromDirectory(string directory)
+    {
+        Logger.Debug("Auto-generating a content builder...");
+        
+        ContentBuilder builder = new ContentBuilder(directory);
+        string fullDir = builder._directory;
+
+        foreach (string file in Directory.GetFiles(fullDir, "*", SearchOption.AllDirectories))
+        {
+            string relativePath = Path.GetRelativePath(builder._directory, file);
+
+            string extension = Path.GetExtension(file);
+            switch (extension.ToLower())
+            {
+                case ".bmp":
+                case ".png":
+                case ".jpg":
+                case ".jpeg":
+                case ".tga":
+                case ".psd":
+                case ".hdr":
+                case ".pic":
+                case ".pnm":
+                case ".dds":
+                    builder.Add(new ImageContent(relativePath));
+                    break;
+                
+                case ".wav":
+                case ".ogg":
+                    builder.Add(new SoundContent(relativePath));
+                    break;
+                
+                case ".gltf":
+                case ".glb":
+                case ".obj":
+                case ".dae":
+                case ".fbx":
+                    builder.Add(new ModelContent(relativePath));
+                    break;
+                
+                case ".ttf":
+                case ".otf":
+                    builder.Add(new FontContent(relativePath));
+                    break;
+                
+                default:
+                    Logger.Warn($"File \"{relativePath}\" is of type either not recognized or not supported. Ignoring...");
+                    break;
+            }
+        }
+
+        return builder;
     }
 }

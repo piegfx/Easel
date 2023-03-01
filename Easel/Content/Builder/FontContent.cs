@@ -2,19 +2,16 @@ using System.IO;
 
 namespace Easel.Content.Builder;
 
-public class ModelContent : IContentType
+public class FontContent : IContentType
 {
     public string Path;
-    public bool FlipUvs;
+    
+    public FontContent() { }
 
-    public ModelContent() { }
-
-    public ModelContent(string path, bool flipUvs = true)
+    public FontContent(string path)
     {
         Path = path;
-        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path),
-            System.IO.Path.GetFileNameWithoutExtension(path));
-        FlipUvs = flipUvs;
+        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path));
     }
 
     public string FriendlyName { get; set; }

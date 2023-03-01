@@ -13,6 +13,7 @@ using Easel.GUI;
 using Easel.Imgui;
 using Easel.Math;
 using Easel.Scenes;
+using Newtonsoft.Json;
 using Sprite = Easel.Entities.Components.Sprite;
 
 namespace Easel.Tests.TestScenes;
@@ -29,7 +30,7 @@ public class Test2D : Scene
     {
         base.Initialize();
 
-        // Create a new content definition, using the content directory named "Content".
+        /*// Create a new content definition, using the content directory named "Content".
         // This creates it from a builder, so we can add content as we please.
         // When providing a path to the content, it only needs to be relative.
         // No need to include the "Content/" or anything like that. It will work that out automatically.
@@ -39,13 +40,15 @@ public class Test2D : Scene
             // Directories are supported too. This one's name will be "DDS/24bitcolor-BC7"
             .Add(new ImageContent("DDS/24bitcolor-BC7.dds"))
             // Duplicates are not allowed (aka they have the same name, but different file extension).
-            // To get around this, assign them a custom name.
-            .Add(new SoundContent("Audio/help.ogg", "Audio/helpogg"))
-            .Add(new SoundContent("Audio/help.wav", "Audio/helpwav"))
+            // To get around this, assign them a friendly name.
+            .Add(new SoundContent("Audio/help.ogg") { FriendlyName = "Audio/helpogg" } )
+            .Add(new SoundContent("Audio/help.wav") { FriendlyName = "Audio/helpwav" })
             // Some content types, such as model, allow for extra parameters.
             .Add(new ModelContent("Fox.gltf", true))
-            .Build();
-        
+            .Build();*/
+
+        ContentDefinition definition = ContentBuilder.FromDirectory("Content").Build(DuplicateHandling.Ignore);
+
         // Before we can use the content, we must add the definition.
         Content.AddContent(definition);
 
@@ -54,6 +57,12 @@ public class Test2D : Scene
 
         Sound sound = Content.Load<Sound>("Audio/helpogg");
         sound.Play();
+        
+        string serialized = definition.SerializeToJson();
+        
+        Console.WriteLine(serialized);
+        
+        ContentDefinition test = ContentDefinition.FromJson(serialized);
         
         //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));
 

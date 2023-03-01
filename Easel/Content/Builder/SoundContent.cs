@@ -6,17 +6,18 @@ namespace Easel.Content.Builder;
 public class SoundContent : IContentType
 {
     public string Path;
-    
-    public SoundContent(string path) : this(path, System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))) { }
 
-    public SoundContent(string path, string customName)
+    public SoundContent() { }
+
+    public SoundContent(string path)
     {
         Path = path;
-        FriendlyName = customName;
+        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path),
+            System.IO.Path.GetFileNameWithoutExtension(path));
     }
 
-    public string FriendlyName { get; }
-    
+    public string FriendlyName { get; set; }
+
     public bool AllowDuplicates => false;
 
     public ContentValidity CheckValidity(string contentPath)

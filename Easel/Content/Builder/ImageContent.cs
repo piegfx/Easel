@@ -6,16 +6,16 @@ public class ImageContent : IContentType
 {
     public string Path;
     
-    public ImageContent(string path) : this(path, System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))) { }
+    public ImageContent() { }
 
-    public ImageContent(string path, string customName)
+    public ImageContent(string path)
     {
         Path = path;
-        FriendlyName = customName;
+        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path));
     }
 
-    public string FriendlyName { get; }
-    
+    public string FriendlyName { get; set; }
+
     public bool AllowDuplicates => false;
 
     public ContentValidity CheckValidity(string contentPath)

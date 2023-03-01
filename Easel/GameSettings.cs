@@ -86,9 +86,16 @@ public struct GameSettings
     /// </summary>
     public bool Server;
 
+    /// <summary>
+    /// If <b>NOT</b> null, a content definition will be automatically generated. You should only use this during
+    /// development. When publishing, you should create a content file. (Default: "Content" in Debug, null in any other
+    /// mode).
+    /// </summary>
+    public string AutoGenerateContentDirectory;
+
     public GameSettings(Size<int> size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
         GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
-        RenderOptions renderOptions, bool server)
+        RenderOptions renderOptions, bool server, string autoGenerateContentDirectory)
     {
         Size = size;
         Fullscreen = fullscreen;
@@ -103,6 +110,7 @@ public struct GameSettings
         StartVisible = startVisible;
         RenderOptions = renderOptions;
         Server = server;
+        AutoGenerateContentDirectory = autoGenerateContentDirectory;
     }
 
     /// <summary>
@@ -124,6 +132,11 @@ public struct GameSettings
         StartVisible = true;
         RenderOptions = RenderOptions.Default;
         Server = false;
+#if DEBUG
+        AutoGenerateContentDirectory = "Content";
+#else
+        AutoGenerateContent = null;
+#endif
     }
 
     public static GameSettings StartFullscreen => new GameSettings()

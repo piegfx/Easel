@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Content.Builder;
 using Easel.Core;
 using Easel.Graphics;
 using Easel.GUI;
@@ -185,6 +186,14 @@ public class EaselGame : IDisposable
         
         Logger.Debug("Creating content manager...");
         Content = new ContentManager();
+
+        if (_settings.AutoGenerateContentDirectory != null)
+        {
+            Logger.Info("Auto-generate content is enabled. Generating...");
+            ContentDefinition definition = ContentBuilder.FromDirectory(_settings.AutoGenerateContentDirectory)
+                .Build(DuplicateHandling.Ignore);
+            Content.AddContent(definition);
+        }
         
         Logger.Debug("Initializing your application...");
         Initialize();

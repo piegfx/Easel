@@ -47,23 +47,17 @@ public class Test2D : Scene
             .Add(new ModelContent("Fox.gltf", true))
             .Build();*/
 
-        ContentDefinition definition = ContentBuilder.FromDirectory("Content").Build(DuplicateHandling.Ignore);
+        //ContentDefinition definition = ContentBuilder.FromDirectory("Content").Build(DuplicateHandling.Ignore);
 
         // Before we can use the content, we must add the definition.
-        Content.AddContent(definition);
+        //Content.AddContent(definition);
 
         // Load as usual!
         _texture = Content.Load<Texture2D>("DDS/24bitcolor-BC7");
 
         Sound sound = Content.Load<Sound>("Audio/helpogg");
         sound.Play();
-        
-        string serialized = definition.SerializeToJson();
-        
-        Console.WriteLine(serialized);
-        
-        ContentDefinition test = ContentDefinition.FromJson(serialized);
-        
+
         //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));
 
         //ETF tex = new ETF(File.ReadAllBytes("/home/ollie/Pictures/ETF/test.etf"));

@@ -55,7 +55,7 @@ public class Test2D : Scene
         // Load as usual!
         _texture = Content.Load<Texture2D>("DDS/24bitcolor-BC7");
 
-        Sound sound = Content.Load<Sound>("Audio/helpogg");
+        Sound sound = Content.Load<Sound>("Audio/help");
         sound.Play();
 
         //File.WriteAllBytes("/home/ollie/Pictures/ETF/test.etf", ETF.CreateEtf(new Bitmap("/home/ollie/Pictures/24bitcolor.png"), customData: "(C) SPACEBOX 2023"));

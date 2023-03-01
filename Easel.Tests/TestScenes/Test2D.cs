@@ -104,8 +104,8 @@ public class Test2D : Scene
         sprite.AddComponent(new Sprite(texture));
         AddEntity(sprite);*/
 
-        UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf");
-        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 100, Color.Red));
+        UI.Theme.Font = new Font("/home/ollie/Documents/Abel-Regular.ttf", new FontOptions() { IsAntialiased = false });
+        UI.Add("test", new Label(new Position(Anchor.CenterCenter), "Stuff", 200, Color.Red));
 
         _filePicker = new FilePicker(FilePickerType.Open);
     }

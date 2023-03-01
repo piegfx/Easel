@@ -16,16 +16,27 @@ public class Font : IDisposable
 
     private Dictionary<uint, Charmap> _charmaps;
 
-    public Font(string path)
+    public Font(string path, FontOptions? options = null)
     {
-        Face = FontHelper.FreeType.CreateFace(path, 0);
+        FontOptions opt = options ?? new FontOptions();
+
+        FaceFlags flags = FaceFlags.RgbaConvert;
+        if (opt.IsAntialiased)
+            flags |= FaceFlags.Antialiased;
+        Face = FontHelper.FreeType.CreateFace(path, 0, flags);
         
         _charmaps = new Dictionary<uint, Charmap>();
     }
 
-    public Font(byte[] data)
+    public Font(byte[] data, FontOptions? options = null)
     {
-        Face = FontHelper.FreeType.CreateFace(data, 0);
+        FontOptions opt = options ?? new FontOptions();
+
+        FaceFlags flags = FaceFlags.RgbaConvert;
+        if (opt.IsAntialiased)
+            flags |= FaceFlags.Antialiased;
+        
+        Face = FontHelper.FreeType.CreateFace(data, 0, flags);
         
         _charmaps = new Dictionary<uint, Charmap>();
     }

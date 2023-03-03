@@ -33,6 +33,8 @@ public class ContentManager
         AddContentProcessor(typeof(Texture2D), new TextureProcessor());
         AddContentProcessor(typeof(Sound), new SoundProcessor());
         AddContentProcessor(typeof(Model), new ModelProcessor());
+        AddContentProcessor(typeof(Font), new FontProcessor());
+        AddContentProcessor(typeof(Bitmap), new BitmapProcessor());
     }
 
     /// <summary>
@@ -65,6 +67,11 @@ public class ContentManager
             Logger.Fatal($"No content file with name \"{path}\" could be found.");
 
         return (T) processor!.Load(Path.Combine(_location, _defaultName), type);
+    }
+
+    public string[] GetAllFiles(string path, string searchPattern = "*")
+    {
+        return Directory.GetFiles(Path.Combine(_location, _defaultName, path), searchPattern);
     }
 
     public void AddContentProcessor(Type type, IContentProcessor processor)

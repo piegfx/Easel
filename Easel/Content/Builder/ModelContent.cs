@@ -12,8 +12,9 @@ public class ModelContent : IContentType
     public ModelContent(string path, bool flipUvs = true)
     {
         Path = path;
-        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path),
-            System.IO.Path.GetFileNameWithoutExtension(path));
+        FriendlyName = System.IO.Path
+            .Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))
+            .Replace('\\', '/');
         FlipUvs = flipUvs;
     }
 

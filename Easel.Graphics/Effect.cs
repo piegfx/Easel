@@ -84,7 +84,7 @@ public class Effect : IDisposable
         
         Logger.Debug("Compiling shader...");
 
-        PieShader = device.CreateCrossPlatformShader(
+        PieShader = device.CreateShader(
             new ShaderAttachment(ShaderStage.Vertex, vertex),
             new ShaderAttachment(ShaderStage.Fragment, fragment));
     }

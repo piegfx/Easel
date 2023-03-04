@@ -11,7 +11,9 @@ public class ImageContent : IContentType
     public ImageContent(string path)
     {
         Path = path;
-        FriendlyName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path));
+        FriendlyName = System.IO.Path
+            .Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))
+            .Replace('\\', '/');
     }
 
     public string FriendlyName { get; set; }

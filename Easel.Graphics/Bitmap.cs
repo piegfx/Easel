@@ -32,14 +32,6 @@ public class Bitmap
     public Bitmap(string path)
     {
         if (!File.Exists(path))
-        {
-            Data = GetMissingBitmap(128, 128);
-            Size = new Size<int>(128, 128);
-            Format = Format.R8G8B8A8_UNorm;
-            Logger.Error($"Failed to find path \"{path}\".");
-            return;
-        }
-        else if (!File.Exists(path))
             Logger.Fatal($"Failed to find path \"{path}\".");
 
         ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);

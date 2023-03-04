@@ -133,7 +133,7 @@ void main()
     out_color = frag_color * texture(uTexture, frag_texCoords);
 }";
 
-        _shader = device.CreateCrossPlatformShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
+        _shader = device.CreateShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
             new ShaderAttachment(ShaderStage.Fragment, fragmentSource));
 
         _depthState = device.CreateDepthState(DepthStateDescription.Disabled);

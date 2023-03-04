@@ -56,7 +56,7 @@ public class Skybox : IDisposable
         _depthState = _device.CreateDepthState(DepthStateDescription.LessEqual);
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
-        _shader = _device.CreateCrossPlatformShader(
+        _shader = _device.CreateShader(
             new ShaderAttachment(ShaderStage.Vertex, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Skybox.Skybox.vert")),
             new ShaderAttachment(ShaderStage.Fragment, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Skybox.Skybox.frag")));
 

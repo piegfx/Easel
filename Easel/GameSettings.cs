@@ -135,7 +135,7 @@ public struct GameSettings
 #if DEBUG
         AutoGenerateContentDirectory = "Content";
 #else
-        AutoGenerateContent = null;
+        AutoGenerateContentDirectory = null;
 #endif
     }
 

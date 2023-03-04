@@ -10,6 +10,7 @@ using Pie.Windowing;
 GameSettings settings = new GameSettings()
 {
     Border = WindowBorder.Resizable,
+    AutoGenerateContentDirectory = null
 };
 
 Logger.UseConsoleLogs();

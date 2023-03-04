@@ -36,20 +36,28 @@ public class ContentBuilder
             Logger.Debug($"Building \"{name}\"...");
             if (contentTypes.ContainsKey(name))
             {
-                if (duplicateHandling == DuplicateHandling.Error)
-                    Logger.Fatal($"Duplicate content definition \"{name}\".");
-                else if (duplicateHandling == DuplicateHandling.Ignore)
+                switch (duplicateHandling)
                 {
-                    Logger.Warn($"Duplicate content definition \"{name}\" found. This file will be ignored.");
-                    continue;
+                    case DuplicateHandling.Error:
+                        Logger.Fatal($"Duplicate content definition \"{name}\".");
+                        break;
+                    case DuplicateHandling.Ignore:
+                        Logger.Warn($"Duplicate content definition \"{name}\" found. This file will be ignored.");
+                        continue;
+                    case DuplicateHandling.Overwrite:
+                        Logger.Info($"Duplicate content definition \"{name}\" found. Overwriting the existing definition.");
+                        break;
                 }
             }
 
             ContentValidity validity = type.CheckValidity(_directory);
             if (!validity.IsValid)
                 Logger.Fatal($"Content not valid: {validity.Exception.Message}");
-            
-            contentTypes.Add(name, type);
+
+            if (duplicateHandling == DuplicateHandling.Overwrite)
+                contentTypes[name] = type;
+            else
+                contentTypes.Add(name, type);
         }
         
         Logger.Debug("Building done!");

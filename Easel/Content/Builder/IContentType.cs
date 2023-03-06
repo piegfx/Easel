@@ -4,6 +4,8 @@ namespace Easel.Content.Builder;
 
 public interface IContentType
 {
+    public string Path { get; set; }
+    
     public string FriendlyName { get; set; }
     
     [JsonIgnore]

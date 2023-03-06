@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Easel.Content.Builder;
 
-public class SoundContent : IContentType
+public struct SoundContent : IContentType
 {
-    public string Path;
+    public string Path { get; set; }
 
     public SoundContent() { }
 

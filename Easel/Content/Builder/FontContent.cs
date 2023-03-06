@@ -2,9 +2,9 @@ using System.IO;
 
 namespace Easel.Content.Builder;
 
-public class FontContent : IContentType
+public struct FontContent : IContentType
 {
-    public string Path;
+    public string Path { get; set; }
     
     public FontContent() { }
 

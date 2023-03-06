@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj" />
+      <ProjectReference Include="..\BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj" />
       <ProjectReference Include="..\Easel\Easel.csproj" />
     </ItemGroup>
 

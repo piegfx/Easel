@@ -2,9 +2,9 @@ using System.IO;
 
 namespace Easel.Content.Builder;
 
-public class ImageContent : IContentType
+public struct ImageContent : IContentType
 {
-    public string Path;
+    public string Path { get; set; }
     
     public ImageContent() { }
 

@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Utils", "Pie\Pie.Utils\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj", "{3C967AC6-FDD3-441D-93BE-1AD69D68BAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
 EndProject

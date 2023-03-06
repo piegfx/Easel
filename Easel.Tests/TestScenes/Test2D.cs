@@ -53,7 +53,7 @@ public class Test2D : Scene
         Content.AddContent(definition);
 
         // Load as usual!
-        _texture = Content.Load<Texture2D>("DDS/24bitcolor-BC7");
+        _texture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
 
         Sound sound = Content.Load<Sound>("Audio/help");
         Console.WriteLine(sound.SoundType);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -32,37 +33,54 @@ public class ContentBuilder
 
         foreach (IContentType type in _types)
         {
-            string name = type.FriendlyName;
-            Logger.Debug($"Building \"{name}\"...");
-            if (contentTypes.ContainsKey(name))
+            if (Path.GetFileNameWithoutExtension(type.Path) == "*")
             {
-                switch (duplicateHandling)
-                {
-                    case DuplicateHandling.Error:
-                        Logger.Fatal($"Duplicate content definition \"{name}\".");
-                        break;
-                    case DuplicateHandling.Ignore:
-                        Logger.Warn($"Duplicate content definition \"{name}\" found. This file will be ignored.");
-                        continue;
-                    case DuplicateHandling.Overwrite:
-                        Logger.Info($"Duplicate content definition \"{name}\" found. Overwriting the existing definition.");
-                        break;
-                }
+                string extension = Path.GetExtension(type.Path);
+                string directory = Path.GetDirectoryName(type.Path);
+
+                Logger.Info($"Adding all \"{extension}\" files from \"{directory}\".");
+                
+                // TODO: This.
             }
-
-            ContentValidity validity = type.CheckValidity(_directory);
-            if (!validity.IsValid)
-                Logger.Fatal($"Content not valid: {validity.Exception.Message}");
-
-            if (duplicateHandling == DuplicateHandling.Overwrite)
-                contentTypes[name] = type;
             else
-                contentTypes.Add(name, type);
+                AddContentType(type, ref contentTypes, duplicateHandling);
         }
         
         Logger.Debug("Building done!");
 
         return new ContentDefinition(_name, contentTypes);
+    }
+
+    private void AddContentType(IContentType type, ref Dictionary<string, IContentType> contentTypes, DuplicateHandling duplicateHandling)
+    {
+        string name = type.FriendlyName;
+        Logger.Debug($"Building \"{type.Path}\"...");
+        if (contentTypes.ContainsKey(name))
+        {
+            switch (duplicateHandling)
+            {
+                case DuplicateHandling.Error:
+                    Logger.Fatal($"Duplicate content definition \"{name}\".");
+                    break;
+                case DuplicateHandling.Ignore:
+                    Logger.Warn($"Duplicate content definition \"{name}\" found. This file will be ignored.");
+                    return;
+                case DuplicateHandling.Overwrite:
+                    Logger.Info($"Duplicate content definition \"{name}\" found. Overwriting the existing definition.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(duplicateHandling), duplicateHandling, null);
+            }
+        }
+
+        ContentValidity validity = type.CheckValidity(_directory);
+        if (!validity.IsValid)
+            Logger.Fatal($"Content not valid: {validity.Exception.Message}");
+
+        if (duplicateHandling == DuplicateHandling.Overwrite)
+            contentTypes[name] = type;
+        else
+            contentTypes.Add(name, type);
     }
 
     public static ContentBuilder FromDirectory(string directory)

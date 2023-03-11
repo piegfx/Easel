@@ -6,7 +6,7 @@ using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.GUI.BBCode;
 using Easel.Math;
-using Pie.Freetype;
+using Pie.Text;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Easel.GUI;

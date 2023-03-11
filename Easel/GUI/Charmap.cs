@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Easel.Graphics;
 using Easel.Math;
-using Pie.Freetype;
 
 namespace Easel.GUI;
 

@@ -24,7 +24,7 @@ public class Entity : InheritableEntity, IDisposable
 
     protected override Scene ActiveScene => SceneManager.ActiveScene;
 
-    protected override AudioDevice Audio => EaselGame.Instance.AudioInternal;
+    protected override EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected override ContentManager Content => EaselGame.Instance.Content;
 

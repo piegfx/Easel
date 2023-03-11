@@ -13,6 +13,7 @@ using Easel.GUI;
 using Easel.Math;
 using Easel.Scenes;
 using Pie;
+using Pie.Audio;
 using Pie.Windowing;
 using Monitor = Pie.Windowing.Monitor;
 using Window = Pie.Windowing.Window;
@@ -46,12 +47,12 @@ public class EaselGame : IDisposable
     /// </summary>
     public EaselGraphics Graphics => GraphicsInternal;
 
-    internal AudioDevice AudioInternal;
+    internal EaselAudio AudioInternal;
 
     /// <summary>
     /// The audio device for this EaselGame.
     /// </summary>
-    public AudioDevice Audio => AudioInternal;
+    public EaselAudio Audio => AudioInternal;
 
     public ContentManager Content;
     
@@ -175,7 +176,7 @@ public class EaselGame : IDisposable
             Window.Resize += WindowOnResize;
 
             Logger.Debug("Creating audio device...");
-            AudioInternal = new AudioDevice(48000, 256);
+            AudioInternal = new EaselAudio();
 
             Logger.Debug("Initializing input...");
             Input.Initialize(Window);

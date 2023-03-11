@@ -31,7 +31,7 @@ public abstract class InheritableEntity
     /// <summary>
     /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
-    protected abstract AudioDevice Audio { get; }
+    protected abstract EaselAudio Audio { get; }
     
     protected abstract ContentManager Content { get; }
 

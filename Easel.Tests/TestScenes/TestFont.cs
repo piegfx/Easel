@@ -3,7 +3,7 @@ using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Easel.Scenes;
-using Pie.Freetype;
+using Pie.Text;
 
 namespace Easel.Tests.TestScenes;
 

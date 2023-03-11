@@ -59,7 +59,7 @@ public abstract class Scene : IDisposable
     /// <summary>
     /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
-    protected AudioDevice Audio => EaselGame.Instance.AudioInternal;
+    protected EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected ContentManager Content => EaselGame.Instance.Content;
 

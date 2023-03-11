@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Easel.Core;
 using Easel.Graphics;
 using Easel.Math;
-using Pie.Freetype;
+using Pie.Text;
 
 namespace Easel.GUI;
 

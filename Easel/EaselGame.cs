@@ -191,9 +191,17 @@ public class EaselGame : IDisposable
         if (_settings.AutoGenerateContentDirectory != null)
         {
             Logger.Info("Auto-generate content is enabled. Generating...");
-            ContentDefinition definition = ContentBuilder.FromDirectory(_settings.AutoGenerateContentDirectory)
-                .Build(DuplicateHandling.Ignore);
-            Content.AddContent(definition);
+            try
+            {
+                ContentDefinition definition = ContentBuilder.FromDirectory(_settings.AutoGenerateContentDirectory)
+                    .Build(DuplicateHandling.Ignore);
+                Content.AddContent(definition);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Logger.Warn(
+                    $"A directory called \"{_settings.AutoGenerateContentDirectory}\" was not found. Either create it, or change \"GameSettings.AutoGenerateContentDirectory\" to a valid content directory, or to \"null\" to disable auto content generation.");
+            }
         }
         
         Logger.Debug("Initializing your application...");

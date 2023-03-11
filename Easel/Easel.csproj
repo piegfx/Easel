@@ -16,7 +16,6 @@
       <ProjectReference Include="..\Easel.Graphics\Easel.Graphics.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
       <ProjectReference Include="..\Pie\Pie.Audio\Pie.Audio.csproj" />
-      <ProjectReference Include="..\Pie\Pie.Freetype\Pie.Freetype.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\Pie.Text\Pie.Text.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />

@@ -83,10 +83,10 @@ public class StandardMaterial : Material
 
         InputLayoutDescription[] descriptions = new[]
         {
-            new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 12, 0, InputType.PerVertex),
-            new InputLayoutDescription("aNormals", Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTangents", Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
+            new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 12, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32B32_Float, 20, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
         };
 
         EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",

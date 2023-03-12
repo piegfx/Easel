@@ -19,7 +19,7 @@ public class Skybox : IDisposable
     private GraphicsBuffer _indexBuffer;
     private GraphicsBuffer _cameraBuffer;
     
-    private DepthState _depthState;
+    private DepthStencilState _depthState;
     private Pie.RasterizerState _rasterizerState;
 
     private Shader _shader;
@@ -53,7 +53,7 @@ public class Skybox : IDisposable
 
         _cameraBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
         
-        _depthState = _device.CreateDepthState(DepthStateDescription.LessEqual);
+        _depthState = _device.CreateDepthState(DepthStencilStateDescription.LessEqual);
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
         _shader = _device.CreateShader(
@@ -61,8 +61,7 @@ public class Skybox : IDisposable
             new ShaderAttachment(ShaderStage.Fragment, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Skybox.Skybox.frag")));
 
         _inputLayout =
-            _device.CreateInputLayout(new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0,
-                InputType.PerVertex));
+            _device.CreateInputLayout(new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex));
 
         SamplerState = samplerState ?? SamplerState.LinearClamp;
     }
@@ -78,7 +77,7 @@ public class Skybox : IDisposable
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetUniformBuffer(0, _cameraBuffer);
         _device.SetTexture(1, PieTexture, SamplerState.PieSamplerState);
-        _device.SetDepthState(_depthState);
+        _device.SetDepthStencilState(_depthState);
         _device.SetRasterizerState(_rasterizerState);
         _device.SetVertexBuffer(0, _vertexBuffer, VertexPosition.SizeInBytes, _inputLayout);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);

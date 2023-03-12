@@ -29,7 +29,7 @@ public class ImGuiRenderer : IDisposable
     private uint _eboSize;
 
     private Shader _shader;
-    private DepthState _depthState;
+    private DepthStencilState _depthState;
     private Pie.RasterizerState _rasterizerState;
     private Pie.SamplerState _samplerState;
     private BlendState _blendState;
@@ -136,7 +136,7 @@ void main()
         _shader = device.CreateShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
             new ShaderAttachment(ShaderStage.Fragment, fragmentSource));
 
-        _depthState = device.CreateDepthState(DepthStateDescription.Disabled);
+        _depthState = device.CreateDepthState(DepthStencilStateDescription.Disabled);
         RasterizerStateDescription stateDesc = RasterizerStateDescription.CullNone;
         stateDesc.ScissorTest = true;
         _rasterizerState = device.CreateRasterizerState(stateDesc);
@@ -145,9 +145,9 @@ void main()
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
         _inputLayout = device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", Format.R32G32_Float, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 8, 0, InputType.PerVertex),
-            new InputLayoutDescription("aColor", Format.R8G8B8A8_UNorm, 16, 0, InputType.PerVertex));
+            new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R8G8B8A8_UNorm, 16, 0, InputType.PerVertex));
     }
 
     public void RecreateFontDeviceTexture()
@@ -290,7 +290,7 @@ void main()
         
         device.SetShader(_shader);
         device.SetRasterizerState(_rasterizerState);
-        device.SetDepthState(_depthState);
+        device.SetDepthStencilState(_depthState);
         device.SetBlendState(_blendState);
         device.SetUniformBuffer(0, _uniformBuffer);
 

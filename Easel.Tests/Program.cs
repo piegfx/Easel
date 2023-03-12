@@ -15,7 +15,7 @@ GameSettings settings = new GameSettings()
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new TestAudio());
+using TestGame game = new TestGame(settings, new Test3D());
 game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);

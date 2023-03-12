@@ -23,7 +23,7 @@ public sealed class ForwardRenderer : IRenderer
     private SceneInfo _sceneInfo;
     private GraphicsBuffer _sceneInfoBuffer;
 
-    private DepthState _depthState;
+    private DepthStencilState _depthState;
 
     private EffectLayout _shadowEffect;
     private Pie.RasterizerState _shadowRasterizer;
@@ -46,11 +46,10 @@ public sealed class ForwardRenderer : IRenderer
         _sceneInfo = new SceneInfo();
         _sceneInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _sceneInfo, true);
 
-        _depthState = device.CreateDepthState(DepthStateDescription.LessEqual);
+        _depthState = device.CreateDepthState(DepthStencilStateDescription.LessEqual);
 
         InputLayout layout =
-            device.CreateInputLayout(new InputLayoutDescription("aPosition", Format.R32G32B32_Float, 0, 0,
-                InputType.PerVertex));
+            device.CreateInputLayout(new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex));
 
         _shadowEffect =
             new EffectLayout(new Effect("Easel.Graphics.Shaders.Shadow.vert", "Easel.Graphics.Shaders.Shadow.frag"),
@@ -160,7 +159,7 @@ public sealed class ForwardRenderer : IRenderer
         _projViewModel.View = camera.View;
 
         device.SetPrimitiveType(PrimitiveType.TriangleList);
-        device.SetDepthState(_depthState);
+        device.SetDepthStencilState(_depthState);
         
         // Draw front-to-back for opaques.
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.

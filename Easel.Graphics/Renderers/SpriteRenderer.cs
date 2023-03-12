@@ -43,7 +43,7 @@ public sealed class SpriteRenderer : IDisposable
     private Effect _effectToUse;
     private InputLayout _layout;
     private Pie.RasterizerState _rasterizerState;
-    private DepthState _depthState;
+    private DepthStencilState _depthState;
     private BlendState _blendState;
 
     private GraphicsDevice _device;
@@ -76,17 +76,17 @@ public sealed class SpriteRenderer : IDisposable
         _roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
 
         _layout = _device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", Format.R32G32_Float, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", Format.R32G32_Float, 8, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTint", Format.R32G32B32A32_Float, 16, 0, InputType.PerVertex),
-            new InputLayoutDescription("aRotation", Format.R32_Float, 32, 0, InputType.PerVertex),
-            new InputLayoutDescription("aOrigin", Format.R32G32_Float, 36, 0, InputType.PerVertex),
-            new InputLayoutDescription("aScale", Format.R32G32_Float, 44, 0, InputType.PerVertex),
-            new InputLayoutDescription("aMeta1", Format.R32G32B32A32_Float, 52, 0, InputType.PerVertex),
-            new InputLayoutDescription("aMeta2", Format.R32G32B32A32_Float, 68, 0, InputType.PerVertex));
+            new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32B32A32_Float, 16, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32_Float, 32, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 36, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 44, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32B32A32_Float, 52, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32B32A32_Float, 68, 0, InputType.PerVertex));
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
-        _depthState = _device.CreateDepthState(DepthStateDescription.Disabled);
+        _depthState = _device.CreateDepthState(DepthStencilStateDescription.Disabled);
         _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
     }
 
@@ -293,7 +293,7 @@ public sealed class SpriteRenderer : IDisposable
 
         _device.SetShader(effect.PieShader);
         _device.SetRasterizerState(_rasterizerState);
-        _device.SetDepthState(_depthState);
+        _device.SetDepthStencilState(_depthState);
         _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
         _device.SetTexture(1, _currentTexture.PieTexture, _currentTexture.SamplerState.PieSamplerState);

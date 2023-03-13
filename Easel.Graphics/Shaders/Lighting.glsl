@@ -1,7 +1,7 @@
 #ifndef LIGHTING_GLSL
 #define LIGHTING_GLSL
 
-#include "Easel.Graphics.Shaders.Types.glsl"
+#include "Types.glsl"
 
 const float PI = 3.141592653589793;
 

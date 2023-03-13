@@ -47,10 +47,10 @@ public class Test2D : Scene
             .Add(new ModelContent("Fox.gltf", true))
             .Build();*/
 
-        ContentDefinition definition = ContentBuilder.FromDirectory("Content").Build(DuplicateHandling.Overwrite);
+        //ContentDefinition definition = ContentBuilder.FromDirectory("Content").Build(DuplicateHandling.Overwrite);
 
         // Before we can use the content, we must add the definition.
-        Content.AddContent(definition);
+        //Content.AddContent(definition);
 
         // Load as usual!
         _texture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");

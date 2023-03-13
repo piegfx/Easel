@@ -1,6 +1,7 @@
 // The bog standard vertex shader all render pipelines use.
+#version 450
 
-#include "Easel.Graphics.Shaders.Types.glsl"
+#include "Types.glsl"
         
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoords;

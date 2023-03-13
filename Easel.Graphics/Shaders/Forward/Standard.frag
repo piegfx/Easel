@@ -1,5 +1,7 @@
-#include "Easel.Graphics.Shaders.Types.glsl"
-#include "Easel.Graphics.Shaders.Lighting.glsl"
+#version 450
+
+#include "../Types.glsl"
+#include "../Lighting.glsl"
 
 layout (location = 0) in VertexInfo
 {

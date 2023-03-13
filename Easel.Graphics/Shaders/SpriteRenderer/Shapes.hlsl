@@ -1,4 +1,4 @@
-﻿struct SDFResult
+struct SDFResult
 {
     float dist;
     float blendAmount;

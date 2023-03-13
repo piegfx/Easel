@@ -12,5 +12,7 @@ public class EaselProject
         Directory.CreateDirectory(fullPath);
         
         Directory.CreateDirectory(Path.Combine(fullPath, "Content"));
+
+        throw new NotImplementedException();
     }
 }

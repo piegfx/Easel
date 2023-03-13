@@ -24,7 +24,7 @@ public class Test3D : Scene
         
         //Graphics.ResizeGraphics(new Size<int>(1280, 720));
 
-        DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
+        //DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
         Texture2D texture = Content.Load<Texture2D>("awesomeface");
         texture.SamplerState = SamplerState.AnisotropicRepeat;

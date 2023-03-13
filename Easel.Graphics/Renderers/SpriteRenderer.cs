@@ -72,8 +72,9 @@ public sealed class SpriteRenderer : IDisposable
         //    new ShaderAttachment(ShaderStage.Vertex, Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert")),
         //    new ShaderAttachment(ShaderStage.Fragment,
         //        Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag")));
-        _spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag");
-        _roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
+        //_spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag");
+        _spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.hlsl");
+        //_roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
 
         _layout = _device.CreateInputLayout(
             new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),
@@ -97,11 +98,11 @@ public sealed class SpriteRenderer : IDisposable
         _begun = true;
 
         Rectangle<int> viewport = EaselGraphics.Instance.Viewport;
-        projection ??= Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
-        transform ??= Matrix4x4.Identity;
+        Matrix4x4 proj = projection ?? Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
+        Matrix4x4 trans = transform ?? Matrix4x4.Identity;
         _effectToUse = effect;
         
-        _device.UpdateBuffer(_projViewBuffer, 0, transform.Value * projection.Value);
+        _device.UpdateBuffer(_projViewBuffer, 0, proj * trans);
     }
 
     public void DrawRectangle(Vector2<float> position, Size<float> size, int borderWidth, float radius, Color color,

@@ -89,6 +89,54 @@ public class Effect : IDisposable
             new ShaderAttachment(ShaderStage.Fragment, fragment));
     }
 
+    public Effect(string shader, EffectLoadType loadType = EffectLoadType.EmbeddedResource, params string[] defines)
+    {
+        GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
+        switch (loadType)
+        {
+            case EffectLoadType.String:
+                // Do nothing
+                break;
+            case EffectLoadType.File:
+                shader = File.ReadAllText(shader);
+                break;
+            case EffectLoadType.EmbeddedResource:
+                shader = Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), shader);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
+        }
+        
+        StringBuilder defineBuilder = new StringBuilder();
+        foreach (string define in defines)
+            defineBuilder.AppendLine("#define " + define);
+
+#if DEBUG
+        if (!_hasCheckedForDisplayEffects)
+        {
+            _hasCheckedForDisplayEffects = true;
+            Logger.Debug($"Checking for {EnvVars.PrintEffects}...");
+            string? pr = Environment.GetEnvironmentVariable(EnvVars.PrintEffects);
+            if (pr is "1")
+            {
+                _displayEffects = true;
+                Logger.Info($"{EnvVars.PrintEffects} is enabled. Effects will be printed to console.");
+            }
+        }
+
+        if (_displayEffects)
+        {
+            LogShader(ShaderStage.Vertex, shader);
+        }
+#endif
+        
+        Logger.Debug("Compiling shader...");
+
+        PieShader = device.CreateShader(
+            new ShaderAttachment(ShaderStage.Vertex, shader, Language.HLSL, "VertexShader"),
+            new ShaderAttachment(ShaderStage.Pixel, shader, Language.HLSL, "PixelShader"));
+    }
+
     public void Dispose()
     {
         PieShader.Dispose();
@@ -97,22 +145,27 @@ public class Effect : IDisposable
 
     private static string PreProcess(string shader)
     {
-        string[] splitText = shader.Split('\n');
-
-        bool hasIncluded = false;
-
-        for (int i = 0; i < splitText.Length; i++)
+        while (true)
         {
-            string line = splitText[i];
+            string[] splitText = shader.Split('\n');
 
-            if (line.StartsWith("#include"))
+            bool hasIncluded = false;
+
+            for (int i = 0; i < splitText.Length; i++)
             {
-                shader = shader.Replace(line, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), line[("#include ".Length)..].Trim().Trim('"')));
-                hasIncluded = true;
+                string line = splitText[i];
+
+                if (line.StartsWith("#include"))
+                {
+                    shader = shader.Replace(line, Utils.LoadEmbeddedString(Assembly.GetExecutingAssembly(), line[("#include ".Length)..].Trim().Trim('"')));
+                    hasIncluded = true;
+                }
             }
+
+            if (hasIncluded) continue;
+            return shader;
+            break;
         }
-        
-        return hasIncluded ? PreProcess(shader) : shader;
     }
 
     [Conditional("DEBUG")]

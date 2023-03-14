@@ -12,16 +12,22 @@ for file in $(find . -type f -name "*.hlsl"); do
   
   if grep -q "VertexShader" "$file"; then
     glslc -fshader-stage=vertex -fentry-point="VertexShader" -fauto-combined-image-sampler -o "${filename}_vert.spv" "$file"
+    
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+    
     hasCompiled=true
   fi
   
   if grep -q "PixelShader" "$file"; then
     glslc -fshader-stage=fragment -fentry-point="PixelShader" -fauto-combined-image-sampler -o "${filename}_frag.spv" "$file"
+    
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+    
     hasCompiled=true
-  fi
-  
-  if [ $? -ne 0 ]; then
-    exit 1
   fi
   
   if ! $hasCompiled; then

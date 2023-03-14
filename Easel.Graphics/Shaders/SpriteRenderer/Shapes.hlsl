@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHAPES_HLSL
+#define SHAPES_HLSL
 
 struct SDFResult
 {
@@ -24,3 +25,5 @@ SDFResult RoundedRect(float2 size, float2 position, float2 texCoords)
 
     return result;
 }
+
+#endif

@@ -124,13 +124,10 @@ public class Test2D : Scene
     {
         base.Draw();
 
-        _f += Time.DeltaTime;
+        //_f += Time.DeltaTime;
 
         Graphics.SpriteRenderer.Begin(transform: Matrix4x4.CreateTranslation(-_f, 0, 0));
         Graphics.SpriteRenderer.DrawVertices(_texture, _vertices, _indices);
-
-        //Graphics.SpriteRenderer.DrawRectangle(new Vector2<float>(100), new Size<float>(100), 2, 20, Color.White,
-        //    Color.Black, 0, Vector2<float>.One);
         Graphics.SpriteRenderer.End();
 
         string text = "What??";
@@ -140,6 +137,10 @@ public class Test2D : Scene
         Position position = new Position(Anchor.TopLeft);
         Vector2<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.Theme.Font.MeasureString(size, text));
         UI.Theme.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2<float>.Zero, new Vector2<float>(5, 1));
+        
+        Graphics.SpriteRenderer.DrawRectangle(new Vector2<float>(100), new Size<float>(100), 2, 20, Color.White,
+            Color.Black, 0, Vector2<float>.One);
+        
         Graphics.SpriteRenderer.End();
 
         //Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);

@@ -79,6 +79,17 @@ PSOutput PixelShader(in VSOutput input)
 {
     PSOutput output;
 
+    if ((options & 0x1) != 0x1)
+    {
+        float4 color = albedoTex.Sample(albedoState, input.texCoords) * material.albedo;
+
+        if ((options & 0x4) == 0x4)
+            output.color = color;
+        else
+            output.color = float4(color.rgb, 1.0);
+        return output;
+    }
+
     float4 albedo = pow(albedoTex.Sample(albedoState, input.texCoords), (float4) 2.2) * material.albedo;
     float3 normal = TempNormal(normalTex, normalState, input.fragPos, input.texCoords, input.normal);
 
@@ -100,7 +111,10 @@ PSOutput PixelShader(in VSOutput input)
     color = color / (color + (float3) 1.0);
     color = pow(color, (float3) (1.0 / 2.2));
 
-    output.color = float4(color, 1.0);
+    if ((options & 0x4) == 0x4)
+        output.color = float4(color, albedo.a);
+    else
+        output.color = float4(color, 1.0);
 
     return output;
 }

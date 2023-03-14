@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Easel.Core;
 using Easel.Math;
 using Pie;
+using Pie.ShaderCompiler;
 using Color = Easel.Math.Color;
 
 namespace Easel.Graphics.Renderers;
@@ -74,7 +75,9 @@ public sealed class SpriteRenderer : IDisposable
         //        Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag")));
         //_spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag");
         _spriteEffect = Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv", "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv");
-        //_roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
+        _roundedRectEffect = Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv",
+            "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv",
+            constants: new[] { new SpecializationConstant(0, 2) });
 
         _layout = _device.CreateInputLayout(
             new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),

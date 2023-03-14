@@ -52,7 +52,7 @@ public sealed class ForwardRenderer : IRenderer
             device.CreateInputLayout(new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex));
 
         _shadowEffect =
-            new EffectLayout(new Effect("Easel.Graphics.Shaders.Shadow.vert", "Easel.Graphics.Shaders.Shadow.frag"),
+            new EffectLayout(Effect.FromPath("Easel.Graphics.Shaders.Shadow_vert.spv", "Easel.Graphics.Shaders.Shadow_frag.spv"), 
                 layout, VertexPositionTextureNormalTangent.SizeInBytes);
 
         _shadowRasterizer = device.CreateRasterizerState(new RasterizerStateDescription(CullFace.Front,

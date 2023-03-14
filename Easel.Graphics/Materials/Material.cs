@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Easel.Core;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Pie;
+using Pie.ShaderCompiler;
 
 namespace Easel.Graphics.Materials;
 
@@ -54,11 +56,13 @@ public abstract class Material : IDisposable
 
     protected internal abstract void ApplyTextures(GraphicsDevice device);
 
-    protected EffectLayout GetEffectLayout(string vShader, string fShader, string[] defines, InputLayoutDescription[] descriptions, uint stride)
+    protected EffectLayout GetEffectLayout(byte[] vShader, byte[] fShader, SpecializationConstant[] constants, InputLayoutDescription[] descriptions, uint stride)
     {
         // TODO: Potentially a better way of getting a hash code?
-        
-        _hash = (vShader + fShader + string.Join(' ', defines)).GetHashCode();
+
+        _hash = unchecked(Convert.ToBase64String(vShader).GetHashCode() +
+                          Convert.ToBase64String(fShader).GetHashCode() +
+                          constants.Sum(constant => constant.GetHashCode()));
         if (!_cache.TryGetValue(_hash, out MaterialCache cache))
         {
             Logger.Debug($"Creating new material cache. (ID: {_hash})");
@@ -66,7 +70,7 @@ public abstract class Material : IDisposable
 
             cache = new MaterialCache()
             {
-                EffectLayout = new EffectLayout(new Effect(vShader, fShader, defines: defines), layout, stride),
+                EffectLayout = new EffectLayout(new Effect(vShader, fShader, constants), layout, stride),
                 NumReferences = 0
             };
             

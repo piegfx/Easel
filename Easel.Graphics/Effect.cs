@@ -24,7 +24,7 @@ public class Effect : IDisposable
     /// </summary>
     public readonly Shader PieShader;
 
-    /// <summary>
+    /*/// <summary>
     /// Create a new <see cref="Effect"/> with the given vertex and fragment/pixel shader.
     /// </summary>
     /// <param name="vertex">The vertex shader to use.</param>
@@ -85,8 +85,8 @@ public class Effect : IDisposable
         Logger.Debug("Compiling shader...");
 
         PieShader = device.CreateShader(
-            new ShaderAttachment(ShaderStage.Vertex, vertex),
-            new ShaderAttachment(ShaderStage.Fragment, fragment));
+            new []{ new ShaderAttachment(ShaderStage.Vertex, vertex),
+            new ShaderAttachment(ShaderStage.Fragment, fragment) });
     }
 
     public Effect(string shader, EffectLoadType loadType = EffectLoadType.EmbeddedResource, params string[] defines)
@@ -133,8 +133,102 @@ public class Effect : IDisposable
         Logger.Debug("Compiling shader...");
 
         PieShader = device.CreateShader(
-            new ShaderAttachment(ShaderStage.Vertex, shader, Language.HLSL, "VertexShader"),
-            new ShaderAttachment(ShaderStage.Pixel, shader, Language.HLSL, "PixelShader"));
+            new []{ new ShaderAttachment(ShaderStage.Vertex, shader, Language.HLSL, "VertexShader"),
+            new ShaderAttachment(ShaderStage.Pixel, shader, Language.HLSL, "PixelShader") });
+    }*/
+
+    public Effect(byte[] vertSpirv, byte[] fragSpirv, SpecializationConstant[] constants = null)
+    {
+        GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
+        
+        Logger.Debug("Compiling shader...");
+
+        PieShader = device.CreateShader(
+            new[]
+            {
+                new ShaderAttachment(ShaderStage.Vertex, vertSpirv),
+                new ShaderAttachment(ShaderStage.Fragment, fragSpirv)
+            }, constants);
+    }
+
+    public static Effect FromPath(string vertexPath, string fragmentPath,
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+    {
+        byte[] vertex, fragment;
+        
+        switch (loadType)
+        {
+            case EffectLoadType.String:
+                throw new NotSupportedException("SPIR-V cannot be loaded from a string.");
+            case EffectLoadType.File:
+                vertex = File.ReadAllBytes(vertexPath);
+                fragment = File.ReadAllBytes(fragmentPath);
+                break;
+            case EffectLoadType.EmbeddedResource:
+                vertex = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), vertexPath);
+                fragment = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), fragmentPath);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
+        }
+
+        return new Effect(vertex, fragment, constants);
+    }
+
+    public static Effect FromHlsl(string hlsl, string vertexEp = "VertexShader", string pixelEp = "PixelShader",
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+    {
+        byte[] vertex, pixel;
+
+        switch (loadType)
+        {
+            case EffectLoadType.String:
+                vertex = TryCompile(ShaderStage.Vertex, hlsl, vertexEp, Language.HLSL);
+                pixel = TryCompile(ShaderStage.Pixel, hlsl, pixelEp, Language.HLSL);
+                break;
+            case EffectLoadType.File:
+                string hlslFile = File.ReadAllText(hlsl);
+                vertex = TryCompile(ShaderStage.Vertex, hlslFile, vertexEp, Language.HLSL);
+                pixel = TryCompile(ShaderStage.Pixel, hlslFile, pixelEp, Language.HLSL);
+                break;
+            case EffectLoadType.EmbeddedResource:
+                string hlslResx = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), hlsl, Encoding.UTF8);
+                vertex = TryCompile(ShaderStage.Vertex, hlslResx, vertexEp, Language.HLSL);
+                pixel = TryCompile(ShaderStage.Pixel, hlslResx, pixelEp, Language.HLSL);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
+        }
+
+        return new Effect(vertex, pixel, constants);
+    }
+    
+    public static Effect FromGlsl(string vertex, string fragment,
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+    {
+        byte[] vert, frag;
+
+        switch (loadType)
+        {
+            case EffectLoadType.String:
+                vert = TryCompile(ShaderStage.Vertex, vertex, "main", Language.GLSL);
+                frag = TryCompile(ShaderStage.Fragment, fragment, "main", Language.GLSL);
+                break;
+            case EffectLoadType.File:
+                vert = TryCompile(ShaderStage.Vertex, File.ReadAllText(vertex), "main", Language.GLSL);
+                frag = TryCompile(ShaderStage.Fragment, File.ReadAllText(fragment), "main", Language.GLSL);
+                break;
+            case EffectLoadType.EmbeddedResource:
+                string vShader = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), vertex, Encoding.UTF8);
+                string fShader = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), fragment, Encoding.UTF8);
+                vert = TryCompile(ShaderStage.Vertex, vShader, "main", Language.GLSL);
+                frag = TryCompile(ShaderStage.Fragment, fShader, "main", Language.GLSL);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
+        }
+
+        return new Effect(vert, frag, constants);
     }
 
     public void Dispose()
@@ -164,8 +258,16 @@ public class Effect : IDisposable
 
             if (hasIncluded) continue;
             return shader;
-            break;
         }
+    }
+
+    private static byte[] TryCompile(ShaderStage stage, string text, string entryPoint, Language language)
+    {
+        CompilerResult result = Compiler.ToSpirv((Stage) stage, language, Encoding.UTF8.GetBytes(text), entryPoint);
+        if (!result.IsSuccess)
+            throw new EaselException(result.Error);
+
+        return result.Result;
     }
 
     [Conditional("DEBUG")]

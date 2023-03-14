@@ -129,8 +129,8 @@ public class Test2D : Scene
         Graphics.SpriteRenderer.Begin(transform: Matrix4x4.CreateTranslation(-_f, 0, 0));
         Graphics.SpriteRenderer.DrawVertices(_texture, _vertices, _indices);
 
-        Graphics.SpriteRenderer.DrawRectangle(new Vector2<float>(100), new Size<float>(100), 2, 20, Color.White,
-            Color.Black, 0, Vector2<float>.One);
+        //Graphics.SpriteRenderer.DrawRectangle(new Vector2<float>(100), new Size<float>(100), 2, 20, Color.White,
+        //    Color.Black, 0, Vector2<float>.One);
         Graphics.SpriteRenderer.End();
 
         string text = "What??";

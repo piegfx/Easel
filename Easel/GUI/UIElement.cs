@@ -67,8 +67,9 @@ public abstract class UIElement
     {
         if (Theme.Blur != null)
         {
-            _effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
-                "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");
+            // TODO: This
+            //_effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
+            //    "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");
 
             if (BlurTexture == null || Size != BlurTexture.Size)
             {

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection;
+using Easel.Core;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
 using Pie;
+using Pie.ShaderCompiler;
 
 namespace Easel.Graphics.Materials;
 
@@ -61,13 +64,13 @@ public class StandardMaterial : Material
     public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
 
     public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo) : this(albedo, normal,
-        metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo, new[] { "LIGHTING", "COMBINE_TEXTURES" }) { }
+        metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo, new[] { new SpecializationConstant(0, 0x1 | 0x2) }) { }
     
     public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao) : this(
-        albedo, normal, metallic, roughness, ao, new[] { "LIGHTING" }) { }
+        albedo, normal, metallic, roughness, ao, new []{ new SpecializationConstant(0, 0x1) }) { }
 
     protected StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao,
-        string[] shaderDefines)
+        SpecializationConstant[] constants)
     {
         // TODO: Dynamic recompilation of shader based on the values?
         // Aka: If metallic texture is set to null, recompile the shader to remove the texture altogether, instead of
@@ -89,8 +92,10 @@ public class StandardMaterial : Material
             new InputLayoutDescription(Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
         };
 
-        EffectLayout = GetEffectLayout("Easel.Graphics.Shaders.Standard.vert",
-            "Easel.Graphics.Shaders.Forward.Standard.frag", shaderDefines, descriptions,
+        byte[] vShader = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_vert.spv");
+        byte[] fShader = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_frag.spv");
+
+        EffectLayout = GetEffectLayout(vShader, fShader, constants, descriptions,
             VertexPositionTextureNormalTangent.SizeInBytes);
     }
 

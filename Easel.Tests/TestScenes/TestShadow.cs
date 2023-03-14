@@ -24,7 +24,7 @@ public class TestShadow : Scene
     {
         base.Initialize();
 
-        Scene* scene;
+        /*Scene* scene;
         ImpasseNative.iaLoadScene("/home/ollie/Downloads/Fox.gltf", &scene);
 
         List<ModelMesh> meshes = new List<ModelMesh>();
@@ -47,7 +47,9 @@ public class TestShadow : Scene
             vptnts.Clear();
         }
 
-        _model = new Model(meshes.ToArray(), new[] { material });
+        _model = new Model(meshes.ToArray(), new[] { material });*/
+        
+        
 
         Camera.Main.ClearColor = Color.RebeccaPurple;
         //Bitmap bitmap = new Bitmap("/home/ollie/Pictures/ball.png");
@@ -90,13 +92,17 @@ public class TestShadow : Scene
             AddEntity(entity);
         }*/
 
-        //_model = new Model("/home/ollie/Downloads/cyber_car(1).gltf");
-        Entity test = new Entity("test");
+        _model = Content.Load<Model>("Fox");
+        Entity test = new Entity("test", new Transform()
+        {
+            Scale = new Vector3(0.01f)
+        });
         test.AddComponent(new ModelRenderer(_model));
         AddEntity(test);
 
-        DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
-        Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);
+        //DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
+        //Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);
+        Texture2D ddsTexture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
         
         Entity cube = new Entity("cube", new Transform()
         {

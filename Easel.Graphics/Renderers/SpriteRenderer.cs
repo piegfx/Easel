@@ -73,7 +73,7 @@ public sealed class SpriteRenderer : IDisposable
         //    new ShaderAttachment(ShaderStage.Fragment,
         //        Utils.LoadEmbeddedString("Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag")));
         //_spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag");
-        _spriteEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.hlsl");
+        _spriteEffect = Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv", "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv");
         //_roundedRectEffect = new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert", "Easel.Graphics.Shaders.SpriteRenderer.Shape.RoundedRect.frag");
 
         _layout = _device.CreateInputLayout(

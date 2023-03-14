@@ -133,8 +133,8 @@ void main()
     out_color = frag_color * texture(uTexture, frag_texCoords);
 }";
 
-        _shader = device.CreateShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
-            new ShaderAttachment(ShaderStage.Fragment, fragmentSource));
+        _shader = device.CreateShader(new []{ new ShaderAttachment(ShaderStage.Vertex, vertexSource),
+            new ShaderAttachment(ShaderStage.Fragment, fragmentSource) });
 
         _depthState = device.CreateDepthState(DepthStencilStateDescription.Disabled);
         RasterizerStateDescription stateDesc = RasterizerStateDescription.CullNone;

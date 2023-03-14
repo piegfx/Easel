@@ -26,7 +26,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ClCompile Include="Shaders\Forward\Standard.hlsl" />
+      <ClCompile Include="Shaders\Lighting.hlsl" />
+      <ClCompile Include="Shaders\Shadow.hlsl" />
       <ClCompile Include="Shaders\SpriteRenderer\Shapes.hlsl" />
+      <ClCompile Include="Shaders\Types.hlsl" />
     </ItemGroup>
 
 </Project>

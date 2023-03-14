@@ -56,7 +56,7 @@ public class Skybox : IDisposable
         _depthState = _device.CreateDepthState(DepthStencilStateDescription.LessEqual);
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
-        _effect = new Effect("Easel.Graphics.Shaders.Skybox.hlsl");
+        _effect = Effect.FromPath("Easel.Graphics.Shaders.Skybox_vert.spv", "Easel.Graphics.Shaders.Skybox_frag.spv");
 
         _inputLayout =
             _device.CreateInputLayout(new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex));

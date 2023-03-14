@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Shaders\**\*" />
+      <EmbeddedResource Include="Shaders\**\*.spv" />
     </ItemGroup>
 
     <ItemGroup>

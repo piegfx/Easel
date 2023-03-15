@@ -1,5 +1,6 @@
 using Easel.Imgui;
 using Easel.Scenes;
+using Pie.Windowing;
 
 namespace Easel.Tests;
 
@@ -20,7 +21,7 @@ public class TestGame : EaselGame
     protected override void Update()
     {
         ImGuiRenderer?.Update();
-        
+
         base.Update();
     }
 

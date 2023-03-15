@@ -237,8 +237,6 @@ public class EaselGame : IDisposable
                 Metrics.Update();
                 UI.Update(GraphicsInternal.Viewport);
                 Update();
-                // TODO: Fix pie
-                GraphicsInternal.SetRenderTarget(null);
                 Draw();
                 if (ShowMetrics)
                     DrawMetrics();
@@ -278,6 +276,7 @@ public class EaselGame : IDisposable
         _actions.Clear();
         
         SceneManager.Draw();
+        
         UI.Draw(GraphicsInternal);
     }
 

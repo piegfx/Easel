@@ -27,7 +27,7 @@ VSOutput VertexShader(in VSInput input)
 {
     VSOutput output;
 
-    output.position = (float4(input.position, 1.0) * view * projection).xyww;
+    output.position = mul(mul(projection, view), float4(input.position, 1.0)).xyww;
     output.texCoords = input.position;
 
     return output;

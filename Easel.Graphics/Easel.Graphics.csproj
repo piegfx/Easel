@@ -29,4 +29,8 @@
       <Folder Include="Shaders\SpriteRenderer" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ClCompile Include="Shaders\Utils\Math.hlsl" />
+    </ItemGroup>
+
 </Project>

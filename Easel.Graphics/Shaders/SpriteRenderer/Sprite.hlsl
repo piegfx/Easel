@@ -53,10 +53,10 @@ VSOutput VertexShader(in VSInput input)
         -sinRot, cosRot
     );
 
-    vertexPos = rot * vertexPos;
+    vertexPos = mul(rot, vertexPos);
     vertexPos += input.origin * input.scale;
 
-    output.position = float4(vertexPos, 0.0, 1.0) * projView;
+    output.position = mul(projView, float4(vertexPos, 0.0, 1.0));
     output.texCoords = input.texCoords;
     output.tint = input.tint;
     output.meta1 = input.meta1;

@@ -64,13 +64,13 @@ VSOutput VertexShader(in VSInput input)
 {
     VSOutput output;
 
-    float4 fragPos = float4(input.position, 1.0) * model;
+    float4 fragPos = mul(model, float4(input.position, 1.0));
     
-    output.position = fragPos * view * projection;
+    output.position = mul(mul(projection, view), fragPos);
     output.texCoords = input.texCoords * material.tiling.xy;
-    output.normal = input.normals * (float3x3) model;
+    output.normal = mul((float3x3) model, input.normals);
     output.fragPos = (float3) fragPos;
-    output.lightSpace = fragPos * lightSpace;
+    output.lightSpace = (float3) mul(lightSpace, fragPos);
 
     return output;
 }

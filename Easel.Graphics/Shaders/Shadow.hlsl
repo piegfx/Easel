@@ -19,7 +19,7 @@ cbuffer ProjViewModel : register(b0)
 VSOutput VertexShader(in VSInput input)
 {
     VSOutput output;
-    output.position = float4(input.position, 1.0) * model * view * projection;
+    output.position = mul(mul(mul(projection, view), model), float4(input.position, 1.0));
 
     return output;
 }

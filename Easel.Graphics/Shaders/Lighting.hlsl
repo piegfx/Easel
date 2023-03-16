@@ -2,8 +2,7 @@
 #define LIGHTING_HLSL
 
 #include "Types.hlsl"
-
-const float PI = 3.141592653589793;
+#include "Utils/Math.hlsl"
 
 // TODO: Replace this with proper normal mapping (still)
 float3 TempNormal(Texture2D normalTex, SamplerState state, float3 fragPos, float2 texCoords, float3 normal)
@@ -68,7 +67,7 @@ float3 ProcessLight(float3 albedo, float3 normal, float metallic, float roughnes
     float3 H = normalize(V + L);
 
     // 0.04 looks correct for dialectic surfaces.
-    float3 F0 = (float4) 0.04;
+    float3 F0 = (float3) 0.04;
     F0 = lerp(F0, albedo, metallic);
     float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
 

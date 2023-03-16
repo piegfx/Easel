@@ -1,4 +1,8 @@
-#include "FXAA.hlsl"
+#define FXAA_PC 1
+#define FXAA_HLSL_5 1
+#define FXAA_QUALITY__PRESET 12
+
+#include "FXAA3_11.h"
 
 struct VSInput
 {
@@ -15,7 +19,7 @@ struct VSInput
 struct VSOutput
 {
     float4 position:  SV_Position;
-    float2 texCoords: TEXCOORD0;
+    noperspective float2 texCoords: TEXCOORD0;
     float4 tint:      COLOR0;
     float4 meta1:     TEXCOORD1;
     float4 meta2:     TEXCOORD2;
@@ -68,9 +72,30 @@ PSOutput PixelShader(in VSOutput input)
 
     float2 frame = float2(1.0 / width, 1.0 / height);
 
-    float3 color = FxaaPS(float4(input.texCoords, input.texCoords - (frame * (0.5 + (1.0 / 4.0)))), sprite, state, frame);
+    FxaaTex tex;
+    tex.tex = sprite;
+    tex.smpl = state;
 
-    output.color = float4(color, 1.0);
+    float4 color = FxaaPixelShader(
+        input.position,
+        0.0,
+        tex,
+        tex,
+        tex,
+        frame,
+        0.0,
+        0.0,
+        0.0,
+        0.75,
+        0.166,
+        0.0833,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    );
+
+    output.color = color;
     
     return output;
 }

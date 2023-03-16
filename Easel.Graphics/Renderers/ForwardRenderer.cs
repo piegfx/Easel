@@ -28,6 +28,8 @@ public sealed class ForwardRenderer : IRenderer
     private EffectLayout _shadowEffect;
     private Pie.RasterizerState _shadowRasterizer;
 
+    private Effect _postProcessEffect;
+    
     public ForwardRenderer(EaselGraphics graphics, Size<int> initialResolution)
     {
         _opaques = new List<TransformedRenderable>();

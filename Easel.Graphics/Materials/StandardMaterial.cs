@@ -64,10 +64,10 @@ public class StandardMaterial : Material
     public StandardMaterial(Texture albedo) : this(albedo, Texture2D.EmptyNormal, Texture2D.Black, Texture2D.White, Texture2D.White) { }
 
     public StandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo) : this(albedo, normal,
-        metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo, new[] { new SpecializationConstant(0, 0x1 | 0x2) }) { }
+        metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo, new[] { new SpecializationConstant(0, (uint) (0x1 | 0x2)) }) { }
     
     public StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao) : this(
-        albedo, normal, metallic, roughness, ao, new []{ new SpecializationConstant(0, 0x1) }) { }
+        albedo, normal, metallic, roughness, ao, new []{ new SpecializationConstant(0, (uint) 0x1) }) { }
 
     protected StandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao,
         SpecializationConstant[] constants)

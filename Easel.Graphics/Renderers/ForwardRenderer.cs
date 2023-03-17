@@ -59,6 +59,9 @@ public sealed class ForwardRenderer : IRenderer
 
         _shadowRasterizer = device.CreateRasterizerState(new RasterizerStateDescription(CullFace.Front,
             CullDirection.CounterClockwise, FillMode.Solid, false));
+
+        //_postProcessEffect = Effect.FromPath("Easel.Graphics.Shaders.PostProcess.PostProcess_vert.spv",
+        //    "Easel.Graphics.Shaders.PostProcess.PostProcess_frag.spv");
     }
 
     private void GraphicsOnSwapchainResized(Size<int> size)
@@ -101,7 +104,7 @@ public sealed class ForwardRenderer : IRenderer
         graphics.SetRenderTarget(null);
         
         graphics.Clear(Color.Black);
-        graphics.SpriteRenderer.Begin();
+        graphics.SpriteRenderer.Begin(/*effect: _postProcessEffect*/);
         graphics.SpriteRenderer.Draw(MainTarget, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
         graphics.SpriteRenderer.End();
     }

@@ -77,7 +77,7 @@ public sealed class SpriteRenderer : IDisposable
         _spriteEffect = Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv", "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv");
         _roundedRectEffect = Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv",
             "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv",
-            constants: new[] { new SpecializationConstant(0, 2) });
+            constants: new[] { new SpecializationConstant(0, 2u) });
 
         _layout = _device.CreateInputLayout(
             new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),

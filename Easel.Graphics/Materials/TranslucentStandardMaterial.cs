@@ -10,13 +10,13 @@ public class TranslucentStandardMaterial : StandardMaterial
 
     public TranslucentStandardMaterial(Texture albedo, Texture normal, Texture metallicRoughnessAo) : base(albedo,
         normal, metallicRoughnessAo, metallicRoughnessAo, metallicRoughnessAo,
-        new[] { new SpecializationConstant(0, 0x1 | 0x2 | 0x4) })
+        new[] { new SpecializationConstant(0, (uint) (0x1 | 0x2 | 0x4)) })
     {
         IsTranslucent = true;
     }
 
     public TranslucentStandardMaterial(Texture albedo, Texture normal, Texture metallic, Texture roughness, Texture ao)
-        : base(albedo, normal, metallic, roughness, ao, new[] { new SpecializationConstant(0, 0x1 | 0x4) })
+        : base(albedo, normal, metallic, roughness, ao, new[] { new SpecializationConstant(0, (uint) (0x1 | 0x4)) })
     {
         IsTranslucent = true;
     }

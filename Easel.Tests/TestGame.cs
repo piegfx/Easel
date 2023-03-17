@@ -1,5 +1,7 @@
+using Easel.Graphics;
 using Easel.Imgui;
 using Easel.Scenes;
+using Pie.ShaderCompiler;
 using Pie.Windowing;
 
 namespace Easel.Tests;
@@ -14,7 +16,7 @@ public class TestGame : EaselGame
     {
         if (!IsServer)
             ImGuiRenderer = new ImGuiRenderer();
-        
+
         base.Initialize();
     }
 

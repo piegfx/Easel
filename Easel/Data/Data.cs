@@ -11,6 +11,8 @@ public static class Data
 
     public static string ConfigFile = "Config.cfg";
 
+    public static string LogDir = "Logs";
+
     public static EaselConfig LoadedConfig;
 
     public static bool LoadConfig<T>() where T : EaselConfig
@@ -57,5 +59,16 @@ public static class Data
         if (!File.Exists(path))
             return null;
         return XmlSerializer.Deserialize<T>(File.ReadAllText(path));
+    }
+
+    public static void InitializeLogFile(string name)
+    {
+        string loggerPath = Path.Combine(AppBaseDir, LogDir);
+        
+        Logger.Debug($"Attempting to initialize the log file \"{name}\" at \"{loggerPath}\".");
+        Directory.CreateDirectory(loggerPath);
+        
+        Logger.InitializeLogFile(Path.Combine(loggerPath, name));
+        Logger.Debug("Log file initialized!");
     }
 }

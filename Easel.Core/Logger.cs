@@ -147,7 +147,7 @@ public static class Logger
 
     private static void LogFile(LogType type, string caller, string message)
     {
-        _stream.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ": " + GetLogMessage(type, caller, message));
+        _stream.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ": " + GetLogMessage(type, caller, message));
     }
 
     #endregion

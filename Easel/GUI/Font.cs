@@ -7,7 +7,6 @@ using Easel.Graphics.Renderers;
 using Easel.GUI.BBCode;
 using Easel.Math;
 using Pie.Text;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Easel.GUI;
 
@@ -42,7 +41,7 @@ public class Font : IDisposable
         _charmaps = new Dictionary<uint, Charmap>();
     }
 
-    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color color, float rotation, Vector2<float> origin, Vector2<float> scale)
+    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2T<int> position, Color color, float rotation, Vector2T<float> origin, Vector2T<float> scale)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -51,7 +50,7 @@ public class Font : IDisposable
             _charmaps.Add(size, charmap);
         }
 
-        Vector2<int> pos = position;
+        Vector2T<int> pos = position;
         int largestChar = 0;
         foreach (char c in text)
         {
@@ -72,17 +71,17 @@ public class Font : IDisposable
             }
             
             Charmap.Character chr = charmap.GetCharacter(c);
-            Vector2<int> charPos = new Vector2<int>(pos.X + chr.Bearing.X,
+            Vector2T<int> charPos = new Vector2T<int>(pos.X + chr.Bearing.X,
                 pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
 
             Vector2 transformedChar = Vector2.Transform((Vector2) charPos, Matrix4x4.CreateScale(scale.X, scale.Y, 1.0f) * Matrix4x4.CreateRotationZ(rotation));
             
-            renderer.Draw(charmap.Texture, (Vector2<float>) transformedChar, chr.Source, color, rotation, Vector2<float>.Zero, scale);
+            renderer.Draw(charmap.Texture, (Vector2T<float>) transformedChar, chr.Source, color, rotation, Vector2T<float>.Zero, scale);
             pos.X += chr.Advance;
         }
     }
 
-    public void DrawBBCode(SpriteRenderer renderer, uint size, string text, Vector2<int> position, Color initialColor)
+    public void DrawBBCode(SpriteRenderer renderer, uint size, string text, Vector2T<int> position, Color initialColor)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -93,7 +92,7 @@ public class Font : IDisposable
 
         BBCodeInstruction[] bbCode = BBCodeParser.Parse(text);
 
-        Vector2<int> pos = position;
+        Vector2T<int> pos = position;
         int largestChar = 0;
         foreach (char c in text)
         {
@@ -125,10 +124,10 @@ public class Font : IDisposable
                         }
 
                         Charmap.Character chr = charmap.GetCharacter(c);
-                        Vector2<int> charPos = new Vector2<int>(pos.X + chr.Bearing.X,
+                        Vector2T<int> charPos = new Vector2T<int>(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        renderer.Draw(charmap.Texture, (Vector2<float>) charPos, chr.Source, currentColor, 0,
-                            Vector2<float>.Zero, Vector2<float>.One);
+                        renderer.Draw(charmap.Texture, (Vector2T<float>) charPos, chr.Source, currentColor, 0,
+                            Vector2T<float>.Zero, Vector2T<float>.One);
                         pos.X += chr.Advance;
                     }
 

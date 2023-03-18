@@ -18,7 +18,11 @@ public static class Time
     /// </summary>
     public static float DeltaTime => (float) _deltaTime;
 
+    public static double DeltaTimeD => _deltaTime;
+
     public static float TotalSeconds => (float) _timerWatch.Elapsed.TotalSeconds;
+
+    public static double TotalSecondsD => _timerWatch.Elapsed.TotalSeconds;
 
     internal static void Initialize()
     {

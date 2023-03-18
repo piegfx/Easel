@@ -20,7 +20,7 @@ public class Canvas
         _backBuffer = new byte[size.Width * size.Height * 4];
 
         Size = size;
-        Scissor = new Rectangle<int>(Vector2<int>.Zero, Size);
+        Scissor = new Rectangle<int>(Vector2T<int>.Zero, Size);
     }
 
     private Canvas(Size<int> size, byte[] data)

@@ -67,7 +67,7 @@ public class EaselGraphics : IDisposable
         PieLog.DebugLog += PieDebug;
         PieGraphics = pieDevice;
 
-        Viewport = new Rectangle<int>(Vector2<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);
 
         MainTarget = new RenderTarget(Viewport.Size, autoDispose: false);
 
@@ -101,7 +101,7 @@ public class EaselGraphics : IDisposable
     public void SetRenderTarget(RenderTarget target)
     {
         PieGraphics.SetFramebuffer(target == null ? MainTarget.PieBuffer : target.PieBuffer);
-        Viewport = new Rectangle<int>(Vector2<int>.Zero, target?.Size ?? (Size<int>) PieGraphics.Swapchain.Size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, target?.Size ?? (Size<int>) PieGraphics.Swapchain.Size);
     }
 
     public void Dispose()
@@ -119,15 +119,15 @@ public class EaselGraphics : IDisposable
         MainTarget = new RenderTarget(size, autoDispose: false);
         SetRenderTarget(null);
         SwapchainResized?.Invoke(size);
-        Viewport = new Rectangle<int>(Vector2<int>.Zero, size);
+        Viewport = new Rectangle<int>(Vector2T<int>.Zero, size);
     }
 
     public void Present()
     {
         PieGraphics.SetFramebuffer(null);
         SpriteRenderer.Begin();
-        SpriteRenderer.Draw(MainTarget, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero,
-            Vector2<float>.One);
+        SpriteRenderer.Draw(MainTarget, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero,
+            Vector2T<float>.One);
         SpriteRenderer.End();
         PieGraphics.Present(VSync ? 1 : 0);
     }

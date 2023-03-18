@@ -41,7 +41,7 @@ public abstract class Material : IDisposable
     /// <summary>
     /// How much the texture will tile. (Default: 1)
     /// </summary>
-    public Vector2<float> Tiling;
+    public Vector2T<float> Tiling;
 
     /// <summary>
     /// The rasterizer state of this material. (Default: CullClockwise)
@@ -50,7 +50,7 @@ public abstract class Material : IDisposable
 
     protected Material()
     {
-        Tiling = Vector2<float>.One;
+        Tiling = Vector2T<float>.One;
         RasterizerState = RasterizerState.CullCounterClockwise;
         DisposeManager.AddItem(this);
     }

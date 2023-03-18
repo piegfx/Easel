@@ -29,7 +29,7 @@ public class NoClipCamera : Component
     public float MoveSpeed;
     public float RunSpeed;
 
-    private Vector2<float> _rotation;
+    private Vector2T<float> _rotation;
 
     public NoClipCamera()
     {
@@ -47,7 +47,7 @@ public class NoClipCamera : Component
         MoveSpeed = 50;
         RunSpeed = 100;
         
-        _rotation = Vector2<float>.Zero;
+        _rotation = Vector2T<float>.Zero;
     }
 
     protected internal override void Update()
@@ -74,7 +74,7 @@ public class NoClipCamera : Component
         if (Input.KeyDown(Down))
             Transform.Position += Transform.Down * speed;
 
-        Vector2<float> mouseDelta = Input.DeltaMousePosition * MouseSensitivity;
+        Vector2T<float> mouseDelta = Input.DeltaMousePosition * MouseSensitivity;
         if (FpsConstraints)
         {
             _rotation.X -= mouseDelta.X;

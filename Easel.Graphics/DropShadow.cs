@@ -7,9 +7,9 @@ public struct DropShadow
 {
     public Color Color;
 
-    public Vector2<float> Offset;
+    public Vector2T<float> Offset;
 
-    public DropShadow(Color color, Vector2<float> offset)
+    public DropShadow(Color color, Vector2T<float> offset)
     {
         Color = color;
         Offset = offset;

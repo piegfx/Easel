@@ -88,9 +88,9 @@ public struct Size<T> : IEquatable<Size<T>> where T : INumber<T>
         return new Size<float>(width, height);
     }
     
-    public static explicit operator Vector2<T>(Size<T> size) => new Vector2<T>(size.Width, size.Height);
+    public static explicit operator Vector2T<T>(Size<T> size) => new Vector2T<T>(size.Width, size.Height);
 
-    public static explicit operator Size<T>(Vector2<T> vector) => new Size<T>(vector.X, vector.Y);
+    public static explicit operator Size<T>(Vector2T<T> vector) => new Size<T>(vector.X, vector.Y);
 
     public static explicit operator System.Drawing.Size(Size<T> size)
     {

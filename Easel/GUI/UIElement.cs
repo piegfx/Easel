@@ -21,7 +21,7 @@ public abstract class UIElement
 
     protected bool IsMouseButtonHeld;
 
-    protected Vector2<int> CalculatedScreenPos;
+    protected Vector2T<int> CalculatedScreenPos;
 
     public UITheme Theme;
 
@@ -37,7 +37,7 @@ public abstract class UIElement
 
     protected internal virtual void Update(ref bool mouseTaken, Rectangle<int> viewport)
     {
-        Vector2<float> mousePos = Input.MousePosition;
+        Vector2T<float> mousePos = Input.MousePosition;
 
         CalculatedScreenPos = Position.CalculatePosition(viewport, Size);
 
@@ -85,22 +85,22 @@ public abstract class UIElement
             renderer.End();
         
             graphics.SetRenderTarget(BlurTexture);
-            graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
+            graphics.Viewport = new Rectangle<int>(new Vector2T<int>(0, rt.Size.Height - Size.Height), rt.Size);
             renderer.Begin();
-            renderer.Draw(rt, new Vector2<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2<float>.Zero, Vector2<float>.One);
+            renderer.Draw(rt, new Vector2T<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
             renderer.End();
             graphics.SetRenderTarget(null);
 
             for (int i = 0; i < Theme.Blur.Iterations; i++)
             {
                 float radius = (Theme.Blur.Iterations - i - 1) * Theme.Blur.Radius;
-                Vector2<float> direction = i % 2 == 0 ? new Vector2<float>(radius, 0) : new Vector2<float>(0, radius);
+                Vector2T<float> direction = i % 2 == 0 ? new Vector2T<float>(radius, 0) : new Vector2T<float>(0, radius);
             
                 graphics.SetRenderTarget(_writeBuffer);
-                graphics.Viewport = new Rectangle<int>(new Vector2<int>(0, rt.Size.Height - Size.Height), rt.Size);
+                graphics.Viewport = new Rectangle<int>(new Vector2T<int>(0, rt.Size.Height - Size.Height), rt.Size);
                 renderer.Begin(effect: _effect);
 
-                renderer.Draw(BlurTexture, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One,
+                renderer.Draw(BlurTexture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One,
                     meta1: new Vector4((System.Numerics.Vector2) direction, Size.Width, Size.Height));
             
                 renderer.End();

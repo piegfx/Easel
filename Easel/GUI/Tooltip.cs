@@ -20,10 +20,10 @@ public class Tooltip
 
     public void Draw(SpriteRenderer renderer)
     {
-        Vector2<int> size = (Vector2<int>) Theme.Font.MeasureStringBBCode(FontSize, Text);
-        Vector2<float> pos = Input.MousePosition + new Vector2<float>(0, -20);
-        renderer.DrawRectangle(pos, (Size<int>) (size + new Vector2<int>(0, 10)), Theme.BorderWidth, Theme.BorderRadius,
-            Theme.BackgroundColor, Theme.BorderColor, 0, Vector2<float>.Zero);
-        Theme.Font.DrawBBCode(renderer, FontSize, Text, (Vector2<int>) pos + size / 2 - size / 2, Theme.FontColor);
+        Vector2T<int> size = (Vector2T<int>) Theme.Font.MeasureStringBBCode(FontSize, Text);
+        Vector2T<float> pos = Input.MousePosition + new Vector2T<float>(0, -20);
+        renderer.DrawRectangle(pos, (Size<int>) (size + new Vector2T<int>(0, 10)), Theme.BorderWidth, Theme.BorderRadius,
+            Theme.BackgroundColor, Theme.BorderColor, 0, Vector2T<float>.Zero);
+        Theme.Font.DrawBBCode(renderer, FontSize, Text, (Vector2T<int>) pos + size / 2 - size / 2, Theme.FontColor);
     }
 }

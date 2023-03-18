@@ -327,9 +327,9 @@ public class EaselGame : IDisposable
         GraphicsInternal.SpriteRenderer.Begin();
         Font font = UI.Theme.Font;
         Size<int> size = font.MeasureString(12, metrics);
-        //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
-        font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2<int>(5), Color.White, 0,
-            Vector2<float>.Zero, Vector2<float>.One);
+        //Graphics.SpriteRenderer.DrawRectangle(Vector2T.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2T.Zero);
+        font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2T<int>(5), Color.White, 0,
+            Vector2T<float>.Zero, Vector2T<float>.One);
         Graphics.SpriteRenderer.End();
     }
     

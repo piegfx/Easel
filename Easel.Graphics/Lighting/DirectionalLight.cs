@@ -9,10 +9,10 @@ namespace Easel.Graphics.Lighting;
 
 public struct DirectionalLight
 {
-    private Vector2<float> _direction;
+    private Vector2T<float> _direction;
     private Vector3 _position;
 
-    public Vector2<float> Direction
+    public Vector2T<float> Direction
     {
         get => _direction;
         set
@@ -29,7 +29,7 @@ public struct DirectionalLight
 
     public ShadowMap ShadowMap;
 
-    public DirectionalLight(Vector2<float> direction, Color color, int numShadowCascades = 0)
+    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 0)
     {
         Direction = direction;
         Color = color;

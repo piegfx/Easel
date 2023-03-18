@@ -36,7 +36,7 @@ public class ImGuiRenderer : IDisposable
 
     private Texture _fontTexture;
 
-    public Vector2<float> Scale;
+    public Vector2T<float> Scale;
 
     private readonly List<char> _pressedChars;
 
@@ -51,7 +51,7 @@ public class ImGuiRenderer : IDisposable
 
     public ImGuiRenderer()
     {
-        Scale = Vector2<float>.One;
+        Scale = Vector2T<float>.One;
         _texture2Ds = new List<Texture>();
 
         EaselGraphics graphics = EaselGame.Instance.Graphics;

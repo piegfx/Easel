@@ -36,7 +36,7 @@ public struct Vector3T<T> : IEquatable<Vector3T<T>> where T : INumber<T>
         Z = scalar;
     }
 
-    public Vector3T(Vector2<T> xy, T z)
+    public Vector3T(Vector2T<T> xy, T z)
     {
         X = xy.X;
         Y = xy.Y;

@@ -1,4 +1,5 @@
 using System;
+using Easel.Core;
 using Pie.Audio;
 using StbVorbisSharp;
 
@@ -66,6 +67,8 @@ public class VorbisPlayer : IAudioPlayer
     public void Dispose()
     {
         _device.BufferFinished -= DeviceOnBufferFinished;
+        
+        Logger.Debug($"Disposing {NumBuffers} buffers...");
         
         for (int i = 0; i < NumBuffers; i++)
             _device.DeleteBuffer(_buffers[i]);

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Easel.Core;
 using Pie.Audio;
 
 namespace Easel.Audio;
@@ -9,7 +10,7 @@ public class Sound : IDisposable
     public IAudioPlayer AudioPlayer;
     public SoundType SoundType;
     
-    public Sound(string path)
+    public Sound(string path, bool autoDispose = true)
     {
         using Stream stream = File.OpenRead(path);
         using BinaryReader reader = new BinaryReader(stream);
@@ -28,6 +29,9 @@ public class Sound : IDisposable
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        
+        if (autoDispose)
+            DisposeManager.AddItem(this);
     }
 
     public ISoundInstance Play(double volume = 1, double speed = 1, double panning = 0.5f, bool loop = false)
@@ -55,6 +59,7 @@ public class Sound : IDisposable
 
     public void Dispose()
     {
+        Logger.Debug("Disposing sound...");
         AudioPlayer.Dispose();
     }
 

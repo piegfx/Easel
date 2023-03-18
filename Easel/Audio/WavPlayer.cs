@@ -1,3 +1,4 @@
+using Easel.Core;
 using Pie.Audio;
 
 namespace Easel.Audio;
@@ -25,6 +26,7 @@ public class WavPlayer : IAudioPlayer
 
     public void Dispose()
     {
+        Logger.Debug("Disposing of PCM audio buffer...");
         _device.DeleteBuffer(_buffer);
     }
 }

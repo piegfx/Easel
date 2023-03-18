@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -59,19 +60,31 @@ public class ContentManager
     
     public T Load<T>(string path)
     {
+        if (!TryLoad(path, out T item))
+            Logger.Fatal($"No content file with name \"{path}\" could be found.");
+
+        return item;
+    }
+
+    public bool TryLoad<T>(string path, [NotNullWhen(true)] out T item)
+    {
+        item = default;
+        
         Logger.Debug("Loading content item \"" + path + "\"...");
         if (!_processors.TryGetValue(typeof(T), out IContentProcessor processor))
             Logger.Fatal($"A content processor for type {typeof(T)} could not be found.");
-        
-        if (!_definitions[_defaultName].ContentTypes.TryGetValue(path, out IContentType type))
-            Logger.Fatal($"No content file with name \"{path}\" could be found.");
 
-        return (T) processor!.Load(Path.Combine(_location, _defaultName), type);
+        if (!_definitions[_defaultName].ContentTypes.TryGetValue(path, out IContentType type))
+            return false;
+        
+        item = (T) processor!.Load(Path.Combine(_location, _defaultName), type);
+        return true;
     }
 
-    public string[] GetAllFiles(string path, string searchPattern = "*")
+    public string[] GetAllFiles(string path, string searchPattern = "*", bool recursive = true)
     {
-        return Directory.GetFiles(Path.Combine(_location, _defaultName, path), searchPattern);
+        return Directory.GetFiles(Path.Combine(_location, _defaultName, path), searchPattern,
+            recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
     }
 
     public void AddContentProcessor(Type type, IContentProcessor processor)

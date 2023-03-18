@@ -19,6 +19,20 @@ public static class Input
     private static HashSet<MouseButton> _mouseButtonsPressed;
     private static HashSet<MouseButton> _newMouseButtons;
 
+    private static string _currentInputScene;
+    private static Dictionary<string, InputScene> _scenes;
+
+    public static string CurrentScene
+    {
+        get => _currentInputScene;
+        set
+        {
+            _currentInputScene = value;
+            InputScene scene = _scenes[value];
+            MouseState = scene.Options.MouseState;
+        }
+    }
+
     static Input()
     {
         _keysPressed = new HashSet<Key>();
@@ -26,6 +40,8 @@ public static class Input
 
         _mouseButtonsPressed = new HashSet<MouseButton>();
         _newMouseButtons = new HashSet<MouseButton>();
+
+        _scenes = new Dictionary<string, InputScene>();
     }
 
     /// <summary>
@@ -118,6 +134,13 @@ public static class Input
     
     public static Vector2<float> ScrollWheelDelta { get; private set; }
 
+    public static void CreateScene(string name, InputSceneOptions options)
+    {
+        _scenes.Add(name, new InputScene(name, options));
+    }
+
+    public static InputScene GetScene(string name) => _scenes[name];
+
     internal static void Initialize(Window window)
     {
         window.KeyDown += WindowOnKeyDown;
@@ -175,5 +198,124 @@ public static class Input
     private static void WindowOnScroll(System.Numerics.Vector2 scroll)
     {
         ScrollWheelDelta += (Vector2<float>) scroll;
+    }
+    
+    public struct InputSceneOptions
+    {
+        public MouseState MouseState;
+    }
+    
+    public class InputScene
+    {
+        internal readonly string Name;
+
+        public InputSceneOptions Options;
+
+        public bool KeyDown(Key key)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.KeyDown(key);
+        }
+
+        public bool AnyKeyDown(out Key pressedKey, params Key[] keys)
+        {
+            pressedKey = Key.Unknown;
+
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyDown(out pressedKey, keys);
+        }
+
+        public bool AnyKeyDown(params Key[] keys)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyDown(keys);
+        }
+        
+        public bool AnyKeyPressed(out Key pressedKey, params Key[] keys)
+        {
+            pressedKey = Key.Unknown;
+
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyPressed(out pressedKey, keys);
+        }
+
+        public bool AnyKeyPressed(params Key[] keys)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyPressed(keys);
+        }
+
+        public bool KeyPressed(Key key)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.KeyPressed(key);
+        }
+        
+        public bool MouseButtonDown(MouseButton button)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.MouseButtonDown(button);
+        }
+        
+        public bool MouseButtonPressed(MouseButton button)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.MouseButtonPressed(button);
+        }
+
+        public Vector2<float> MousePosition
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2<float>.Zero;
+
+                return Input.MousePosition;
+            }
+        }
+        
+        public Vector2<float> DeltaMousePosition
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2<float>.Zero;
+
+                return Input.DeltaMousePosition;
+            }
+        }
+        
+        public Vector2<float> ScrollWheelDelta
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2<float>.Zero;
+
+                return Input.ScrollWheelDelta;
+            }
+        }
+
+        internal InputScene(string name, InputSceneOptions options)
+        {
+            Name = name;
+            Options = options;
+        }
     }
 }

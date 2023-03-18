@@ -52,6 +52,7 @@ public abstract class Material : IDisposable
     {
         Tiling = Vector2<float>.One;
         RasterizerState = RasterizerState.CullCounterClockwise;
+        DisposeManager.AddItem(this);
     }
 
     protected internal abstract void ApplyTextures(GraphicsDevice device);

@@ -32,16 +32,6 @@ public abstract class Scene : IDisposable
 
     public string Name;
 
-    /// <summary>
-    /// Contains a list of disposable objects that will be automatically disposed when the scene is disposed. Engine
-    /// objects, such as textures, will be automatically added to this list on creation (unless you tell them not to).
-    /// Pie objects, such as graphics buffers, however, will not, so it is recommended that you add them to this list
-    /// so you don't need to remember to delete them later.
-    /// </summary>
-    /// <remarks>It's recommended you don't clear this list unless you remember to manually clean objects later. You
-    /// also don't need to add entities to this list, they are automatically disposed separately.</remarks>
-    public List<IDisposable> GarbageCollections;
-
     private int _entityCount;
 
     private int _unnamedEntityId;
@@ -71,7 +61,6 @@ public abstract class Scene : IDisposable
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
-        GarbageCollections = new List<IDisposable>();
     }
     
     protected Scene(string name, int initialCapacity = 128) : this(initialCapacity)
@@ -173,8 +162,7 @@ public abstract class Scene : IDisposable
             _entities[i].Dispose();
         
         Logger.Debug("Collecting garbage...");
-        foreach (IDisposable disposable in GarbageCollections)
-            disposable.Dispose();
+        DisposeManager.DisposeAll();
         
         Logger.Debug("Scene disposed.");
     }

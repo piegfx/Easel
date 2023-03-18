@@ -31,7 +31,7 @@ public abstract class Texture : IDisposable
         SamplerState = state;
         
         if (autoDispose)
-            EaselGraphics.Instance.Disposables.Add(this);
+            DisposeManager.AddItem(this);
     }
 
     public virtual void Dispose()

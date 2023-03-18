@@ -16,7 +16,6 @@ namespace Easel.Graphics;
 public class EaselGraphics : IDisposable
 {
     private Rectangle<int> _viewport;
-    internal List<IDisposable> Disposables;
 
     /// <summary>
     /// Is invoked when the <see cref="Viewport"/> is resized.
@@ -71,8 +70,6 @@ public class EaselGraphics : IDisposable
         Viewport = new Rectangle<int>(Vector2<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);
 
         MainTarget = new RenderTarget(Viewport.Size, autoDispose: false);
-
-        Disposables = new List<IDisposable>();
 
         if (options.Deferred)
             throw new NotImplementedException("Deferred rendering has currently not been implemented.");

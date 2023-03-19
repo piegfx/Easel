@@ -49,7 +49,7 @@ public class ImGuiRenderer : IDisposable
 
     private List<Texture> _texture2Ds;
 
-    public ImGuiRenderer()
+    public ImGuiRenderer(FontInfo? defaultFont = null)
     {
         Scale = Vector2T<float>.One;
         _texture2Ds = new List<Texture>();
@@ -68,7 +68,10 @@ public class ImGuiRenderer : IDisposable
         _context = ImGuiNET.ImGui.CreateContext();
         ImGuiNET.ImGui.SetCurrentContext(_context);
         ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
-        io.Fonts.AddFontDefault();
+        if (defaultFont != null)
+            io.Fonts.AddFontFromFileTTF(defaultFont.Value.Path, defaultFont.Value.Size);
+        else
+            io.Fonts.AddFontDefault();
         io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
         CreateDeviceResources();

@@ -71,10 +71,10 @@ public class Test2D : Scene
         
         _vertices = new SpriteRenderer.SpriteVertex[]
         {
-            new(new Vector2<float>(0, 0), new Vector2<float>(0, 0), Color.White),
-            new(new Vector2<float>(1024, 0), new Vector2<float>(1, 0), Color.White),
-            new(new Vector2<float>(1024, 1024), new Vector2<float>(1, 1), Color.White),
-            new(new Vector2<float>(0, 1024), new Vector2<float>(0, 1), Color.White),
+            new(new Vector2T<float>(0, 0), new Vector2T<float>(0, 0), Color.White),
+            new(new Vector2T<float>(1024, 0), new Vector2T<float>(1, 0), Color.White),
+            new(new Vector2T<float>(1024, 1024), new Vector2T<float>(1, 1), Color.White),
+            new(new Vector2T<float>(0, 1024), new Vector2T<float>(0, 1), Color.White),
         };
         
         _indices = new uint[]
@@ -93,7 +93,7 @@ public class Test2D : Scene
         Graphics.SetRenderTarget(_rt);
         Graphics.Clear(Color.Transparent);
         Graphics.SpriteRenderer.Begin();
-        _font.Draw(Graphics.SpriteRenderer, size, text, Vector2<int>.Zero, Color.White);
+        _font.Draw(Graphics.SpriteRenderer, size, text, Vector2T<int>.Zero, Color.White);
         Graphics.SpriteRenderer.End();
         Graphics.SetRenderTarget(null);
 
@@ -135,11 +135,11 @@ public class Test2D : Scene
 
         Graphics.SpriteRenderer.Begin();
         Position position = new Position(Anchor.TopLeft);
-        Vector2<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.Theme.Font.MeasureString(size, text));
-        UI.Theme.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2<float>.Zero, new Vector2<float>(5, 1));
+        Vector2T<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.Theme.Font.MeasureString(size, text));
+        UI.Theme.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2T<float>.Zero, new Vector2T<float>(5, 1));
         
-        Graphics.SpriteRenderer.DrawRectangle(new Vector2<float>(100), new Size<float>(100), 2, 20, Color.White,
-            Color.Black, 0, Vector2<float>.One);
+        Graphics.SpriteRenderer.DrawRectangle(new Vector2T<float>(100), new Size<float>(100), 2, 20, Color.White,
+            Color.Black, 0, Vector2T<float>.One);
         
         Graphics.SpriteRenderer.End();
 

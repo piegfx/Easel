@@ -26,7 +26,7 @@ public class TestFont : Scene
         base.Draw();
         
         Graphics.SpriteRenderer.Begin();
-        Graphics.SpriteRenderer.Draw(_texture, Vector2<float>.Zero, null, Color.White, 0, Vector2<float>.Zero, Vector2<float>.One, SpriteFlip.None);
+        Graphics.SpriteRenderer.Draw(_texture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One, SpriteFlip.None);
         Graphics.SpriteRenderer.End();
     }
 }

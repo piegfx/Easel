@@ -34,6 +34,8 @@ public class BlendState : IDisposable
         return state;
     }
 
+    public static BlendState Disabled => FromDescription(BlendStateDescription.Disabled);
+
     public static BlendState AlphaBlend => FromDescription(BlendStateDescription.AlphaBlend);
 
     public static BlendState Additive => FromDescription(BlendStateDescription.Additive);

@@ -45,7 +45,7 @@ public class GaussianBlur : IDisposable
         graphics.SetRenderTarget(_target);
         //graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, graphics.MainTarget.Size);
         
-        renderer.Begin(blendState: BlendState.AlphaBlend);
+        renderer.Begin(blendState: BlendState.Disabled);
 
         renderer.Draw(Texture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
         
@@ -57,7 +57,7 @@ public class GaussianBlur : IDisposable
             Vector2T<float> direction = i % 2 == 0 ? new Vector2T<float>(radius, 0) : new Vector2T<float>(0, radius);
             
             graphics.SetRenderTarget(_target2);
-            renderer.Begin(effect: _effect);
+            renderer.Begin(effect: _effect, blendState: BlendState.Disabled);
 
             renderer.Draw(_target, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One,
                 meta1: new Vector4((System.Numerics.Vector2) direction, _target.Size.Width, _target.Size.Height));

@@ -125,7 +125,7 @@ public class EaselGraphics : IDisposable
     public void Present()
     {
         PieGraphics.SetFramebuffer(null);
-        SpriteRenderer.Begin();
+        SpriteRenderer.Begin(blendState: BlendState.Disabled);
         SpriteRenderer.Draw(MainTarget, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero,
             Vector2T<float>.One);
         SpriteRenderer.End();

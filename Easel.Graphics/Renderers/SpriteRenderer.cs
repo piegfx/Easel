@@ -46,6 +46,7 @@ public sealed class SpriteRenderer : IDisposable
     private Pie.RasterizerState _rasterizerState;
     private DepthStencilState _depthState;
     private BlendState _blendState;
+    private BlendState _stateToUse;
 
     private GraphicsDevice _device;
 
@@ -91,10 +92,10 @@ public sealed class SpriteRenderer : IDisposable
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthState = _device.CreateDepthState(DepthStencilStateDescription.Disabled);
-        _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
+        _blendState = BlendState.NonPremultiplied;
     }
 
-    public void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null)
+    public void Begin(Matrix4x4? transform = null, Matrix4x4? projection = null, Effect effect = null, BlendState blendState = null)
     {
         if (_begun)
             throw new EaselException("SpriteRenderer session is already active.");
@@ -104,6 +105,7 @@ public sealed class SpriteRenderer : IDisposable
         Matrix4x4 proj = projection ?? Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1f, 1f);
         Matrix4x4 trans = transform ?? Matrix4x4.Identity;
         _effectToUse = effect;
+        _stateToUse = blendState ?? _blendState;
         
         _device.UpdateBuffer(_projViewBuffer, 0, proj * trans);
     }
@@ -298,7 +300,7 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetShader(effect.PieShader);
         _device.SetRasterizerState(_rasterizerState);
         _device.SetDepthStencilState(_depthState);
-        _device.SetBlendState(_blendState);
+        _device.SetBlendState(_stateToUse.PieBlendState);
         _device.SetUniformBuffer(0, _projViewBuffer);
         _device.SetTexture(1, _currentTexture.PieTexture, _currentTexture.SamplerState.PieSamplerState);
         _device.SetPrimitiveType(PrimitiveType.TriangleList);

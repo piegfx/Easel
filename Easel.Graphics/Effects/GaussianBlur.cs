@@ -45,7 +45,7 @@ public class GaussianBlur : IDisposable
         graphics.SetRenderTarget(_target);
         //graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, graphics.MainTarget.Size);
         
-        renderer.Begin();
+        renderer.Begin(blendState: BlendState.AlphaBlend);
 
         renderer.Draw(Texture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
         

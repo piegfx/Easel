@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using Easel.Core;
-using Easel.Graphics;
+﻿using System.Collections.Generic;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 
 namespace Easel.GUI;
@@ -13,61 +8,50 @@ public static class UI
 {
     private static Dictionary<string, UIElement> _elements;
 
-    public static UITheme Theme;
+    private static List<UIElement> _elementsList;
 
-    public static Tooltip CurrentTooltip;
+    public static Style DefaultStyle;
 
-    internal static Font DefaultFont;
+    public static Size<int>? TargetSize;
 
     static UI()
     {
+        DefaultStyle = new Style();
+        TargetSize = null;
+
         _elements = new Dictionary<string, UIElement>();
-
-        DefaultFont = new Font(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.Roboto-Regular.ttf"));
-        Theme = new UITheme()
-        {
-            Font = DefaultFont
-        };
+        _elementsList = new List<UIElement>();
     }
-
-    public static void Add(string id, UIElement element)
-    {
-        _elements.Add(id, element);
-    }
-
-    public static void Remove(string id)
-    {
-        _elements.Remove(id, out UIElement element);
-    }
-
-    public static T Get<T>(string id) where T : UIElement
-    {
-        return (T) _elements[id];
-    }
-
+    
     public static void Clear()
     {
         _elements.Clear();
+        _elementsList.Clear();
     }
 
-    internal static void Update(Rectangle<int> viewport)
+    public static void Add(UIElement element)
     {
-        CurrentTooltip = null;
-        
+        _elements.Add(element.Name, element);
+        _elementsList.Add(element);
+    }
+
+    internal static void Update()
+    {
+        Rectangle<int> viewport =
+            new Rectangle<int>(Vector2T<int>.Zero, EaselGame.Instance.GraphicsInternal.MainTarget.Size);
+
         bool mouseCaptured = false;
-        foreach ((_, UIElement element) in _elements.Reverse())
-            element.Update(ref mouseCaptured, viewport);
+        for (int i = _elementsList.Count - 1; i >= 0; i--)
+            _elementsList[i].Update(viewport, ref mouseCaptured);
     }
 
-    internal static void Draw(EaselGraphics graphics)
+    internal static void Draw(SpriteRenderer renderer)
     {
-        graphics.SpriteRenderer.Begin();
+        renderer.Begin();
         
-        foreach ((_, UIElement element) in _elements)
-            element.Draw(graphics.SpriteRenderer);
+        for (int i = 0; i < _elements.Count; i++)
+            _elementsList[i].Draw(renderer, 1.0);
         
-        CurrentTooltip?.Draw(graphics.SpriteRenderer);
-        
-        graphics.SpriteRenderer.End();
+        renderer.End();
     }
 }

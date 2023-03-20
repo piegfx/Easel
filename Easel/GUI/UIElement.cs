@@ -1,10 +1,5 @@
-﻿using System;
-using System.Numerics;
-using System.Reflection;
-using Easel.Graphics;
-using Easel.Graphics.Renderers;
+﻿using Easel.Graphics.Renderers;
 using Easel.Math;
-using Pie.ShaderCompiler;
 using Pie.Windowing;
 
 namespace Easel.GUI;
@@ -13,117 +8,60 @@ public abstract class UIElement
 {
     public event OnClick Click;
     
+    public string Name;
+    
     public Position Position;
 
     public Size<int> Size;
-    
-    public bool IsClicked;
 
-    public bool IsHovering;
+    public Style Style;
 
-    protected bool IsMouseButtonHeld;
+    public bool MouseTransparent;
 
     protected Vector2T<int> CalculatedScreenPos;
 
-    public UITheme Theme;
-
-    public Tooltip Tooltip;
-
-    protected UIElement(Position position, Size<int> size)
+    protected bool IsHovered;
+    
+    protected bool IsClicked;
+    
+    public UIElement(string name, Position position, Size<int> size)
     {
+        Name = name;
         Position = position;
         Size = size;
-        // UITheme is purposefully a struct, copy it for each element.
-        Theme = UI.Theme;
+        Style = UI.DefaultStyle;
     }
 
-    protected internal virtual void Update(ref bool mouseTaken, Rectangle<int> viewport)
+    protected internal virtual void Update(Rectangle<int> viewport, ref bool mouseCaptured)
     {
-        Vector2T<float> mousePos = Input.MousePosition;
-
         CalculatedScreenPos = Position.CalculatePosition(viewport, Size);
 
-        IsClicked = false;
-        IsHovering = false;
-        
-        if (!mouseTaken && mousePos.X >= CalculatedScreenPos.X && mousePos.X < CalculatedScreenPos.X + Size.Width &&
-            mousePos.Y >= CalculatedScreenPos.Y && mousePos.Y < CalculatedScreenPos.Y + Size.Height)
-        {
-            mouseTaken = true;
-            IsHovering = true;
+        Vector2T<float> mousePosition = Input.MousePosition;
 
-            UI.CurrentTooltip = Tooltip;
+        if (!mouseCaptured &&
+            mousePosition.X >= CalculatedScreenPos.X && mousePosition.X < CalculatedScreenPos.X + Size.Width &&
+            mousePosition.Y >= CalculatedScreenPos.Y && mousePosition.Y < CalculatedScreenPos.Y + Size.Height)
+        {
+            mouseCaptured = true;
+
+            IsHovered = true;
 
             if (Input.MouseButtonDown(MouseButton.Left))
-                IsMouseButtonHeld = true;
-            else if (IsMouseButtonHeld)
-            {
-                Click?.Invoke(this);
                 IsClicked = true;
-                IsMouseButtonHeld = false;
+            else if (IsClicked)
+            {
+                IsClicked = false;
+                Click?.Invoke(this);
             }
         }
-    }
-
-    protected internal virtual void Draw(SpriteRenderer renderer)
-    {
-        // TODO: Blur is kinda bronked.
-        if (Theme.Blur != null)
+        else
         {
-            _effect ??= Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv",
-                "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv",
-                constants: new[] { new SpecializationConstant(0, 0) }, assembly: Assembly.GetAssembly(typeof(SpriteRenderer)));
-
-            if (BlurTexture == null || Size != BlurTexture.Size)
-            {
-                BlurTexture?.Dispose();
-                _writeBuffer?.Dispose();
-                BlurTexture = new RenderTarget(Size);
-                _writeBuffer = new RenderTarget(Size);
-            }
-            
-            EaselGraphics graphics = EaselGame.Instance.GraphicsInternal;
-            RenderTarget rt = graphics.Renderer.MainTarget;
-        
-            renderer.End();
-        
-            graphics.SetRenderTarget(BlurTexture);
-            graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, rt.Size);
-            renderer.Begin();
-            renderer.Draw(rt, new Vector2T<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
-            renderer.End();
-            graphics.SetRenderTarget(null);
-
-            /*for (int i = 0; i < Theme.Blur.Iterations; i++)
-            {
-                float radius = (Theme.Blur.Iterations - i - 1) * Theme.Blur.Radius;
-                Vector2T<float> direction = i % 2 == 0 ? new Vector2T<float>(radius, 0) : new Vector2T<float>(0, radius);
-            
-                graphics.SetRenderTarget(_writeBuffer);
-                graphics.Viewport = new Rectangle<int>(new Vector2T<int>(0, rt.Size.Height - Size.Height), rt.Size);
-                renderer.Begin(effect: _effect);
-
-                renderer.Draw(BlurTexture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One,
-                    meta1: new Vector4((System.Numerics.Vector2) direction, Size.Width, Size.Height));
-            
-                renderer.End();
-                graphics.SetRenderTarget(null);
-                (BlurTexture, _writeBuffer) = (_writeBuffer, BlurTexture);
-            }*/
-
-            renderer.Begin();
+            IsClicked = false;
+            IsHovered = false;
         }
     }
+    
+    protected internal abstract void Draw(SpriteRenderer renderer, double scale);
 
     public delegate void OnClick(UIElement element);
-
-    #region Blur
-
-    protected RenderTarget BlurTexture;
-
-    private static Effect _effect;
-    
-    private RenderTarget _writeBuffer;
-
-    #endregion
 }

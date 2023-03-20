@@ -1,21 +1,27 @@
-using Easel.Graphics.Renderers;
+﻿using Easel.Graphics.Renderers;
 using Easel.Math;
 
 namespace Easel.GUI;
 
 public class Panel : UIElement
 {
-    public Panel(Position position, Size<int> size) : base(position, size) { }
+    public Panel(string name, Position position, Size<int> size) : base(name, position, size) { }
     
-    protected internal override void Draw(SpriteRenderer renderer)
+    protected internal override void Draw(SpriteRenderer renderer, double scale)
     {
-        base.Draw(renderer);
+        Color bg = Style.Panel.BackgroundColor;
+        Color border = Style.Panel.BorderColor;
+        float radius = Style.Panel.BorderRadius;
+        int width = Style.Panel.BorderWidth;
 
-        // TODO: what
-        //renderer.DrawRectangle(BlurTexture, (Vector2T<float>) CalculatedScreenPos, Size, 0, Theme.BorderRadius,
-        //    Color.White, Color.White, 0, Vector2T<float>.Zero);
+        if (Style.BackgroundTexture != null)
+        {
+            renderer.Draw(Style.BackgroundTexture, (Vector2T<float>) CalculatedScreenPos,
+                new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2T<float>.Zero,
+                Vector2T<float>.One);
+        }
 
-        renderer.Draw(BlurTexture, (Vector2T<float>) CalculatedScreenPos, null, Color.White, 0, Vector2T<float>.Zero,
-            (Vector2T<float>) (Vector2T<int>) Size);
+        renderer.DrawRectangle((Vector2T<float>) CalculatedScreenPos, Size, width, radius, bg, border, 0,
+            Vector2T<float>.Zero);
     }
 }

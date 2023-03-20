@@ -235,9 +235,10 @@ public class EaselGame : IDisposable
                 Input.Update(Window);
                 Time.Update();
                 Metrics.Update();
-                UI.Update(GraphicsInternal.Viewport);
+                UI.Update();
                 Update();
                 Draw();
+                UI.Draw(GraphicsInternal.SpriteRenderer);
                 if (ShowMetrics)
                     DrawMetrics();
                 GraphicsInternal.Present();
@@ -276,8 +277,6 @@ public class EaselGame : IDisposable
         _actions.Clear();
         
         SceneManager.Draw();
-        
-        UI.Draw(GraphicsInternal);
     }
 
     /// <summary>
@@ -325,7 +324,7 @@ public class EaselGame : IDisposable
     {
         string metrics = Metrics.GetString();
         GraphicsInternal.SpriteRenderer.Begin();
-        Font font = UI.Theme.Font;
+        Font font = UI.DefaultStyle.Font;
         Size<int> size = font.MeasureString(12, metrics);
         //Graphics.SpriteRenderer.DrawRectangle(Vector2T.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2T.Zero);
         font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2T<int>(5), Color.White, 0,

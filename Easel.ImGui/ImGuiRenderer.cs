@@ -32,7 +32,7 @@ public class ImGuiRenderer : IDisposable
     private DepthStencilState _depthState;
     private Pie.RasterizerState _rasterizerState;
     private Pie.SamplerState _samplerState;
-    private BlendState _blendState;
+    private Pie.BlendState _blendState;
 
     private Texture _fontTexture;
 

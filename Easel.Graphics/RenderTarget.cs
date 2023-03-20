@@ -1,4 +1,5 @@
-﻿using Easel.Math;
+﻿using Easel.Core;
+using Easel.Math;
 using Pie;
 
 namespace Easel.Graphics;
@@ -30,7 +31,7 @@ public class RenderTarget : Texture
     public override void Dispose()
     {
         PieBuffer.Dispose();
-        //_depth.Dispose();
+        _depth.Dispose();
         
         base.Dispose();
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using Easel.Core;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie.ShaderCompiler;
@@ -19,7 +20,7 @@ public class GaussianBlur : IDisposable
 
     public int Iterations;
 
-    public GaussianBlur(Texture texture, float radius, int iterations)
+    public GaussianBlur(Texture texture, float radius, int iterations, bool autoDispose = true)
     {
         Texture = texture;
         Radius = radius;
@@ -31,6 +32,9 @@ public class GaussianBlur : IDisposable
         _effect ??= Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv",
             "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv",
             constants: new[] { new SpecializationConstant(0, 1u) });
+        
+        if (autoDispose)
+            DisposeManager.AddItem(this);
     }
 
     public Texture Blur()

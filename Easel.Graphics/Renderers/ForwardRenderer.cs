@@ -107,7 +107,7 @@ public sealed class ForwardRenderer : IRenderer
         graphics.SetRenderTarget(null);
         
         graphics.Clear(Color.Black);
-        graphics.SpriteRenderer.Begin(blendState: BlendState.Disabled /*effect: _postProcessEffect*/);
+        graphics.SpriteRenderer.Begin(blendState: BlendState.DisabledRgbMask /*effect: _postProcessEffect*/);
         graphics.SpriteRenderer.Draw(MainTarget, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
         graphics.SpriteRenderer.End();
     }

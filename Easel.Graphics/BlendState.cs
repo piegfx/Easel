@@ -36,6 +36,11 @@ public class BlendState : IDisposable
 
     public static BlendState Disabled => FromDescription(BlendStateDescription.Disabled);
 
+    public static BlendState DisabledRgbMask => FromDescription(BlendStateDescription.Disabled with
+    {
+        ColorWriteMask = ColorWriteMask.Red | ColorWriteMask.Green | ColorWriteMask.Blue
+    });
+
     public static BlendState AlphaBlend => FromDescription(BlendStateDescription.AlphaBlend);
 
     public static BlendState Additive => FromDescription(BlendStateDescription.Additive);

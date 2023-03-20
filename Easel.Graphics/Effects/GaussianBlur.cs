@@ -3,6 +3,7 @@ using System.Numerics;
 using Easel.Core;
 using Easel.Graphics.Renderers;
 using Easel.Math;
+using Pie;
 using Pie.ShaderCompiler;
 
 namespace Easel.Graphics.Effects;
@@ -43,9 +44,10 @@ public class GaussianBlur : IDisposable
         SpriteRenderer renderer = graphics.SpriteRenderer;
         
         graphics.SetRenderTarget(_target);
+        graphics.Clear(Color.Black);
         //graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, graphics.MainTarget.Size);
-        
-        renderer.Begin(blendState: BlendState.Disabled);
+
+        renderer.Begin(blendState: BlendState.DisabledRgbMask);
 
         renderer.Draw(Texture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
         

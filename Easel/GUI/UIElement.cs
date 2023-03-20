@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
+using Pie.ShaderCompiler;
 using Pie.Windowing;
 
 namespace Easel.GUI;
@@ -65,11 +67,12 @@ public abstract class UIElement
 
     protected internal virtual void Draw(SpriteRenderer renderer)
     {
+        // TODO: Blur is kinda bronked.
         if (Theme.Blur != null)
         {
-            // TODO: This
-            //_effect ??= new Effect("Easel.Graphics.Shaders.SpriteRenderer.Sprite.vert",
-            //    "Easel.Graphics.Shaders.SpriteRenderer.Sprite.frag", defines: "BLUR");
+            _effect ??= Effect.FromPath("Easel.Graphics.Shaders.SpriteRenderer.Sprite_vert.spv",
+                "Easel.Graphics.Shaders.SpriteRenderer.Sprite_frag.spv",
+                constants: new[] { new SpecializationConstant(0, 0) }, assembly: Assembly.GetAssembly(typeof(SpriteRenderer)));
 
             if (BlurTexture == null || Size != BlurTexture.Size)
             {
@@ -85,13 +88,13 @@ public abstract class UIElement
             renderer.End();
         
             graphics.SetRenderTarget(BlurTexture);
-            graphics.Viewport = new Rectangle<int>(new Vector2T<int>(0, rt.Size.Height - Size.Height), rt.Size);
+            graphics.Viewport = new Rectangle<int>(Vector2T<int>.Zero, rt.Size);
             renderer.Begin();
             renderer.Draw(rt, new Vector2T<float>(0, 000), new Rectangle<int>(CalculatedScreenPos, Size), Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
             renderer.End();
             graphics.SetRenderTarget(null);
 
-            for (int i = 0; i < Theme.Blur.Iterations; i++)
+            /*for (int i = 0; i < Theme.Blur.Iterations; i++)
             {
                 float radius = (Theme.Blur.Iterations - i - 1) * Theme.Blur.Radius;
                 Vector2T<float> direction = i % 2 == 0 ? new Vector2T<float>(radius, 0) : new Vector2T<float>(0, radius);
@@ -106,7 +109,7 @@ public abstract class UIElement
                 renderer.End();
                 graphics.SetRenderTarget(null);
                 (BlurTexture, _writeBuffer) = (_writeBuffer, BlurTexture);
-            }
+            }*/
 
             renderer.Begin();
         }

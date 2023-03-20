@@ -152,7 +152,8 @@ public class Effect : IDisposable
     }
 
     public static Effect FromPath(string vertexPath, string fragmentPath,
-        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null,
+        Assembly assembly = null)
     {
         byte[] vertex, fragment;
         
@@ -165,8 +166,8 @@ public class Effect : IDisposable
                 fragment = File.ReadAllBytes(fragmentPath);
                 break;
             case EffectLoadType.EmbeddedResource:
-                vertex = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), vertexPath);
-                fragment = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), fragmentPath);
+                vertex = Utils.LoadEmbeddedResource(assembly ?? Assembly.GetCallingAssembly(), vertexPath);
+                fragment = Utils.LoadEmbeddedResource(assembly ?? Assembly.GetCallingAssembly(), fragmentPath);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);

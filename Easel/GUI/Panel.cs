@@ -11,7 +11,11 @@ public class Panel : UIElement
     {
         base.Draw(renderer);
 
-        renderer.DrawRectangle(BlurTexture, (Vector2T<float>) CalculatedScreenPos, Size, 0, Theme.BorderRadius,
-            Color.White, Color.White, 0, Vector2T<float>.Zero);
+        // TODO: what
+        //renderer.DrawRectangle(BlurTexture, (Vector2T<float>) CalculatedScreenPos, Size, 0, Theme.BorderRadius,
+        //    Color.White, Color.White, 0, Vector2T<float>.Zero);
+
+        renderer.Draw(BlurTexture, (Vector2T<float>) CalculatedScreenPos, null, Color.White, 0, Vector2T<float>.Zero,
+            (Vector2T<float>) (Vector2T<int>) Size);
     }
 }

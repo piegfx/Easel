@@ -49,7 +49,7 @@ public sealed class ForwardRenderer : IRenderer
         _sceneInfo = new SceneInfo();
         _sceneInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _sceneInfo, true);
 
-        _depthState = device.CreateDepthState(DepthStencilStateDescription.LessEqual);
+        _depthState = device.CreateDepthStencilState(DepthStencilStateDescription.LessEqual);
 
         InputLayout layout =
             device.CreateInputLayout(new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex));

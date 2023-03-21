@@ -166,6 +166,7 @@ public class EaselGame : IDisposable
             Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
 
             Logger.Debug("Creating window...");
+            PieLog.DebugLog += PieDebug;
             Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
             Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
             Window.Visible = _settings.StartVisible;
@@ -335,5 +336,12 @@ public class EaselGame : IDisposable
     private void WindowOnResize(System.Drawing.Size size)
     {
         GraphicsInternal.ResizeGraphics((Size<int>) size);
+    }
+    
+    private void PieDebug(LogType logtype, string message)
+    {
+        //if (logtype == LogType.Debug)
+        //    return;
+        Logger.Log((Logger.LogType) logtype, message);
     }
 }

@@ -91,7 +91,7 @@ public sealed class SpriteRenderer : IDisposable
             new InputLayoutDescription(Format.R32G32B32A32_Float, 68, 0, InputType.PerVertex));
 
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
-        _depthState = _device.CreateDepthState(DepthStencilStateDescription.Disabled);
+        _depthState = _device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
         _blendState = BlendState.NonPremultiplied;
     }
 

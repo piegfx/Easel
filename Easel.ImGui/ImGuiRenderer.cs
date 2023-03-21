@@ -139,7 +139,7 @@ void main()
         _shader = device.CreateShader(new []{ new ShaderAttachment(ShaderStage.Vertex, vertexSource),
             new ShaderAttachment(ShaderStage.Fragment, fragmentSource) });
 
-        _depthState = device.CreateDepthState(DepthStencilStateDescription.Disabled);
+        _depthState = device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
         RasterizerStateDescription stateDesc = RasterizerStateDescription.CullNone;
         stateDesc.ScissorTest = true;
         _rasterizerState = device.CreateRasterizerState(stateDesc);

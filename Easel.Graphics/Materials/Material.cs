@@ -19,6 +19,8 @@ public abstract class Material : IDisposable
 
     private static Dictionary<int, MaterialCache> _cache;
     private int _hash;
+    
+    public bool IsDisposed { get; private set; }
 
     static Material()
     {
@@ -84,6 +86,10 @@ public abstract class Material : IDisposable
 
     public virtual void Dispose()
     {
+        if (IsDisposed)
+            return;
+        IsDisposed = true;
+        
         MaterialCache cache = _cache[_hash];
         cache.NumReferences--;
         if (cache.NumReferences <= 0)

@@ -135,8 +135,8 @@ public class Test2D : Scene
 
         Graphics.SpriteRenderer.Begin();
         Position position = new Position(Anchor.TopLeft);
-        Vector2T<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.Theme.Font.MeasureString(size, text));
-        UI.Theme.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2T<float>.Zero, new Vector2T<float>(5, 1));
+        Vector2T<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.DefaultStyle.Font.MeasureString(size, text));
+        UI.DefaultStyle.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2T<float>.Zero, new Vector2T<float>(5, 1));
         
         Graphics.SpriteRenderer.DrawRectangle(new Vector2T<float>(100), new Size<float>(100), 2, 20, Color.White,
             Color.Black, 0, Vector2T<float>.One);

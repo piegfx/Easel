@@ -64,7 +64,6 @@ public class EaselGraphics : IDisposable
     {
         Instance = this;
         
-        PieLog.DebugLog += PieDebug;
         PieGraphics = pieDevice;
 
         Viewport = new Rectangle<int>(Vector2T<int>.Zero, (Size<int>) pieDevice.Swapchain.Size);
@@ -80,13 +79,6 @@ public class EaselGraphics : IDisposable
         Renderer = new ForwardRenderer(this, Viewport.Size);
 
         VSync = true;
-    }
-
-    private void PieDebug(LogType logtype, string message)
-    {
-        if (logtype == LogType.Debug)
-            return;
-        Logger.Log((Logger.LogType) logtype, message);
     }
 
     /// <summary>

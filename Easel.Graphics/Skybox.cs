@@ -53,7 +53,7 @@ public class Skybox : IDisposable
 
         _cameraBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _cameraInfo, true);
         
-        _depthState = _device.CreateDepthState(DepthStencilStateDescription.LessEqual);
+        _depthState = _device.CreateDepthStencilState(DepthStencilStateDescription.LessEqual);
         _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullCounterClockwise);
 
         _effect = Effect.FromPath("Easel.Graphics.Shaders.Skybox_vert.spv", "Easel.Graphics.Shaders.Skybox_frag.spv");

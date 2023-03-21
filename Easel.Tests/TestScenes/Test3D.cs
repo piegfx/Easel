@@ -80,7 +80,7 @@ public class Test3D : Scene
         thingy.AddComponent(new Sprite(texture));
         AddEntity(thingy);
         
-        UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
+        //UI.Add("test", new Label(new Position(Anchor.BottomLeft), "Hello NativeAOT!", 24));
         
         //UI.Add("test2", new GaussianBlur(new Position(Anchor.CenterCenter, new Vector2T<int>(0, 0)), new Size<int>(300), 0.9f, 12));
     }

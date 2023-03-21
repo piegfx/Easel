@@ -67,7 +67,7 @@ public sealed class ForwardRenderer : IRenderer
     private void GraphicsOnSwapchainResized(Size<int> size)
     {
         MainTarget.Dispose();
-        MainTarget = new RenderTarget(size);
+        MainTarget = new RenderTarget(size, autoDispose: false);
     }
     
     public DirectionalLight? DirectionalLight { get; set; }

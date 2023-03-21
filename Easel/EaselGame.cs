@@ -139,10 +139,11 @@ public class EaselGame : IDisposable
 
             GraphicsDeviceOptions options = new GraphicsDeviceOptions();
 
-#if DEBUG
-            Logger.Info("Graphics debugging enabled.");
-            options.Debug = true;
-#endif
+            if (_settings.RenderOptions.GraphicsDebugging)
+            {
+                Logger.Info("Graphics debugging enabled.");
+                options.Debug = true;
+            }
 
             Logger.Debug($"Checking for {EnvVars.ForceApi}...");
             string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);

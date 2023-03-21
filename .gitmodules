@@ -1,9 +1,6 @@
 [submodule "Pie"]
 	path = Pie
 	url = https://github.com/IsometricSoftware/Pie
-[submodule "mixr"]
-	path = mixr
-	url = https://github.com/piegfx/mixr/
 [submodule "BulletSharp"]
 	path = BulletSharp
 	url = https://github.com/piegfx/BulletSharp

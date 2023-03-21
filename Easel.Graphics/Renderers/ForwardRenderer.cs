@@ -27,7 +27,6 @@ public sealed class ForwardRenderer : IRenderer
 
     private EffectLayout _shadowEffect;
     private Pie.RasterizerState _shadowRasterizer;
-    private Pie.BlendState _blendState;
 
     private Effect _postProcessEffect;
     
@@ -60,8 +59,6 @@ public sealed class ForwardRenderer : IRenderer
 
         _shadowRasterizer = device.CreateRasterizerState(new RasterizerStateDescription(CullFace.Front,
             CullDirection.CounterClockwise, FillMode.Solid, false));
-
-        _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
         //_postProcessEffect = Effect.FromPath("Easel.Graphics.Shaders.PostProcess.PostProcess_vert.spv",
         //    "Easel.Graphics.Shaders.PostProcess.PostProcess_frag.spv");
@@ -168,8 +165,7 @@ public sealed class ForwardRenderer : IRenderer
 
         device.SetPrimitiveType(PrimitiveType.TriangleList);
         device.SetDepthStencilState(_depthState);
-        device.SetBlendState(_blendState);
-        
+
         // Draw front-to-back for opaques.
         // This is to save a bit of GPU time so it doesn't process fragments that are covered by objects in front.
         foreach (TransformedRenderable renderable in opaques)
@@ -198,6 +194,7 @@ public sealed class ForwardRenderer : IRenderer
             device.SetTexture(2, DirectionalLight.Value.ShadowMap.Texture, DirectionalLight.Value.ShadowMap.SamplerState);
         renderable.Renderable.Material.ApplyTextures(device);
         device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
+        device.SetBlendState(renderable.Renderable.Material.BlendState.PieBlendState);
 
         device.SetVertexBuffer(0, renderable.Renderable.VertexBuffer,
             renderable.Renderable.Material.EffectLayout.Stride,

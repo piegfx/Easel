@@ -49,11 +49,15 @@ public abstract class Material : IDisposable
     /// The rasterizer state of this material. (Default: CullClockwise)
     /// </summary>
     public RasterizerState RasterizerState;
+    
+    // TODO: Depth states
+    public BlendState BlendState;
 
     protected Material()
     {
         Tiling = Vector2T<float>.One;
         RasterizerState = RasterizerState.CullCounterClockwise;
+        BlendState = BlendState.NonPremultiplied;
         DisposeManager.AddItem(this);
     }
 

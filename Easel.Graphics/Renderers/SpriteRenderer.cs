@@ -17,7 +17,7 @@ public sealed class SpriteRenderer : IDisposable
     private const uint NumVertices = 4;
     private const uint NumIndices = 6;
 
-    public const uint MaxSprites = 512;
+    public const uint MaxSprites = 16384;
     private const uint VertexSizeInBytes = NumVertices * SpriteVertex.SizeInBytes;
     private const uint IndicesSizeInBytes = NumIndices * sizeof(uint);
 

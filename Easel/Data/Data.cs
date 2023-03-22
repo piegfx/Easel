@@ -13,7 +13,7 @@ public static class Data
 
     public static string LogDir = "Logs";
 
-    public static EaselConfig LoadedConfig;
+    /*public static EaselConfig LoadedConfig;
 
     public static bool LoadConfig<T>() where T : EaselConfig
     {
@@ -59,7 +59,7 @@ public static class Data
         if (!File.Exists(path))
             return null;
         return XmlSerializer.Deserialize<T>(File.ReadAllText(path));
-    }
+    }*/
 
     public static void InitializeLogFile(string name)
     {

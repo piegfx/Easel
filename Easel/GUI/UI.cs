@@ -10,9 +10,31 @@ public static class UI
 
     private static List<UIElement> _elementsList;
 
+    private static Size<int>? _targetSize;
+    private static float _scaleMultiplier;
+    private static float _calculatedScale;
+
     public static Style DefaultStyle;
 
-    public static Size<int>? TargetSize;
+    public static Size<int>? TargetSize
+    {
+        get => _targetSize;
+        set
+        {
+            _targetSize = value;
+            CalculateScale();
+        }
+    }
+
+    public static float Scale
+    {
+        get
+        {
+            CalculateScale();
+            return _calculatedScale * _scaleMultiplier;
+        }
+        set => _scaleMultiplier = value;
+    }
 
     static UI()
     {
@@ -21,6 +43,8 @@ public static class UI
 
         _elements = new Dictionary<string, UIElement>();
         _elementsList = new List<UIElement>();
+
+        _scaleMultiplier = 1.0f;
     }
     
     public static void Clear()
@@ -50,8 +74,20 @@ public static class UI
         renderer.Begin();
         
         for (int i = 0; i < _elements.Count; i++)
-            _elementsList[i].Draw(renderer, 1.0);
+            _elementsList[i].Draw(renderer);
         
         renderer.End();
+    }
+
+    private static void CalculateScale()
+    {
+        if (_targetSize == null)
+        {
+            _calculatedScale = 1f;
+            return;
+        }
+
+        Size<int> size = EaselGame.Instance.GraphicsInternal.MainTarget.Size;
+        _calculatedScale = size.Height / (float) _targetSize.Value.Height;
     }
 }

@@ -24,7 +24,7 @@ public struct Position
 
     public Position(Anchor anchor) : this(anchor, Vector2T<int>.Zero) { }
 
-    public Position(Vector2T<int> offset) : this(Anchor.TopLeft, Vector2T<int>.Zero) { }
+    public Position(Vector2T<int> offset) : this(Anchor.TopLeft, offset) { }
 
     /// <summary>
     /// Calculate the screen position of the UI element.
@@ -34,7 +34,11 @@ public struct Position
     /// <returns>The calculated position.</returns>
     public readonly Vector2T<int> CalculatePosition(Rectangle<int> viewport, Size<int> elementSize)
     {
+        float scale = UI.Scale;
+        
         Vector2T<int> pos = Vector2T<int>.Zero;
+
+        elementSize = new Size<int>((int) (elementSize.Width * scale), (int) (elementSize.Height * scale));
 
         switch (Anchor)
         {
@@ -72,7 +76,7 @@ public struct Position
                 throw new ArgumentOutOfRangeException();
         }
 
-        pos += Offset;
+        pos += (Vector2T<int>) ((Vector2T<float>) Offset * scale);
 
         return pos;
     }

@@ -61,7 +61,7 @@ public abstract class UIElement
         }
     }
     
-    protected internal abstract void Draw(SpriteRenderer renderer, double scale);
+    protected internal abstract void Draw(SpriteRenderer renderer);
 
     public delegate void OnClick(UIElement element);
 }

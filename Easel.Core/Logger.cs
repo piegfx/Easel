@@ -98,36 +98,21 @@ public static class Logger
     private static void ConsoleLog(LogType type, string caller, string message)
     {
         string msg = GetLogMessage(type, caller, message);
-        
-        switch (type)
+
+        ConsoleColor color = Console.ForegroundColor;
+
+        Console.ForegroundColor = type switch
         {
-            case LogType.Debug:
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(msg);
-                break;
-            case LogType.Info:
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(msg);
-                Console.ForegroundColor = ConsoleColor.White;
-                break;
-            case LogType.Warn:
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(msg);
-                Console.ForegroundColor = ConsoleColor.White;
-                break;
-            case LogType.Error:
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(msg);
-                Console.ForegroundColor = ConsoleColor.White;
-                break;
-            case LogType.Fatal:
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine(msg);
-                Console.ForegroundColor = ConsoleColor.White;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
+            LogType.Debug => color,
+            LogType.Info => ConsoleColor.Cyan,
+            LogType.Warn => ConsoleColor.Yellow,
+            LogType.Error => ConsoleColor.Red,
+            LogType.Fatal => ConsoleColor.DarkRed,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+
+        Console.WriteLine(msg);
+        Console.ForegroundColor = color;
     }
 
     #region Log file

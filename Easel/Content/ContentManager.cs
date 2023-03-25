@@ -47,6 +47,8 @@ public class ContentManager
         if (_definitions.Count == 0)
             _defaultName = definition.Name;
         _definitions.Add(definition.Name, definition);
+        
+        Logger.Debug($"Content definition with name \"{definition.Name}\" added.");
     }
 
     /*/// <summary>
@@ -57,28 +59,38 @@ public class ContentManager
     {
         
     }*/
-    
-    public T Load<T>(string path)
+
+    public bool TryLoad<T>(string definitionName, string path, [NotNullWhen(true)] out T item)
     {
-        if (!TryLoad(path, out T item))
-            Logger.Fatal($"No content file with name \"{path}\" could be found.");
+        item = default;
+        
+        Logger.Debug($"Loading content item \"{path}\" from definition \"{definitionName}\"...");
+        if (!_processors.TryGetValue(typeof(T), out IContentProcessor processor))
+            Logger.Fatal($"A content processor for type {typeof(T)} could not be found.");
+
+        if (!_definitions[definitionName].ContentTypes.TryGetValue(path, out IContentType type))
+            return false;
+        
+        item = (T) processor!.Load(Path.Combine(_location, definitionName), type);
+        return true;
+    }
+    
+    public T Load<T>(string definitionName, string path)
+    {
+        if (!TryLoad(definitionName, path, out T item))
+            Logger.Fatal($"No content file with name \"{path}\" could be found in definition \"{definitionName}\".");
 
         return item;
     }
 
     public bool TryLoad<T>(string path, [NotNullWhen(true)] out T item)
     {
-        item = default;
-        
-        Logger.Debug("Loading content item \"" + path + "\"...");
-        if (!_processors.TryGetValue(typeof(T), out IContentProcessor processor))
-            Logger.Fatal($"A content processor for type {typeof(T)} could not be found.");
+        return TryLoad(_defaultName, path, out item);
+    }
 
-        if (!_definitions[_defaultName].ContentTypes.TryGetValue(path, out IContentType type))
-            return false;
-        
-        item = (T) processor!.Load(Path.Combine(_location, _defaultName), type);
-        return true;
+    public T Load<T>(string path)
+    {
+        return Load<T>(_defaultName, path);
     }
 
     public string[] GetAllFiles(string path, string searchPattern = "*", bool recursive = true)

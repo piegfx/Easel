@@ -1,4 +1,6 @@
 using System;
+using Easel.Core;
+using Pie.Audio;
 using StbVorbisSharp;
 
 namespace Easel.Audio;
@@ -9,7 +11,7 @@ public class VorbisPlayer : IAudioPlayer
     private Vorbis _vorbis;
 
     public const int NumBuffers = 2;
-    private int[] _buffers;
+    private AudioBuffer[] _buffers;
     private AudioFormat _format;
     private int _currentBuffer;
 
@@ -21,24 +23,21 @@ public class VorbisPlayer : IAudioPlayer
         
         _vorbis = Vorbis.FromMemory(data);
 
-        _format = new AudioFormat((byte) _vorbis.Channels, _vorbis.SampleRate, 16);
+        _format = new AudioFormat((byte) _vorbis.Channels, _vorbis.SampleRate, FormatType.I16);
         
-        _buffers = new int[NumBuffers];
+        _buffers = new AudioBuffer[NumBuffers];
         for (int i = 0; i < NumBuffers; i++)
-        {
-            _buffers[i] = _device.CreateBuffer();
-            _device.UpdateBuffer(_buffers[i], GetNextVorbisData(), _format);
-        }
-        
+            _buffers[i] = _device.CreateBuffer(new BufferDescription(DataType.Pcm, _format), GetNextVorbisData());
+
         _device.BufferFinished += DeviceOnBufferFinished;
     }
 
-    private void DeviceOnBufferFinished(AudioDevice system, ushort channel, int buffer)
+    private void DeviceOnBufferFinished(AudioSystem system, ushort channel, AudioBuffer buffer)
     {
         if (channel != _channel)
             return;
         
-        _device.UpdateBuffer(_buffers[_currentBuffer], GetNextVorbisData(), _format);
+        _device.UpdateBuffer(_buffers[_currentBuffer], GetNextVorbisData());
         _device.QueueBuffer(_buffers[_currentBuffer++], _channel);
         if (_currentBuffer >= NumBuffers)
             _currentBuffer = 0;
@@ -68,6 +67,8 @@ public class VorbisPlayer : IAudioPlayer
     public void Dispose()
     {
         _device.BufferFinished -= DeviceOnBufferFinished;
+        
+        Logger.Debug($"Disposing {NumBuffers} buffers...");
         
         for (int i = 0; i < NumBuffers; i++)
             _device.DeleteBuffer(_buffers[i]);

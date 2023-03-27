@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using Easel.Core;
+using Pie.Audio;
 
 namespace Easel.Audio;
 
@@ -8,25 +10,28 @@ public class Sound : IDisposable
     public IAudioPlayer AudioPlayer;
     public SoundType SoundType;
     
-    public Sound(string path)
+    public Sound(string path, bool autoDispose = true)
     {
         using Stream stream = File.OpenRead(path);
         using BinaryReader reader = new BinaryReader(stream);
 
-        AudioDevice device = EaselGame.Instance.AudioInternal;
+        EaselAudio device = EaselGame.Instance.AudioInternal;
 
         SoundType = GetSoundType(reader);
         switch (SoundType)
         {
             case SoundType.Wav:
-                AudioPlayer = new WavPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
+                AudioPlayer = new WavPlayer(device.PieAudio, reader.ReadBytes((int) reader.BaseStream.Length));
                 break;
             case SoundType.Vorbis:
-                AudioPlayer = new VorbisPlayer(device, reader.ReadBytes((int) reader.BaseStream.Length));
+                AudioPlayer = new VorbisPlayer(device.PieAudio, reader.ReadBytes((int) reader.BaseStream.Length));
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        
+        if (autoDispose)
+            DisposeManager.AddItem(this);
     }
 
     public ISoundInstance Play(double volume = 1, double speed = 1, double panning = 0.5f, bool loop = false)
@@ -36,17 +41,25 @@ public class Sound : IDisposable
             Volume = volume,
             Speed = speed,
             Panning = panning,
-            Loop = SoundType != SoundType.Vorbis && loop,
-            InterpolationType = InterpolationType.Linear
+            Looping = SoundType != SoundType.Vorbis && loop,
+            Interpolation = InterpolationType.Linear,
+            LoopStart = 0,
+            LoopEnd = -1
         };
 
-        AudioDevice device = EaselGame.Instance.AudioInternal;
-        ushort channel = device.GetAvailableChannel();
+        EaselAudio device = EaselGame.Instance.AudioInternal;
+        if (!device.TryGetAvailableChannel(out ushort channel))
+        {
+            throw new NotImplementedException(
+                "Oopsy poopsy too many sounds are playing but nO PRIORITY SYSTEM HAS BEEN IMPLEMENTED BECAUSE SKYE IS LAZY");
+        }
+
         return AudioPlayer.Play(channel, properties);
     }
 
     public void Dispose()
     {
+        Logger.Debug("Disposing sound...");
         AudioPlayer.Dispose();
     }
 

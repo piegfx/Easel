@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Easel.Graphics;
 using Easel.Math;
-using Pie.Freetype;
 
 namespace Easel.GUI;
 
@@ -28,8 +27,8 @@ public class Charmap : IDisposable
 
     public struct Character
     {
-        public Rectangle Source;
-        public Point Bearing;
+        public Rectangle<int> Source;
+        public Vector2T<int> Bearing;
         public int Advance;
     }
 

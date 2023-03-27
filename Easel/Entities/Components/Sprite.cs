@@ -1,8 +1,8 @@
 using System.Numerics;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
-using Easel.Utilities;
 
 namespace Easel.Entities.Components;
 
@@ -10,7 +10,7 @@ public class Sprite : Component
 {
     public Texture Texture;
 
-    public Rectangle? SourceRectangle;
+    public Rectangle<int>? SourceRectangle;
 
     public Color Tint;
 
@@ -28,7 +28,7 @@ public class Sprite : Component
     {
         base.Draw();
 
-        Graphics.Renderer2D.Draw(Texture, Transform.Position, SourceRectangle, Tint,
-            Transform.Rotation.ToEulerAngles().Z, Transform.Origin.ToVector2(), Transform.Scale.ToVector2(), Flip);
+        Graphics.Renderer.DrawSprite(new Graphics.Renderers.Sprite(Texture, Transform.Position, SourceRectangle,
+            Tint, Transform.SpriteRotation, (Vector2T<float>) Transform.Origin.ToVector2(), (Vector2T<float>) Transform.Scale.ToVector2(), Flip));
     }
 }

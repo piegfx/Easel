@@ -1,4 +1,5 @@
 using System;
+using Pie.Audio;
 
 namespace Easel.Audio;
 
@@ -48,10 +49,10 @@ public struct PcmInstance : ISoundInstance
     }
 
     public bool Loop {
-        get => _properties.Loop;
+        get => _properties.Looping;
         set
         {
-            _properties.Loop = value;
+            _properties.Looping = value;
             _device.SetChannelProperties(_channel, _properties);
         }
     }
@@ -69,7 +70,7 @@ public struct PcmInstance : ISoundInstance
 
     public void Resume()
     {
-        _device.Play(_channel);
+        _device.Resume(_channel);
     }
 
     public void Restart()

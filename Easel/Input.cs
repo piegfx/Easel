@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Easel.Math;
 using Pie.Windowing;
 using Silk.NET.GLFW;
 using MouseButton = Pie.Windowing.MouseButton;
@@ -18,6 +19,20 @@ public static class Input
     private static HashSet<MouseButton> _mouseButtonsPressed;
     private static HashSet<MouseButton> _newMouseButtons;
 
+    private static string _currentInputScene;
+    private static Dictionary<string, InputScene> _scenes;
+
+    public static string CurrentScene
+    {
+        get => _currentInputScene;
+        set
+        {
+            _currentInputScene = value;
+            InputScene scene = _scenes[value];
+            MouseState = scene.Options.MouseState;
+        }
+    }
+
     static Input()
     {
         _keysPressed = new HashSet<Key>();
@@ -25,6 +40,8 @@ public static class Input
 
         _mouseButtonsPressed = new HashSet<MouseButton>();
         _newMouseButtons = new HashSet<MouseButton>();
+
+        _scenes = new Dictionary<string, InputScene>();
     }
 
     /// <summary>
@@ -34,16 +51,39 @@ public static class Input
     /// <returns><see langword="true"/>, if the key is currently held.</returns>
     public static bool KeyDown(Key key) => _keysPressed.Contains(key);
 
-    public static bool AnyKeyDown(params Key[] keys)
+    public static bool AnyKeyDown(out Key pressedKey, params Key[] keys)
     {
         foreach (Key key in keys)
         {
             if (_keysPressed.Contains(key))
+            {
+                pressedKey = key;
                 return true;
+            }
         }
 
+        pressedKey = Key.Unknown;
         return false;
     }
+
+    public static bool AnyKeyDown(params Key[] keys) => AnyKeyDown(out _, keys);
+    
+    public static bool AnyKeyPressed(out Key pressedKey, params Key[] keys)
+    {
+        foreach (Key key in keys)
+        {
+            if (_newKeys.Contains(key))
+            {
+                pressedKey = key;
+                return true;
+            }
+        }
+
+        pressedKey = Key.Unknown;
+        return false;
+    }
+
+    public static bool AnyKeyPressed(params Key[] keys) => AnyKeyPressed(out _, keys);
 
     /// <summary>
     /// Query if the given key was pressed this frame.
@@ -69,12 +109,12 @@ public static class Input
     /// <summary>
     /// Get the current mouse position relative to the view (top left = 0, 0)
     /// </summary>
-    public static Vector2 MousePosition { get; private set; }
+    public static Vector2T<float> MousePosition { get; private set; }
     
     /// <summary>
     /// Returns the number of pixels the mouse has moved since the last frame.
     /// </summary>
-    public static Vector2 DeltaMousePosition { get; private set; }
+    public static Vector2T<float> DeltaMousePosition { get; private set; }
 
     private static MouseState _currentMouseState;
     private static bool _mouseStateChanged;
@@ -92,7 +132,14 @@ public static class Input
         }
     }
     
-    public static Vector2 ScrollWheelDelta { get; private set; }
+    public static Vector2T<float> ScrollWheelDelta { get; private set; }
+
+    public static void CreateScene(string name, InputSceneOptions options)
+    {
+        _scenes.Add(name, new InputScene(name, options));
+    }
+
+    public static InputScene GetScene(string name) => _scenes[name];
 
     internal static void Initialize(Window window)
     {
@@ -103,7 +150,7 @@ public static class Input
         window.Scroll += WindowOnScroll;
 
         InputState state = window.ProcessEvents();
-        MousePosition = state.MousePosition;
+        MousePosition = (Vector2T<float>) state.MousePosition;
     }
 
     internal static void Update(Window window)
@@ -111,11 +158,11 @@ public static class Input
         _newKeys.Clear();
         _newMouseButtons.Clear();
         
-        ScrollWheelDelta = Vector2.Zero;
+        ScrollWheelDelta = Vector2T<float>.Zero;
 
         InputState state = window.ProcessEvents();
-        DeltaMousePosition = state.MousePosition - MousePosition;
-        MousePosition = state.MousePosition;
+        DeltaMousePosition = (Vector2T<float>) state.MousePosition - MousePosition;
+        MousePosition = (Vector2T<float>) state.MousePosition;
 
         if (_mouseStateChanged)
         {
@@ -148,8 +195,127 @@ public static class Input
         _newMouseButtons.Remove(button);
     }
     
-    private static void WindowOnScroll(Vector2 scroll)
+    private static void WindowOnScroll(System.Numerics.Vector2 scroll)
     {
-        ScrollWheelDelta += scroll;
+        ScrollWheelDelta += (Vector2T<float>) scroll;
+    }
+    
+    public struct InputSceneOptions
+    {
+        public MouseState MouseState;
+    }
+    
+    public class InputScene
+    {
+        internal readonly string Name;
+
+        public InputSceneOptions Options;
+
+        public bool KeyDown(Key key)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.KeyDown(key);
+        }
+
+        public bool AnyKeyDown(out Key pressedKey, params Key[] keys)
+        {
+            pressedKey = Key.Unknown;
+
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyDown(out pressedKey, keys);
+        }
+
+        public bool AnyKeyDown(params Key[] keys)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyDown(keys);
+        }
+        
+        public bool AnyKeyPressed(out Key pressedKey, params Key[] keys)
+        {
+            pressedKey = Key.Unknown;
+
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyPressed(out pressedKey, keys);
+        }
+
+        public bool AnyKeyPressed(params Key[] keys)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.AnyKeyPressed(keys);
+        }
+
+        public bool KeyPressed(Key key)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.KeyPressed(key);
+        }
+        
+        public bool MouseButtonDown(MouseButton button)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.MouseButtonDown(button);
+        }
+        
+        public bool MouseButtonPressed(MouseButton button)
+        {
+            if (Name != Input.CurrentScene)
+                return false;
+
+            return Input.MouseButtonPressed(button);
+        }
+
+        public Vector2T<float> MousePosition
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2T<float>.Zero;
+
+                return Input.MousePosition;
+            }
+        }
+        
+        public Vector2T<float> DeltaMousePosition
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2T<float>.Zero;
+
+                return Input.DeltaMousePosition;
+            }
+        }
+        
+        public Vector2T<float> ScrollWheelDelta
+        {
+            get
+            {
+                if (Name != Input.CurrentScene)
+                    return Vector2T<float>.Zero;
+
+                return Input.ScrollWheelDelta;
+            }
+        }
+
+        internal InputScene(string name, InputSceneOptions options)
+        {
+            Name = name;
+            Options = options;
+        }
     }
 }

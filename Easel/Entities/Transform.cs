@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using Easel.Utilities;
+using Easel.Core;
 
 namespace Easel.Entities;
 

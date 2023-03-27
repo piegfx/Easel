@@ -1,5 +1,8 @@
+using Easel.Graphics;
 using Easel.Imgui;
 using Easel.Scenes;
+using Pie.ShaderCompiler;
+using Pie.Windowing;
 
 namespace Easel.Tests;
 
@@ -11,15 +14,16 @@ public class TestGame : EaselGame
 
     protected override void Initialize()
     {
-        ImGuiRenderer = new ImGuiRenderer();
-        
+        if (!IsServer)
+            ImGuiRenderer = new ImGuiRenderer();
+
         base.Initialize();
     }
 
     protected override void Update()
     {
-        ImGuiRenderer.Update();
-        
+        ImGuiRenderer?.Update();
+
         base.Update();
     }
 
@@ -27,6 +31,6 @@ public class TestGame : EaselGame
     {
         base.Draw();
         
-        ImGuiRenderer.Draw();
+        ImGuiRenderer?.Draw();
     }
 }

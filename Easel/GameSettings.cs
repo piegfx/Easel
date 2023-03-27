@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
+using Easel.Graphics;
+using Easel.Graphics.Renderers;
 using Easel.Math;
-using Easel.Utilities;
 using Pie;
 using Pie.Windowing;
 
@@ -14,7 +15,12 @@ public struct GameSettings
     /// <summary>
     /// The starting size (resolution) of the game view, in pixels. (Default: 1280x720)
     /// </summary>
-    public Size Size;
+    public Size<int> Size;
+
+    /// <summary>
+    /// If enabled, the window will start in fullscreen mode at the given <see cref="Size"/>. (Default: false)
+    /// </summary>
+    public bool Fullscreen;
 
     /// <summary>
     /// The starting title of the game view. (Default: The starting assembly name)
@@ -69,15 +75,53 @@ public struct GameSettings
     /// If disabled, the game window will not be visible until you tell it to become visible.
     /// </summary>
     public bool StartVisible;
-    
+
+    /// <summary>
+    /// The render options Easel will use for your application.
+    /// </summary>
+    public RenderOptions RenderOptions;
+
+    /// <summary>
+    /// Run the game in a configuration where no graphics device or window is created.
+    /// </summary>
+    public bool Server;
+
+    /// <summary>
+    /// If <b>NOT</b> null, a content definition will be automatically generated. You should only use this during
+    /// development. When publishing, you should create a content file. (Default: "Content" in Debug, null in any other
+    /// mode).
+    /// </summary>
+    public string AutoGenerateContentDirectory;
+
+    public GameSettings(Size<int> size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
+        GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
+        RenderOptions renderOptions, bool server, string autoGenerateContentDirectory)
+    {
+        Size = size;
+        Fullscreen = fullscreen;
+        Title = title;
+        Border = border;
+        VSync = vSync;
+        TargetFps = targetFps;
+        Api = api;
+        AllowMissing = allowMissing;
+        Icon = icon;
+        TitleBarFlags = titleBarFlags;
+        StartVisible = startVisible;
+        RenderOptions = renderOptions;
+        Server = server;
+        AutoGenerateContentDirectory = autoGenerateContentDirectory;
+    }
+
     /// <summary>
     /// Create the default game settings.
     /// </summary>
     public GameSettings()
     {
-        Size = new Size(1280, 720);
-        
-        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel View";
+        Size = new Size<int>(1280, 720);
+        Fullscreen = false;
+
+        Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
         Border = WindowBorder.Fixed;
         VSync = true;
         TargetFps = 0;
@@ -86,5 +130,18 @@ public struct GameSettings
         Icon = null;
         TitleBarFlags = TitleBarFlags.ShowEasel;
         StartVisible = true;
+        RenderOptions = RenderOptions.Default;
+        Server = false;
+#if DEBUG
+        AutoGenerateContentDirectory = "Content";
+#else
+        AutoGenerateContentDirectory = null;
+#endif
     }
+
+    public static GameSettings StartFullscreen => new GameSettings()
+    {
+        Size = new Size<int>(-1, -1),
+        Fullscreen = true
+    };
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Easel.Core;
 using Easel.GUI;
 
 namespace Easel.Scenes;

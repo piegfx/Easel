@@ -20,7 +20,7 @@ public abstract class Component : InheritableEntity, IDisposable
     
     protected override Scene ActiveScene => SceneManager.ActiveScene;
     
-    protected override AudioDevice Audio => EaselGame.Instance.AudioInternal;
+    protected override EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected override ContentManager Content => EaselGame.Instance.Content;
 
@@ -73,9 +73,7 @@ public abstract class Component : InheritableEntity, IDisposable
 
     protected bool HasComponent<T>() where T : Component => Entity.HasComponent<T>();
 
-    protected override void AddEntity(string name, Entity entity) => SceneManager.ActiveScene.AddEntity(name, entity);
-
-    protected override void AddEntity(Entity entity) => SceneManager.ActiveScene.AddEntity(entity);
+    protected override void AddEntity(Entity entity) => SceneManager.ActiveScene.AddEntity( entity);
 
     protected override void RemoveEntity(string name) => SceneManager.ActiveScene.RemoveEntity(name);
 

@@ -6,14 +6,16 @@ using System.Reflection;
 using System.Threading;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Content.Builder;
+using Easel.Core;
 using Easel.Graphics;
-using Easel.Graphics.Renderers;
 using Easel.GUI;
 using Easel.Math;
 using Easel.Scenes;
-using Easel.Utilities;
 using Pie;
+using Pie.Audio;
 using Pie.Windowing;
+using Monitor = Pie.Windowing.Monitor;
 using Window = Pie.Windowing.Window;
 
 namespace Easel;
@@ -29,6 +31,7 @@ public class EaselGame : IDisposable
 {
     private GameSettings _settings;
     private double _targetFrameTime;
+    private bool _shouldClose;
 
     public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -44,23 +47,20 @@ public class EaselGame : IDisposable
     /// </summary>
     public EaselGraphics Graphics => GraphicsInternal;
 
-    internal AudioDevice AudioInternal;
+    internal EaselAudio AudioInternal;
 
     /// <summary>
     /// The audio device for this EaselGame.
     /// </summary>
-    public AudioDevice Audio => AudioInternal;
+    public EaselAudio Audio => AudioInternal;
 
     public ContentManager Content;
-
-    /// <summary>
-    /// If enabled, the game will synchronize with the monitor's vertical refresh rate.
-    /// </summary>
-    public bool VSync;
-
+    
     public bool AllowMissing;
     
     public bool ShowMetrics;
+
+    public bool IsServer => _settings.Server;
 
     private ConcurrentBag<Action> _actions;
 
@@ -91,7 +91,6 @@ public class EaselGame : IDisposable
     {
         Logger.Debug("New EaselGame created!");
         _settings = settings;
-        VSync = settings.VSync;
         AllowMissing = settings.AllowMissing;
         if (AllowMissing)
             Logger.Info("Missing content support is enabled.");
@@ -114,92 +113,140 @@ public class EaselGame : IDisposable
         Logger.Info("\tMemory: " + SystemInfo.MemoryInfo);
         Logger.Info("\tLogical threads: " + SystemInfo.LogicalThreads);
         Logger.Info("\tOS: " + Environment.OSVersion.VersionString);
-        
 
-        _settings.Icon ??= new Bitmap(Utils.LoadEmbeddedResource("Easel.EaselLogo.png"));
-        
-        Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height, _settings.Icon.Data);
-
-        WindowSettings settings = new WindowSettings()
+        if (!IsServer)
         {
-            Size = (System.Drawing.Size) _settings.Size,
-            Title = _settings.Title,
-            Border = _settings.Border,
-            EventDriven = false,
-            Icons = new []{ icon },
-            StartVisible = _settings.StartVisible
-        };
 
-        GraphicsDeviceOptions options = new GraphicsDeviceOptions();
-        
-#if DEBUG
-        Logger.Info("Graphics debugging enabled.");
-        options.Debug = true;
-#endif
-        
-        Logger.Debug($"Checking for {EnvVars.ForceApi}...");
-        string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);
-        GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
-        if (apistr != null)
-        {
-            Logger.Debug($"{EnvVars.ForceApi} environment variable set. Attempting to use \"{apistr}\".");
-            if (!Enum.TryParse(apistr, true, out GraphicsApi potApi))
-                Logger.Warn($"Could not parse API \"{apistr}\", reverting back to default API.");
-            else
-                api = potApi;
+            _settings.Icon ??=
+                new Bitmap(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.EaselLogo.png"));
+
+            Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height,
+                _settings.Icon.Data);
+
+            System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
+            if (size.Width == -1 && size.Height == -1)
+                size = Monitor.PrimaryMonitor.VideoMode.Size;
+
+            WindowSettings settings = new WindowSettings()
+            {
+                Size = size,
+                Title = _settings.Title,
+                Border = _settings.Border,
+                EventDriven = false,
+                Icons = new[] { icon },
+                StartVisible = false
+            };
+
+            GraphicsDeviceOptions options = new GraphicsDeviceOptions();
+
+            if (_settings.RenderOptions.GraphicsDebugging)
+            {
+                Logger.Info("Graphics debugging enabled.");
+                options.Debug = true;
+            }
+
+            Logger.Debug($"Checking for {EnvVars.ForceApi}...");
+            string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);
+            GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
+            if (apistr != null)
+            {
+                Logger.Debug($"{EnvVars.ForceApi} environment variable set. Attempting to use \"{apistr}\".");
+                if (!Enum.TryParse(apistr, true, out GraphicsApi potApi))
+                    Logger.Warn($"Could not parse API \"{apistr}\", reverting back to default API.");
+                else
+                    api = potApi;
+            }
+
+            if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
+                settings.Title += " - Easel";
+            if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
+                settings.Title += " - " + api.ToFriendlyString();
+            if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
+                settings.Title += " - 0 FPS";
+
+            Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
+
+            Logger.Debug("Creating window...");
+            PieLog.DebugLog += PieDebug;
+            Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
+            Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
+            Window.Visible = _settings.StartVisible;
+
+            Logger.Debug("Creating graphics device...");
+            GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
+            GraphicsInternal.VSync = _settings.VSync;
+            Window.Resize += WindowOnResize;
+
+            Logger.Debug("Creating audio device...");
+            AudioInternal = new EaselAudio();
+
+            Logger.Debug("Initializing input...");
+            Input.Initialize(Window);
         }
-        
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
-            settings.Title += " - Easel";
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
-            settings.Title += " - " + api.ToFriendlyString();
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
-            settings.Title += " - 0 FPS";
-        
-        Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
 
-        Logger.Debug("Creating window...");
-        Window = Window.CreateWindow(settings, api);
-        Logger.Debug("Creating graphics device...");
-        GraphicsInternal = new EaselGraphics(Window, options);
-        GraphicsInternal.Initialize(new ForwardRenderer(GraphicsInternal), new Default2DRenderer(GraphicsInternal));
-
-        Logger.Debug("Creating audio device...");
-        AudioInternal = new AudioDevice(48000, 256);
-
-        Logger.Debug("Initializing input...");
-        Input.Initialize(Window);
         Logger.Debug("Initializing time...");
         Time.Initialize();
         
         Logger.Debug("Creating content manager...");
         Content = new ContentManager();
+
+        if (_settings.AutoGenerateContentDirectory != null)
+        {
+            Logger.Info("Auto-generate content is enabled. Generating...");
+            try
+            {
+                ContentDefinition definition = ContentBuilder.FromDirectory(_settings.AutoGenerateContentDirectory)
+                    .Build(DuplicateHandling.Ignore);
+                Content.AddContent(definition);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Logger.Warn(
+                    $"A directory called \"{_settings.AutoGenerateContentDirectory}\" was not found. Either create it, or change \"GameSettings.AutoGenerateContentDirectory\" to a valid content directory, or to \"null\" to disable auto content generation.");
+            }
+        }
         
         Logger.Debug("Initializing your application...");
         Initialize();
 
         SpinWait sw = new SpinWait();
 
-        while (!Window.ShouldClose)
+        if (IsServer)
         {
-            if ((!VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+            while (!_shouldClose)
             {
-                sw.SpinOnce();
-                continue;
+                if (_targetFrameTime != 0 && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+                    continue;
+                
+                Time.Update();
+                Update();
             }
-            sw.Reset();
-            Input.Update(Window);
-            Time.Update();
-            Metrics.Update();
-            Update();
-            // TODO: Fix pie
-            GraphicsInternal.SetRenderTarget(null);
-            Draw();
-            if (ShowMetrics)
-                DrawMetrics();
-            Graphics.PieGraphics.Present(VSync ? 1 : 0);
         }
-        
+        else
+        {
+
+            while (!Window.ShouldClose)
+            {
+                if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+                {
+                    sw.SpinOnce();
+                    continue;
+                }
+
+                sw.Reset();
+                Input.Update(Window);
+                Time.Update();
+                Metrics.Update();
+                UI.Update();
+                Update();
+                Draw();
+                UI.Draw(GraphicsInternal.SpriteRenderer);
+                if (ShowMetrics)
+                    DrawMetrics();
+                GraphicsInternal.Present();
+            }
+        }
+
         Logger.Debug("Close requested, shutting down...");
     }
 
@@ -219,7 +266,6 @@ public class EaselGame : IDisposable
     {
         SceneManager.Update();
         AudioEffect.Update();
-        UI.Update(GraphicsInternal.Viewport);
     }
 
     /// <summary>
@@ -228,11 +274,11 @@ public class EaselGame : IDisposable
     /// </summary>
     protected virtual void Draw()
     {
-        SceneManager.Draw();
         foreach (Action action in _actions)
             action();
         _actions.Clear();
-        UI.Draw(GraphicsInternal);
+        
+        SceneManager.Draw();
     }
 
     /// <summary>
@@ -242,7 +288,7 @@ public class EaselGame : IDisposable
     public void Dispose()
     {
         SceneManager.ActiveScene?.Dispose();
-        Graphics.Dispose();
+        GraphicsInternal.Dispose();
         Window.Dispose();
         Logger.Debug("EaselGame disposed.");
     }
@@ -262,7 +308,10 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Close()
     {
-        Window.ShouldClose = true;
+        if (IsServer)
+            _shouldClose = true;
+        else
+            Window.ShouldClose = true;
     }
 
     /// <summary>
@@ -276,11 +325,24 @@ public class EaselGame : IDisposable
     private void DrawMetrics()
     {
         string metrics = Metrics.GetString();
-        Graphics.SpriteRenderer.Begin();
-        Font font = UI.Theme.Font;
-        Size size = font.MeasureString(12, metrics);
-        //Graphics.SpriteRenderer.DrawRectangle(Vector2.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2.Zero);
-        font.Draw(12, metrics, new Vector2(5), Color.White);
+        GraphicsInternal.SpriteRenderer.Begin();
+        Font font = UI.DefaultStyle.Font;
+        Size<int> size = font.MeasureString(12, metrics);
+        //Graphics.SpriteRenderer.DrawRectangle(Vector2T.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2T.Zero);
+        font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2T<int>(5), Color.White, 0,
+            Vector2T<float>.Zero, Vector2T<float>.One);
         Graphics.SpriteRenderer.End();
+    }
+    
+    private void WindowOnResize(System.Drawing.Size size)
+    {
+        GraphicsInternal.ResizeGraphics((Size<int>) size);
+    }
+    
+    private void PieDebug(LogType logtype, string message)
+    {
+        //if (logtype == LogType.Debug)
+        //    return;
+        Logger.Log((Logger.LogType) logtype, message);
     }
 }

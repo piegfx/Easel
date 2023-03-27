@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Easel.Audio;
 using Easel.Content;
+using Easel.Core;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
+using Easel.Graphics.Lighting;
 using Easel.Math;
+using Pie;
+using DirectionalLight = Easel.Entities.Components.DirectionalLight;
 
 namespace Easel.Scenes;
 
@@ -25,15 +30,7 @@ public abstract class Scene : IDisposable
     // index to the entity which gets returned instead.
     private Dictionary<string, int> _entityPointers;
 
-    /// <summary>
-    /// Contains a list of disposable objects that will be automatically disposed when the scene is disposed. Engine
-    /// objects, such as textures, will be automatically added to this list on creation (unless you tell them not to).
-    /// Pie objects, such as graphics buffers, however, will not, so it is recommended that you add them to this list
-    /// so you don't need to remember to delete them later.
-    /// </summary>
-    /// <remarks>It's recommended you don't clear this list unless you remember to manually clean objects later. You
-    /// also don't need to add entities to this list, they are automatically disposed separately.</remarks>
-    public List<IDisposable> GarbageCollections;
+    public string Name;
 
     private int _entityCount;
 
@@ -52,16 +49,9 @@ public abstract class Scene : IDisposable
     /// <summary>
     /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
-    protected AudioDevice Audio => EaselGame.Instance.AudioInternal;
+    protected EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected ContentManager Content => EaselGame.Instance.Content;
-
-    /// <summary>
-    /// The scene's <see cref="Scenes.World"/> properties, such as skybox and clear color.
-    /// </summary>
-    public readonly World World;
-
-    private float _timer;
 
     /// <summary>
     /// Create a new scene.
@@ -71,8 +61,11 @@ public abstract class Scene : IDisposable
     {
         _entities = new Entity[initialCapacity];
         _entityPointers = new Dictionary<string, int>(initialCapacity);
-        GarbageCollections = new List<IDisposable>();
-        World = new World();
+    }
+    
+    protected Scene(string name, int initialCapacity = 128) : this(initialCapacity)
+    {
+        Name = name;
     }
 
     /// <summary>
@@ -80,10 +73,18 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-        Size size = (Size) EaselGame.Instance.Window.Size;
-        Camera camera = new Camera(EaselMath.ToRadians(70), size.Width / (float) size.Height);
-        camera.Tag = Tags.MainCamera;
-        AddEntity("Main Camera", camera);
+        if (!EaselGame.Instance.IsServer)
+        {
+            Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
+            Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
+            camera.Tag = Tags.MainCamera;
+            AddEntity(camera);
+        }
+
+        Entity directionalLight = new Entity("Sun");
+        directionalLight.AddComponent(new DirectionalLight(new Vector2T<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
+            Color.White));
+        AddEntity(directionalLight);
     }
 
     /// <summary>
@@ -107,8 +108,8 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-        Graphics.Renderer.ClearAll();
-        Graphics.Renderer2D.ClearAll();
+        Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
+        Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -117,38 +118,38 @@ public abstract class Scene : IDisposable
                 continue;
             entity.Draw();
         }
+
+        Size<int> framebufferSize = Graphics.Renderer.MainTarget.Size;
+
+        DirectionalLight sun = null;
+        Entity[] lights = GetEntitiesWithComponent<DirectionalLight>();
+        if (lights.Length > 0)
+            sun = lights[0].GetComponent<DirectionalLight>();
         
-        Graphics.SetRenderTarget(Graphics.PostProcessor.MainTarget);
-        
-        #region 3D pass
-        
-        Rectangle viewport = Graphics.Viewport;
-        foreach (Entity entity in GetEntitiesWithTag(Tags.MainCamera))
+        Graphics.Renderer.DirectionalLight = sun?.InternalLight;
+
+        int j = 0;
+        foreach (Camera camera in cameras)
         {
-            Camera camera = (Camera) entity;
-            // TODO: Update to handle render targets instead of using view size.
-            Graphics.Viewport = camera.Viewport ?? viewport;
-            Graphics.Renderer.Render(camera, World);
+            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
+            
+            // Convert the camera's normalized viewport into a viewport pie can understand.
+            Rectangle<int> viewport = new Rectangle<int>();
+            viewport.X = (int) (framebufferSize.Width * camera.Viewport.X);
+            viewport.Y = (int) (framebufferSize.Height * camera.Viewport.Y);
+            viewport.Width = (int) (framebufferSize.Width * camera.Viewport.Z) - viewport.X;
+            viewport.Height = (int) (framebufferSize.Height * camera.Viewport.W) - viewport.Y;
+
+            Graphics.Viewport = viewport;
+            if ((camera.CameraType & CameraType.Camera3D) == CameraType.Camera3D) 
+                Graphics.Renderer.Perform3DPass(j == 0 ? camera.CameraInfo : camera.CameraInfo with { ClearColor = null });
+            if ((camera.CameraType & CameraType.Camera2D) == CameraType.Camera2D) 
+                Graphics.Renderer.Perform2DPass(j == 0 ? camera.CameraInfo : camera.CameraInfo with { ClearColor = null });
+
+            j++;
         }
         
-        #endregion
-
-        #region 2D pass
-
-        Graphics.Renderer2D.Render(Camera.Main, World);
-
-        #endregion
-        
-        Graphics.SetRenderTarget(null);
-        Graphics.PostProcessor.Process(Graphics);
-
-        _timer += Time.DeltaTime;
-
-        if (_timer >= 60)
-        {
-            _timer = 0;
-            Graphics.CleanMeshes();
-        }
+        Graphics.Renderer.DoneFrame();
     }
 
     /// <summary>
@@ -161,8 +162,7 @@ public abstract class Scene : IDisposable
             _entities[i].Dispose();
         
         Logger.Debug("Collecting garbage...");
-        foreach (IDisposable disposable in GarbageCollections)
-            disposable.Dispose();
+        DisposeManager.DisposeAll();
         
         Logger.Debug("Scene disposed.");
     }
@@ -170,29 +170,17 @@ public abstract class Scene : IDisposable
     /// <summary>
     /// Add an entity to the scene.
     /// </summary>
-    /// <param name="name">The name of the entity.</param>
     /// <param name="entity">The entity to add.</param>
-    public void AddEntity(string name, Entity entity)
+    public void AddEntity(Entity entity)
     {
-        entity.Name = name;
+        entity.Name ??= _unnamedEntityId++.ToString();
         entity.Initialize();
         
         int count = _entityCount++;
         if (count >= _entities.Length)
             Array.Resize(ref _entities, _entities.Length << 1);
         _entities[count] = entity;
-        _entityPointers.Add(name, count);
-    }
-
-    /// <summary>
-    /// Add an entity to the scene. Use this overload if you don't plan on referencing the entity, or you are
-    /// keeping a reference to the entity directly in your code. It will be automatically assigned a name.
-    /// </summary>
-    /// <param name="entity">The entity to add.</param>
-    public void AddEntity(Entity entity)
-    {
-        entity.Name = _unnamedEntityId++.ToString();
-        AddEntity(entity.Name, entity);
+        _entityPointers.Add(entity.Name, count);
     }
 
     /// <summary>
@@ -266,8 +254,8 @@ public abstract class Scene : IDisposable
         List<Entity> entities = new List<Entity>();
         for (int i = 0; i < _entityCount; i++)
         {
-            if (entities[i].GetComponent<T>() != null)
-                entities.Add(entities[i]);
+            if (_entities[i].HasComponent<T>())
+                entities.Add(_entities[i]);
         }
 
         return entities.ToArray();

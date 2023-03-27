@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -12,49 +12,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Pie\Pie.Freetype\Pie.Freetype.csproj" />
+      <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
+      <ProjectReference Include="..\Easel.Graphics\Easel.Graphics.csproj" />
+      <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
+      <ProjectReference Include="..\Pie\Pie.Audio\Pie.Audio.csproj" />
       <ProjectReference Include="..\Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
+      <ProjectReference Include="..\Pie\Pie.Text\Pie.Text.csproj" />
       <ProjectReference Include="..\Pie\Pie.Utils\Pie.Utils.csproj" />
       <ProjectReference Include="..\Pie\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\Pie\Pie\Pie.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Silk.NET.Assimp" Version="2.16.0" />
       <PackageReference Include="Silk.NET.SDL" Version="2.16.0" />
-      <PackageReference Include="StbImageSharp" Version="2.27.11" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Sprite.vert" />
-      <EmbeddedResource Include="Graphics\Shaders\Forward\Standard.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\Standard.vert" />
-      <None Remove="Graphics\Shaders\Forward\Lighting.glsl" />
-      <EmbeddedResource Include="Graphics\Shaders\Forward\Lighting.glsl" />
-      <None Remove="Graphics\Shaders\Forward\Material.glsl" />
-      <EmbeddedResource Include="Graphics\Shaders\Forward\Material.glsl" />
-      <None Remove="EaselLogo.png" />
       <EmbeddedResource Include="EaselLogo.png" />
-      <None Remove="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\SpriteRenderer\Shape.RoundedRect.frag" />
-      <None Remove="Roboto-Regular.ttf" />
       <EmbeddedResource Include="Roboto-Regular.ttf" />
-      <None Remove="Graphics\Shaders\Skybox\Skybox.vert" />
-      <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.vert" />
-      <None Remove="Graphics\Shaders\Skybox\Skybox.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\Skybox\Skybox.frag" />
-      <None Remove="Graphics\Shaders\PostProcessor.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\PostProcessor.frag" />
-      <None Update="libmixr.so">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="mixr.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Remove="Graphics\Shaders\Deferred\GBuffer.frag" />
-      <EmbeddedResource Include="Graphics\Shaders\Deferred\GBuffer.frag" />
+      <EmbeddedResource Include="Graphics\Shaders\**\*" />
     </ItemGroup>
 
 </Project>

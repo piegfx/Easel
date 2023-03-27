@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Easel.Core;
 using Easel.Graphics;
 using Easel.Math;
 using ImGuiNET;
@@ -28,14 +29,14 @@ public class ImGuiRenderer : IDisposable
     private uint _eboSize;
 
     private Shader _shader;
-    private DepthState _depthState;
-    private RasterizerState _rasterizerState;
-    private SamplerState _samplerState;
-    private BlendState _blendState;
+    private DepthStencilState _depthState;
+    private Pie.RasterizerState _rasterizerState;
+    private Pie.SamplerState _samplerState;
+    private Pie.BlendState _blendState;
 
     private Texture _fontTexture;
 
-    public Vector2 Scale;
+    public Vector2T<float> Scale;
 
     private readonly List<char> _pressedChars;
 
@@ -48,9 +49,9 @@ public class ImGuiRenderer : IDisposable
 
     private List<Texture> _texture2Ds;
 
-    public ImGuiRenderer()
+    public ImGuiRenderer(FontInfo? defaultFont = null)
     {
-        Scale = Vector2.One;
+        Scale = Vector2T<float>.One;
         _texture2Ds = new List<Texture>();
 
         EaselGraphics graphics = EaselGame.Instance.Graphics;
@@ -67,7 +68,10 @@ public class ImGuiRenderer : IDisposable
         _context = ImGuiNET.ImGui.CreateContext();
         ImGuiNET.ImGui.SetCurrentContext(_context);
         ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
-        io.Fonts.AddFontDefault();
+        if (defaultFont != null)
+            io.Fonts.AddFontFromFileTTF(defaultFont.Value.Path, defaultFont.Value.Size);
+        else
+            io.Fonts.AddFontDefault();
         io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
         CreateDeviceResources();
@@ -79,7 +83,7 @@ public class ImGuiRenderer : IDisposable
         _frameBegun = true;
     }
 
-    private void ViewportOnResize(Rectangle viewport)
+    private void ViewportOnResize(Rectangle<int> viewport)
     {
         _windowWidth = viewport.Width;
         _windowHeight = viewport.Height;
@@ -132,10 +136,10 @@ void main()
     out_color = frag_color * texture(uTexture, frag_texCoords);
 }";
 
-        _shader = device.CreateCrossPlatformShader(new ShaderAttachment(ShaderStage.Vertex, vertexSource),
-            new ShaderAttachment(ShaderStage.Fragment, fragmentSource));
+        _shader = device.CreateShader(new []{ new ShaderAttachment(ShaderStage.Vertex, vertexSource),
+            new ShaderAttachment(ShaderStage.Fragment, fragmentSource) });
 
-        _depthState = device.CreateDepthState(DepthStateDescription.Disabled);
+        _depthState = device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
         RasterizerStateDescription stateDesc = RasterizerStateDescription.CullNone;
         stateDesc.ScissorTest = true;
         _rasterizerState = device.CreateRasterizerState(stateDesc);
@@ -144,9 +148,9 @@ void main()
 
         _stride = (uint) Unsafe.SizeOf<ImDrawVert>();
         _inputLayout = device.CreateInputLayout(
-            new InputLayoutDescription("aPosition", AttributeType.Float2, 0, 0, InputType.PerVertex),
-            new InputLayoutDescription("aTexCoords", AttributeType.Float2, 8, 0, InputType.PerVertex),
-            new InputLayoutDescription("aColor", AttributeType.NByte4, 16, 0, InputType.PerVertex));
+            new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R32G32_Float, 8, 0, InputType.PerVertex),
+            new InputLayoutDescription(Format.R8G8B8A8_UNorm, 16, 0, InputType.PerVertex));
     }
 
     public void RecreateFontDeviceTexture()
@@ -155,13 +159,13 @@ void main()
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height);
         GraphicsDevice device = EaselGame.Instance.Graphics.PieGraphics;
         _fontTexture?.Dispose();
-        //_fontTexture =
-        //    device.CreateTexture(
-        //        new TextureDescription(TextureType.Texture2D, width, height, PixelFormat.R8G8B8A8_UNorm, 1, 1,
-        //            TextureUsage.ShaderResource), new [] { new TextureData(pixels) });
-        //device.GenerateMipmaps(_fontTexture);
+        _fontTexture =
+            device.CreateTexture(
+                new TextureDescription(width, height, Format.R8G8B8A8_UNorm, 1, 1,
+                    TextureUsage.ShaderResource), pixels);
+        device.GenerateMipmaps(_fontTexture);
 
-        //io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
+        io.Fonts.SetTexID(GetImGuiTexture(_fontTexture));
     }
 
     public void Draw()
@@ -189,8 +193,8 @@ void main()
     private void SetPerFrameImGuiData(float deltaTime)
     {
         ImGuiIOPtr io = ImGuiNET.ImGui.GetIO();
-        io.DisplaySize = new Vector2(_windowWidth / Scale.X, _windowHeight / Scale.Y);
-        io.DisplayFramebufferScale = Scale;
+        io.DisplaySize = new System.Numerics.Vector2(_windowWidth / Scale.X, _windowHeight / Scale.Y);
+        io.DisplayFramebufferScale = (System.Numerics.Vector2) Scale;
         io.DeltaTime = deltaTime;
     }
 
@@ -202,7 +206,7 @@ void main()
         io.MouseDown[1] = Input.MouseButtonDown(MouseButton.Right);
         io.MouseDown[2] = Input.MouseButtonDown(MouseButton.Middle);
 
-        io.MousePos = Input.MousePosition / Scale;
+        io.MousePos = (System.Numerics.Vector2) (Input.MousePosition / Scale);
 
         io.MouseWheel = Input.ScrollWheelDelta.Y;
         io.MouseWheelH = Input.ScrollWheelDelta.X;
@@ -289,7 +293,7 @@ void main()
         
         device.SetShader(_shader);
         device.SetRasterizerState(_rasterizerState);
-        device.SetDepthState(_depthState);
+        device.SetDepthStencilState(_depthState);
         device.SetBlendState(_blendState);
         device.SetUniformBuffer(0, _uniformBuffer);
 

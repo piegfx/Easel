@@ -31,24 +31,16 @@ public abstract class InheritableEntity
     /// <summary>
     /// The current <see cref="AudioDevice"/> instance.
     /// </summary>
-    protected abstract AudioDevice Audio { get; }
+    protected abstract EaselAudio Audio { get; }
     
     protected abstract ContentManager Content { get; }
 
     /// <summary>
     /// Add an entity to the current scene.
     /// </summary>
-    /// <param name="name">The name of the entity.</param>
-    /// <param name="entity">The entity to add.</param>
-    protected abstract void AddEntity(string name, Entity entity);
-
-    /// <summary>
-    /// Add an entity to the current scene. Use this overload if you don't plan on referencing the entity, or you are
-    /// keeping a reference to the entity directly in your code. It will be automatically assigned a name.
-    /// </summary>
     /// <param name="entity">The entity to add.</param>
     protected abstract void AddEntity(Entity entity);
-
+    
     /// <summary>
     /// Remove an entity from the scene.
     /// </summary>

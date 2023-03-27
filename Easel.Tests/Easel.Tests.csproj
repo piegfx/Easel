@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BulletSharpPInvoke\BulletSharp\BulletSharp.DotNetCore.csproj" />
+      <ProjectReference Include="..\BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj" />
       <ProjectReference Include="..\Easel.ImGui\Easel.ImGui.csproj" />
       <ProjectReference Include="..\Easel.Physics\Easel.Physics.csproj" />
       <ProjectReference Include="..\Easel\Easel.csproj" />
@@ -19,6 +19,10 @@
       <Content Include="Content/**/*">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Content\Audio" />
     </ItemGroup>
 
 </Project>

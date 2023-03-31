@@ -92,8 +92,8 @@ public class StandardMaterial : Material
             new InputLayoutDescription(Format.R32G32B32_Float, 32, 0, InputType.PerVertex)
         };
 
-        byte[] vShader = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_vert.spv");
-        byte[] fShader = Utils.LoadEmbeddedResource(Assembly.GetCallingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_frag.spv");
+        byte[] vShader = Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_vert.spv");
+        byte[] fShader = Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.Graphics.Shaders.Forward.Standard_frag.spv");
 
         EffectLayout = GetEffectLayout(vShader, fShader, constants, descriptions,
             VertexPositionTextureNormalTangent.SizeInBytes);

@@ -15,7 +15,7 @@ public class ContentBuilder
     public ContentBuilder(string contentName)
     {
         _name = contentName;
-        _directory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), contentName);
+        _directory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", contentName);
         _types = new List<IContentType>();
     }
 

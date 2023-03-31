@@ -59,6 +59,12 @@ public static class EaselMath
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Wrap<T>(T value, T min, T max) where T : INumber<T> => value < min ? max : value > max ? min : value;
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Max<T>(T value1, T value2) where T : INumber<T> => value1 > value2 ? value1 : value2;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T Min<T>(T value1, T value2) where T : INumber<T> => value1 > value2 ? value2 : value1;
 
     /// <summary>
     /// Calculates a position along a quadratic bezier curve that outputs a value based on the given variable for t

@@ -28,7 +28,7 @@ public class ContentManager
     public ContentManager()
     {
         _definitions = new Dictionary<string, ContentDefinition>();
-        _location = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        _location = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "";
 
         _processors = new Dictionary<Type, IContentProcessor>();
         AddContentProcessor(typeof(Texture2D), new TextureProcessor());

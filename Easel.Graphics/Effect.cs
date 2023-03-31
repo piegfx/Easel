@@ -166,8 +166,9 @@ public class Effect : IDisposable
                 fragment = File.ReadAllBytes(fragmentPath);
                 break;
             case EffectLoadType.EmbeddedResource:
-                vertex = Utils.LoadEmbeddedResource(assembly ?? Assembly.GetCallingAssembly(), vertexPath);
-                fragment = Utils.LoadEmbeddedResource(assembly ?? Assembly.GetCallingAssembly(), fragmentPath);
+                assembly ??= Assembly.GetExecutingAssembly();
+                vertex = Utils.LoadEmbeddedResource(assembly, vertexPath);
+                fragment = Utils.LoadEmbeddedResource(assembly, fragmentPath);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(loadType), loadType, null);
@@ -177,7 +178,8 @@ public class Effect : IDisposable
     }
 
     public static Effect FromHlsl(string hlsl, string vertexEp = "VertexShader", string pixelEp = "PixelShader",
-        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null,
+        Assembly assembly = null)
     {
         byte[] vertex, pixel;
 
@@ -193,7 +195,7 @@ public class Effect : IDisposable
                 pixel = TryCompile(ShaderStage.Pixel, hlslFile, pixelEp, Language.HLSL);
                 break;
             case EffectLoadType.EmbeddedResource:
-                string hlslResx = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), hlsl, Encoding.UTF8);
+                string hlslResx = Utils.LoadEmbeddedString(assembly ?? Assembly.GetExecutingAssembly(), hlsl, Encoding.UTF8);
                 vertex = TryCompile(ShaderStage.Vertex, hlslResx, vertexEp, Language.HLSL);
                 pixel = TryCompile(ShaderStage.Pixel, hlslResx, pixelEp, Language.HLSL);
                 break;
@@ -205,7 +207,8 @@ public class Effect : IDisposable
     }
     
     public static Effect FromGlsl(string vertex, string fragment,
-        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null)
+        EffectLoadType loadType = EffectLoadType.EmbeddedResource, SpecializationConstant[] constants = null,
+        Assembly assembly = null)
     {
         byte[] vert, frag;
 
@@ -220,8 +223,9 @@ public class Effect : IDisposable
                 frag = TryCompile(ShaderStage.Fragment, File.ReadAllText(fragment), "main", Language.GLSL);
                 break;
             case EffectLoadType.EmbeddedResource:
-                string vShader = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), vertex, Encoding.UTF8);
-                string fShader = Utils.LoadEmbeddedString(Assembly.GetCallingAssembly(), fragment, Encoding.UTF8);
+                assembly ??= Assembly.GetExecutingAssembly();
+                string vShader = Utils.LoadEmbeddedString(assembly, vertex, Encoding.UTF8);
+                string fShader = Utils.LoadEmbeddedString(assembly, fragment, Encoding.UTF8);
                 vert = TryCompile(ShaderStage.Vertex, vShader, "main", Language.GLSL);
                 frag = TryCompile(ShaderStage.Fragment, fShader, "main", Language.GLSL);
                 break;

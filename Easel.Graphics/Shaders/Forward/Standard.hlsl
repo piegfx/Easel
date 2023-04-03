@@ -15,7 +15,7 @@ struct VSOutput
     float2 texCoords:  TEXCOORD0;
     float3 normal:     NORMAL;
     float3 fragPos:    TEXCOORD1;
-    float3 lightSpace: TEXCOORD2;
+    float4 lightSpace: TEXCOORD2;
 };
 
 struct PSOutput
@@ -70,7 +70,7 @@ VSOutput VertexShader(in VSInput input)
     output.texCoords = input.texCoords * material.tiling.xy;
     output.normal = mul((float3x3) model, input.normals);
     output.fragPos = (float3) fragPos;
-    output.lightSpace = (float3) mul(lightSpace, fragPos);
+    output.lightSpace = mul(lightSpace, fragPos);
 
     return output;
 }
@@ -103,7 +103,7 @@ PSOutput PixelShader(in VSOutput input)
     float3 viewDir = normalize((float3) cameraPos - input.fragPos);
     float3 result = ProcessDirLight(sun, viewDir, albedo.rgb, normal, metallic, roughness);
 
-    float shadow = 0.0;
+    float shadow = CalculateShadow(input.lightSpace, input.texCoords, shadowTex, shadowState);
 
     float3 ambient = (float3) 0.03 * albedo.rgb * ao;
     float3 color = ambient + (1.0 - shadow) * result;

@@ -141,7 +141,7 @@ public sealed class ForwardRenderer : IRenderer
             _projViewModel.Projection = info.Projection;
             _projViewModel.View = info.View;
             _projViewModel.LightSpace = lightSpace;
-            device.SetDepthState(_depthState);
+            device.SetDepthStencilState(_depthState);
             device.SetShader(_shadowEffect.Effect.PieShader);
             device.SetRasterizerState(_shadowRasterizer);
             

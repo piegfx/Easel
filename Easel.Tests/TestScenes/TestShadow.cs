@@ -103,7 +103,8 @@ public class TestShadow : Scene
         //DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
         //Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);
         Texture2D ddsTexture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
-        
+        ddsTexture.SamplerState = SamplerState.LinearClamp;
+
         Entity cube = new Entity("cube", new Transform()
         {
             Position = new Vector3(2f, -0.05f, 0),

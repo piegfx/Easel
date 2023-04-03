@@ -16,10 +16,16 @@ public class Rigidbody : Component
 
     public bool LockX, LockY, LockZ;
 
-    public Vector3 Velocity
+    public Vector3 LinearVelocity
     {
         get => _rb.LinearVelocity;
         set => _rb.LinearVelocity = value;
+    }
+
+    public Vector3 AngularVelocity
+    {
+        get => _rb.AngularVelocity;
+        set => _rb.AngularVelocity = value;
     }
 
     public float Friction

@@ -1,26 +1,29 @@
 using System;
 using System.Numerics;
 using BulletSharp;
+using Easel.Entities;
 using Easel.Math;
 
 namespace Easel.Physics;
 
 public static class Physics
 {
-    public static readonly DiscreteDynamicsWorld World;
-    public static readonly CollisionDispatcher Dispatcher;
-    public static readonly DbvtBroadphase Broadphase;
-    public static readonly CollisionConfiguration Configuration;
+    private static DiscreteDynamicsWorld World;
+    private static CollisionDispatcher Dispatcher;
+    private static DbvtBroadphase Broadphase;
+    private static CollisionConfiguration Configuration;
+
+    public static event OnFixedUpdate FixedUpdate;
 
     public static float SimulationSpeed = 1;
 
-    static Physics()
+    public static void Initialize(PhysicsInitializeSettings settings)
     {
         Configuration = new DefaultCollisionConfiguration();
         Dispatcher = new CollisionDispatcher(Configuration);
         Broadphase = new DbvtBroadphase();
         World = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, Configuration);
-        World.Gravity = new Vector3(0, -9.81f, 0);
+        World.Gravity = settings.Gravity;
 
         World.PairCache.SetInternalGhostPairCallback(new GhostPairCallback());
     }
@@ -64,6 +67,9 @@ public static class Physics
         hit.CollisionObject = cb.CollisionObject;
         hit.Rotation = rotation;
         hit.ChildIndex = cb.ChildIndex;
+        hit.Entity = cb.CollisionObject.UserObject.GetType() == typeof(Entity)
+            ? (Entity) cb.CollisionObject.UserObject
+            : null;
 
         return true;
     }
@@ -98,8 +104,16 @@ public static class Physics
         return obj;
     }
 
-    public static void Update()
+    public static void Remove(RigidBody body)
     {
-        World.StepSimulation(Time.DeltaTime * SimulationSpeed, fixedTimeStep: (1 / 60f) * SimulationSpeed);
+        World.RemoveRigidBody(body);
     }
+
+    public static void Timestep(float deltaTime)
+    {
+        World.StepSimulation(deltaTime * SimulationSpeed, fixedTimeStep: (1 / 60f) * SimulationSpeed);
+        FixedUpdate?.Invoke();
+    }
+
+    public delegate void OnFixedUpdate();
 }

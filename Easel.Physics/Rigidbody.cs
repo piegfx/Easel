@@ -28,10 +28,26 @@ public class Rigidbody : Component
         set => _rb.Friction = value;
     }
 
+    public float Restitution
+    {
+        get => _rb.Restitution;
+        set => _rb.Restitution = value;
+    }
+
     public Rigidbody(float mass, CollisionShape shape)
     {
         _iMass = mass;
         _iShape = shape;
+        Physics.FixedUpdate += FixedUpdate;
+    }
+
+    private void FixedUpdate()
+    {
+        Matrix4x4.Decompose(_rb.InterpolationWorldTransform, out Vector3 scale, out Quaternion rotation,
+            out Vector3 translation);
+
+        Transform.Position = translation;
+        Transform.Rotation = rotation;
     }
 
     protected override void Initialize()
@@ -48,28 +64,21 @@ public class Rigidbody : Component
         else
             _rb = Physics.AddRigidBody(_iMass, _iShape, transform);
 
-        //_rb.Restitution = 0.9f;
-        //_rb.CcdMotionThreshold = 0.00005f;
-        //_rb.CcdSweptSphereRadius = 0.5f;
+        _rb.UserObject = Entity;
     }
 
     protected override void Update()
     {
         base.Update();
-        
-        _rb.WorldTransform = Matrix4x4.CreateFromQuaternion(Transform.Rotation) *
-                             Matrix4x4.CreateTranslation(Transform.Position);
-        //_rb.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
-
-        //Transform.Position = _rb.WorldTransform.Translation;
-        //Transform.Rotation = _rb.Orientation;
+        _rb.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
+        _rb.WorldTransform = Transform.TransformMatrix;
     }
 
     public override void Dispose()
     {
         base.Dispose();
         
-        Physics.World.RemoveRigidBody(_rb);
+        Physics.Remove(_rb);
         _rb.Dispose();
     }
 }

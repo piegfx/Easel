@@ -1,5 +1,6 @@
 using System.Numerics;
 using BulletSharp;
+using Easel.Entities;
 using Easel.Math;
 
 namespace Easel.Physics;
@@ -12,6 +13,7 @@ public struct RayHit
     public Vector3T<float> RealNormal;
     public Quaternion Rotation;
     public int ChildIndex;
+    public Entity Entity;
 
     public CollisionObject CollisionObject;
 }

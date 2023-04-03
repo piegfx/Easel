@@ -15,7 +15,7 @@ GameSettings settings = new GameSettings()
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new TestShadow());
+using TestGame game = new TestGame(settings, new TestPhysics());
 game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);

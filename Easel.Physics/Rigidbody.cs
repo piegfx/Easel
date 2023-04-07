@@ -10,7 +10,7 @@ public class Rigidbody : Component
     private float _iMass;
     private CollisionShape _iShape;
     
-    private RigidBody _rb;
+    public RigidBody BulletBody;
 
     private Transform _lastTransform;
 
@@ -18,26 +18,26 @@ public class Rigidbody : Component
 
     public Vector3 LinearVelocity
     {
-        get => _rb.LinearVelocity;
-        set => _rb.LinearVelocity = value;
+        get => BulletBody.LinearVelocity;
+        set => BulletBody.LinearVelocity = value;
     }
 
     public Vector3 AngularVelocity
     {
-        get => _rb.AngularVelocity;
-        set => _rb.AngularVelocity = value;
+        get => BulletBody.AngularVelocity;
+        set => BulletBody.AngularVelocity = value;
     }
 
     public float Friction
     {
-        get => _rb.Friction;
-        set => _rb.Friction = value;
+        get => BulletBody.Friction;
+        set => BulletBody.Friction = value;
     }
 
     public float Restitution
     {
-        get => _rb.Restitution;
-        set => _rb.Restitution = value;
+        get => BulletBody.Restitution;
+        set => BulletBody.Restitution = value;
     }
 
     public Rigidbody(float mass, CollisionShape shape)
@@ -49,7 +49,7 @@ public class Rigidbody : Component
 
     private void FixedUpdate()
     {
-        Matrix4x4.Decompose(_rb.InterpolationWorldTransform, out Vector3 scale, out Quaternion rotation,
+        Matrix4x4.Decompose(BulletBody.InterpolationWorldTransform, out Vector3 scale, out Quaternion rotation,
             out Vector3 translation);
 
         Transform.Position = translation;
@@ -66,25 +66,25 @@ public class Rigidbody : Component
         _iShape.LocalScaling = Transform.Scale;
 
         if (_iMass == 0)
-            _rb = Physics.AddStaticBody(_iShape, transform);
+            BulletBody = Physics.AddStaticBody(_iShape, transform);
         else
-            _rb = Physics.AddRigidBody(_iMass, _iShape, transform);
+            BulletBody = Physics.AddRigidBody(_iMass, _iShape, transform);
 
-        _rb.UserObject = Entity;
+        BulletBody.UserObject = Entity;
     }
 
     protected override void Update()
     {
         base.Update();
-        _rb.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
-        _rb.WorldTransform = Transform.TransformMatrix;
+        BulletBody.AngularFactor = new Vector3(LockX ? 0 : 1, LockY ? 0 : 1, LockZ ? 0 : 1);
+        BulletBody.WorldTransform = Transform.TransformMatrix;
     }
 
     public override void Dispose()
     {
         base.Dispose();
         
-        Physics.Remove(_rb);
-        _rb.Dispose();
+        Physics.Remove(BulletBody);
+        BulletBody.Dispose();
     }
 }

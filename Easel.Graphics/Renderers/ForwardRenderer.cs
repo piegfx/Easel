@@ -125,13 +125,13 @@ public sealed class ForwardRenderer : IRenderer
         
         // First perform depth-only shadow pass
 
-        /*if (DirectionalLight?.ShadowMap != null)
+        if (DirectionalLight?.ShadowMap != null)
         {
             Matrix4x4 proj = Matrix4x4.CreateOrthographicOffCenter(-5.0f, 5.0f, -5.0f, 5.0f, 1.0f, 10.0f);
             Matrix4x4 view = Matrix4x4.CreateLookAt(
                 -new Vector3(_sceneInfo.Sun.Direction.X, _sceneInfo.Sun.Direction.Y, _sceneInfo.Sun.Direction.Z),
                 Vector3.Zero, Vector3.UnitY);
-            Matrix4x4 lightSpace = proj * view;
+            Matrix4x4 lightSpace = view * proj;
             device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffer);
             device.Clear(ClearFlags.Depth);
             // TODO: Optimize and set viewport to FB size.
@@ -150,11 +150,11 @@ public sealed class ForwardRenderer : IRenderer
             
             foreach (TransformedRenderable renderable in _translucents)
                 DrawShadowedRenderable(device, renderable);
-        }*/
+        }
         
         // Then perform main color pass.
         
-        //graphics.SetRenderTarget(MainTarget);
+        graphics.SetRenderTarget(MainTarget);
         //device.Viewport = new Rectangle(0, 0, 1280, 720);
 
         if (camera.ClearColor.HasValue)

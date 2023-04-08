@@ -70,7 +70,7 @@ VSOutput VertexShader(in VSInput input)
     output.texCoords = input.texCoords * material.tiling.xy;
     output.normal = mul((float3x3) model, input.normals);
     output.fragPos = (float3) fragPos;
-    output.lightSpace = mul(lightSpace, fragPos);
+    output.lightSpace = mul(lightSpace, float4(fragPos.xyz, 1.0));
 
     return output;
 }
@@ -103,11 +103,12 @@ PSOutput PixelShader(in VSOutput input)
     float3 viewDir = normalize((float3) cameraPos - input.fragPos);
     float3 result = ProcessDirLight(sun, viewDir, albedo.rgb, normal, metallic, roughness);
 
-    //float shadow = CalculateShadow(input.lightSpace, input.texCoords, shadowTex, shadowState);
-    float shadow = 0.0;
+    float shadow = CalculateShadow(input.lightSpace, shadowTex, shadowState, normal, normalize((float3) -sun.direction - input.fragPos));
+    //float shadow = 0.0;
 
     float3 ambient = (float3) 0.03 * albedo.rgb * ao;
     float3 color = ambient + (1.0 - shadow) * result;
+    //float3 color = (1.0 - shadow);
 
     color = color / (color + (float3) 1.0);
     color = pow(color, (float3) (1.0 / 2.2));

@@ -29,7 +29,7 @@ public struct DirectionalLight
 
     public ShadowMap ShadowMap;
 
-    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 0)
+    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 1)
     {
         Direction = direction;
         Color = color;

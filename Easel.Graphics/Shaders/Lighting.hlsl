@@ -96,17 +96,17 @@ float3 ProcessDirLight(DirectionalLight light, float3 viewDir, float3 albedo, fl
     return ProcessLight(albedo, normal, metallic, roughness, L, N, viewDir, radiance);
 }
 
-float CalculateShadow(float4 lightSpace, float2 texCoords, Texture2D shadowTex, SamplerState state)
+float CalculateShadow(float4 lightSpace, Texture2D shadowTex, SamplerState state, float3 normal, float3 lightDir)
 {
     float3 projCoords = lightSpace.xyz / lightSpace.w;
 
-    //projCoords = projCoords * 0.5 + 0.5;
+    projCoords = projCoords * 0.5 + 0.5;
 
-    float closestDepth = shadowTex.Sample(state, texCoords).r;
-
+    float closestDepth = shadowTex.Sample(state, projCoords.xy).r;
     float currentDepth = projCoords.z;
 
-    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
     return shadow;
 }

@@ -132,7 +132,7 @@ public sealed class ForwardRenderer : IRenderer
                 -new Vector3(_sceneInfo.Sun.Direction.X, _sceneInfo.Sun.Direction.Y, _sceneInfo.Sun.Direction.Z),
                 Vector3.Zero, Vector3.UnitY);
             Matrix4x4 lightSpace = view * proj;
-            device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffer);
+            device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffers[0]);
             device.Clear(ClearFlags.Depth);
             // TODO: Optimize and set viewport to FB size.
             device.Viewport = new Rectangle(0, 0, 1024, 1024);
@@ -191,7 +191,7 @@ public sealed class ForwardRenderer : IRenderer
         device.SetUniformBuffer(0, _projViewModelBuffer);
         device.SetUniformBuffer(1, _sceneInfoBuffer);
         if (DirectionalLight?.ShadowMap != null)
-            device.SetTexture(2, DirectionalLight.Value.ShadowMap.Texture, DirectionalLight.Value.ShadowMap.SamplerState);
+            device.SetTexture(2, DirectionalLight.Value.ShadowMap.Textures[0], DirectionalLight.Value.ShadowMap.SamplerState);
         renderable.Renderable.Material.ApplyTextures(device);
         device.SetRasterizerState(renderable.Renderable.Material.RasterizerState.PieRasterizerState);
         device.SetBlendState(renderable.Renderable.Material.BlendState.PieBlendState);

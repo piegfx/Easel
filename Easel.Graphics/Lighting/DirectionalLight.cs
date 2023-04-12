@@ -12,6 +12,9 @@ public struct DirectionalLight
     private Vector2T<float> _direction;
     private Vector3 _position;
 
+    private Matrix4x4 _projection;
+    private Matrix4x4 _view;
+
     public Vector2T<float> Direction
     {
         get => _direction;
@@ -29,7 +32,7 @@ public struct DirectionalLight
 
     public ShadowMap ShadowMap;
 
-    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 1)
+    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 4)
     {
         Direction = direction;
         Color = color;
@@ -42,4 +45,11 @@ public struct DirectionalLight
         Direction = new Vector4(_position, 0),
         Color = Color
     };
+
+    private void CalculateViewProjMatrices()
+    {
+        // TODO: Move these to user-adjustable values.
+        const float near = 0.1f;
+        const float far = 1000.0f;
+    }
 }

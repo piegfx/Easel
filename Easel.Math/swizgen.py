@@ -7,14 +7,22 @@ def process(components, num_components, text, final_list):
         process(components, num_components - 1, text + comp, final_list)
 
 if __name__ == "__main__":
-    components = ['X', 'Y', 'Z', 'W']
-    max_components = 4
+    components = list(input("Enter components you would like to generate swizzles for. (For example, RGBA) "))
+
+    max_components = int(input("Enter the maximum number of components. "))
+
+    struct_name = input("Enter a struct name.\nAvailable variables:\n\t\"{elem}\" - Element name\n\t\"{length}\" - The length of the element\n\t\"{params}\" - The elements in parameter form\n")
 
     final_list = []
+    print("Processing... (this may take a while!)")
     process(components, max_components, "", final_list)
+
+    print("Prettyfying... (this may also take a while!)")
     final_list = sorted(final_list, key=lambda x: len(x))
+
     for elem in final_list:
         split_elem = list(elem)
         length = len(split_elem)
-        joj = ", ".join(split_elem)
-        print(f"public Vector{length}T<T> {elem} => new Vector{length}T<T>({joj})")
+        joj = ", ".join(split_elem) # oops, forgot to change this. guess it's joj now
+        text = struct_name.replace("{elem}", elem).replace("{length}", str(length)).replace("{params}", joj).replace("\\n", "\n")
+        print(text)

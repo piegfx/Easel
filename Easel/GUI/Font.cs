@@ -126,7 +126,7 @@ public class Font : IDisposable
                         Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2T<int> charPos = new Vector2T<int>(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        renderer.Draw(charmap.Texture, (Vector2T<float>) charPos, chr.Source, currentColor, 0,
+                        renderer.Draw(charmap.Texture, charPos.As<float>(), chr.Source, currentColor, 0,
                             Vector2T<float>.Zero, Vector2T<float>.One);
                         pos.X += chr.Advance;
                     }

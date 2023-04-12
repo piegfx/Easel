@@ -76,7 +76,7 @@ public struct Position
                 throw new ArgumentOutOfRangeException();
         }
 
-        pos += (Vector2T<int>) ((Vector2T<float>) Offset * scale);
+        pos += (Offset.As<float>() * scale).As<int>();
 
         return pos;
     }

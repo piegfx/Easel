@@ -12,7 +12,8 @@ using Easel.Tests;
 using Easel.Tests.TestScenes;
 using Pie.Windowing;
 
-
+Vector2T<float> vector = new Vector2T<float>(12, 3);
+float length = vector.Length();
 
 /*GameSettings settings = new GameSettings()
 {

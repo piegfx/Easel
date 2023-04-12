@@ -25,7 +25,7 @@ public class Panel : UIElement
                 Vector2T<float>.One);
         }*/
 
-        renderer.DrawRectangle((Vector2T<float>) CalculatedScreenPos, size, width, radius, bg, border, 0,
+        renderer.DrawRectangle(CalculatedScreenPos.As<float>(), size, width, radius, bg, border, 0,
             Vector2T<float>.Zero);
     }
 }

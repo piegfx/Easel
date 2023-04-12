@@ -15,8 +15,6 @@ if __name__ == "__main__":
 
     output = input("Enter an output file name (leave blank for TTY output) (WARNING THIS WILL OVERWRITE!!!). ")
 
-    pass;
-
     final_list = []
     print("Processing... (this may take a while!)")
     process(components, max_components, "", final_list)

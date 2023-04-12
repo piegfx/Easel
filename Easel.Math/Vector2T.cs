@@ -123,6 +123,66 @@ public struct Vector2T<T> : IEquatable<Vector2T<T>> where T : INumber<T>
     {
         return HashCode.Combine(X, Y);
     }
+
+    #region Swizzle
+
+    public Vector2T<T> XX => new Vector2T<T>(X, X);
+
+    public Vector2T<T> XY => new Vector2T<T>(X, Y);
+
+    public Vector2T<T> YX => new Vector2T<T>(Y, X);
+
+    public Vector2T<T> YY => new Vector2T<T>(Y, Y);
+
+    public Vector3T<T> XXX => new Vector3T<T>(X, X, X);
+
+    public Vector3T<T> XXY => new Vector3T<T>(X, X, Y);
+
+    public Vector3T<T> XYX => new Vector3T<T>(X, Y, X);
+
+    public Vector3T<T> XYY => new Vector3T<T>(X, Y, Y);
+
+    public Vector3T<T> YXX => new Vector3T<T>(Y, X, X);
+
+    public Vector3T<T> YXY => new Vector3T<T>(Y, X, Y);
+
+    public Vector3T<T> YYX => new Vector3T<T>(Y, Y, X);
+
+    public Vector3T<T> YYY => new Vector3T<T>(Y, Y, Y);
+
+    public Vector4T<T> XXXX => new Vector4T<T>(X, X, X, X);
+
+    public Vector4T<T> XXXY => new Vector4T<T>(X, X, X, Y);
+
+    public Vector4T<T> XXYX => new Vector4T<T>(X, X, Y, X);
+
+    public Vector4T<T> XXYY => new Vector4T<T>(X, X, Y, Y);
+
+    public Vector4T<T> XYXX => new Vector4T<T>(X, Y, X, X);
+
+    public Vector4T<T> XYXY => new Vector4T<T>(X, Y, X, Y);
+
+    public Vector4T<T> XYYX => new Vector4T<T>(X, Y, Y, X);
+
+    public Vector4T<T> XYYY => new Vector4T<T>(X, Y, Y, Y);
+
+    public Vector4T<T> YXXX => new Vector4T<T>(Y, X, X, X);
+
+    public Vector4T<T> YXXY => new Vector4T<T>(Y, X, X, Y);
+
+    public Vector4T<T> YXYX => new Vector4T<T>(Y, X, Y, X);
+
+    public Vector4T<T> YXYY => new Vector4T<T>(Y, X, Y, Y);
+
+    public Vector4T<T> YYXX => new Vector4T<T>(Y, Y, X, X);
+
+    public Vector4T<T> YYXY => new Vector4T<T>(Y, Y, X, Y);
+
+    public Vector4T<T> YYYX => new Vector4T<T>(Y, Y, Y, X);
+
+    public Vector4T<T> YYYY => new Vector4T<T>(Y, Y, Y, Y);
+
+    #endregion
 }
 
 public static class Vector2T

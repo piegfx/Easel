@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
 namespace Easel.Math;
@@ -91,6 +92,12 @@ public struct Size<T> : IEquatable<Size<T>> where T : INumber<T>
 
     public static explicit operator Size<T>(System.Drawing.Size size) =>
         new Size<T>(T.CreateChecked(size.Width), T.CreateChecked(size.Height));
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public Size<TOther> As<TOther>() where TOther : INumber<TOther>
+    {
+        return new Size<TOther>(TOther.CreateChecked(Width), TOther.CreateChecked(Height));
+    }
 
     public override string ToString()
     {

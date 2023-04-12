@@ -133,7 +133,7 @@ public static class Vector2T
     [MethodImpl(Options)]
     public static T MagnitudeSquared<T>(in Vector2T<T> vector) where T : INumber<T>
     {
-        return vector.X * vector.X + vector.Y * vector.Y;
+        return Dot(vector, vector);
     }
 
     [MethodImpl(Options)]
@@ -181,20 +181,21 @@ public static class Vector2T
     [MethodImpl(Options)]
     public static T DistanceSquared<T>(in Vector2T<T> a, in Vector2T<T> b) where T : INumber<T>
     {
-        throw new NotImplementedException();
+        Vector2T<T> res = a - b;
+        return Dot(res, res);
     }
 
     [MethodImpl(Options)]
     public static T Distance<T>(in Vector2T<T> a, in Vector2T<T> b) where T : INumber<T>, IRootFunctions<T>
     {
-        throw new NotImplementedException();
+        return T.Sqrt(DistanceSquared(a, b));
     }
 
     [MethodImpl(Options)]
     public static Vector2T<T> Lerp<T>(in Vector2T<T> a, in Vector2T<T> b, T amount) where T : INumber<T>
     {
         T x = EaselMath.Lerp(a.X, b.X, amount);
-        T y = EaselMath.Lerp(a.X, b.Y, amount);
+        T y = EaselMath.Lerp(a.Y, b.Y, amount);
         return new Vector2T<T>(x, y);
     }
 
@@ -210,14 +211,14 @@ public static class Vector2T
     public static Vector2T<T> Min<T>(in Vector2T<T> a, in Vector2T<T> b) where T : INumber<T>
     {
         T x = T.Min(a.X, b.X);
-        T y = T.Max(a.Y, b.Y);
+        T y = T.Min(a.Y, b.Y);
         return new Vector2T<T>(x, y);
     }
 
     [MethodImpl(Options)]
     public static Vector2T<T> Reflect<T>(in Vector2T<T> surface, in Vector2T<T> normal) where T : INumber<T>
     {
-        throw new NotImplementedException();
+        return surface - (T.CreateChecked(2) * Dot(surface, normal)) * normal;
     }
 
     [MethodImpl(Options)]
@@ -236,6 +237,18 @@ public static class Vector2T
 
     [MethodImpl(Options)]
     public static Vector2T<T> Transform<T>(in Vector2T<T> vector, in QuaternionT<T> quaternion) where T : INumber<T>
+    {
+        throw new NotImplementedException();
+    }
+    
+    [MethodImpl(Options)]
+    public static Vector2T<T> TransformNormal<T>(in Vector2T<T> vector, in MatrixT<T> matrix) where T : INumber<T>
+    {
+        throw new NotImplementedException();
+    }
+
+    [MethodImpl(Options)]
+    public static Vector2T<T> TransformNormal<T>(in Vector2T<T> vector, in QuaternionT<T> quaternion) where T : INumber<T>
     {
         throw new NotImplementedException();
     }

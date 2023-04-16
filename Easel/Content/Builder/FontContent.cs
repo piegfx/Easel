@@ -1,19 +1,25 @@
 using System.IO;
+using Easel.GUI;
 
 namespace Easel.Content.Builder;
 
 public struct FontContent : IContentType
 {
     public string Path { get; set; }
+
+    public FontOptions FontOptions;
     
     public FontContent() { }
 
-    public FontContent(string path)
+    public FontContent(string path) : this(path, new FontOptions()) { }
+    
+    public FontContent(string path, FontOptions options)
     {
         Path = path;
         FriendlyName = System.IO.Path
             .Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))
             .Replace('\\', '/');
+        FontOptions = options;
     }
 
     public string FriendlyName { get; set; }

@@ -11,13 +11,13 @@ public struct FontContent : IContentType
     
     public FontContent() { }
 
-    public FontContent(string path, FontOptions? options = null)
+    public FontContent(string path, FontOptions options)
     {
         Path = path;
         FriendlyName = System.IO.Path
             .Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path))
             .Replace('\\', '/');
-        FontOptions = options ?? new FontOptions();
+        FontOptions = options;
     }
 
     public string FriendlyName { get; set; }

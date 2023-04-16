@@ -79,12 +79,13 @@ public abstract class Scene : IDisposable
             Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
             camera.Tag = Tags.MainCamera;
             AddEntity(camera);
-        }
+        
 
-        Entity directionalLight = new Entity("Sun");
-        directionalLight.AddComponent(new DirectionalLight(new Vector2T<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
-            Color.White));
-        AddEntity(directionalLight);
+            Entity directionalLight = new Entity("Sun");
+            directionalLight.AddComponent(new DirectionalLight(new Vector2T<float>(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
+                Color.White));
+            AddEntity(directionalLight);
+        }
     }
 
     /// <summary>

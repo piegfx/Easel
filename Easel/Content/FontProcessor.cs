@@ -9,6 +9,6 @@ public class FontProcessor : IContentProcessor
     public object Load(string contentDir, IContentType contentType)
     {
         FontContent content = (FontContent) contentType;
-        return new Font(Path.Combine(contentDir, content.Path));
+        return new Font(Path.Combine(contentDir, content.Path), content.FontOptions);
     }
 }

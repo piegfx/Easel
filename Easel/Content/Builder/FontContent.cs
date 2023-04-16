@@ -11,6 +11,8 @@ public struct FontContent : IContentType
     
     public FontContent() { }
 
+    public FontContent(string path) : this(path, new FontOptions()) { }
+    
     public FontContent(string path, FontOptions options)
     {
         Path = path;

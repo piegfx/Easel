@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using Easel.Core;
 using Easel.Graphics.Materials;
+using Easel.Math;
 using Silk.NET.Assimp;
 using Material = Easel.Graphics.Materials.Material;
 
@@ -132,7 +133,7 @@ public unsafe class Model : IDisposable
             Silk.NET.Assimp.Mesh* mesh = scene->MMeshes[i];
 
             for (int v = 0; v < mesh->MNumVertices; v++)
-                vptnts.Add(new VertexPositionTextureNormalTangent(mesh->MVertices[v], mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals == null ? Vector3.Zero : mesh->MNormals[v], mesh->MTangents == null ? Vector3.Zero : mesh->MTangents[0]));
+                vptnts.Add(new VertexPositionTextureNormalTangent((Vector3T<float>) mesh->MVertices[v], (Vector2T<float>) mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals == null ? Vector3T<float>.Zero : (Vector3T<float>) mesh->MNormals[v], mesh->MTangents == null ? Vector3T<float>.Zero : (Vector3T<float>) mesh->MTangents[0]));
 
             for (int f = 0; f < mesh->MNumFaces; f++)
             {

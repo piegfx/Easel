@@ -30,7 +30,7 @@ public class Camera : Entity
             Matrix4x4 parent = Matrix4x4.Identity;
             if (Parent != null)
                 Matrix4x4.Invert(Parent.Transform.TransformMatrix, out parent);
-            return parent * Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
+            return parent * Matrix4x4.CreateLookAt((Vector3) Transform.Position, (Vector3) (Transform.Position + Transform.Forward), (Vector3) Transform.Up);
         }
     }
 
@@ -147,7 +147,7 @@ public class Camera : Entity
 
     #endregion
 
-    public Frustum<float> Frustum => new Frustum<float>((Matrix<float>) (ProjectionMatrix * ViewMatrix));
+    //public Frustum<float> Frustum => new Frustum<float>((Matrix<float>) (ProjectionMatrix * ViewMatrix));
 
     /// <summary>
     /// Create a new perspective camera for use in 3D scenes.

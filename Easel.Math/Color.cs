@@ -184,6 +184,8 @@ public struct Color
     {
         return "Color(R: " + Rb + ", G: " + Gb + ", B: " + Bb + ", A: " + Ab + ")";
     }
+    
+    #region Predefined colors
 
     /// <summary>
     /// AliceBlue has an RGBA value of (240, 248, 255, 255) (hex #F0F8FFFF)
@@ -929,4 +931,6 @@ public struct Color
     /// Transparent has an RGBA value of (0, 0, 0, 0) (hex #00000000)
     /// </summary>
     public static readonly Color Transparent = new Color(0x00000000);
+    
+    #endregion
 }

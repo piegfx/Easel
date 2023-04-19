@@ -28,7 +28,7 @@ public class Sprite : Component
     {
         base.Draw();
 
-        Graphics.Renderer.DrawSprite(new Graphics.Renderers.Sprite(Texture, Transform.Position, SourceRectangle,
-            Tint, Transform.SpriteRotation, (Vector2T<float>) Transform.Origin.ToVector2(), (Vector2T<float>) Transform.Scale.ToVector2(), Flip));
+        Graphics.Renderer.DrawSprite(new Graphics.Renderers.Sprite(Texture, (Vector3) Transform.Position, SourceRectangle,
+            Tint, Transform.SpriteRotation, Transform.Origin.XY, Transform.Scale.XY, Flip));
     }
 }

@@ -45,7 +45,7 @@ public class Skybox : IDisposable
         VertexPosition[] vps = new VertexPosition[vptnts.Length];
         for (int i = 0; i < vptnts.Length; i++)
         {
-            vps[i] = new VertexPosition(vptnts[i].Position);
+            vps[i] = new VertexPosition((Vector3) vptnts[i].Position);
         }
 
         _vertexBuffer = _device.CreateBuffer(BufferType.VertexBuffer, vps);

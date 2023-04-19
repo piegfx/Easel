@@ -2,13 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel", "Easel\Easel.csproj", "{41C71ED6-7B5C-4F42-B34A-243101998E74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Windowing", "Pie\Pie.Windowing\Pie.Windowing.csproj", "{0763205F-C44B-4804-AB13-E6FC75A3D1FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Windowing", "Pie\src\Pie.Windowing\Pie.Windowing.csproj", "{0763205F-C44B-4804-AB13-E6FC75A3D1FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie", "Pie\Pie\Pie.csproj", "{84440321-78F2-4870-9E4D-18CD026DD4E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie", "Pie\src\Pie\Pie.csproj", "{84440321-78F2-4870-9E4D-18CD026DD4E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Utils", "Pie\Pie.Utils\Pie.Utils.csproj", "{14D10AC7-D613-442F-8FF5-9E8184FC964F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Utils", "Pie\src\Pie.Utils\Pie.Utils.csproj", "{14D10AC7-D613-442F-8FF5-9E8184FC964F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj", "{3C967AC6-FDD3-441D-93BE-1AD69D68BAED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj", "{3C967AC6-FDD3-441D-93BE-1AD69D68BAED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
 EndProject
@@ -26,9 +26,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Math", "Easel.Math\Ea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Graphics", "Easel.Graphics\Easel.Graphics.csproj", "{9224D18E-6D8B-431C-B3FF-63F739197AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Text", "Pie\Pie.Text\Pie.Text.csproj", "{50307C92-84AB-409B-AE90-EE44341D3D37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Text", "Pie\src\Pie.Text\Pie.Text.csproj", "{50307C92-84AB-409B-AE90-EE44341D3D37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\Pie.Audio\Pie.Audio.csproj", "{DA4F7C25-CD35-4441-997C-F672BEF97337}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\src\Pie.Audio\Pie.Audio.csproj", "{DA4F7C25-CD35-4441-997C-F672BEF97337}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

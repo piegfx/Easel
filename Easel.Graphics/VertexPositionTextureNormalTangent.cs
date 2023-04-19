@@ -1,15 +1,16 @@
 using System.Numerics;
+using Easel.Math;
 
 namespace Easel.Graphics;
 
 public struct VertexPositionTextureNormalTangent
 {
-    public Vector3 Position;
-    public Vector2 TexCoords;
-    public Vector3 Normals;
-    public Vector3 Tangents;
+    public Vector3T<float> Position;
+    public Vector2T<float> TexCoords;
+    public Vector3T<float> Normals;
+    public Vector3T<float> Tangents;
 
-    public VertexPositionTextureNormalTangent(Vector3 position, Vector2 texCoords, Vector3 normals, Vector3 tangents)
+    public VertexPositionTextureNormalTangent(Vector3T<float> position, Vector2T<float> texCoords, Vector3T<float> normals, Vector3T<float> tangents)
     {
         Position = position;
         TexCoords = texCoords;

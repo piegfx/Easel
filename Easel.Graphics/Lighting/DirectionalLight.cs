@@ -2,15 +2,13 @@ using System;
 using System.Numerics;
 using Easel.Graphics.Renderers.Structs;
 using Easel.Math;
-using Vector3 = System.Numerics.Vector3;
-using Vector4 = System.Numerics.Vector4;
 
 namespace Easel.Graphics.Lighting;
 
 public struct DirectionalLight
 {
     private Vector2T<float> _direction;
-    private Vector3 _position;
+    private Vector3T<float> _position;
 
     private Matrix4x4 _projection;
     private Matrix4x4 _view;
@@ -23,7 +21,7 @@ public struct DirectionalLight
             _direction = value;
             float theta = -value.Y;
             float phi = value.X;
-            _position = new Vector3(MathF.Cos(phi) * MathF.Cos(theta), MathF.Cos(phi) * MathF.Sin(theta),
+            _position = new Vector3T<float>(MathF.Cos(phi) * MathF.Cos(theta), MathF.Cos(phi) * MathF.Sin(theta),
                 MathF.Sin(phi));
         }
     }

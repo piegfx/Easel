@@ -102,6 +102,16 @@ public class Entity : InheritableEntity, IDisposable
         }
     }
 
+    protected internal virtual void AfterUpdate()
+    {
+        for (int i = 0; i < _componentCount; i++)
+        {
+            if (!_components[i].Enabled)
+                continue;
+            _components[i].AfterUpdate();
+        }
+    }
+
     protected internal virtual void Draw()
     {
         for (int i = 0; i < _componentCount; i++)

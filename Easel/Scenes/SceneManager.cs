@@ -42,6 +42,11 @@ public static class SceneManager
         _activeScene?.Update();
     }
 
+    internal static void AfterUpdate()
+    {
+        _activeScene?.AfterUpdate();
+    }
+
     internal static void Draw()
     {
         if (_activeScene != null)

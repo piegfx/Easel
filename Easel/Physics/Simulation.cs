@@ -34,4 +34,9 @@ public class Simulation
         PhysicsSystem.Init(1024, 0, 1024, 1024, _broadPhaseInterface, _objectVsBroadPhase, _objectLayerPair);
         PhysicsSystem.Gravity = initSettings.Gravity;
     }
+
+    public void Timestep(float deltaTime)
+    {
+        PhysicsSystem.Update(deltaTime, 1, 1, _allocator, _jobSystem);
+    }
 }

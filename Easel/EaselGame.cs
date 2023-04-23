@@ -239,6 +239,7 @@ public class EaselGame : IDisposable
             Metrics.Update();
             UI.Update();
             Update();
+            AfterUpdate();
             Draw();
             UI.Draw(GraphicsInternal.SpriteRenderer);
             if (ShowMetrics)
@@ -257,6 +258,7 @@ public class EaselGame : IDisposable
             sw.Reset();
             Time.Update();
             Update();
+            AfterUpdate();
             Draw();
         }
 #endif
@@ -286,6 +288,7 @@ public class EaselGame : IDisposable
 
     protected virtual void AfterUpdate()
     {
+        Simulation.Timestep(1 / 60f);
         SceneManager.AfterUpdate();
     }
 

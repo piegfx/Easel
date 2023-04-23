@@ -14,8 +14,7 @@ public class TestGame : EaselGame
 
     protected override void Initialize()
     {
-        if (!IsServer)
-            ImGuiRenderer = new ImGuiRenderer();
+        ImGuiRenderer = new ImGuiRenderer();
 
         base.Initialize();
     }

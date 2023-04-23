@@ -60,8 +60,6 @@ public class EaselGame : IDisposable
     
     public bool ShowMetrics;
 
-    public bool IsServer => _settings.Server;
-
     private ConcurrentBag<Action> _actions;
 
     /// <summary>
@@ -113,76 +111,72 @@ public class EaselGame : IDisposable
         Logger.Info("\tMemory: " + SystemInfo.MemoryInfo);
         Logger.Info("\tLogical threads: " + SystemInfo.LogicalThreads);
         Logger.Info("\tOS: " + Environment.OSVersion.VersionString);
+        
+        _settings.Icon ??=
+            new Bitmap(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.EaselLogo.png"));
 
-        if (!IsServer)
+        Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height,
+            _settings.Icon.Data);
+
+        System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
+        if (size.Width == -1 && size.Height == -1)
+            size = Monitor.PrimaryMonitor.VideoMode.Size;
+
+        WindowSettings settings = new WindowSettings()
         {
+            Size = size,
+            Title = _settings.Title,
+            Border = _settings.Border,
+            EventDriven = false,
+            Icons = new[] { icon },
+            StartVisible = false
+        };
 
-            _settings.Icon ??=
-                new Bitmap(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.EaselLogo.png"));
+        GraphicsDeviceOptions options = new GraphicsDeviceOptions();
 
-            Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height,
-                _settings.Icon.Data);
-
-            System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
-            if (size.Width == -1 && size.Height == -1)
-                size = Monitor.PrimaryMonitor.VideoMode.Size;
-
-            WindowSettings settings = new WindowSettings()
-            {
-                Size = size,
-                Title = _settings.Title,
-                Border = _settings.Border,
-                EventDriven = false,
-                Icons = new[] { icon },
-                StartVisible = false
-            };
-
-            GraphicsDeviceOptions options = new GraphicsDeviceOptions();
-
-            if (_settings.RenderOptions.GraphicsDebugging)
-            {
-                Logger.Info("Graphics debugging enabled.");
-                options.Debug = true;
-            }
-
-            Logger.Debug($"Checking for {EnvVars.ForceApi}...");
-            string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);
-            GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
-            if (apistr != null)
-            {
-                Logger.Debug($"{EnvVars.ForceApi} environment variable set. Attempting to use \"{apistr}\".");
-                if (!Enum.TryParse(apistr, true, out GraphicsApi potApi))
-                    Logger.Warn($"Could not parse API \"{apistr}\", reverting back to default API.");
-                else
-                    api = potApi;
-            }
-
-            if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
-                settings.Title += " - Easel";
-            if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
-                settings.Title += " - " + api.ToFriendlyString();
-            if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
-                settings.Title += " - 0 FPS";
-
-            Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
-
-            Logger.Debug("Creating window...");
-            PieLog.DebugLog += PieDebug;
-            Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
-            Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
-            Window.Visible = _settings.StartVisible;
-
-            Logger.Debug("Creating graphics device...");
-            GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
-            GraphicsInternal.VSync = _settings.VSync;
-            Window.Resize += WindowOnResize;
-
-            Logger.Debug("Creating audio device...");
-            AudioInternal = new EaselAudio();
-
-            Logger.Debug("Initializing input...");
-            Input.Initialize(Window);
+        if (_settings.RenderOptions.GraphicsDebugging)
+        {
+            Logger.Info("Graphics debugging enabled.");
+            options.Debug = true;
         }
+
+        Logger.Debug($"Checking for {EnvVars.ForceApi}...");
+        string? apistr = Environment.GetEnvironmentVariable(EnvVars.ForceApi);
+        GraphicsApi api = _settings.Api ?? GraphicsDevice.GetBestApiForPlatform();
+        if (apistr != null)
+        {
+            Logger.Debug($"{EnvVars.ForceApi} environment variable set. Attempting to use \"{apistr}\".");
+            if (!Enum.TryParse(apistr, true, out GraphicsApi potApi))
+                Logger.Warn($"Could not parse API \"{apistr}\", reverting back to default API.");
+            else
+                api = potApi;
+        }
+
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
+            settings.Title += " - Easel";
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
+            settings.Title += " - " + api.ToFriendlyString();
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
+            settings.Title += " - 0 FPS";
+
+        Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
+
+        Logger.Debug("Creating window...");
+        PieLog.DebugLog += PieDebug;
+        Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
+        Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
+        Window.Visible = _settings.StartVisible;
+
+        Logger.Debug("Creating graphics device...");
+        GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
+        GraphicsInternal.VSync = _settings.VSync;
+        Window.Resize += WindowOnResize;
+
+        Logger.Debug("Creating audio device...");
+        AudioInternal = new EaselAudio();
+
+        Logger.Debug("Initializing input...");
+        Input.Initialize(Window);
 
         Logger.Debug("Initializing time...");
         Time.Initialize();
@@ -210,41 +204,26 @@ public class EaselGame : IDisposable
         Initialize();
 
         SpinWait sw = new SpinWait();
-
-        if (IsServer)
+        
+        while (!Window.ShouldClose)
         {
-            while (!_shouldClose)
+            if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
             {
-                if (_targetFrameTime != 0 && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
-                    continue;
-                
-                Time.Update();
-                Update();
+                sw.SpinOnce();
+                continue;
             }
-        }
-        else
-        {
 
-            while (!Window.ShouldClose)
-            {
-                if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
-                {
-                    sw.SpinOnce();
-                    continue;
-                }
-
-                sw.Reset();
-                Input.Update(Window);
-                Time.Update();
-                Metrics.Update();
-                UI.Update();
-                Update();
-                Draw();
-                UI.Draw(GraphicsInternal.SpriteRenderer);
-                if (ShowMetrics)
-                    DrawMetrics();
-                GraphicsInternal.Present();
-            }
+            sw.Reset();
+            Input.Update(Window);
+            Time.Update();
+            Metrics.Update();
+            UI.Update();
+            Update();
+            Draw();
+            UI.Draw(GraphicsInternal.SpriteRenderer);
+            if (ShowMetrics)
+                DrawMetrics();
+            GraphicsInternal.Present();
         }
 
         Logger.Debug("Close requested, shutting down...");
@@ -308,10 +287,7 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Close()
     {
-        if (IsServer)
-            _shouldClose = true;
-        else
-            Window.ShouldClose = true;
+        Window.ShouldClose = true;
     }
 
     /// <summary>

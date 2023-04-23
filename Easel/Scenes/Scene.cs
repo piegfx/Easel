@@ -77,14 +77,20 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
+#if !HEADLESS
         Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
+#else 
+        Size<int> size = Size<int>.Zero;
+#endif
         Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
         camera.Tag = Tags.MainCamera;
         AddEntity(camera);
 
         Entity directionalLight = new Entity("Sun");
+#if !HEADLESS
         directionalLight.AddComponent(new DirectionalLight(new Vector2(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
             Color.White));
+#endif
         AddEntity(directionalLight);
     }
 
@@ -113,13 +119,14 @@ public abstract class Scene : IDisposable
             entity.AfterUpdate();
         }
     }
-
+    
     /// <summary>
     /// Called once per frame during draw. Where the base function is called will determine when entities in the scene
     /// are drawn.
     /// </summary>
     protected internal virtual void Draw()
     {
+#if !HEADLESS
         Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
         Graphics.Renderer.NewFrame();
 
@@ -162,6 +169,8 @@ public abstract class Scene : IDisposable
         }
         
         Graphics.Renderer.DoneFrame();
+
+#endif
     }
 
     /// <summary>

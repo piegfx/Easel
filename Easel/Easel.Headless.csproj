@@ -33,5 +33,10 @@
         <Compile Remove="Entities\Components\NoClipCamera.cs" />
         <Compile Remove="Entities\Components\Sprite.cs" />
     </ItemGroup>
+    
+    <!-- Must include this package in Headless as well otherwise Rider decides it doesn't want to work and throws a tantrum -->
+    <ItemGroup>
+      <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
+    </ItemGroup>
 
 </Project>

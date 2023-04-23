@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using Easel.Math;
 using Pie.Windowing;
-using Silk.NET.GLFW;
 using MouseButton = Pie.Windowing.MouseButton;
 
 namespace Easel;

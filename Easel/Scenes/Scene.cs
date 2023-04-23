@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Easel.Audio;
-using Easel.Content;
 using Easel.Core;
 using Easel.Entities;
 using Easel.Entities.Components;
+using Easel.Math;
+#if !HEADLESS
+using Easel.Audio;
+using Easel.Content;
 using Easel.Graphics;
 using Easel.Graphics.Lighting;
-using Easel.Math;
 using Pie;
 using DirectionalLight = Easel.Entities.Components.DirectionalLight;
+#endif
 
 namespace Easel.Scenes;
 
@@ -41,6 +43,7 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected EaselGame Game => EaselGame.Instance;
 
+#if !HEADLESS
     /// <summary>
     /// The current <see cref="EaselGraphics"/> instance.
     /// </summary>
@@ -52,6 +55,7 @@ public abstract class Scene : IDisposable
     protected EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected ContentManager Content => EaselGame.Instance.Content;
+#endif
 
     /// <summary>
     /// Create a new scene.

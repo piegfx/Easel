@@ -1,9 +1,11 @@
-using Easel.Audio;
-using Easel.Content;
 using Easel.Entities;
 using Easel.Entities.Components;
-using Easel.Graphics;
 using Easel.Scenes;
+#if !HEADLESS
+using Easel.Audio;
+using Easel.Content;
+using Easel.Graphics;
+#endif
 
 namespace Easel.Interfaces;
 
@@ -18,15 +20,11 @@ public abstract class InheritableEntity
     /// </summary>
     protected abstract EaselGame Game { get; }
     
+#if !HEADLESS
     /// <summary>
     /// The current <see cref="EaselGraphics"/> instance.
     /// </summary>
     protected abstract EaselGraphics Graphics { get; }
-    
-    /// <summary>
-    /// The currently active <see cref="Scene"/>.
-    /// </summary>
-    protected abstract Scene ActiveScene { get; }
     
     /// <summary>
     /// The current <see cref="AudioDevice"/> instance.
@@ -34,6 +32,12 @@ public abstract class InheritableEntity
     protected abstract EaselAudio Audio { get; }
     
     protected abstract ContentManager Content { get; }
+#endif
+    
+    /// <summary>
+    /// The currently active <see cref="Scene"/>.
+    /// </summary>
+    protected abstract Scene ActiveScene { get; }
 
     /// <summary>
     /// Add an entity to the current scene.

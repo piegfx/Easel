@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Easel.Audio;
-using Easel.Content;
 using Easel.Core;
 using Easel.Entities.Components;
-using Easel.Graphics;
 using Easel.Interfaces;
 using Easel.Scenes;
+#if !HEADLESS
+using Easel.Audio;
+using Easel.Content;
+using Easel.Graphics;
+#endif
 
 namespace Easel.Entities;
 
@@ -20,13 +22,15 @@ public class Entity : InheritableEntity, IDisposable
 {
     protected override EaselGame Game => EaselGame.Instance;
 
+#if !HEADLESS
     protected override EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
-
-    protected override Scene ActiveScene => SceneManager.ActiveScene;
-
+    
     protected override EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected override ContentManager Content => EaselGame.Instance.Content;
+#endif
+
+    protected override Scene ActiveScene => SceneManager.ActiveScene;
 
     /// <summary>
     /// The parent of this entity, if any.

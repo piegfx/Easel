@@ -6,6 +6,7 @@
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefineConstants>$(DefineConstants);HEADLESS</DefineConstants>
+        <RootNamespace>Easel</RootNamespace>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -21,9 +22,16 @@
         <Compile Remove="Audio\**\*" />
         <Compile Remove="Content\**\*" />
         <Compile Remove="GUI\**\*" />
+        <Compile Remove="Formats\**\*" />
         
         <Compile Remove="Metrics.cs" />
         <Compile Remove="Input.cs" />
+        
+        <Compile Remove="Entities\Camera.cs" />
+        <Compile Remove="Entities\Components\DirectionalLight.cs" />
+        <Compile Remove="Entities\Components\ModelRenderer.cs" />
+        <Compile Remove="Entities\Components\NoClipCamera.cs" />
+        <Compile Remove="Entities\Components\Sprite.cs" />
     </ItemGroup>
 
 </Project>

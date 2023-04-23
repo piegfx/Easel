@@ -1,19 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Easel.Graphics;
 using Easel.Graphics.Primitives;
 using Easel.Graphics.Renderers;
-using Easel.Math;
-using Pie;
-using Pie.Utils;
-using Silk.NET.Assimp;
 using Material = Easel.Graphics.Materials.Material;
 using Mesh = Easel.Graphics.Mesh;
-using Texture = Pie.Texture;
-using TextureType = Silk.NET.Assimp.TextureType;
 
 namespace Easel.Entities.Components;
 

@@ -1,5 +1,6 @@
 using Easel.Entities;
 using Easel.Entities.Components;
+using Easel.Physics;
 using Easel.Scenes;
 #if !HEADLESS
 using Easel.Audio;
@@ -19,6 +20,8 @@ public abstract class InheritableEntity
     /// The current <see cref="EaselGame"/> instance.
     /// </summary>
     protected abstract EaselGame Game { get; }
+
+    protected abstract Simulation Simulation { get; }
     
 #if !HEADLESS
     /// <summary>

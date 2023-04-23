@@ -50,6 +50,11 @@ public static class SceneManager
     {
         _activeScene?.AfterUpdate();
     }
+    
+    internal static void FixedUpdate()
+    {
+        _activeScene?.FixedUpdate();
+    }
 
     internal static void Draw()
     {

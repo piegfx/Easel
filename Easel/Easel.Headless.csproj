@@ -36,7 +36,6 @@
     
     <!-- Must include this package in Headless as well otherwise Rider decides it doesn't want to work and throws a tantrum -->
     <ItemGroup>
-      <PackageReference Include="JoltPhysicsSharp" Version="1.6.1" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
 

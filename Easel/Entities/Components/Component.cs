@@ -1,5 +1,6 @@
 ﻿using System;
 using Easel.Interfaces;
+using Easel.Physics;
 using Easel.Scenes;
 #if !HEADLESS
 using Easel.Audio;
@@ -17,7 +18,9 @@ public abstract class Component : InheritableEntity, IDisposable
     public bool Enabled;
 
     protected override EaselGame Game => EaselGame.Instance;
-    
+
+    protected override Simulation Simulation => EaselGame.Instance.Simulation;
+
 #if !HEADLESS
     protected override EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
     
@@ -52,6 +55,8 @@ public abstract class Component : InheritableEntity, IDisposable
     protected internal virtual void Update() { }
 
     protected internal virtual void AfterUpdate() { }
+
+    protected internal virtual void FixedUpdate() { }
 
     /// <summary>
     /// Called once per frame during draw.

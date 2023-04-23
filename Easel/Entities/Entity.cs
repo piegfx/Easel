@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Easel.Core;
 using Easel.Entities.Components;
 using Easel.Interfaces;
+using Easel.Physics;
 using Easel.Scenes;
 #if !HEADLESS
 using Easel.Audio;
@@ -21,6 +22,8 @@ namespace Easel.Entities;
 public class Entity : InheritableEntity, IDisposable
 {
     protected override EaselGame Game => EaselGame.Instance;
+
+    protected override Simulation Simulation => EaselGame.Instance.Simulation;
 
 #if !HEADLESS
     protected override EaselGraphics Graphics => EaselGame.Instance.GraphicsInternal;
@@ -113,6 +116,16 @@ public class Entity : InheritableEntity, IDisposable
             if (!_components[i].Enabled)
                 continue;
             _components[i].AfterUpdate();
+        }
+    }
+    
+    protected internal virtual void FixedUpdate()
+    {
+        for (int i = 0; i < _componentCount; i++)
+        {
+            if (!_components[i].Enabled)
+                continue;
+            _components[i].FixedUpdate();
         }
     }
 

@@ -238,6 +238,9 @@ public class EaselGame : IDisposable
             Time.Update();
             Metrics.Update();
             UI.Update();
+            // TODO: Fixed update on separate thread/improved render loop?
+            // For now fixed update just runs before every update cycle.
+            FixedUpdate();
             Update();
             AfterUpdate();
             Draw();
@@ -257,6 +260,7 @@ public class EaselGame : IDisposable
 
             sw.Reset();
             Time.Update();
+            FixedUpdate();
             Update();
             AfterUpdate();
             Draw();
@@ -288,8 +292,13 @@ public class EaselGame : IDisposable
 
     protected virtual void AfterUpdate()
     {
-        Simulation.Timestep(1 / 60f);
         SceneManager.AfterUpdate();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        Simulation.Timestep(1 / 60f);
+        SceneManager.FixedUpdate();
     }
 
     /// <summary>

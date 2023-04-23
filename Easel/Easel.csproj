@@ -21,10 +21,10 @@
       <ProjectReference Include="..\Pie\src\Pie.Utils\Pie.Utils.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\Pie\src\Pie\Pie.csproj" />
+      <ProjectReference Include="..\..\..\C++\JoltPhysicsSharp\src\JoltPhysicsSharp\JoltPhysicsSharp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="JoltPhysicsSharp" Version="1.6.1" />
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
     </ItemGroup>
 

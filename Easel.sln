@@ -10,11 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Utils", "Pie\src\Pie.Ut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj", "{3C967AC6-FDD3-441D-93BE-1AD69D68BAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletSharp.DotNetCore", "BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj", "{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Physics", "Easel.Physics\Easel.Physics.csproj", "{06B18F63-DF52-4134-9CD5-834585D6D62A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Tests", "Easel.Tests\Easel.Tests.csproj", "{329A244A-9B04-4312-8173-5B2A82D1830F}"
 EndProject
@@ -60,10 +56,6 @@ Global
 		{EEC48DAA-F3DA-4677-8C8A-8865516329FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEC48DAA-F3DA-4677-8C8A-8865516329FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEC48DAA-F3DA-4677-8C8A-8865516329FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6388DBE6-D5A3-4ABA-B5A5-D76932EC20D3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{256A2222-A3F2-4678-B39A-98625AE3B274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{256A2222-A3F2-4678-B39A-98625AE3B274}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{256A2222-A3F2-4678-B39A-98625AE3B274}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,10 +64,6 @@ Global
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06B18F63-DF52-4134-9CD5-834585D6D62A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{329A244A-9B04-4312-8173-5B2A82D1830F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{329A244A-9B04-4312-8173-5B2A82D1830F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{329A244A-9B04-4312-8173-5B2A82D1830F}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -246,6 +246,7 @@ public class EaselGame : IDisposable
         SceneManager.Update();
         AudioEffect.Update();
     }
+    
 
     /// <summary>
     /// Gets called on game draw. Where you call the base function will determine when Easel draws the current scene,

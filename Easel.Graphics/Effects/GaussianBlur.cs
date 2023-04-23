@@ -49,19 +49,19 @@ public class GaussianBlur : IDisposable
 
         renderer.Begin(blendState: BlendState.DisabledRgbMask);
 
-        renderer.Draw(Texture, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
+        renderer.Draw(Texture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
         
         renderer.End();
 
         for (int i = 0; i < Iterations; i++)
         {
             float radius = (Iterations - i - 1) * Radius;
-            Vector2T<float> direction = i % 2 == 0 ? new Vector2T<float>(radius, 0) : new Vector2T<float>(0, radius);
+            Vector2 direction = i % 2 == 0 ? new Vector2(radius, 0) : new Vector2(0, radius);
             
             graphics.SetRenderTarget(_target2);
             renderer.Begin(effect: _effect, blendState: BlendState.Disabled);
 
-            renderer.Draw(_target, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One,
+            renderer.Draw(_target, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One,
                 meta1: new Vector4((System.Numerics.Vector2) direction, _target.Size.Width, _target.Size.Height));
             
             renderer.End();

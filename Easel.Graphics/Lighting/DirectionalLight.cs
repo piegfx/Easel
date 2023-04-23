@@ -7,13 +7,13 @@ namespace Easel.Graphics.Lighting;
 
 public struct DirectionalLight
 {
-    private Vector2T<float> _direction;
-    private Vector3T<float> _position;
+    private Vector2 _direction;
+    private Vector3 _position;
 
     private Matrix4x4 _projection;
     private Matrix4x4 _view;
 
-    public Vector2T<float> Direction
+    public Vector2 Direction
     {
         get => _direction;
         set
@@ -21,7 +21,7 @@ public struct DirectionalLight
             _direction = value;
             float theta = -value.Y;
             float phi = value.X;
-            _position = new Vector3T<float>(MathF.Cos(phi) * MathF.Cos(theta), MathF.Cos(phi) * MathF.Sin(theta),
+            _position = new Vector3(MathF.Cos(phi) * MathF.Cos(theta), MathF.Cos(phi) * MathF.Sin(theta),
                 MathF.Sin(phi));
         }
     }
@@ -30,7 +30,7 @@ public struct DirectionalLight
 
     public ShadowMap ShadowMap;
 
-    public DirectionalLight(Vector2T<float> direction, Color color, int numShadowCascades = 4)
+    public DirectionalLight(Vector2 direction, Color color, int numShadowCascades = 0)
     {
         Direction = direction;
         Color = color;

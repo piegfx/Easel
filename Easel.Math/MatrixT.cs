@@ -68,10 +68,10 @@ public struct MatrixT<T> where T : INumber<T>
         Row3 = row3;
     }
 
-    public static MatrixT<T> operator *(MatrixT<T> left, MatrixT<T> right)
+    /*public static MatrixT<T> operator *(MatrixT<T> left, MatrixT<T> right)
     {
         
-    }
+    }*/
 }
 
 public static class MatrixT

@@ -59,7 +59,7 @@ public class TestShadow : Scene
             MoveSpeed = 5
         });
 
-        GetEntity("Sun").GetComponent<DirectionalLight>().Direction = new Vector2T<float>(0, 1);
+        GetEntity("Sun").GetComponent<DirectionalLight>().Direction = new Vector2(0, 1);
 
         Texture2D texture2D = Content.Load<Texture2D>("Texture");
         _model = Content.Load<Model>("Fox");

@@ -38,7 +38,7 @@ public class Test3D : Scene
         Bitmap back = Content.Load<Bitmap>("back");
         Camera.Main.Skybox = new Skybox(right, left, top, bottom, front, back);
         Camera.Main.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(20), 0, 0);
-        Camera.Main.Viewport = new Vector4T<float>(0, 0, 0.5f, 1f);
+        Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);
         Camera.Main.AddComponent(new NoClipCamera()
         {
             MoveSpeed = 10
@@ -55,7 +55,7 @@ public class Test3D : Scene
         //second.Skybox = new Skybox(awesomeface, awesomeface, awesomeface, awesomeface, awesomeface, awesomeface);
         second.Skybox = Camera.Main.Skybox;
         second.Tag = Tags.MainCamera;
-        second.Viewport = new Vector4T<float>(0.5f, 0, 1.0f, 0.5f);
+        second.Viewport = new Vector4(0.5f, 0, 1.0f, 0.5f);
         AddEntity(second);
 
         Camera third = new Camera("third", EaselMath.ToRadians(75), 640 / 360f);
@@ -65,7 +65,7 @@ public class Test3D : Scene
         // TODO: Better camera solution than forcing every camera to use main camera tag.
         third.Tag = Tags.MainCamera;
         third.Skybox = Camera.Main.Skybox;
-        third.Viewport = new Vector4T<float>(0.5f, 0.5f, 1.0f, 1.0f);
+        third.Viewport = new Vector4(0.5f, 0.5f, 1.0f, 1.0f);
         AddEntity(third);
 
         Entity entity = new Entity(null, new Transform()

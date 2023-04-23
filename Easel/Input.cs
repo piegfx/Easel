@@ -109,12 +109,12 @@ public static class Input
     /// <summary>
     /// Get the current mouse position relative to the view (top left = 0, 0)
     /// </summary>
-    public static Vector2T<float> MousePosition { get; private set; }
+    public static Vector2 MousePosition { get; private set; }
     
     /// <summary>
     /// Returns the number of pixels the mouse has moved since the last frame.
     /// </summary>
-    public static Vector2T<float> DeltaMousePosition { get; private set; }
+    public static Vector2 DeltaMousePosition { get; private set; }
 
     private static MouseState _currentMouseState;
     private static bool _mouseStateChanged;
@@ -132,7 +132,7 @@ public static class Input
         }
     }
     
-    public static Vector2T<float> ScrollWheelDelta { get; private set; }
+    public static Vector2 ScrollWheelDelta { get; private set; }
 
     public static void CreateScene(string name, InputSceneOptions options)
     {
@@ -150,7 +150,7 @@ public static class Input
         window.Scroll += WindowOnScroll;
 
         InputState state = window.ProcessEvents();
-        MousePosition = (Vector2T<float>) state.MousePosition;
+        MousePosition = (Vector2) state.MousePosition;
     }
 
     internal static void Update(Window window)
@@ -158,11 +158,11 @@ public static class Input
         _newKeys.Clear();
         _newMouseButtons.Clear();
         
-        ScrollWheelDelta = Vector2T<float>.Zero;
+        ScrollWheelDelta = Vector2.Zero;
 
         InputState state = window.ProcessEvents();
-        DeltaMousePosition = (Vector2T<float>) state.MousePosition - MousePosition;
-        MousePosition = (Vector2T<float>) state.MousePosition;
+        DeltaMousePosition = (Vector2) state.MousePosition - MousePosition;
+        MousePosition = (Vector2) state.MousePosition;
 
         if (_mouseStateChanged)
         {
@@ -197,7 +197,7 @@ public static class Input
     
     private static void WindowOnScroll(System.Numerics.Vector2 scroll)
     {
-        ScrollWheelDelta += (Vector2T<float>) scroll;
+        ScrollWheelDelta += (Vector2) scroll;
     }
     
     public struct InputSceneOptions
@@ -279,34 +279,34 @@ public static class Input
             return Input.MouseButtonPressed(button);
         }
 
-        public Vector2T<float> MousePosition
+        public Vector2 MousePosition
         {
             get
             {
                 if (Name != Input.CurrentScene)
-                    return Vector2T<float>.Zero;
+                    return Vector2.Zero;
 
                 return Input.MousePosition;
             }
         }
         
-        public Vector2T<float> DeltaMousePosition
+        public Vector2 DeltaMousePosition
         {
             get
             {
                 if (Name != Input.CurrentScene)
-                    return Vector2T<float>.Zero;
+                    return Vector2.Zero;
 
                 return Input.DeltaMousePosition;
             }
         }
         
-        public Vector2T<float> ScrollWheelDelta
+        public Vector2 ScrollWheelDelta
         {
             get
             {
                 if (Name != Input.CurrentScene)
-                    return Vector2T<float>.Zero;
+                    return Vector2.Zero;
 
                 return Input.ScrollWheelDelta;
             }

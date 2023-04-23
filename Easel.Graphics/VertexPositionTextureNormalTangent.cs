@@ -5,12 +5,12 @@ namespace Easel.Graphics;
 
 public struct VertexPositionTextureNormalTangent
 {
-    public Vector3T<float> Position;
-    public Vector2T<float> TexCoords;
-    public Vector3T<float> Normals;
-    public Vector3T<float> Tangents;
+    public Vector3 Position;
+    public Vector2 TexCoords;
+    public Vector3 Normals;
+    public Vector3 Tangents;
 
-    public VertexPositionTextureNormalTangent(Vector3T<float> position, Vector2T<float> texCoords, Vector3T<float> normals, Vector3T<float> tangents)
+    public VertexPositionTextureNormalTangent(Vector3 position, Vector2 texCoords, Vector3 normals, Vector3 tangents)
     {
         Position = position;
         TexCoords = texCoords;

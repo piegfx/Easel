@@ -9,7 +9,7 @@ namespace Easel.Tests.TestScenes;
 
 public class TestGameScene : Scene
 {
-    private Vector2T<float> _velocity;
+    private Vector2 _velocity;
     
     protected override void Initialize()
     {

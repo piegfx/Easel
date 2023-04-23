@@ -1,4 +1,5 @@
-﻿using Easel.Graphics.Renderers;
+﻿using System.Numerics;
+using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie.Windowing;
 
@@ -36,7 +37,7 @@ public abstract class UIElement
     {
         CalculatedScreenPos = Position.CalculatePosition(viewport, Size);
 
-        Vector2T<float> mousePosition = Input.MousePosition;
+        Vector2 mousePosition = Input.MousePosition;
 
         if (!mouseCaptured &&
             mousePosition.X >= CalculatedScreenPos.X && mousePosition.X < CalculatedScreenPos.X + Size.Width &&

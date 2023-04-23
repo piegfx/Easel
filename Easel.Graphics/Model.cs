@@ -133,7 +133,7 @@ public unsafe class Model : IDisposable
             Silk.NET.Assimp.Mesh* mesh = scene->MMeshes[i];
 
             for (int v = 0; v < mesh->MNumVertices; v++)
-                vptnts.Add(new VertexPositionTextureNormalTangent((Vector3T<float>) mesh->MVertices[v], (Vector2T<float>) mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals == null ? Vector3T<float>.Zero : (Vector3T<float>) mesh->MNormals[v], mesh->MTangents == null ? Vector3T<float>.Zero : (Vector3T<float>) mesh->MTangents[0]));
+                vptnts.Add(new VertexPositionTextureNormalTangent((Vector3) mesh->MVertices[v], (Vector2) mesh->MTextureCoords[0][v].ToVector2(), mesh->MNormals == null ? Vector3.Zero : (Vector3) mesh->MNormals[v], mesh->MTangents == null ? Vector3.Zero : (Vector3) mesh->MTangents[0]));
 
             for (int f = 0; f < mesh->MNumFaces; f++)
             {

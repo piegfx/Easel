@@ -105,7 +105,7 @@ public sealed class ForwardRenderer : IRenderer
         
         graphics.Clear(Color.Black);
         graphics.SpriteRenderer.Begin(blendState: BlendState.DisabledRgbMask /*effect: _postProcessEffect*/);
-        graphics.SpriteRenderer.Draw(MainTarget, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero, Vector2T<float>.One);
+        graphics.SpriteRenderer.Draw(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One);
         graphics.SpriteRenderer.End();
     }
 
@@ -228,7 +228,7 @@ public sealed class ForwardRenderer : IRenderer
         for (int i = 0; i < _opaqueSprites.Count; i++)
         {
             Sprite sprite = _opaqueSprites[i];
-            graphics.SpriteRenderer.Draw(sprite.Texture, new Vector2T<float>(sprite.Position.X, sprite.Position.Y),
+            graphics.SpriteRenderer.Draw(sprite.Texture, new Vector2(sprite.Position.X, sprite.Position.Y),
                 sprite.Source, sprite.Tint, sprite.Rotation, sprite.Origin, sprite.Scale, sprite.Flip);
         }
         

@@ -13,16 +13,21 @@ using Pie.Windowing;*/
 
 using System;
 using System.Numerics;
+using Easel;
+using Easel.Core;
 using Easel.Math;
+using Easel.Tests;
+using Easel.Tests.TestScenes;
+using Pie.Windowing;
 
-const float amount = 0.6532f;
+/*const float amount = 0.6532f;
 
 Console.WriteLine("Vector2------------------------------------------------------------------------------------------");
 
 Vector2 numericsVector2 = new Vector2(-13, 20.4f);
 Vector2 numericsVector22 = new Vector2(10.5f, -3.2f);
-Vector2T<float> easelVector2 = new Vector2T<float>(-13, 20.4f);
-Vector2T<float> easelVector22 = new Vector2T<float>(10.5f, -3.2f);
+Vector2 easelVector2 = new Vector2(-13, 20.4f);
+Vector2 easelVector22 = new Vector2(10.5f, -3.2f);
 
 Console.WriteLine();
 Console.WriteLine($"Numerics: {numericsVector2}");
@@ -66,19 +71,19 @@ Console.WriteLine($"Easel length: {easelVector2.Length()}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics clamp: {Vector2.Clamp(numericsVector2, new Vector2(-15, 15), new Vector2(-5, 25))}");
-Console.WriteLine($"Easel clamp: {Vector2T.Clamp(easelVector2, new Vector2T<float>(-15, 15), new Vector2T<float>(-5, 25))}");
+Console.WriteLine($"Easel clamp: {Vector2T.Clamp(easelVector2, new Vector2(-15, 15), new Vector2(-5, 25))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics min: {Vector2.Min(numericsVector2, new Vector2(-25, 26))}");
-Console.WriteLine($"Easel min: {Vector2T.Min(easelVector2, new Vector2T<float>(-25, 26))}");
+Console.WriteLine($"Easel min: {Vector2T.Min(easelVector2, new Vector2(-25, 26))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics max: {Vector2.Max(numericsVector2, new Vector2(-25, 26))}");
-Console.WriteLine($"Easel max: {Vector2T.Max(easelVector2, new Vector2T<float>(-25, 26))}");
+Console.WriteLine($"Easel max: {Vector2T.Max(easelVector2, new Vector2(-25, 26))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics lerp: {Vector2.Lerp(numericsVector2, Vector2.Zero, amount)}");
-Console.WriteLine($"Easel lerp: {Vector2T.Lerp(easelVector2, Vector2T<float>.Zero, amount)}");
+Console.WriteLine($"Easel lerp: {Vector2T.Lerp(easelVector2, Vector2.Zero, amount)}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics abs: {Vector2.Abs(numericsVector2)}");
@@ -90,22 +95,22 @@ Console.WriteLine($"Easel sqrt: {Vector2T.Sqrt(easelVector2)}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics distance: {Vector2.Distance(numericsVector2, new Vector2(20, 30))}");
-Console.WriteLine($"Easel distance: {Vector2T.Distance(easelVector2, new Vector2T<float>(20, 30))}");
+Console.WriteLine($"Easel distance: {Vector2T.Distance(easelVector2, new Vector2(20, 30))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics reflect: {Vector2.Reflect(numericsVector2, Vector2.Normalize(new Vector2(134, 456)))}");
-Console.WriteLine($"Easel reflect: {Vector2T.Reflect(easelVector2, new Vector2T<float>(134, 456).Normalize())}");
+Console.WriteLine($"Easel reflect: {Vector2T.Reflect(easelVector2, new Vector2(134, 456).Normalize())}");
 
 Console.WriteLine();
-Console.WriteLine($"Numerics to easel: {(Vector2T<float>) numericsVector2}");
+Console.WriteLine($"Numerics to easel: {(Vector2) numericsVector2}");
 Console.WriteLine($"Easel to numerics: {(Vector2) easelVector2}");
 
 Console.WriteLine("\nVector3------------------------------------------------------------------------------------------");
 
 Vector3 numericsVector3 = new Vector3(2, -13, 20.4f);
 Vector3 numericsVector32 = new Vector3(-20.24f, 10.5f, -3.2f);
-Vector3T<float> easelVector3 = new Vector3T<float>(2, -13, 20.4f);
-Vector3T<float> easelVector32 = new Vector3T<float>(-20.24f, 10.5f, -3.2f);
+Vector3 easelVector3 = new Vector3(2, -13, 20.4f);
+Vector3 easelVector32 = new Vector3(-20.24f, 10.5f, -3.2f);
 
 Console.WriteLine();
 Console.WriteLine($"Numerics: {numericsVector3}");
@@ -149,19 +154,19 @@ Console.WriteLine($"Easel length: {easelVector3.Length()}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics clamp: {Vector3.Clamp(numericsVector3, new Vector3(2, -15, 15), new Vector3(4, -5, 25))}");
-Console.WriteLine($"Easel clamp: {Vector3T.Clamp(easelVector3, new Vector3T<float>(2, -15, 15), new Vector3T<float>(4, -5, 25))}");
+Console.WriteLine($"Easel clamp: {Vector3T.Clamp(easelVector3, new Vector3(2, -15, 15), new Vector3(4, -5, 25))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics min: {Vector3.Min(numericsVector3, new Vector3(-4.56f, -25, 26))}");
-Console.WriteLine($"Easel min: {Vector3T.Min(easelVector3, new Vector3T<float>(-4.56f, -25, 26))}");
+Console.WriteLine($"Easel min: {Vector3T.Min(easelVector3, new Vector3(-4.56f, -25, 26))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics max: {Vector3.Max(numericsVector3, new Vector3(-4.56f, -25, 26))}");
-Console.WriteLine($"Easel max: {Vector3T.Max(easelVector3, new Vector3T<float>(-4.56f, -25, 26))}");
+Console.WriteLine($"Easel max: {Vector3T.Max(easelVector3, new Vector3(-4.56f, -25, 26))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics lerp: {Vector3.Lerp(numericsVector3, Vector3.Zero, amount)}");
-Console.WriteLine($"Easel lerp: {Vector3T.Lerp(easelVector3, Vector3T<float>.Zero, amount)}");
+Console.WriteLine($"Easel lerp: {Vector3T.Lerp(easelVector3, Vector3.Zero, amount)}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics abs: {Vector3.Abs(numericsVector3)}");
@@ -173,18 +178,18 @@ Console.WriteLine($"Easel sqrt: {Vector3T.Sqrt(easelVector3)}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics distance: {Vector3.Distance(numericsVector3, new Vector3(10, 20, 30))}");
-Console.WriteLine($"Easel distance: {Vector3T.Distance(easelVector3, new Vector3T<float>(10, 20, 30))}");
+Console.WriteLine($"Easel distance: {Vector3T.Distance(easelVector3, new Vector3(10, 20, 30))}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics reflect: {Vector3.Reflect(numericsVector3, Vector3.Normalize(new Vector3(-321, 134, 456)))}");
-Console.WriteLine($"Easel reflect: {Vector3T.Reflect(easelVector3, new Vector3T<float>(-321, 134, 456).Normalize())}");
+Console.WriteLine($"Easel reflect: {Vector3T.Reflect(easelVector3, new Vector3(-321, 134, 456).Normalize())}");
 
 Console.WriteLine();
 Console.WriteLine($"Numerics cross: {Vector3.Cross(numericsVector3, numericsVector32)}");
 Console.WriteLine($"Easel cross: {Vector3T.Cross(easelVector3, easelVector32)}");
 
 Console.WriteLine();
-Console.WriteLine($"Numerics to easel: {(Vector3T<float>) numericsVector3}");
+Console.WriteLine($"Numerics to easel: {(Vector3) numericsVector3}");
 Console.WriteLine($"Easel to numerics: {(Vector3) easelVector3}");
 
 Console.WriteLine("\nVector4------------------------------------------------------------------------------------------");
@@ -264,9 +269,9 @@ Console.WriteLine($"Easel distance: {Vector4T.Distance(easelVector4, new Vector4
 
 Console.WriteLine();
 Console.WriteLine($"Numerics to easel: {(Vector4T<float>) numericsVector4}");
-Console.WriteLine($"Easel to numerics: {(Vector4) easelVector4}");
+Console.WriteLine($"Easel to numerics: {(Vector4) easelVector4}");*/
 
-/*GameSettings settings = new GameSettings()
+GameSettings settings = new GameSettings()
 {
     Border = WindowBorder.Resizable,
     //AutoGenerateContentDirectory = null
@@ -275,7 +280,7 @@ Console.WriteLine($"Easel to numerics: {(Vector4) easelVector4}");
 Logger.UseConsoleLogs();
 
 using TestGame game = new TestGame(settings, new TestShadow());
-game.Run();*/
+game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);
 Console.WriteLine(quat);

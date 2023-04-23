@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Easel.Core;
 using Easel.Graphics.Renderers;
 using Easel.Math;
@@ -118,8 +119,8 @@ public class EaselGraphics : IDisposable
     {
         PieGraphics.SetFramebuffer(null);
         SpriteRenderer.Begin(blendState: BlendState.DisabledRgbMask);
-        SpriteRenderer.Draw(MainTarget, Vector2T<float>.Zero, null, Color.White, 0, Vector2T<float>.Zero,
-            Vector2T<float>.One);
+        SpriteRenderer.Draw(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.Zero,
+            Vector2.One);
         SpriteRenderer.End();
         PieGraphics.Present(VSync ? 1 : 0);
     }

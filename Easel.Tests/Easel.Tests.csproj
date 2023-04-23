@@ -8,17 +8,12 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <ItemGroup><!--<ProjectReference Include="..\BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj" />
+    <ItemGroup>
+        <ProjectReference Include="..\BulletSharp\BulletSharp\BulletSharp.DotNetCore.csproj" />
       <ProjectReference Include="..\Easel.ImGui\Easel.ImGui.csproj" />
       <ProjectReference Include="..\Easel.Physics\Easel.Physics.csproj" />
-      <ProjectReference Include="..\Easel\Easel.csproj" />-->
-    
+      <ProjectReference Include="..\Easel\Easel.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Compile Remove="TestScenes/*" />
-        <Compile Remove="TestGame.cs" />
     </ItemGroup>
 
     <ItemGroup>

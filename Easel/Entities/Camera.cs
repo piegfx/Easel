@@ -127,7 +127,7 @@ public class Camera : Entity
 
     #region Orthographic
 
-    private Vector2T<float> _orthoSize;
+    private Vector2 _orthoSize;
     
     /// <summary>
     /// The size of the orthographic matrix, in normalized 0-1 coordinates. (1, 1) will be the size of the current
@@ -135,7 +135,7 @@ public class Camera : Entity
     /// Use this for camera zoom functionality.
     /// </summary>
     /// <returns></returns>
-    public Vector2T<float> OrthoSize
+    public Vector2 OrthoSize
     {
         get => _orthoSize;
         set
@@ -163,7 +163,7 @@ public class Camera : Entity
         _aspectRatio = aspectRatio;
         _near = near;
         _far = far;
-        _orthoSize = Vector2T<float>.One;
+        _orthoSize = Vector2.One;
         ClearColor = Color.Black;
         CameraType = type;
 
@@ -172,11 +172,11 @@ public class Camera : Entity
         GenerateProjectionMatrix();
     }
 
-    public Camera(string name, Vector2T<float>? orthoSize = null, CameraType type = CameraType.Camera3D) : base(name)
+    public Camera(string name, Vector2? orthoSize = null, CameraType type = CameraType.Camera3D) : base(name)
     {
         _projectionType = ProjectionType.Orthographic;
         CameraType = type;
-        _orthoSize = orthoSize ?? Vector2T<float>.One;
+        _orthoSize = orthoSize ?? Vector2.One;
         ClearColor = Color.Black;
 
         Viewport = new Vector4(0, 0, 1, 1);

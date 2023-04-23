@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 
@@ -20,12 +21,12 @@ public class Panel : UIElement
 
         /*if (Style.BackgroundTexture != null)
         {
-            renderer.Draw(Style.BackgroundTexture, (Vector2T<float>) CalculatedScreenPos,
-                new Rectangle<int>(CalculatedScreenPos, size), Color.White, 0, Vector2T<float>.Zero,
-                Vector2T<float>.One);
+            renderer.Draw(Style.BackgroundTexture, (Vector2) CalculatedScreenPos,
+                new Rectangle<int>(CalculatedScreenPos, size), Color.White, 0, Vector2.Zero,
+                Vector2.One);
         }*/
 
-        renderer.DrawRectangle(CalculatedScreenPos.As<float>(), size.As<float>(), width, radius, bg, border, 0,
-            Vector2T<float>.Zero);
+        renderer.DrawRectangle((Vector2) CalculatedScreenPos, size.As<float>(), width, radius, bg, border, 0,
+            Vector2.Zero);
     }
 }

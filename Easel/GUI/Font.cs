@@ -41,7 +41,7 @@ public class Font : IDisposable
         _charmaps = new Dictionary<uint, Charmap>();
     }
 
-    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2T<int> position, Color color, float rotation, Vector2T<float> origin, Vector2T<float> scale)
+    public void Draw(SpriteRenderer renderer, uint size, string text, Vector2T<int> position, Color color, float rotation, Vector2 origin, Vector2 scale)
     {
         if (!_charmaps.TryGetValue(size, out Charmap charmap))
         {
@@ -76,7 +76,7 @@ public class Font : IDisposable
 
             Vector2 transformedChar = Vector2.Transform((Vector2) charPos, Matrix4x4.CreateScale(scale.X, scale.Y, 1.0f) * Matrix4x4.CreateRotationZ(rotation));
             
-            renderer.Draw(charmap.Texture, (Vector2T<float>) transformedChar, chr.Source, color, rotation, Vector2T<float>.Zero, scale);
+            renderer.Draw(charmap.Texture, (Vector2) transformedChar, chr.Source, color, rotation, Vector2.Zero, scale);
             pos.X += chr.Advance;
         }
     }
@@ -126,8 +126,8 @@ public class Font : IDisposable
                         Charmap.Character chr = charmap.GetCharacter(c);
                         Vector2T<int> charPos = new Vector2T<int>(pos.X + chr.Bearing.X,
                             pos.Y - chr.Source.Height + (chr.Source.Height - chr.Bearing.Y));
-                        renderer.Draw(charmap.Texture, charPos.As<float>(), chr.Source, currentColor, 0,
-                            Vector2T<float>.Zero, Vector2T<float>.One);
+                        renderer.Draw(charmap.Texture, (Vector2) charPos, chr.Source, currentColor, 0,
+                            Vector2.Zero, Vector2.One);
                         pos.X += chr.Advance;
                     }
 

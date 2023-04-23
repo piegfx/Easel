@@ -103,8 +103,8 @@ PSOutput PixelShader(in VSOutput input)
     float3 viewDir = normalize((float3) cameraPos - input.fragPos);
     float3 result = ProcessDirLight(sun, viewDir, albedo.rgb, normal, metallic, roughness);
 
-    float shadow = CalculateShadow(input.lightSpace, shadowTex, shadowState, normal, normalize((float3) -sun.direction - input.fragPos));
-    //float shadow = 0.0;
+    //float shadow = CalculateShadow(input.lightSpace, shadowTex, shadowState, normal, normalize((float3) -sun.direction - input.fragPos));
+    float shadow = 0.0;
 
     float3 ambient = (float3) 0.03 * albedo.rgb * ao;
     float3 color = ambient + (1.0 - shadow) * result;

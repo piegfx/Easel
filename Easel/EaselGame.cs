@@ -330,7 +330,7 @@ public class EaselGame : IDisposable
         Size<int> size = font.MeasureString(12, metrics);
         //Graphics.SpriteRenderer.DrawRectangle(Vector2T.Zero, size + new Size(10), new Color(Color.Black, 0.5f), 0, Vector2T.Zero);
         font.Draw(GraphicsInternal.SpriteRenderer, 12, metrics, new Vector2T<int>(5), Color.White, 0,
-            Vector2T<float>.Zero, Vector2T<float>.One);
+            Vector2.Zero, Vector2.One);
         Graphics.SpriteRenderer.End();
     }
     

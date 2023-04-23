@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using Easel.Core;
 using Easel.Math;
+using Easel.Physics;
 using Easel.Scenes;
 #if !HEADLESS
 using Easel.Audio;
@@ -67,6 +68,8 @@ public class EaselGame : IDisposable
 #else
     private bool _shouldClose;
 #endif
+
+    public Simulation Simulation;
 
     /// <summary>
     /// The target frames per second of the application.
@@ -208,6 +211,10 @@ public class EaselGame : IDisposable
         }
 
 #endif
+        
+        Logger.Debug("Initializing physics...");
+        // TODO: PhysicsInitSettings in the GameSettings.
+        Simulation = new Simulation(new PhysicsInitSettings());
         
         Logger.Debug("Initializing time...");
         Time.Initialize();

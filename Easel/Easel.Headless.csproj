@@ -16,17 +16,6 @@
       <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Silk.NET.SDL" Version="2.17.0" />
-      <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="EaselLogo.png" />
-      <EmbeddedResource Include="Roboto-Regular.ttf" />
-      <EmbeddedResource Include="Graphics\Shaders\**\*" />
-    </ItemGroup>
     
     <ItemGroup>
         <Compile Remove="Audio\**\*" />

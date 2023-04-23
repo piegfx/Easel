@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
+#if !HEADLESS
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie;
 using Pie.Windowing;
+#endif
 
 namespace Easel;
 
@@ -12,6 +14,7 @@ namespace Easel;
 /// </summary>
 public struct GameSettings
 {
+#if !HEADLESS
     /// <summary>
     /// The starting size (resolution) of the game view, in pixels. (Default: 1280x720)
     /// </summary>
@@ -28,21 +31,31 @@ public struct GameSettings
     public string Title;
 
     /// <summary>
-    /// The initial border of the view. (Default: <see cref="WindowBorder.Fixed"/>)
-    /// </summary>
-    public WindowBorder Border;
-
-    /// <summary>
     /// Whether or not the game will synchronize to the vertical refresh rate. (Default: <see langword="true" />)
     /// </summary>
     public bool VSync;
+    
+    /// <summary>
+    /// If enabled, Easel will not error if it tries to load items that do not exist, such as textures, instead
+    /// displaying a default "missing" object. (Default: <see langword="false" />
+    /// </summary>
+    public bool AllowMissing;
 
     /// <summary>
-    /// The target frames per second of the game. Set to 0 to have unlimited FPS. (Default: 0, if <see cref="VSync"/> is
-    /// enabled the game will run at the monitor's native refresh rate (typically 60, 144, etc.)
+    /// The title bar flags, if any (Default: <see cref="Easel.TitleBarFlags.ShowEasel"/>)
     /// </summary>
-    public int TargetFps;
+    public TitleBarFlags TitleBarFlags;
 
+    /// <summary>
+    /// If disabled, the game window will not be visible until you tell it to become visible.
+    /// </summary>
+    public bool StartVisible;
+    
+    /// <summary>
+    /// The initial border of the view. (Default: <see cref="WindowBorder.Fixed"/>)
+    /// </summary>
+    public WindowBorder Border;
+    
     /// <summary>
     /// The graphics API the game will use - leave null to let Easel decide which API to use. (Default: <see langword="null"/>)
     ///
@@ -54,27 +67,11 @@ public struct GameSettings
     /// </list>
     /// </summary>
     public GraphicsApi? Api;
-
-    /// <summary>
-    /// If enabled, Easel will not error if it tries to load items that do not exist, such as textures, instead
-    /// displaying a default "missing" object. (Default: <see langword="false" />
-    /// </summary>
-    public bool AllowMissing;
-
+    
     /// <summary>
     /// The view icon, if any. (Default: <see langword="null" />)
     /// </summary>
     public Bitmap Icon;
-
-    /// <summary>
-    /// The title bar flags, if any (Default: <see cref="Easel.TitleBarFlags.ShowEasel"/>)
-    /// </summary>
-    public TitleBarFlags TitleBarFlags;
-
-    /// <summary>
-    /// If disabled, the game window will not be visible until you tell it to become visible.
-    /// </summary>
-    public bool StartVisible;
 
     /// <summary>
     /// The render options Easel will use for your application.
@@ -88,25 +85,34 @@ public struct GameSettings
     /// </summary>
     public string AutoGenerateContentDirectory;
 
-    public GameSettings(Size<int> size, string title, bool fullscreen, WindowBorder border, bool vSync, int targetFps, 
-        GraphicsApi? api, bool allowMissing, Bitmap icon, TitleBarFlags titleBarFlags, bool startVisible,
-        RenderOptions renderOptions, string autoGenerateContentDirectory)
+#endif
+
+    /// <summary>
+    /// The target frames per second of the game. Set to 0 to have unlimited FPS. (Default: 0, if <see cref="VSync"/> is
+    /// enabled the game will run at the monitor's native refresh rate (typically 60, 144, etc.)
+    /// </summary>
+    public int TargetFps;
+
+#if !HEADLESS
+    public GameSettings(Size<int> size, bool fullscreen, string title, bool vSync, bool allowMissing,
+        TitleBarFlags titleBarFlags, bool startVisible, WindowBorder border, GraphicsApi? api, Bitmap icon,
+        RenderOptions renderOptions, string autoGenerateContentDirectory, int targetFps)
     {
         Size = size;
         Fullscreen = fullscreen;
         Title = title;
-        Border = border;
         VSync = vSync;
-        TargetFps = targetFps;
-        Api = api;
         AllowMissing = allowMissing;
-        Icon = icon;
         TitleBarFlags = titleBarFlags;
         StartVisible = startVisible;
+        Border = border;
+        Api = api;
+        Icon = icon;
         RenderOptions = renderOptions;
         AutoGenerateContentDirectory = autoGenerateContentDirectory;
+        TargetFps = targetFps;
     }
-
+    
     /// <summary>
     /// Create the default game settings.
     /// </summary>
@@ -137,4 +143,18 @@ public struct GameSettings
         Size = new Size<int>(-1, -1),
         Fullscreen = true
     };
+#else
+    public GameSettings(int targetFps)
+    {
+        TargetFps = targetFps;
+    }
+    
+    /// <summary>
+    /// Create the default game settings.
+    /// </summary>
+    public GameSettings()
+    {
+        TargetFps = 0;
+    }
+#endif
 }

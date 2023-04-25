@@ -31,7 +31,8 @@ public class Simulation
         _objectVsBroadPhase = new ObjectVsBroadPhaseLayerFilterImpl();
 
         PhysicsSystem = new PhysicsSystem();
-        PhysicsSystem.Init(1024, 0, 1024, 1024, _broadPhaseInterface, _objectVsBroadPhase, _objectLayerPair);
+        PhysicsSystem.Init(initSettings.MaxPhysicsObjects, 0, initSettings.MaxPhysicsObjects, 1024,
+            _broadPhaseInterface, _objectVsBroadPhase, _objectLayerPair);
         PhysicsSystem.Gravity = initSettings.Gravity;
     }
 

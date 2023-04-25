@@ -82,4 +82,9 @@ public class Rigidbody : Component
         Simulation.BodyInterface.RemoveBody(Handle);
         Simulation.BodyInterface.DestroyBody(Handle);
     }
+
+    public void ApplyForce(Vector3 force)
+    {
+        Simulation.BodyInterface.AddForce(Handle, force);
+    }
 }

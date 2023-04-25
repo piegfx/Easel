@@ -25,17 +25,14 @@ public class TestPhysics : Scene
 
         Material material = new StandardMaterial() { RasterizerState = RasterizerState.CullClockwise };
         
-        for (int y = 0; y < 1000; y++)
+        Entity cube = new Entity($"cube", new Transform()
         {
-            Entity cube = new Entity($"cube{y}", new Transform()
-            {
-                Position = new Vector3(Random.Shared.Next(-5, 5), 10 + (y * 0.5f), Random.Shared.Next(-5, 5))
-            });
-            cube.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f))));
-            cube.AddComponent(new ModelRenderer(new Cube(), material));
-            AddEntity(cube);
-        }
-        
+            Position = new Vector3(0, 5, -5)
+        });
+        cube.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f))));
+        cube.AddComponent(new ModelRenderer(new Cube(), material));
+        AddEntity(cube);
+
         Entity cube2 = new Entity("cubes", new Transform()
         {
             Position = new Vector3(0, -5, -3),

@@ -23,31 +23,26 @@ public class TestPhysics : Scene
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
 
-        Entity cube = new Entity("cube", new Transform()
-        {
-            Position = new Vector3(0, 0, -3)
-        });
-        cube.AddComponent(new ModelRenderer(new Cube(), new StandardMaterial() { RasterizerState = RasterizerState.CullClockwise }));
-        cube.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f)), new RigidbodyInitSettings() { Restitution = 1 }));
-        AddEntity(cube);
+        Material material = new StandardMaterial() { RasterizerState = RasterizerState.CullClockwise };
         
-        Entity cube2 = new Entity("cube2", new Transform()
+        for (int y = 0; y < 1000; y++)
+        {
+            Entity cube = new Entity($"cube{y}", new Transform()
+            {
+                Position = new Vector3(Random.Shared.Next(-5, 5), 10 + (y * 0.5f), Random.Shared.Next(-5, 5))
+            });
+            cube.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f))));
+            cube.AddComponent(new ModelRenderer(new Cube(), material));
+            AddEntity(cube);
+        }
+        
+        Entity cube2 = new Entity("cubes", new Transform()
         {
             Position = new Vector3(0, -5, -3),
+            Scale = new Vector3(20, 0.25f, 20)
         });
-        cube2.AddComponent(new ModelRenderer(new Cube(), new StandardMaterial() { RasterizerState = RasterizerState.CullClockwise }));
-        cube2.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f)), new RigidbodyInitSettings() { BodyType = BodyType.Static, Restitution = 1 }));
+        cube2.AddComponent(new ModelRenderer(new Cube(), material));
+        cube2.AddComponent(new Rigidbody(new BoxShape(new Vector3(10, 0.25f / 2f, 10)), new RigidbodyInitSettings() { BodyType = BodyType.Static }));
         AddEntity(cube2);
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Input.KeyDown(Key.Up))
-            GetEntity("cube").GetComponent<Rigidbody>().LinearVelocity = new Vector3(0, 1, 0);
-
-        if (Input.KeyDown(Key.Right))
-            GetEntity("cube").GetComponent<Rigidbody>().AngularVelocity = new Vector3(1, 0, 0);
     }
 }

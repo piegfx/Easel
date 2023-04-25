@@ -11,25 +11,25 @@ public class Rigidbody : Component
 {
     private ShapeSettings _settings;
     private RigidbodyInitSettings _initSettings;
-    private BodyID _id;
+    public BodyID Handle;
 
     public Vector3 LinearVelocity
     {
-        get => Simulation.BodyInterface.GetLinearVelocity(_id);
-        set => Simulation.BodyInterface.SetLinearVelocity(_id, value);
+        get => Simulation.BodyInterface.GetLinearVelocity(Handle);
+        set => Simulation.BodyInterface.SetLinearVelocity(Handle, value);
     }
 
     // TODO: Angular velocity in PR
     public Vector3 AngularVelocity
     {
-        get => Simulation.BodyInterface.GetAngularVelocity(_id);
-        set => Simulation.BodyInterface.SetAngularVelocity(_id, value);
+        get => Simulation.BodyInterface.GetAngularVelocity(Handle);
+        set => Simulation.BodyInterface.SetAngularVelocity(Handle, value);
     }
 
     public float Restitution
     {
-        get => Simulation.BodyInterface.GetRestitution(_id);
-        set => Simulation.BodyInterface.SetRestitution(_id, value);
+        get => Simulation.BodyInterface.GetRestitution(Handle);
+        set => Simulation.BodyInterface.SetRestitution(Handle, value);
     }
 
     public Rigidbody(IShape shape, RigidbodyInitSettings? settings = null)
@@ -56,14 +56,14 @@ public class Rigidbody : Component
         body.Restitution = Restitution;
         
         Simulation.BodyInterface.AddBody(body, ActivationMode.Activate);
-        _id = body.ID;
+        Handle = body.ID;
     }
 
     protected internal override void AfterUpdate()
     {
         base.AfterUpdate();
 
-        Simulation.BodyInterface.SetPositionAndRotationWhenChanged(_id, Transform.Position, Transform.Rotation,
+        Simulation.BodyInterface.SetPositionAndRotationWhenChanged(Handle, Transform.Position, Transform.Rotation,
             ActivationMode.Activate);
     }
 
@@ -71,15 +71,15 @@ public class Rigidbody : Component
     {
         base.FixedUpdate();
 
-        Transform.Position = Simulation.BodyInterface.GetPosition(_id);
-        Transform.Rotation = Simulation.BodyInterface.GetRotation(_id);
+        Transform.Position = Simulation.BodyInterface.GetPosition(Handle);
+        Transform.Rotation = Simulation.BodyInterface.GetRotation(Handle);
     }
 
     public override void Dispose()
     {
         base.Dispose();
         
-        Simulation.BodyInterface.RemoveBody(_id);
-        Simulation.BodyInterface.DestroyBody(_id);
+        Simulation.BodyInterface.RemoveBody(Handle);
+        Simulation.BodyInterface.DestroyBody(Handle);
     }
 }

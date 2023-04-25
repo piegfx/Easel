@@ -16,6 +16,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
+      <ProjectReference Include="..\JoltPhysicsSharp\src\JoltPhysicsSharp\JoltPhysicsSharp.csproj" />
     </ItemGroup>
     
     <ItemGroup>
@@ -37,6 +38,15 @@
     <!-- Must include this package in Headless as well otherwise Rider decides it doesn't want to work and throws a tantrum -->
     <ItemGroup>
       <PackageReference Include="StbVorbisSharp" Version="1.22.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="joltc.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="libjoltc.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

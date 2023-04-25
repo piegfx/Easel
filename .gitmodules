@@ -1,3 +1,7 @@
 [submodule "Pie"]
 	path = Pie
 	url = https://github.com/IsometricSoftware/Pie
+[submodule "JoltPhysicsSharp"]
+	path = JoltPhysicsSharp
+	url = https://github.com/piegfx/JoltPhysicsSharp
+	branch = piegfx-fixes

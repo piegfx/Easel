@@ -22,8 +22,8 @@ public class Rigidbody : Component
     // TODO: Angular velocity in PR
     public Vector3 AngularVelocity
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => Simulation.BodyInterface.GetAngularVelocity(_id);
+        set => Simulation.BodyInterface.SetAngularVelocity(_id, value);
     }
 
     public float Restitution
@@ -69,7 +69,7 @@ public class Rigidbody : Component
 
     protected internal override void FixedUpdate()
     {
-        base.AfterUpdate();
+        base.FixedUpdate();
 
         Transform.Position = Simulation.BodyInterface.GetPosition(_id);
         Transform.Rotation = Simulation.BodyInterface.GetRotation(_id);

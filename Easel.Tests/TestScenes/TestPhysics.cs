@@ -39,4 +39,15 @@ public class TestPhysics : Scene
         cube2.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f)), new RigidbodyInitSettings() { BodyType = BodyType.Static, Restitution = 1 }));
         AddEntity(cube2);
     }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Input.KeyDown(Key.Up))
+            GetEntity("cube").GetComponent<Rigidbody>().LinearVelocity = new Vector3(0, 1, 0);
+
+        if (Input.KeyDown(Key.Right))
+            GetEntity("cube").GetComponent<Rigidbody>().AngularVelocity = new Vector3(1, 0, 0);
+    }
 }

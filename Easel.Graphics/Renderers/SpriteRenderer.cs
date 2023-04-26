@@ -46,6 +46,7 @@ public class SpriteRenderer : IDisposable
     {
         _device = renderer.Device;
         
+        // We store the vertices and indices on system memory to reduce GPU calls.
         _vertices = new SpriteVertex[MaxVertices];
         _indices = new uint[MaxIndices];
 
@@ -112,6 +113,15 @@ public class SpriteRenderer : IDisposable
         float texW = rect.Width / (float) texSize.Width;
         float texH = rect.Height / (float) texSize.Height;
 
+        // Perform flipping.
+        // The logic here is that let's say we have tex coords X: 0.2, W: 0.6, and we want to flip on the x axis.
+        // First do 1 - X, so 0.8. Now you could think we'd also do 1 - W for 0.4, but it doesn't work like that.
+        // If you look at the texture coordinate section, you'll see in sections we do texX + texW.
+        // Well with this logic the result will be 0.8 + 0.4 which is 1.2.
+        // So instead we must just invert the W component, which in our example will be -0.6.
+        // Therefore, 0.8 + -0.6 will result in 0.2 which is what we want in our final result.
+        // DO NOT RELY ON A REPEATING SAMPLER STATE TO DO FLIPPING!!! We must support clamped states as well, which this
+        // solution does fully support.
         switch (flip)
         {
             case Flip.None:
@@ -144,11 +154,17 @@ public class SpriteRenderer : IDisposable
         uint currentVertex = _currentSprite * NumVertices;
         uint currentIndex = _currentSprite * NumIndices;
 
+        // 0 ----- 1   Here we use a clockwise triangle arrangement to produce the quad.
+        // |    /  |   Our NORMALIZED vertices will be, in order, (0, 0), (1, 0), (1, 1), (0, 1).
+        // |  /    |   As we are using an orthographic matrix, we must scale these vertices up to screen space.
+        // 3 ----- 2   
         _vertices[currentVertex + 0] = new SpriteVertex(new Vector2(x, y), new Vector2(texX, texY), tint);
         _vertices[currentVertex + 1] = new SpriteVertex(new Vector2(x + w, y), new Vector2(texX + texW, texY), tint);
         _vertices[currentVertex + 2] = new SpriteVertex(new Vector2(x + w, y + h), new Vector2(texX + texW, texY + texH), tint);
         _vertices[currentVertex + 3] = new SpriteVertex(new Vector2(x, y + h), new Vector2(texX, texY + texH), tint);
 
+        // Vertex order: First triangle: 0, 1, 3. Second triangle: 1, 2, 3.
+        // You can see where these correspond in the diagram above.
         _indices[currentIndex + 0] = 0 + currentVertex;
         _indices[currentIndex + 1] = 1 + currentVertex;
         _indices[currentIndex + 2] = 3 + currentVertex;
@@ -159,6 +175,7 @@ public class SpriteRenderer : IDisposable
         _currentSprite++;
     }
 
+    // Flush everything to GPU so it is ready for the next batch.
     private void Flush()
     {
         // No need to waste GPU time if there is nothing to do.
@@ -166,6 +183,7 @@ public class SpriteRenderer : IDisposable
         if (_currentSprite == 0)
             return;
 
+        // Map the buffers for fast DMA transfers!
         IntPtr vtx = _device.MapBuffer(_vertexBuffer, MapMode.Write);
         PieUtils.CopyToUnmanaged(vtx, 0, _vertices);
         _device.UnmapBuffer(_vertexBuffer);

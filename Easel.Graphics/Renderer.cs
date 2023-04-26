@@ -40,6 +40,8 @@ public sealed class Renderer : IDisposable
 
     public void BeginFrame()
     {
+        // Acts as a guard to make sure you don't screw up any rendering bits. Each render frame is standalone and can't
+        // interact with other frames.
         if (InFrame)
             throw new EaselException("A frame is already active!");
 
@@ -47,6 +49,9 @@ public sealed class Renderer : IDisposable
         
         Device.SetFramebuffer(MainBuffer.DeviceBuffer);
         
+        // Reset everything per frame.
+        // Note that the directional light is also reset. While it does persist for the entire duration of the frame, in
+        // keeping with the rest of the API it is reset on a new frame.
         _opaques.Clear();
         _transluscents.Clear();
         _directionalLight = null;
@@ -59,6 +64,8 @@ public sealed class Renderer : IDisposable
 
         InFrame = false;
         
+        // Reset the device viewport back to the main buffer size so that we don't have any weird viewport stuff to deal
+        // with.
         Device.Viewport = new System.Drawing.Rectangle(0, 0, MainBuffer.Size.Width, MainBuffer.Size.Height);
     }
 
@@ -74,6 +81,11 @@ public sealed class Renderer : IDisposable
 
     public void Perform3DPass(in CameraInfo cameraInfo, in SceneInfo sceneInfo, in Rectangle<float> viewport)
     {
+        // Most cameras won't want to clear the screen, so we only clear for any cameras that have the clear color set.
+        // Note that currently setting the clear color in the camera will clear the *entire* screen, so you should only
+        // set the value for the first camera in the scene.
+        // TODO: Depth-stencil clear only option?
+        // TODO: Use scissor rectangle/RTs to allow every camera to clear the color buffer?
         if (cameraInfo.ClearColor != null)
             Device.Clear((Vector4) cameraInfo.ClearColor.Value, ClearFlags.Depth | ClearFlags.Stencil);
 

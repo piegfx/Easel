@@ -12,6 +12,8 @@ public sealed class Effect : IDisposable
     {
         GraphicsDevice device = Renderer.Instance.Device;
 
+        // Easel (and pie) can only natively understand SPIR-V, and Easel heavily encourages usage of SPIR-V compiled
+        // shaders, instead of runtime compiling GLSL or HLSL.
         DeviceShader =
             device.CreateShader(
                 new[]

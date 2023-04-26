@@ -8,6 +8,8 @@ public class Texture2D : IDisposable
 {
     public Pie.Texture DeviceTexture;
 
+    public Size<int> Size => new Size<int>(DeviceTexture.Description.Width, DeviceTexture.Description.Height);
+
     public Texture2D(string path, int mipLevels = 0, bool generateMipmaps = true) : this(new Bitmap(path), mipLevels,
         generateMipmaps) { }
 

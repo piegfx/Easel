@@ -1,11 +1,16 @@
+using Easel.Math;
+
 namespace Easel.Graphics;
 
 public struct RendererSettings
 {
-    public RenderMode RenderMode;
+    public RenderMode Mode;
 
-    public RendererSettings(RenderMode renderMode = RenderMode.Deferred)
+    public Size<int>? Resolution;
+
+    public RendererSettings(RenderMode mode = RenderMode.Deferred, Size<int>? resolution = null)
     {
-        RenderMode = renderMode;
+        Mode = mode;
+        Resolution = resolution;
     }
 }

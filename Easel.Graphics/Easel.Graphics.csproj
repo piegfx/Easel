@@ -25,4 +25,8 @@
       <PackageReference Include="StbImageSharp" Version="2.27.13" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ClCompile Include="Shaders\2D\Sprite.hlsl" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,4 @@
+using Easel.Core;
 using Easel.Math;
 using Pie;
 
@@ -16,8 +17,9 @@ public class RenderTarget2D : Texture2D
             TextureUsage.ShaderResource | TextureUsage.Framebuffer));
         if (depthFormat != null)
         {
+            Logger.Debug("Creating depth texture.");
             DepthTexture = device.CreateTexture(new TextureDescription(size.Width, size.Height, depthFormat.Value, 1, 1,
-                TextureUsage.Framebuffer | TextureUsage.ShaderResource));
+                TextureUsage.Framebuffer));
         }
 
         DeviceBuffer = device.CreateFramebuffer(new FramebufferAttachment(DeviceTexture),

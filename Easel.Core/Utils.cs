@@ -82,6 +82,9 @@ public static class Utils
     public static byte[] LoadEmbeddedResource(Assembly assembly, string assemblyName)
     {
         using Stream stream = assembly.GetManifestResourceStream(assemblyName);
+        if (stream == null)
+            throw new Exception($"The embedded resource, \"{assemblyName}\", could not be found in assembly \"{assembly.GetName().Name}\".");
+        
         using MemoryStream memoryStream = new MemoryStream();
         stream!.CopyTo(memoryStream);
         return memoryStream.ToArray();

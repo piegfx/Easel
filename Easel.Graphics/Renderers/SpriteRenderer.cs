@@ -32,6 +32,7 @@ public class SpriteRenderer : IDisposable
 
     private DepthStencilState _depthStencilState;
     private RasterizerState _rasterizerState;
+    private BlendState _blendState;
 
     private Texture2D _currentTexture;
     private uint _currentSprite;
@@ -55,9 +56,9 @@ public class SpriteRenderer : IDisposable
         _cameraMatricesBuffer = _device.CreateBuffer(BufferType.UniformBuffer, _cameraMatrices, true);
 
         byte[] vertex = Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(),
-            Renderer.AssemblyName + ".2D.Sprite_vert.spv");
+            Renderer.AssemblyName + ".Sprite.Sprite_vert.spv");
         byte[] fragment = Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(),
-            Renderer.AssemblyName + ".2D.Sprite_frag.spv");
+            Renderer.AssemblyName + ".Sprite.Sprite_frag.spv");
 
         _shader = _device.CreateShader(new[]
             { new ShaderAttachment(ShaderStage.Vertex, vertex), new ShaderAttachment(ShaderStage.Fragment, fragment) });
@@ -69,7 +70,8 @@ public class SpriteRenderer : IDisposable
         );
 
         _depthStencilState = _device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
-        _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
+        _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
+        _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
         _ss = _device.CreateSamplerState(SamplerStateDescription.LinearClamp);
 
@@ -94,6 +96,8 @@ public class SpriteRenderer : IDisposable
     {
         if (texture != _currentTexture || _currentSprite >= MaxSprites)
             Flush();
+
+        _currentTexture = texture;
 
         Size<int> texSize = texture.Size;
 
@@ -139,8 +143,10 @@ public class SpriteRenderer : IDisposable
         _device.SetShader(_shader);
         _device.SetDepthStencilState(_depthStencilState);
         _device.SetRasterizerState(_rasterizerState);
+        _device.SetBlendState(_blendState);
         _device.SetTexture(1, _currentTexture.DeviceTexture, _ss);
         _device.SetVertexBuffer(0, _vertexBuffer, SpriteVertex.SizeInBytes, _inputLayout);
+        _device.SetUniformBuffer(0, _cameraMatricesBuffer);
         _device.SetIndexBuffer(_indexBuffer, IndexType.UInt);
         _device.DrawIndexed(_currentSprite * NumIndices);
 

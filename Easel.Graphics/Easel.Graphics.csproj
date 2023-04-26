@@ -18,6 +18,8 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Shaders\**\*.spv" />
+      <None Remove="DEBUG.png" />
+      <EmbeddedResource Include="DEBUG.png" />
     </ItemGroup>
 
     <ItemGroup>

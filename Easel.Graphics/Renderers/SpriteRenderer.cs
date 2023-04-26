@@ -70,10 +70,10 @@ public class SpriteRenderer : IDisposable
         );
 
         _depthStencilState = _device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
-        _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullNone);
+        _rasterizerState = _device.CreateRasterizerState(RasterizerStateDescription.CullClockwise);
         _blendState = _device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
-        _ss = _device.CreateSamplerState(SamplerStateDescription.LinearClamp);
+        _ss = _device.CreateSamplerState(SamplerStateDescription.LinearRepeat);
 
         _currentSprite = 0;
     }
@@ -92,7 +92,7 @@ public class SpriteRenderer : IDisposable
     }
 
     public void Draw(Texture2D texture, Vector2 position, Rectangle<int>? source, Color tint, float rotation,
-        Vector2 origin, Vector2 scale)
+        Vector2 origin, Vector2 scale, Flip flip = Flip.None)
     {
         if (texture != _currentTexture || _currentSprite >= MaxSprites)
             Flush();
@@ -100,19 +100,54 @@ public class SpriteRenderer : IDisposable
         _currentTexture = texture;
 
         Size<int> texSize = texture.Size;
+        Rectangle<int> rect = source ?? new Rectangle<int>(Vector2T<int>.Zero, texSize);
 
         float x = position.X;
         float y = position.Y;
-        float w = texSize.Width * scale.X;
-        float h = texSize.Height * scale.Y;
+        float w = rect.Width * scale.X;
+        float h = rect.Height * scale.Y;
+
+        float texX = rect.X / (float) texSize.Width;
+        float texY = rect.Y / (float) texSize.Height;
+        float texW = rect.Width / (float) texSize.Width;
+        float texH = rect.Height / (float) texSize.Height;
+
+        switch (flip)
+        {
+            case Flip.None:
+                break;
+            case Flip.FlipX:
+                texW = -texW;
+                texX = 1.0f - texX;
+                break;
+            case Flip.FlipY:
+                texH = -texH;
+                texY = 1.0f - texY;
+                break;
+            case Flip.FlipXY:
+                texW = -texW;
+                texX = 1.0f - texX;
+                texH = -texH;
+                texY = 1.0f - texY;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(flip), flip, null);
+        }
+
+        // Perform a Y-flip when drawing render targets under OpenGL.
+        if (texture is RenderTarget2D && _device.Api == GraphicsApi.OpenGL)
+        {
+            texH = -texH;
+            texY = 1.0f - texY;
+        }
 
         uint currentVertex = _currentSprite * NumVertices;
         uint currentIndex = _currentSprite * NumIndices;
 
-        _vertices[currentVertex + 0] = new SpriteVertex(new Vector2(x, y), new Vector2(0, 0), tint);
-        _vertices[currentVertex + 1] = new SpriteVertex(new Vector2(x + w, y), new Vector2(1, 0), tint);
-        _vertices[currentVertex + 2] = new SpriteVertex(new Vector2(x + w, y + h), new Vector2(1, 1), tint);
-        _vertices[currentVertex + 3] = new SpriteVertex(new Vector2(x, y + h), new Vector2(0, 1), tint);
+        _vertices[currentVertex + 0] = new SpriteVertex(new Vector2(x, y), new Vector2(texX, texY), tint);
+        _vertices[currentVertex + 1] = new SpriteVertex(new Vector2(x + w, y), new Vector2(texX + texW, texY), tint);
+        _vertices[currentVertex + 2] = new SpriteVertex(new Vector2(x + w, y + h), new Vector2(texX + texW, texY + texH), tint);
+        _vertices[currentVertex + 3] = new SpriteVertex(new Vector2(x, y + h), new Vector2(texX, texY + texH), tint);
 
         _indices[currentIndex + 0] = 0 + currentVertex;
         _indices[currentIndex + 1] = 1 + currentVertex;
@@ -179,5 +214,13 @@ public class SpriteRenderer : IDisposable
         }
 
         public const uint SizeInBytes = 32;
+    }
+
+    public enum Flip
+    {
+        None,
+        FlipX,
+        FlipY,
+        FlipXY
     }
 }

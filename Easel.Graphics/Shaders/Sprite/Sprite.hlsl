@@ -1,3 +1,8 @@
+/*
+    (C) 2023 PIEGFX
+    Performs sprite rendering.
+*/
+
 struct VSInput
 {
     float2 position:  POSITION;

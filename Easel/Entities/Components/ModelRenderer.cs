@@ -47,7 +47,7 @@ public class ModelRenderer : Component
         Matrix4x4 world = Transform.TransformMatrix *
                           (Entity.Parent?.Transform.TransformMatrix ?? Matrix4x4.Identity);
         for (int i = 0; i < _renderables.Length; i++)
-            Graphics.Renderer.Draw(_renderables[i], Matrix4x4.Transpose(_transforms[i]) * world);
+            EaselGame.Instance.Graphics.Renderer.Draw(_renderables[i], Matrix4x4.Transpose(_transforms[i]) * world);
     }
 
     public override void Dispose()

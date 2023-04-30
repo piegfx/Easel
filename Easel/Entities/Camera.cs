@@ -206,7 +206,7 @@ public class Camera : Entity
     {
         base.Initialize();
         
-        Graphics.ViewportResized += GraphicsOnViewportResized;
+        EaselGame.Instance.Graphics.ViewportResized += GraphicsOnViewportResized;
     }
 
     private void GraphicsOnViewportResized(Rectangle<int> viewport)
@@ -220,7 +220,7 @@ public class Camera : Entity
         ProjectionMatrix = ProjectionType switch
         {
             ProjectionType.Perspective => Matrix4x4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, _near, _far),
-            ProjectionType.Orthographic => Matrix4x4.CreateOrthographicOffCenter(0, Graphics.Viewport.Width * _orthoSize.X, Graphics.Viewport.Height * _orthoSize.Y, 0, -1, 1),
+            ProjectionType.Orthographic => Matrix4x4.CreateOrthographicOffCenter(0, EaselGame.Instance.Graphics.Viewport.Width * _orthoSize.X, EaselGame.Instance.Graphics.Viewport.Height * _orthoSize.Y, 0, -1, 1),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -229,7 +229,7 @@ public class Camera : Entity
     {
         base.Dispose();
 
-        Graphics.ViewportResized -= GraphicsOnViewportResized;
+        EaselGame.Instance.Graphics.ViewportResized -= GraphicsOnViewportResized;
     }
 
     /// <summary>

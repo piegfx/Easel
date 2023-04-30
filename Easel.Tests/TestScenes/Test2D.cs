@@ -119,22 +119,22 @@ public class Test2D : Scene
 
         //_f += Time.DeltaTime;
 
-        Graphics.SpriteRenderer.Begin(transform: Matrix4x4.CreateTranslation(-_f, 0, 0));
-        Graphics.SpriteRenderer.DrawVertices(_texture, _vertices, _indices);
-        Graphics.SpriteRenderer.End();
+        EaselGame.Instance.Graphics.SpriteRenderer.Begin(transform: Matrix4x4.CreateTranslation(-_f, 0, 0));
+        EaselGame.Instance.Graphics.SpriteRenderer.DrawVertices(_texture, _vertices, _indices);
+        EaselGame.Instance.Graphics.SpriteRenderer.End();
 
         string text = "What??";
         uint size = 100;
 
-        Graphics.SpriteRenderer.Begin();
+        EaselGame.Instance.Graphics.SpriteRenderer.Begin();
         Position position = new Position(Anchor.TopLeft);
-        Vector2T<int> realPos = position.CalculatePosition(Graphics.Viewport, UI.DefaultStyle.Font.MeasureString(size, text));
-        UI.DefaultStyle.Font.Draw(Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2.Zero, new Vector2(5, 1));
+        Vector2T<int> realPos = position.CalculatePosition(EaselGame.Instance.Graphics.Viewport, UI.DefaultStyle.Font.MeasureString(size, text));
+        UI.DefaultStyle.Font.Draw(EaselGame.Instance.Graphics.SpriteRenderer, size, text, realPos, Color.White, EaselMath.ToRadians(20), Vector2.Zero, new Vector2(5, 1));
         
-        Graphics.SpriteRenderer.DrawRectangle(new Vector2(100), new Size<float>(100), 2, 20, Color.White,
+        EaselGame.Instance.Graphics.SpriteRenderer.DrawRectangle(new Vector2(100), new Size<float>(100), 2, 20, Color.White,
             Color.Black, 0, Vector2.One);
         
-        Graphics.SpriteRenderer.End();
+        EaselGame.Instance.Graphics.SpriteRenderer.End();
 
         //Camera.Main.ClearColor = Color.FromHsv(200, 0.5f, 0.75f);
         //Camera.Main.Transform.Position.X += 1;

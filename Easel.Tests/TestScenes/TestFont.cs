@@ -25,8 +25,8 @@ public class TestFont : Scene
     {
         base.Draw();
         
-        Graphics.SpriteRenderer.Begin();
-        Graphics.SpriteRenderer.Draw(_texture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteFlip.None);
-        Graphics.SpriteRenderer.End();
+        EaselGame.Instance.Graphics.SpriteRenderer.Begin();
+        EaselGame.Instance.Graphics.SpriteRenderer.Draw(_texture, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteFlip.None);
+        EaselGame.Instance.Graphics.SpriteRenderer.End();
     }
 }

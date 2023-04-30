@@ -54,14 +54,6 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-
-        Size<int> size = Size<int>.Zero;
-        Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
-        camera.Tag = Tags.MainCamera;
-        AddEntity(camera);
-
-        Entity directionalLight = new Entity("Sun");
-        AddEntity(directionalLight);
     }
 
     /// <summary>

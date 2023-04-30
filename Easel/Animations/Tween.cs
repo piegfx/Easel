@@ -1,7 +1,6 @@
-using System;
-using Easel.Math;
+using Easel.Headless;
 
-namespace Easel.Headless.Animations;
+namespace Easel.Animations;
 
 public struct Tween
 {

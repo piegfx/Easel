@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Easel.Core;
 using Easel.Headless.Entities;
 using Easel.Headless.Entities.Components;
-using Easel.Math;
+using Easel.Headless.EventArgs;
 
 namespace Easel.Headless.Scenes;
 
@@ -14,6 +14,8 @@ namespace Easel.Headless.Scenes;
 /// </summary>
 public abstract class Scene : IDisposable
 {
+    public static event EventHandler<InitializeSceneEventArgs>? InitializeScene;
+    
     // This is the array which gets looped through on update and draw - arrays are FAR faster to loop through compared
     // to dictionaries, so we want to use the array for speed reasons.
     private Entity[] _entities;
@@ -54,6 +56,7 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
+        InitializeScene?.Invoke(null, new InitializeSceneEventArgs(this));
     }
 
     /// <summary>

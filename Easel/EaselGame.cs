@@ -15,6 +15,7 @@ using Pie;
 using Pie.Windowing;
 using System.Collections.Concurrent;
 using System.IO;
+using Easel.Events;
 using Easel.Headless;
 using Monitor = Pie.Windowing.Monitor;
 using Window = Pie.Windowing.Window;
@@ -245,6 +246,7 @@ public class EaselGame : IDisposable
     /// </summary>
     protected virtual void Initialize()
     {
+        InitializeSceneEvent.Initialize();
         SceneManager.Initialize();
     }
 

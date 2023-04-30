@@ -1,10 +1,10 @@
-
 using System;
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Renderers.Structs;
+using Easel.Headless.Entities;
 using Easel.Math;
-using Easel.Scenes;
+using Easel.Headless.Scenes;
 
 namespace Easel.Entities;
 
@@ -202,7 +202,7 @@ public class Camera : Entity
         ProjectionType = ProjectionType.Perspective;
     }
 
-    protected internal override void Initialize()
+    protected override void Initialize()
     {
         base.Initialize();
         

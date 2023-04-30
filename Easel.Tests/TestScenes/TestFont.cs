@@ -1,8 +1,8 @@
 using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
+using Easel.Headless.Scenes;
 using Easel.Math;
-using Easel.Scenes;
 using Pie.Text;
 
 namespace Easel.Tests.TestScenes;

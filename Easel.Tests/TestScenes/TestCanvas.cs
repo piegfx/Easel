@@ -1,9 +1,9 @@
-using System;
-using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
 using Easel.Math;
-using Easel.Scenes;
+using Camera = Easel.Entities.Camera;
 
 namespace Easel.Tests.TestScenes;
 

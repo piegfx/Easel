@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
-#if !HEADLESS
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.Math;
 using Pie;
 using Pie.Windowing;
-#endif
 
 namespace Easel;
 
@@ -14,7 +12,6 @@ namespace Easel;
 /// </summary>
 public struct GameSettings
 {
-#if !HEADLESS
     /// <summary>
     /// The starting size (resolution) of the game view, in pixels. (Default: 1280x720)
     /// </summary>
@@ -42,7 +39,7 @@ public struct GameSettings
     public bool AllowMissing;
 
     /// <summary>
-    /// The title bar flags, if any (Default: <see cref="Easel.TitleBarFlags.ShowEasel"/>)
+    /// The title bar flags, if any (Default: <see cref="TitleBarFlags.ShowEasel"/>)
     /// </summary>
     public TitleBarFlags TitleBarFlags;
 
@@ -85,15 +82,12 @@ public struct GameSettings
     /// </summary>
     public string AutoGenerateContentDirectory;
 
-#endif
-
     /// <summary>
     /// The target frames per second of the game. Set to 0 to have unlimited FPS. (Default: 0, if <see cref="VSync"/> is
     /// enabled the game will run at the monitor's native refresh rate (typically 60, 144, etc.)
     /// </summary>
     public int TargetFps;
-
-#if !HEADLESS
+    
     public GameSettings(Size<int> size, bool fullscreen, string title, bool vSync, bool allowMissing,
         TitleBarFlags titleBarFlags, bool startVisible, WindowBorder border, GraphicsApi? api, Bitmap icon,
         RenderOptions renderOptions, string autoGenerateContentDirectory, int targetFps)
@@ -143,18 +137,4 @@ public struct GameSettings
         Size = new Size<int>(-1, -1),
         Fullscreen = true
     };
-#else
-    public GameSettings(int targetFps)
-    {
-        TargetFps = targetFps;
-    }
-    
-    /// <summary>
-    /// Create the default game settings.
-    /// </summary>
-    public GameSettings()
-    {
-        TargetFps = 0;
-    }
-#endif
 }

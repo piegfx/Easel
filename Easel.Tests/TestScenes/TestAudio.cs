@@ -1,7 +1,5 @@
-using System;
-using System.IO;
 using Easel.Audio;
-using Easel.Scenes;
+using Easel.Headless.Scenes;
 
 namespace Easel.Tests.TestScenes;
 

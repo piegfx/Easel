@@ -1,4 +1,5 @@
 using System;
+using Easel.Headless;
 using Pie;
 
 namespace Easel;

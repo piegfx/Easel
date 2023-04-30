@@ -1,15 +1,15 @@
-using System;
 using System.Numerics;
-using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
 using Easel.Graphics.Primitives;
+using Easel.Headless.Entities;
+using Easel.Headless.Entities.Components;
+using Easel.Headless.Physics.Shapes;
+using Easel.Headless.Physics.Structs;
+using Easel.Headless.Scenes;
 using Easel.Math;
-using Easel.Physics.Shapes;
-using Easel.Physics.Structs;
-using Easel.Scenes;
-using Pie.Windowing;
+using Camera = Easel.Entities.Camera;
 
 namespace Easel.Tests.TestScenes;
 

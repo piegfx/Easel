@@ -2,6 +2,7 @@ using System.Numerics;
 using Easel.Core;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
+using Easel.Headless.Entities.Components;
 using Easel.Math;
 
 namespace Easel.Entities.Components;
@@ -24,7 +25,7 @@ public class Sprite : Component
         Flip = SpriteFlip.None;
     }
 
-    protected internal override void Draw()
+    protected override void Draw()
     {
         base.Draw();
 

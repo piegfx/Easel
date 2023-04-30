@@ -1,4 +1,5 @@
 using System.Numerics;
+using Easel.Headless.Entities.Components;
 using Easel.Math;
 
 namespace Easel.Entities.Components;

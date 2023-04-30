@@ -3,6 +3,7 @@ using System.Numerics;
 using Easel.Graphics;
 using Easel.Graphics.Primitives;
 using Easel.Graphics.Renderers;
+using Easel.Headless.Entities.Components;
 using Material = Easel.Graphics.Materials.Material;
 using Mesh = Easel.Graphics.Mesh;
 
@@ -40,7 +41,7 @@ public class ModelRenderer : Component
         _transforms = new[] { Matrix4x4.Identity };
     }
 
-    protected internal override void Draw()
+    protected override void Draw()
     {
         base.Draw();
         Matrix4x4 world = Transform.TransformMatrix *

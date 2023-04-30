@@ -1,20 +1,13 @@
 using System;
-using System.IO;
 using System.Numerics;
 using Easel.Audio;
-using Easel.Content;
-using Easel.Content.Builder;
 using Easel.Entities;
-using Easel.Entities.Components;
-using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Renderers;
 using Easel.GUI;
+using Easel.Headless.Scenes;
 using Easel.Imgui;
 using Easel.Math;
-using Easel.Scenes;
-using Newtonsoft.Json;
-using Sprite = Easel.Entities.Components.Sprite;
 
 namespace Easel.Tests.TestScenes;
 
@@ -53,9 +46,9 @@ public class Test2D : Scene
         //Content.AddContent(definition);
 
         // Load as usual!
-        _texture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
+        _texture = EaselGame.Instance.Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
 
-        Sound sound = Content.Load<Sound>("Audio/help");
+        Sound sound = EaselGame.Instance.Content.Load<Sound>("Audio/help");
         Console.WriteLine(sound.SoundType);
         sound.Play();
 

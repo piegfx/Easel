@@ -1,5 +1,7 @@
 using System;
 using System.Numerics;
+using Easel.Headless;
+using Easel.Headless.Entities.Components;
 using Easel.Math;
 using Pie.Windowing;
 
@@ -50,7 +52,7 @@ public class NoClipCamera : Component
         _rotation = Vector2.Zero;
     }
 
-    protected internal override void Update()
+    protected override void Update()
     {
         base.Update();
         

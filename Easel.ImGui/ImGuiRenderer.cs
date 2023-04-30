@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Easel.Core;
 using Easel.Graphics;
+using Easel.Headless;
 using Easel.Math;
 using ImGuiNET;
 using Pie;

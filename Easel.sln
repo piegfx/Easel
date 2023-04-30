@@ -25,11 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Text", "Pie\src\Pie.Tex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\src\Pie.Audio\Pie.Audio.csproj", "{DA4F7C25-CD35-4441-997C-F672BEF97337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Headless", "Easel\Easel.Headless.csproj", "{CDB67FFC-74DA-42A7-BFBC-06DCE8EDDA73}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoltPhysicsSharp", "JoltPhysicsSharp\src\JoltPhysicsSharp\JoltPhysicsSharp.csproj", "{126A42B6-0C65-4CFE-8764-C9546E07C3F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Head", "Easel\Easel.Head.csproj", "{034FF58C-98D7-42A9-983C-C9DFF20C0857}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Headless", "Easel.Headless\Easel.Headless.csproj", "{DE3088D8-448D-4153-9B61-868053D1BDE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,17 +91,13 @@ Global
 		{DA4F7C25-CD35-4441-997C-F672BEF97337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA4F7C25-CD35-4441-997C-F672BEF97337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA4F7C25-CD35-4441-997C-F672BEF97337}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDB67FFC-74DA-42A7-BFBC-06DCE8EDDA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDB67FFC-74DA-42A7-BFBC-06DCE8EDDA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDB67FFC-74DA-42A7-BFBC-06DCE8EDDA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDB67FFC-74DA-42A7-BFBC-06DCE8EDDA73}.Release|Any CPU.Build.0 = Release|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{034FF58C-98D7-42A9-983C-C9DFF20C0857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{034FF58C-98D7-42A9-983C-C9DFF20C0857}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{034FF58C-98D7-42A9-983C-C9DFF20C0857}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{034FF58C-98D7-42A9-983C-C9DFF20C0857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE3088D8-448D-4153-9B61-868053D1BDE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE3088D8-448D-4153-9B61-868053D1BDE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE3088D8-448D-4153-9B61-868053D1BDE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE3088D8-448D-4153-9B61-868053D1BDE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

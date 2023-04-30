@@ -1,9 +1,9 @@
 using System.Numerics;
-using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
-using Easel.Math;
-using Easel.Scenes;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
+using Camera = Easel.Entities.Camera;
 
 namespace Easel.Tests.TestScenes;
 
@@ -21,7 +21,7 @@ public class TestGameScene : Scene
         {
             Position = new Vector3(100, 100, 0)
         });
-        entity.AddComponent(new Sprite(Content.Load<Texture2D>("awesomeface")));
+        entity.AddComponent(new Sprite(EaselGame.Instance.Content.Load<Texture2D>("awesomeface")));
         AddEntity(entity);
     }
 

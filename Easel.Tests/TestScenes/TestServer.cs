@@ -1,6 +1,7 @@
 using System;
-using Easel.Entities;
-using Easel.Scenes;
+using Easel.Headless;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
 
 namespace Easel.Tests.TestScenes;
 

@@ -1,8 +1,5 @@
-using Easel.Graphics;
+using Easel.Headless.Scenes;
 using Easel.Imgui;
-using Easel.Scenes;
-using Pie.ShaderCompiler;
-using Pie.Windowing;
 
 namespace Easel.Tests;
 

@@ -1,10 +1,10 @@
 using System;
 using System.Numerics;
-using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
-using Easel.Math;
-using Easel.Scenes;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
+using Camera = Easel.Entities.Camera;
 
 namespace Easel.Tests.TestScenes;
 
@@ -16,7 +16,7 @@ public class TestManyEntities : Scene
         
         Camera.Main.UseOrtho2D();
 
-        Texture2D texture = Content.Load<Texture2D>("awesomeface");
+        Texture2D texture = EaselGame.Instance.Content.Load<Texture2D>("awesomeface");
         Random random = new Random();
         
         for (int i = 0; i < 13457; i++)

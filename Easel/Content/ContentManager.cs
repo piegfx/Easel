@@ -9,7 +9,7 @@ using Easel.Audio;
 using Easel.Content.Builder;
 using Easel.Content.Localization;
 using Easel.Core;
-using Easel.Data;
+using Easel.Headless.Data;
 using Easel.Formats;
 using Easel.Graphics;
 using Easel.GUI;

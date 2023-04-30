@@ -1,16 +1,12 @@
-using System;
-using System.IO;
 using System.Numerics;
-using Easel.Entities;
 using Easel.Entities.Components;
-using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
-using Easel.Graphics.Primitives;
-using Easel.GUI;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
 using Easel.Math;
-using Easel.Scenes;
 using Pie.Windowing;
+using Camera = Easel.Entities.Camera;
 
 namespace Easel.Tests.TestScenes;
 
@@ -26,16 +22,16 @@ public class Test3D : Scene
 
         //DDS dds = new DDS(File.ReadAllBytes("/home/ollie/Pictures/RubberFloor.dds"));
 
-        Texture2D texture = Content.Load<Texture2D>("awesomeface");
+        Texture2D texture = EaselGame.Instance.Content.Load<Texture2D>("awesomeface");
         texture.SamplerState = SamplerState.AnisotropicRepeat;
         
         Camera.Main.ClearColor = Color.CornflowerBlue;
-        Bitmap right = Content.Load<Bitmap>("right");
-        Bitmap left = Content.Load<Bitmap>("left");
-        Bitmap top = Content.Load<Bitmap>("top");
-        Bitmap bottom = Content.Load<Bitmap>("bottom");
-        Bitmap front = Content.Load<Bitmap>("front");
-        Bitmap back = Content.Load<Bitmap>("back");
+        Bitmap right = EaselGame.Instance.Content.Load<Bitmap>("right");
+        Bitmap left = EaselGame.Instance.Content.Load<Bitmap>("left");
+        Bitmap top = EaselGame.Instance.Content.Load<Bitmap>("top");
+        Bitmap bottom = EaselGame.Instance.Content.Load<Bitmap>("bottom");
+        Bitmap front = EaselGame.Instance.Content.Load<Bitmap>("front");
+        Bitmap back = EaselGame.Instance.Content.Load<Bitmap>("back");
         Camera.Main.Skybox = new Skybox(right, left, top, bottom, front, back);
         Camera.Main.Transform.Rotation = Quaternion.CreateFromYawPitchRoll(EaselMath.ToRadians(20), 0, 0);
         Camera.Main.Viewport = new Vector4(0, 0, 0.5f, 1f);

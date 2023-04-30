@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Easel.Entities;
 using Easel.Entities.Components;
-using Easel.Formats;
 using Easel.Graphics;
 using Easel.Graphics.Materials;
 using Easel.Graphics.Primitives;
+using Easel.Headless.Entities;
+using Easel.Headless.Scenes;
 using Easel.Math;
-using Easel.Scenes;
-using Pie.Utils;
+using Camera = Easel.Entities.Camera;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Easel.Tests.TestScenes;
@@ -61,8 +57,8 @@ public class TestShadow : Scene
 
         GetEntity("Sun").GetComponent<DirectionalLight>().Direction = new Vector2(0, 1);
 
-        Texture2D texture2D = Content.Load<Texture2D>("Texture");
-        _model = Content.Load<Model>("Fox");
+        Texture2D texture2D = EaselGame.Instance.Content.Load<Texture2D>("Texture");
+        _model = EaselGame.Instance.Content.Load<Model>("Fox");
 
         for (int f = 0; f < 9; f++)
         {
@@ -102,7 +98,7 @@ public class TestShadow : Scene
 
         //DDS dds = Content.Load<DDS>("DDS/24bitcolor-BC7");
         //Texture2D ddsTexture = new Texture2D(dds.Bitmaps[0][0]);
-        Texture2D ddsTexture = Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
+        Texture2D ddsTexture = EaselGame.Instance.Content.Load<Texture2D>("DDS/Compressed/24bitcolor-BC7");
         ddsTexture.SamplerState = SamplerState.LinearClamp;
 
         Entity cube = new Entity("cube", new Transform()

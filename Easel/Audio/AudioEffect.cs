@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Easel.Headless;
 using Easel.Math;
 
 namespace Easel.Audio;

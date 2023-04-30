@@ -12,16 +12,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
       <ProjectReference Include="..\Easel.Graphics\Easel.Graphics.csproj" />
-      <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
+      <ProjectReference Include="..\Easel.Headless\Easel.Headless.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.Audio\Pie.Audio.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.Text\Pie.Text.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.Utils\Pie.Utils.csproj" />
       <ProjectReference Include="..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\Pie\src\Pie\Pie.csproj" />
-      <ProjectReference Include="..\JoltPhysicsSharp\src\JoltPhysicsSharp\JoltPhysicsSharp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,10 +30,6 @@
       <EmbeddedResource Include="EaselLogo.png" />
       <EmbeddedResource Include="Roboto-Regular.ttf" />
       <EmbeddedResource Include="Graphics\Shaders\**\*" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Compile Remove="Entities\Camera.Headless.cs" />
     </ItemGroup>
     
     <ItemGroup>

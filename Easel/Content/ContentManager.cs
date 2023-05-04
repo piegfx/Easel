@@ -82,6 +82,18 @@ public class ContentManager
 
         return item;
     }
+    
+    public Lazy<T> LoadLazy<T>(string definitionName, string path)
+    {
+        Lazy<T> lazy = new Lazy<T>( () => {
+            if (!TryLoad(definitionName, path, out T item))
+                Logger.Fatal($"No content file with name \"{path}\" could be found in definition \"{definitionName}\".");
+
+            return item;
+        });
+
+        return lazy;
+    }
 
     public bool TryLoad<T>(string path, [NotNullWhen(true)] out T item)
     {
@@ -91,6 +103,11 @@ public class ContentManager
     public T Load<T>(string path)
     {
         return Load<T>(_defaultName, path);
+    }
+    
+    public Lazy<T> LoadLazy<T>(string path)
+    {
+        return LoadLazy<T>(_defaultName, path);
     }
 
     public string[] GetAllFiles(string path, string searchPattern = "*", bool recursive = true)

@@ -85,14 +85,7 @@ public class ContentManager
     
     public Lazy<T> LoadLazy<T>(string definitionName, string path)
     {
-        Lazy<T> lazy = new Lazy<T>(() => {
-            if (!TryLoad(definitionName, path, out T item))
-                Logger.Fatal($"No content file with name \"{path}\" could be found in definition \"{definitionName}\".");
-
-            return item;
-        });
-
-        return lazy;
+        return new Lazy<T>(() => Load<T>(definitionName, path));
     }
 
     public bool TryLoad<T>(string path, [NotNullWhen(true)] out T item)

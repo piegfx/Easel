@@ -52,8 +52,8 @@ public class TestShadow : Scene
         
 
         Camera.Main.ClearColor = Color.RebeccaPurple;
-        //Bitmap bitmap = new Bitmap("/home/ollie/Pictures/ball.png");
-        //Camera.Main.Skybox = new Skybox(bitmap, bitmap, bitmap, bitmap, bitmap, bitmap, SamplerState.PointClamp);
+        Bitmap bitmap = new Bitmap("/home/ollie/Pictures/ball.png");
+        Camera.Main.Skybox = new Skybox(bitmap, bitmap, bitmap, bitmap, bitmap, bitmap, SamplerState.PointClamp);
         Camera.Main.AddComponent(new NoClipCamera()
         {
             MoveSpeed = 5

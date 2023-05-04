@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Easel.Audio;
 using Easel.Scenes;
+using Pie.Audio;
 
 namespace Easel.Tests.TestScenes;
 
@@ -11,7 +12,20 @@ public class TestAudio : Scene
     {
         base.Initialize();
 
-        Sound sound = new Sound("/home/ollie/Music/r-59.ogg");
-        sound.Play(speed: 1.0, loop: true);
+        AudioDevice device = Audio.PieAudio;
+
+        PCM pcm = PCM.LoadWav("/home/ollie/Music/strange airy.wav");
+
+        AudioBuffer buffer = device.CreateBuffer(new BufferDescription(DataType.Pcm, pcm.Format), pcm.Data);
+
+        const int numIterations = 256;
+        
+        ChannelProperties properties = new ChannelProperties()
+        {
+            Volume = 1.0 / numIterations
+        };
+        
+        for (ushort i = 0; i < numIterations; i++)
+            device.PlayBuffer(buffer, i, properties);
     }
 }

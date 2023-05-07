@@ -12,6 +12,20 @@ namespace Easel;
 /// </summary>
 public static class Input
 {
+    public static event OnKeyDown NewKeyDown;
+    
+    public static event OnKeyUp KeyUp;
+    
+    public static event OnMouseButtonDown MouseDown;
+    
+    public static event OnMouseButtonUp MouseUp;
+    
+    public static event OnScroll Scroll;
+
+    public static event OnMouseMove MouseMove;
+
+    public static event OnTextInput TextInput;
+    
     private static HashSet<Key> _keysPressed;
     private static HashSet<Key> _newKeys;
 
@@ -147,6 +161,8 @@ public static class Input
         window.MouseButtonDown += WindowOnMouseButtonDown;
         window.MouseButtonUp += WindowOnMouseButtonUp;
         window.Scroll += WindowOnScroll;
+        window.MouseMove += WindowOnMouseMove;
+        window.TextInput += WindowOnTextInput;
 
         InputState state = window.ProcessEvents();
         MousePosition = (Vector2) state.MousePosition;
@@ -174,29 +190,44 @@ public static class Input
     {
         _keysPressed.Add(key);
         _newKeys.Add(key);
+        NewKeyDown?.Invoke(key);
     }
     
     private static void WindowOnKeyUp(Key key)
     {
         _keysPressed.Remove(key);
         _newKeys.Remove(key);
+        KeyUp?.Invoke(key);
     }
     
     private static void WindowOnMouseButtonDown(MouseButton button)
     {
         _mouseButtonsPressed.Add(button);
         _newMouseButtons.Add(button);
+        MouseDown?.Invoke(button);
     }
     
     private static void WindowOnMouseButtonUp(MouseButton button)
     {
         _mouseButtonsPressed.Remove(button);
         _newMouseButtons.Remove(button);
+        MouseUp?.Invoke(button);
     }
     
     private static void WindowOnScroll(System.Numerics.Vector2 scroll)
     {
         ScrollWheelDelta += (Vector2) scroll;
+        Scroll?.Invoke(scroll);
+    }
+    
+    private static void WindowOnMouseMove(Vector2 position)
+    {
+        MouseMove?.Invoke(position);
+    }
+    
+    private static void WindowOnTextInput(char c)
+    {
+        TextInput?.Invoke(c);
     }
     
     public struct InputSceneOptions
@@ -317,4 +348,18 @@ public static class Input
             Options = options;
         }
     }
+
+    public delegate void OnKeyDown(Key key);
+
+    public delegate void OnKeyUp(Key key);
+
+    public delegate void OnMouseButtonDown(MouseButton button);
+
+    public delegate void OnMouseButtonUp(MouseButton button);
+
+    public delegate void OnScroll(Vector2 scroll);
+
+    public delegate void OnMouseMove(Vector2 moveAmount);
+
+    public delegate void OnTextInput(char c);
 }

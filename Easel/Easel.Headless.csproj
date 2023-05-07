@@ -28,6 +28,8 @@
         <Compile Remove="Metrics.cs" />
         <Compile Remove="Input.cs" />
         
+        <Compile Remove="EaselWindow.cs" />
+        
         <Compile Remove="Entities\Camera.cs" />
         <Compile Remove="Entities\Components\DirectionalLight.cs" />
         <Compile Remove="Entities\Components\ModelRenderer.cs" />

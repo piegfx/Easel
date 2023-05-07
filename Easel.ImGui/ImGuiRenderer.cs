@@ -60,7 +60,7 @@ public class ImGuiRenderer : IDisposable
 
         graphics.ViewportResized += ViewportOnResize;
         // TODO: Input.TextInput
-        EaselGame.Instance.Window.TextInput += PressChar;
+        Input.TextInput += PressChar;
 
         _pressedChars = new List<char>();
         _keysList = Enum.GetValues<Key>();

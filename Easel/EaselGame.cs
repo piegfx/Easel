@@ -41,7 +41,7 @@ public class EaselGame : IDisposable
     /// <summary>
     /// The underlying game window. Access this to change its size, title, and subscribe to various events.
     /// </summary>
-    public Window Window { get; private set; }
+    public EaselWindow Window { get; private set; }
 
     internal EaselGraphics GraphicsInternal;
 
@@ -131,13 +131,13 @@ public class EaselGame : IDisposable
         Icon icon = new Icon((uint) _settings.Icon.Size.Width, (uint) _settings.Icon.Size.Height,
             _settings.Icon.Data);
 
-        System.Drawing.Size size = (System.Drawing.Size) _settings.Size;
+        Size<int> size = _settings.Size;
         if (size.Width == -1 && size.Height == -1)
-            size = Monitor.PrimaryMonitor.VideoMode.Size;
+            size = (Size<int>) Monitor.PrimaryMonitor.VideoMode.Size;
 
         WindowSettings settings = new WindowSettings()
         {
-            Size = size,
+            Size = (System.Drawing.Size) size,
             Title = _settings.Title,
             Border = _settings.Border,
             EventDriven = false,
@@ -176,7 +176,8 @@ public class EaselGame : IDisposable
 
         Logger.Debug("Creating window...");
         PieLog.DebugLog += PieDebug;
-        Window = Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options);
+        Window = new EaselWindow(
+            Pie.Windowing.Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options));
         Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
         Window.Visible = _settings.StartVisible;
 
@@ -189,7 +190,7 @@ public class EaselGame : IDisposable
         AudioInternal = new EaselAudio();
 
         Logger.Debug("Initializing input...");
-        Input.Initialize(Window);
+        Input.Initialize(Window.Window);
 
         Logger.Debug("Creating content manager...");
         Content = new ContentManager();
@@ -225,7 +226,7 @@ public class EaselGame : IDisposable
         SpinWait sw = new SpinWait();
         
 #if !HEADLESS
-        while (!Window.ShouldClose)
+        while (!Window.Window.ShouldClose)
         {
             if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
             {
@@ -234,7 +235,7 @@ public class EaselGame : IDisposable
             }
 
             sw.Reset();
-            Input.Update(Window);
+            Input.Update(Window.Window);
             Time.Update();
             Metrics.Update();
             UI.Update();
@@ -325,7 +326,7 @@ public class EaselGame : IDisposable
         SceneManager.ActiveScene?.Dispose();
 #if !HEADLESS
         GraphicsInternal.Dispose();
-        Window.Dispose();
+        Window.Window.Dispose();
 #endif
         Logger.Debug("EaselGame disposed.");
     }
@@ -338,7 +339,7 @@ public class EaselGame : IDisposable
 #if HEADLESS
         _shouldClose = true;
 #else
-        Window.ShouldClose = true;
+        Window.Window.ShouldClose = true;
 #endif
     }
 
@@ -373,9 +374,9 @@ public class EaselGame : IDisposable
         Graphics.SpriteRenderer.End();
     }
     
-    private void WindowOnResize(System.Drawing.Size size)
+    private void WindowOnResize(Size<int> newSize)
     {
-        GraphicsInternal.ResizeGraphics((Size<int>) size);
+        GraphicsInternal.ResizeGraphics(newSize);
     }
     
     private void PieDebug(LogType logtype, string message)

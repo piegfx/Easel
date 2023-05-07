@@ -2,11 +2,9 @@ using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Physics;
 using Easel.Scenes;
-#if !HEADLESS
 using Easel.Audio;
 using Easel.Content;
 using Easel.Graphics;
-#endif
 
 namespace Easel.Interfaces;
 
@@ -23,7 +21,6 @@ public abstract class InheritableEntity
 
     protected abstract Simulation Simulation { get; }
     
-#if !HEADLESS
     /// <summary>
     /// The current <see cref="EaselGraphics"/> instance.
     /// </summary>
@@ -35,8 +32,7 @@ public abstract class InheritableEntity
     protected abstract EaselAudio Audio { get; }
     
     protected abstract ContentManager Content { get; }
-#endif
-    
+
     /// <summary>
     /// The currently active <see cref="Scene"/>.
     /// </summary>

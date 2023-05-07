@@ -5,14 +5,12 @@ using Easel.Core;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Math;
-#if !HEADLESS
 using Easel.Audio;
 using Easel.Content;
 using Easel.Graphics;
 using Easel.Graphics.Lighting;
 using Pie;
 using DirectionalLight = Easel.Entities.Components.DirectionalLight;
-#endif
 
 namespace Easel.Scenes;
 
@@ -42,8 +40,7 @@ public abstract class Scene : IDisposable
     /// The current <see cref="EaselGame"/> instance.
     /// </summary>
     protected EaselGame Game => EaselGame.Instance;
-
-#if !HEADLESS
+    
     /// <summary>
     /// The current <see cref="EaselGraphics"/> instance.
     /// </summary>
@@ -55,7 +52,6 @@ public abstract class Scene : IDisposable
     protected EaselAudio Audio => EaselGame.Instance.AudioInternal;
 
     protected ContentManager Content => EaselGame.Instance.Content;
-#endif
 
     /// <summary>
     /// Create a new scene.
@@ -77,20 +73,14 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Initialize()
     {
-#if !HEADLESS
         Size<int> size = (Size<int>) EaselGame.Instance.Window.Size;
-#else 
-        Size<int> size = Size<int>.Zero;
-#endif
         Camera camera = new Camera("Main Camera", EaselMath.ToRadians(70), size.Width / (float) size.Height);
         camera.Tag = Tags.MainCamera;
         AddEntity(camera);
 
         Entity directionalLight = new Entity("Sun");
-#if !HEADLESS
         directionalLight.AddComponent(new DirectionalLight(new Vector2(EaselMath.ToRadians(0), EaselMath.ToRadians(75)),
             Color.White));
-#endif
         AddEntity(directionalLight);
     }
 
@@ -137,7 +127,6 @@ public abstract class Scene : IDisposable
     /// </summary>
     protected internal virtual void Draw()
     {
-#if !HEADLESS
         Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
         Graphics.Renderer.NewFrame();
 
@@ -180,8 +169,6 @@ public abstract class Scene : IDisposable
         }
         
         Graphics.Renderer.DoneFrame();
-
-#endif
     }
 
     /// <summary>

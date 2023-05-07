@@ -7,7 +7,6 @@ using Easel.Core;
 using Easel.Math;
 using Easel.Physics;
 using Easel.Scenes;
-#if !HEADLESS
 using Easel.Audio;
 using Easel.Content;
 using Easel.Content.Builder;
@@ -19,7 +18,6 @@ using System.Collections.Concurrent;
 using System.IO;
 using Monitor = Pie.Windowing.Monitor;
 using Window = Pie.Windowing.Window;
-#endif
 
 namespace Easel;
 
@@ -37,7 +35,6 @@ public class EaselGame : IDisposable
 
     public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
     
-#if !HEADLESS
     /// <summary>
     /// The underlying game window. Access this to change its size, title, and subscribe to various events.
     /// </summary>
@@ -64,10 +61,6 @@ public class EaselGame : IDisposable
     public bool ShowMetrics;
 
     private ConcurrentBag<Action> _actions;
-
-#else
-    private bool _shouldClose;
-#endif
 
     public Simulation Simulation;
 
@@ -98,12 +91,10 @@ public class EaselGame : IDisposable
     {
         Logger.Debug("New EaselGame created!");
         _settings = settings;
-#if !HEADLESS
         AllowMissing = settings.AllowMissing;
         if (AllowMissing)
             Logger.Info("Missing content support is enabled.");
         _actions = new ConcurrentBag<Action>();
-#endif
         Instance = this;
         SceneManager.InitializeScene(scene);
 
@@ -122,9 +113,7 @@ public class EaselGame : IDisposable
         Logger.Info("\tMemory: " + SystemInfo.MemoryInfo);
         Logger.Info("\tLogical threads: " + SystemInfo.LogicalThreads);
         Logger.Info("\tOS: " + Environment.OSVersion.VersionString);
-        
-#if !HEADLESS
-        
+
         _settings.Icon ??=
             new Bitmap(Utils.LoadEmbeddedResource(Assembly.GetExecutingAssembly(), "Easel.EaselLogo.png"));
 
@@ -211,8 +200,6 @@ public class EaselGame : IDisposable
             }
         }
 
-#endif
-        
         Logger.Debug("Initializing physics...");
         // TODO: PhysicsInitSettings in the GameSettings.
         Simulation = new Simulation(new PhysicsInitSettings());
@@ -225,7 +212,6 @@ public class EaselGame : IDisposable
 
         SpinWait sw = new SpinWait();
         
-#if !HEADLESS
         while (!Window.Window.ShouldClose)
         {
             if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
@@ -250,23 +236,6 @@ public class EaselGame : IDisposable
                 DrawMetrics();
             GraphicsInternal.Present();
         }
-#else
-        while (!_shouldClose)
-        {
-            if (_targetFrameTime != 0 && TargetFps < 60 && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
-            {
-                sw.SpinOnce();
-                continue;
-            }
-
-            sw.Reset();
-            Time.Update();
-            FixedUpdate();
-            Update();
-            AfterUpdate();
-            Draw();
-        }
-#endif
 
         Logger.Debug("Close requested, shutting down...");
     }
@@ -286,9 +255,7 @@ public class EaselGame : IDisposable
     protected virtual void Update()
     {
         SceneManager.Update();
-#if !HEADLESS
         AudioEffect.Update();
-#endif
     }
 
     protected virtual void AfterUpdate()
@@ -308,12 +275,10 @@ public class EaselGame : IDisposable
     /// </summary>
     protected virtual void Draw()
     {
-#if !HEADLESS
         foreach (Action action in _actions)
             action();
         _actions.Clear();
-#endif
-        
+
         SceneManager.Draw();
     }
 
@@ -324,10 +289,8 @@ public class EaselGame : IDisposable
     public void Dispose()
     {
         SceneManager.ActiveScene?.Dispose();
-#if !HEADLESS
         GraphicsInternal.Dispose();
         Window.Window.Dispose();
-#endif
         Logger.Debug("EaselGame disposed.");
     }
 
@@ -336,11 +299,7 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Close()
     {
-#if HEADLESS
-        _shouldClose = true;
-#else
         Window.Window.ShouldClose = true;
-#endif
     }
 
     /// <summary>
@@ -351,7 +310,6 @@ public class EaselGame : IDisposable
     /// up many other parts of the engine and it will likely stop working.</remarks>
     public static EaselGame Instance;
     
-#if !HEADLESS
     /// <summary>
     /// Run the given code on the main thread - useful for graphics calls which <b>cannot</b> run on any other thread.
     /// These actions are processed at the end of <see cref="Draw"/>.
@@ -385,5 +343,4 @@ public class EaselGame : IDisposable
         //    return;
         Logger.Log((Logger.LogType) logtype, message);
     }
-#endif
 }

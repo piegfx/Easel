@@ -1,8 +1,6 @@
 ﻿using System;
 using Easel.Core;
-#if !HEADLESS
 using Easel.GUI;
-#endif
 
 namespace Easel.Scenes;
 
@@ -35,9 +33,7 @@ public static class SceneManager
             _activeScene?.Dispose();
             _activeScene = null;
             GC.Collect();
-#if !HEADLESS
             UI.Clear();
-#endif
             _activeScene = _switchScene;
             _activeScene.Initialize();
             _switchScene = null;

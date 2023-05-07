@@ -133,7 +133,7 @@ public sealed class ForwardRenderer : IRenderer
                 Vector3.Zero, Vector3.UnitY);
             Matrix4x4 lightSpace = view * proj;
             device.SetFramebuffer(DirectionalLight.Value.ShadowMap.Framebuffers[0]);
-            device.Clear(ClearFlags.Depth);
+            device.ClearDepthStencilBuffer(ClearFlags.Depth, 1, 0);
             // TODO: Optimize and set viewport to FB size.
             device.Viewport = new Rectangle(0, 0, 1024, 1024);
 

@@ -88,7 +88,8 @@ public class EaselGraphics : IDisposable
     /// <param name="color">The color to clear with.</param>
     public void Clear(Color color)
     {
-        PieGraphics.Clear((System.Drawing.Color) color, ClearFlags.Depth | ClearFlags.Stencil);
+        PieGraphics.ClearColorBuffer((Vector4) color);
+        PieGraphics.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);
     }
 
     public void SetRenderTarget(RenderTarget target)

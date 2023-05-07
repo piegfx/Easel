@@ -161,7 +161,7 @@ public abstract class Scene : IDisposable
         int j = 0;
         foreach (Camera camera in cameras)
         {
-            Graphics.PieGraphics.Clear(ClearFlags.Depth | ClearFlags.Stencil);
+            Graphics.PieGraphics.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);
             
             // Convert the camera's normalized viewport into a viewport pie can understand.
             Rectangle<int> viewport = new Rectangle<int>();

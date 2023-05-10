@@ -11,6 +11,7 @@ public class EaselWindow
     internal Window Window;
 
     private string _internalTitle;
+    private string _title;
 
     public Size<int> Size
     {
@@ -21,7 +22,11 @@ public class EaselWindow
     public string Title
     {
         get => Window.Title;
-        set => Window.Title = value + _internalTitle;
+        set
+        {
+            _title = value;
+            Window.Title = _title + _internalTitle;
+        }
     }
 
     public bool Visible
@@ -66,6 +71,8 @@ public class EaselWindow
     internal EaselWindow(Window window)
     {
         Window = window;
+
+        _title = window.Title;
         window.Resize += WindowOnResize;
     }
 
@@ -80,7 +87,7 @@ public class EaselWindow
         set
         {
             _internalTitle = value;
-            Title += _internalTitle;
+            Window.Title = _title + _internalTitle;
         }
     }
 

@@ -5,6 +5,8 @@ namespace Easel;
 
 public static class Metrics
 {
+    internal static event OnUpdate MetricsUpdate;
+    
     private static ulong _totalFrames;
     private static float _secondsCounter;
     private static int _framesInSecond;
@@ -31,6 +33,9 @@ public static class Metrics
             _secondsCounter = 0;
             _fps = _framesInSecond;
             _framesInSecond = 0;
+            MetricsUpdate?.Invoke();
         }
     }
+
+    internal delegate void OnUpdate();
 }

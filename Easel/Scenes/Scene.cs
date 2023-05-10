@@ -128,7 +128,6 @@ public abstract class Scene : IDisposable
     protected internal virtual void Draw()
     {
         Entity[] cameras = GetEntitiesWithTag(Tags.MainCamera);
-        Graphics.Renderer.NewFrame();
 
         for (int i = 0; i < _entityCount; i++)
         {
@@ -167,8 +166,6 @@ public abstract class Scene : IDisposable
 
             j++;
         }
-        
-        Graphics.Renderer.DoneFrame();
     }
 
     /// <summary>

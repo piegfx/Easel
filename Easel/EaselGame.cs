@@ -154,13 +154,6 @@ public class EaselGame : IDisposable
                 api = potApi;
         }
 
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
-            settings.Title += " - Easel";
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
-            settings.Title += " - " + api.ToFriendlyString();
-        if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
-            settings.Title += " - 0 FPS";
-
         Logger.Info($"Using {api.ToFriendlyString()} graphics API.");
 
         Logger.Debug("Creating window...");
@@ -206,6 +199,7 @@ public class EaselGame : IDisposable
         
         Logger.Debug("Initializing time...");
         Time.Initialize();
+        Metrics.MetricsUpdate += MetricsOnUpdate;
         
         Logger.Debug("Initializing your application...");
         Initialize();
@@ -230,7 +224,11 @@ public class EaselGame : IDisposable
             FixedUpdate();
             Update();
             AfterUpdate();
+            
+            GraphicsInternal.Renderer.NewFrame();
             Draw();
+            GraphicsInternal.Renderer.DoneFrame();
+
             UI.Draw(GraphicsInternal.SpriteRenderer);
             if (ShowMetrics)
                 DrawMetrics();
@@ -342,5 +340,18 @@ public class EaselGame : IDisposable
         //if (logtype == LogType.Debug)
         //    return;
         Logger.Log((Logger.LogType) logtype, message);
+    }
+    
+    private void MetricsOnUpdate()
+    {
+        string title = "";
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowEasel) == TitleBarFlags.ShowEasel)
+            title += " - Easel";
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowGraphicsApi) == TitleBarFlags.ShowGraphicsApi)
+            title += " - " + GraphicsInternal.PieGraphics.Api.ToFriendlyString();
+        if ((_settings.TitleBarFlags & TitleBarFlags.ShowFps) == TitleBarFlags.ShowFps)
+            title += $" - {Metrics.FPS} FPS";
+
+        Window.InternalTitle = title;
     }
 }

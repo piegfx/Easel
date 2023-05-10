@@ -18,18 +18,19 @@ public struct Tween
             if (IsFinished)
                 return 1.0;
 
-            double time = _currentTime / _endTime;
+            double time = CurrentTime / _endTime;
 
             if (PingPong && (_numRepeats & 1) == 1)
                 time = 1.0 - time;
 
-            return time;
+            return EaselMath.Clamp(time, 0.0, 1.0);
         }
     }
     
     private double _endTime;
-    private double _currentTime;
     private int _numRepeats;
+    
+    public double CurrentTime;
 
     public Tween(double duration)
     {
@@ -39,7 +40,7 @@ public struct Tween
 
     public void Update()
     {
-        if (!IsFinished && _currentTime >= _endTime)
+        if (!IsFinished && CurrentTime >= _endTime)
         {
             _numRepeats++;
             if (NumRepeats > 0 && _numRepeats >= NumRepeats)
@@ -47,9 +48,9 @@ public struct Tween
                 IsFinished = true;
                 return;
             }
-            _currentTime -= _endTime;
+            CurrentTime -= _endTime;
         }
 
-        _currentTime += Time.DeltaTimeD;
+        CurrentTime += Time.DeltaTimeD;
     }
 }

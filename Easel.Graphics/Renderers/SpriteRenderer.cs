@@ -282,9 +282,14 @@ public sealed class SpriteRenderer : IDisposable
     {
         if (_totalIndices == 0)
             return;
-        
-        _device.UpdateBuffer(_vertexBuffer, 0, _vertices);
-        _device.UpdateBuffer(_indexBuffer, 0, _indices);
+
+        IntPtr vptr = _device.MapBuffer(_vertexBuffer, MapMode.Write);
+        PieUtils.CopyToUnmanaged(vptr, 0, _vertices);
+        _device.UnmapBuffer(_vertexBuffer);
+
+        IntPtr iptr = _device.MapBuffer(_indexBuffer, MapMode.Write);
+        PieUtils.CopyToUnmanaged(iptr, 0, _indices);
+        _device.UnmapBuffer(_indexBuffer);
 
         Effect effect = _effectToUse;
         if (effect == null)

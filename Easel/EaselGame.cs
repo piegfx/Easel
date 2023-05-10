@@ -208,9 +208,9 @@ public class EaselGame : IDisposable
         
         while (!Window.Window.ShouldClose)
         {
-            if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds <= _targetFrameTime)
+            if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds < _targetFrameTime)
             {
-                sw.SpinOnce();
+                //sw.SpinOnce();
                 continue;
             }
 

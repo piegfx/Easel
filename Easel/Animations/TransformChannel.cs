@@ -30,7 +30,8 @@ public class TransformChannel : IAnimationChannel
 
         double lerpAmount = (_currentTime - currentFrame.Time) / (nextFrame.Time - currentFrame.Time);
 
-        Transform = Transform.Lerp(currentFrame.Transform, nextFrame.Transform, (float) lerpAmount);
+        Transform = Transform.Lerp(currentFrame.Transform, nextFrame.Transform,
+            (float) double.Clamp(lerpAmount, 0.0, 1.0));
 
         _currentTime += dt;
 

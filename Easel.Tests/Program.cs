@@ -9,18 +9,23 @@ using Easel;
 using Easel.Core;
 using Easel.Tests;
 using Easel.Tests.TestScenes;
+using Pie;
 using Pie.Windowing;
 
 
 GameSettings settings = new GameSettings()
 {
     Border = WindowBorder.Resizable,
+    TitleBarFlags = TitleBarFlags.ShowFps | TitleBarFlags.ShowGraphicsApi,
+    VSync = false,
+    TargetFps = 0,
+    Api = GraphicsApi.D3D11
     //AutoGenerateContentDirectory = null
 };
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new TestShadow());
+using TestGame game = new TestGame(settings, new TestManyEntities());
 game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);

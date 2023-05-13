@@ -284,11 +284,11 @@ public sealed class SpriteRenderer : IDisposable
             return;
 
         IntPtr vptr = _device.MapBuffer(_vertexBuffer, MapMode.Write);
-        PieUtils.CopyToUnmanaged(vptr, 0, _vertices);
+        PieUtils.CopyToUnmanaged(vptr, 0, _totalVertices * SpriteVertex.SizeInBytes, _vertices);
         _device.UnmapBuffer(_vertexBuffer);
 
         IntPtr iptr = _device.MapBuffer(_indexBuffer, MapMode.Write);
-        PieUtils.CopyToUnmanaged(iptr, 0, _indices);
+        PieUtils.CopyToUnmanaged(iptr, 0, _totalIndices * sizeof(uint), _indices);
         _device.UnmapBuffer(_indexBuffer);
 
         Effect effect = _effectToUse;

@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.Numerics;
+using System.Text;
 using Easel.Entities;
 using Easel.Entities.Components;
 using Easel.Graphics;
+using Easel.GUI;
 using Easel.Math;
 using Easel.Scenes;
 
@@ -47,6 +49,8 @@ public class TestManyEntities : Scene
             entity.AddComponent(new Sprite(texture));
             AddEntity(entity);
         }*/
+
+        UI.DefaultStyle.Font = new Font(@"C:\Windows\Fonts\Arial.ttf");
     }
 
     protected override void Draw()
@@ -55,15 +59,26 @@ public class TestManyEntities : Scene
         
         Graphics.SpriteRenderer.Begin();
 
-        int i = 0;
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine("text");
+        builder.AppendLine("more text");
+
+        string text = builder.ToString();
+        
+        UI.DefaultStyle.Font.Draw(Graphics.SpriteRenderer, 48, text, new Vector2T<int>(10, 10),
+            Color.White, 0, Vector2.Zero, Vector2.One);
+        
+        Graphics.SpriteRenderer.End();
+
+        /*int i = 0;
         foreach (Texture2D texture in _textures)
         {
+            Graphics.SpriteRenderer.Begin();
             Graphics.SpriteRenderer.Draw(texture, new Vector2(i * 100), null, Color.White, 0, Vector2.Zero,
                 Vector2.One);
+            Graphics.SpriteRenderer.End();
 
             i++;
-        }
-
-        Graphics.SpriteRenderer.End();
+        }*/
     }
 }

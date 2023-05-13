@@ -68,6 +68,8 @@ public class Font : IDisposable
                     pos.Y += (int) size;
                     pos.X = position.X;
                     continue;
+                case '\r':
+                    continue;
             }
             
             Charmap.Character chr = charmap.GetCharacter(c);
@@ -120,6 +122,8 @@ public class Font : IDisposable
                             case '\n':
                                 pos.Y += (int) size;
                                 pos.X = position.X;
+                                continue;
+                            case '\r':
                                 continue;
                         }
 

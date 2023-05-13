@@ -19,7 +19,7 @@ GameSettings settings = new GameSettings()
     TitleBarFlags = TitleBarFlags.ShowFps | TitleBarFlags.ShowGraphicsApi,
     VSync = false,
     TargetFps = 0,
-    Api = GraphicsApi.D3D11
+    Api = GraphicsApi.OpenGL
     //AutoGenerateContentDirectory = null
 };
 

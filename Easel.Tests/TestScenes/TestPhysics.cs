@@ -27,7 +27,8 @@ public class TestPhysics : Scene
         
         Entity cube = new Entity($"cube", new Transform()
         {
-            Position = new Vector3(0, 5, -5)
+            Position = new Vector3(0, 5, -5),
+            Rotation = Quaternion.CreateFromYawPitchRoll(0, 1, 0)
         });
         cube.AddComponent(new Rigidbody(new BoxShape(new Vector3(0.5f))));
         cube.AddComponent(new ModelRenderer(new Cube(), material));

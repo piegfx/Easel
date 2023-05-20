@@ -4,4 +4,4 @@
 [submodule "JoltPhysicsSharp"]
 	path = JoltPhysicsSharp
 	url = https://github.com/piegfx/JoltPhysicsSharp
-	branch = piegfx-fixes
+	branch = net7-only

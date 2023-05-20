@@ -17,15 +17,15 @@ GameSettings settings = new GameSettings()
 {
     Border = WindowBorder.Resizable,
     TitleBarFlags = TitleBarFlags.ShowFps | TitleBarFlags.ShowGraphicsApi,
-    VSync = false,
-    TargetFps = 0,
+    VSync = true,
+    TargetFps = 200,
     Api = GraphicsApi.OpenGL
     //AutoGenerateContentDirectory = null
 };
 
 Logger.UseConsoleLogs();
 
-using TestGame game = new TestGame(settings, new TestManyEntities());
+using TestGame game = new TestGame(settings, new TestPhysics());
 game.Run();
 
 /*QuaternionT<float> quat = QuaternionT.FromEuler(1f, 0.5f, 0.25f);

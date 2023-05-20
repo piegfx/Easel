@@ -205,6 +205,8 @@ public class EaselGame : IDisposable
         Initialize();
 
         SpinWait sw = new SpinWait();
+
+        double fixedAccumulator = 0.0;
         
         while (!Window.Window.ShouldClose)
         {
@@ -213,15 +215,26 @@ public class EaselGame : IDisposable
                 //sw.SpinOnce();
                 continue;
             }
+            
+            fixedAccumulator += Time.InternalStopwatch.Elapsed.TotalSeconds;
 
             sw.Reset();
             Input.Update(Window.Window);
             Time.Update();
             Metrics.Update();
             UI.Update();
-            // TODO: Fixed update on separate thread/improved render loop?
-            // For now fixed update just runs before every update cycle.
-            FixedUpdate();
+
+            // Fixed update must be fixed - therefore it must run at a constant rate.
+            // Currently, easel forces a fixed update delta time of 60hz.
+            // This setup means that at FPS's lower than 60, FixedUpdate may be invoked multiple
+            // times per frame.
+            const double fixedUpdateDelta = 1.0 / 60.0;
+            while (fixedAccumulator >= fixedUpdateDelta)
+            {
+                FixedUpdate();
+                fixedAccumulator -= fixedUpdateDelta;
+            }
+
             Update();
             AfterUpdate();
             

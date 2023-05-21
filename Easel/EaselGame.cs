@@ -32,6 +32,7 @@ public class EaselGame : IDisposable
 {
     private GameSettings _settings;
     private double _targetFrameTime;
+    private bool _shouldClose;
 
     public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
     
@@ -122,17 +123,7 @@ public class EaselGame : IDisposable
 
         Size<int> size = _settings.Size;
         if (size.Width == -1 && size.Height == -1)
-            size = (Size<int>) Monitor.PrimaryMonitor.VideoMode.Size;
-
-        WindowSettings settings = new WindowSettings()
-        {
-            Size = (System.Drawing.Size) size,
-            Title = _settings.Title,
-            Border = _settings.Border,
-            EventDriven = false,
-            Icons = new[] { icon },
-            StartVisible = false
-        };
+            size = (Size<int>) Monitor.PrimaryMonitor.CurrentMode.Size;
 
         GraphicsDeviceOptions options = new GraphicsDeviceOptions();
 
@@ -158,10 +149,19 @@ public class EaselGame : IDisposable
 
         Logger.Debug("Creating window...");
         PieLog.DebugLog += PieDebug;
-        Window = new EaselWindow(
-            Pie.Windowing.Window.CreateWithGraphicsDevice(settings, api, out GraphicsDevice device, options));
-        Window.SetFullscreen(_settings.Fullscreen, size, Monitor.PrimaryMonitor.VideoMode.RefreshRate);
-        Window.Visible = _settings.StartVisible;
+
+        WindowBuilder builder = new WindowBuilder()
+            .Size(size.Width, size.Height)
+            .Title(_settings.Title)
+            .Icon(icon)
+            .GraphicsDeviceOptions(options);
+
+        builder.WindowFullscreenMode = _settings.FullscreenMode;
+        builder.WindowResizable = _settings.Resizable;
+        builder.WindowBorderless = _settings.Borderless;
+        
+        Window = new EaselWindow(builder.Build(out GraphicsDevice device));
+        //Window.Visible = _settings.StartVisible;
 
         Logger.Debug("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);
@@ -170,9 +170,6 @@ public class EaselGame : IDisposable
 
         Logger.Debug("Creating audio device...");
         AudioInternal = new EaselAudio();
-
-        Logger.Debug("Initializing input...");
-        Input.Initialize(Window.Window);
 
         Logger.Debug("Creating content manager...");
         Content = new ContentManager();
@@ -208,8 +205,9 @@ public class EaselGame : IDisposable
 
         double fixedAccumulator = 0.0;
         
-        while (!Window.Window.ShouldClose)
+        while (!_shouldClose)
         {
+            // If vsync is enabled, completely ignore this - it will only serve to slow vsync down.
             if ((!Graphics.VSync || (_targetFrameTime != 0 && TargetFps < 60)) && Time.InternalStopwatch.Elapsed.TotalSeconds < _targetFrameTime)
             {
                 //sw.SpinOnce();
@@ -219,7 +217,12 @@ public class EaselGame : IDisposable
             fixedAccumulator += Time.InternalStopwatch.Elapsed.TotalSeconds;
 
             sw.Reset();
+            
+            // Update input. We must do this BEFORE polling events, as it resets a few values.
             Input.Update(Window.Window);
+            if (Window.ProcessEvents())
+                _shouldClose = true;
+            
             Time.Update();
             Metrics.Update();
             UI.Update();
@@ -310,7 +313,7 @@ public class EaselGame : IDisposable
     /// </summary>
     public void Close()
     {
-        Window.Window.ShouldClose = true;
+        _shouldClose = true;
     }
 
     /// <summary>

@@ -18,9 +18,9 @@ public struct GameSettings
     public Size<int> Size;
 
     /// <summary>
-    /// If enabled, the window will start in fullscreen mode at the given <see cref="Size"/>. (Default: false)
+    /// The starting fullscreen mode of the window. (Default: <see cref="Pie.Windowing.FullscreenMode.Windowed"/>)
     /// </summary>
-    public bool Fullscreen;
+    public FullscreenMode FullscreenMode;
 
     /// <summary>
     /// The starting title of the game view. (Default: The starting assembly name)
@@ -47,11 +47,16 @@ public struct GameSettings
     /// If disabled, the game window will not be visible until you tell it to become visible.
     /// </summary>
     public bool StartVisible;
-    
+
     /// <summary>
-    /// The initial border of the view. (Default: <see cref="WindowBorder.Fixed"/>)
+    /// Whether or not the window will be resizable. (Default: false)
     /// </summary>
-    public WindowBorder Border;
+    public bool Resizable;
+
+    /// <summary>
+    /// Whether or not the window will be borderless. (Default: false)
+    /// </summary>
+    public bool Borderless;
     
     /// <summary>
     /// The graphics API the game will use - leave null to let Easel decide which API to use. (Default: <see langword="null"/>)
@@ -88,18 +93,19 @@ public struct GameSettings
     /// </summary>
     public int TargetFps;
     
-    public GameSettings(Size<int> size, bool fullscreen, string title, bool vSync, bool allowMissing,
-        TitleBarFlags titleBarFlags, bool startVisible, WindowBorder border, GraphicsApi? api, Bitmap icon,
+    public GameSettings(Size<int> size, FullscreenMode fullscreenMode, string title, bool vSync, bool allowMissing,
+        TitleBarFlags titleBarFlags, bool startVisible, bool resizable, bool borderless, GraphicsApi? api, Bitmap icon,
         RenderOptions renderOptions, string autoGenerateContentDirectory, int targetFps)
     {
         Size = size;
-        Fullscreen = fullscreen;
+        FullscreenMode = fullscreenMode;
         Title = title;
         VSync = vSync;
         AllowMissing = allowMissing;
         TitleBarFlags = titleBarFlags;
         StartVisible = startVisible;
-        Border = border;
+        Resizable = resizable;
+        Borderless = borderless;
         Api = api;
         Icon = icon;
         RenderOptions = renderOptions;
@@ -113,10 +119,11 @@ public struct GameSettings
     public GameSettings()
     {
         Size = new Size<int>(1280, 720);
-        Fullscreen = false;
+        FullscreenMode = FullscreenMode.Windowed;
 
         Title = Assembly.GetEntryAssembly()?.GetName().Name ?? "Easel Window";
-        Border = WindowBorder.Fixed;
+        Resizable = false;
+        Borderless = false;
         VSync = true;
         TargetFps = 0;
         Api = null;
@@ -135,6 +142,6 @@ public struct GameSettings
     public static GameSettings StartFullscreen => new GameSettings()
     {
         Size = new Size<int>(-1, -1),
-        Fullscreen = true
+        FullscreenMode = FullscreenMode.BorderlessFullscreen
     };
 }

@@ -15,7 +15,7 @@ using Pie.Windowing;
 
 GameSettings settings = new GameSettings()
 {
-    Border = WindowBorder.Resizable,
+    Resizable = true,
     TitleBarFlags = TitleBarFlags.ShowFps | TitleBarFlags.ShowGraphicsApi,
     VSync = true,
     TargetFps = 200,

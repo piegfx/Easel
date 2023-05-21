@@ -42,7 +42,7 @@ public static class Input
         {
             _currentInputScene = value;
             InputScene scene = _scenes[value];
-            MouseState = scene.Options.MouseState;
+            CursorMode = scene.Options.CursorMode;
         }
     }
 
@@ -129,18 +129,18 @@ public static class Input
     /// </summary>
     public static Vector2 DeltaMousePosition { get; private set; }
 
-    private static MouseState _currentMouseState;
+    private static CursorMode _currentCursorMode;
     private static bool _mouseStateChanged;
 
     /// <summary>
-    /// Get or set the mouse state for the current game view.
+    /// Get or set the cursor mode for the current game window.
     /// </summary>
-    public static MouseState MouseState
+    public static CursorMode CursorMode
     {
-        get => _currentMouseState;
+        get => _currentCursorMode;
         set
         {
-            _currentMouseState = value;
+            _currentCursorMode = value;
             _mouseStateChanged = true;
         }
     }
@@ -154,85 +154,74 @@ public static class Input
 
     public static InputScene GetScene(string name) => _scenes[name];
 
-    internal static void Initialize(Window window)
-    {
-        window.KeyDown += WindowOnKeyDown;
-        window.KeyUp += WindowOnKeyUp;
-        window.MouseButtonDown += WindowOnMouseButtonDown;
-        window.MouseButtonUp += WindowOnMouseButtonUp;
-        window.Scroll += WindowOnScroll;
-        window.MouseMove += WindowOnMouseMove;
-        window.TextInput += WindowOnTextInput;
-
-        InputState state = window.ProcessEvents();
-        MousePosition = (Vector2) state.MousePosition;
-    }
-
     internal static void Update(Window window)
     {
         _newKeys.Clear();
         _newMouseButtons.Clear();
         
         ScrollWheelDelta = Vector2.Zero;
-
-        InputState state = window.ProcessEvents();
-        DeltaMousePosition = (Vector2) state.MousePosition - MousePosition;
-        MousePosition = (Vector2) state.MousePosition;
+        DeltaMousePosition = Vector2.Zero;
 
         if (_mouseStateChanged)
         {
-            window.MouseState = _currentMouseState;
+            window.CursorMode = _currentCursorMode;
             _mouseStateChanged = false;
         }
     }
 
-    private static void WindowOnKeyDown(Key key)
+    internal static void AddKeyDown(Key key)
     {
         _keysPressed.Add(key);
         _newKeys.Add(key);
         NewKeyDown?.Invoke(key);
     }
     
-    private static void WindowOnKeyUp(Key key)
+    internal static void AddKeyUp(Key key)
     {
         _keysPressed.Remove(key);
         _newKeys.Remove(key);
         KeyUp?.Invoke(key);
     }
     
-    private static void WindowOnMouseButtonDown(MouseButton button)
+    internal static void AddnMouseButtonDown(MouseButton button)
     {
         _mouseButtonsPressed.Add(button);
         _newMouseButtons.Add(button);
         MouseDown?.Invoke(button);
     }
     
-    private static void WindowOnMouseButtonUp(MouseButton button)
+    internal static void AddMouseButtonUp(MouseButton button)
     {
         _mouseButtonsPressed.Remove(button);
         _newMouseButtons.Remove(button);
         MouseUp?.Invoke(button);
     }
     
-    private static void WindowOnScroll(System.Numerics.Vector2 scroll)
+    internal static void AddScroll(System.Numerics.Vector2 scroll)
     {
         ScrollWheelDelta += (Vector2) scroll;
         Scroll?.Invoke(scroll);
     }
     
-    private static void WindowOnMouseMove(Vector2 position)
+    internal static void AddMouseMove(int newX, int newY, int deltaX, int deltaY)
     {
-        MouseMove?.Invoke(position);
+        Vector2 position = new Vector2(newX, newY);
+        Vector2 delta = new Vector2(deltaX, deltaY);
+
+        MousePosition = position;
+        DeltaMousePosition += delta;
+        
+        MouseMove?.Invoke(position, DeltaMousePosition);
     }
     
-    private static void WindowOnTextInput(char c)
+    internal static void AddTextInput(string text)
     {
-        TextInput?.Invoke(c);
+        TextInput?.Invoke(text);
     }
     
     public struct InputSceneOptions
     {
-        public MouseState MouseState;
+        public CursorMode CursorMode;
     }
     
     public class InputScene
@@ -352,6 +341,8 @@ public static class Input
     public delegate void OnKeyDown(Key key);
 
     public delegate void OnKeyUp(Key key);
+    
+    public delegate void OnMouseMove(Vector2 position, Vector2 delta);
 
     public delegate void OnMouseButtonDown(MouseButton button);
 
@@ -359,7 +350,5 @@ public static class Input
 
     public delegate void OnScroll(Vector2 scroll);
 
-    public delegate void OnMouseMove(Vector2 moveAmount);
-
-    public delegate void OnTextInput(char c);
+    public delegate void OnTextInput(string text);
 }

@@ -230,9 +230,9 @@ void main()
         io.KeySuper = Input.KeyDown(Key.LeftSuper) || Input.KeyDown(Key.RightSuper);
     }
 
-    private void PressChar(char chr)
+    private void PressChar(string text)
     {
-        _pressedChars.Add(chr);
+        _pressedChars.AddRange(text.ToCharArray());
     }
 
     private static void SetKeyMappings()

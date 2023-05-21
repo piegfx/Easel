@@ -159,9 +159,9 @@ public class EaselGame : IDisposable
         builder.WindowFullscreenMode = _settings.FullscreenMode;
         builder.WindowResizable = _settings.Resizable;
         builder.WindowBorderless = _settings.Borderless;
+        builder.WindowHidden = !_settings.StartVisible;
         
         Window = new EaselWindow(builder.Build(out GraphicsDevice device));
-        //Window.Visible = _settings.StartVisible;
 
         Logger.Debug("Creating graphics device...");
         GraphicsInternal = new EaselGraphics(device, _settings.RenderOptions);

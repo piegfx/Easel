@@ -1,3 +1,4 @@
+using System;
 using Easel.Graphics;
 using Easel.Imgui;
 using Easel.Scenes;
@@ -22,6 +23,14 @@ public class TestGame : EaselGame
     protected override void Update()
     {
         ImGuiRenderer?.Update();
+
+        if (Input.KeyPressed(Key.F11))
+        {
+            if (Window.FullscreenMode != FullscreenMode.Windowed)
+                Window.FullscreenMode = FullscreenMode.Windowed;
+            else
+                Window.FullscreenMode = FullscreenMode.BorderlessFullscreen;
+        }
 
         base.Update();
     }

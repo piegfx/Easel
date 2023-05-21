@@ -32,11 +32,11 @@ public class EaselWindow
         }
     }
 
-    /*public bool Visible
+    public bool Visible
     {
         get => Window.Visible;
         set => Window.Visible = value;
-    }*/
+    }
 
     public bool Resizable
     {
@@ -56,7 +56,9 @@ public class EaselWindow
         set => Window.FullscreenMode = value;
     }
 
-    /*public bool Focused => Window.Focused;
+    public bool Focused => Window.Focused;
+
+    public void Focus() => Window.Focus();
 
     public void Center() => Window.Center();
 
@@ -64,7 +66,7 @@ public class EaselWindow
 
     public void Minimize() => Window.Minimize();
 
-    public void Restore() => Window.Restore();*/
+    public void Restore() => Window.Restore();
 
     internal EaselWindow(Window window)
     {

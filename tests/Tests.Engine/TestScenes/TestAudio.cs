@@ -1,10 +1,4 @@
-using System;
-using System.IO;
-using Easel.Audio;
-using Easel.Scenes;
-using Pie.Audio;
-
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class TestAudio : Scene
 {

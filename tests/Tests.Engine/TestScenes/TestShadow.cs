@@ -1,20 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Easel.Entities;
-using Easel.Entities.Components;
-using Easel.Formats;
-using Easel.Graphics;
-using Easel.Graphics.Materials;
-using Easel.Graphics.Primitives;
-using Easel.Math;
-using Easel.Scenes;
-using Pie.Utils;
 using Vector2 = System.Numerics.Vector2;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class TestShadow : Scene
 {

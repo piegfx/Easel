@@ -1,11 +1,6 @@
 using System.Numerics;
-using Easel.Graphics;
-using Easel.Graphics.Renderers;
-using Easel.Math;
-using Easel.Scenes;
-using Pie.Text;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class TestFont : Scene
 {

@@ -1,11 +1,4 @@
-using System;
-using Easel.Graphics;
-using Easel.Imgui;
-using Easel.Scenes;
-using Pie.ShaderCompiler;
-using Pie.Windowing;
-
-namespace Easel.Tests;
+namespace Tests.Engine;
 
 public class TestGame : EaselGame
 {

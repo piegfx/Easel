@@ -1,22 +1,7 @@
 using System;
-using System.IO;
 using System.Numerics;
-using Easel.Audio;
-using Easel.Content;
-using Easel.Content.Builder;
-using Easel.Entities;
-using Easel.Entities.Components;
-using Easel.Formats;
-using Easel.Graphics;
-using Easel.Graphics.Renderers;
-using Easel.GUI;
-using Easel.Imgui;
-using Easel.Math;
-using Easel.Scenes;
-using Newtonsoft.Json;
-using Sprite = Easel.Entities.Components.Sprite;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class Test2D : Scene
 {

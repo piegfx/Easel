@@ -7,10 +7,10 @@ using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using Easel;
 using Easel.Core;
-using Easel.Tests;
-using Easel.Tests.TestScenes;
 using Pie;
 using Pie.Windowing;
+using Tests.Engine;
+using Tests.Engine.TestScenes;
 
 
 GameSettings settings = new GameSettings()

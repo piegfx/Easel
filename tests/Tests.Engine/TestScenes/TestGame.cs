@@ -1,11 +1,6 @@
 using System.Numerics;
-using Easel.Entities;
-using Easel.Entities.Components;
-using Easel.Graphics;
-using Easel.Math;
-using Easel.Scenes;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class TestGameScene : Scene
 {

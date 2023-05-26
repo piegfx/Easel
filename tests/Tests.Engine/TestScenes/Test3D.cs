@@ -1,18 +1,6 @@
-using System;
-using System.IO;
 using System.Numerics;
-using Easel.Entities;
-using Easel.Entities.Components;
-using Easel.Formats;
-using Easel.Graphics;
-using Easel.Graphics.Materials;
-using Easel.Graphics.Primitives;
-using Easel.GUI;
-using Easel.Math;
-using Easel.Scenes;
-using Pie.Windowing;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class Test3D : Scene
 {

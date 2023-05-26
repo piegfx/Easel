@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-#
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel", "Easel\Easel.csproj", "{41C71ED6-7B5C-4F42-B34A-243101998E74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Windowing", "Pie\src\Pie.Windowing\Pie.Windowing.csproj", "{0763205F-C44B-4804-AB13-E6FC75A3D1FF}"
@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Tests", "Easel.Tests\Easel.Tests.csproj", "{329A244A-9B04-4312-8173-5B2A82D1830F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Core", "Easel.Core\Easel.Core.csproj", "{ED12C30B-7203-407A-808B-62ECCE332BA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Math", "Easel.Math\Easel.Math.csproj", "{20B8524F-1586-4AFE-864B-A7D879BB22D5}"
@@ -26,6 +24,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Audio", "Pie\src\Pie.Audio\Pie.Audio.csproj", "{DA4F7C25-CD35-4441-997C-F672BEF97337}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoltPhysicsSharp", "JoltPhysicsSharp\src\JoltPhysicsSharp\JoltPhysicsSharp.csproj", "{126A42B6-0C65-4CFE-8764-C9546E07C3F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{499E7989-0191-4C2A-8DD1-53801533F42F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Graphics", "tests\Tests.Graphics\Tests.Graphics.csproj", "{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Engine", "tests\Tests.Engine\Tests.Engine.csproj", "{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +69,6 @@ Global
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D364965-C9F5-4E4C-8B9D-7342B4427804}.Release|Any CPU.Build.0 = Release|Any CPU
-		{329A244A-9B04-4312-8173-5B2A82D1830F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{329A244A-9B04-4312-8173-5B2A82D1830F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{329A244A-9B04-4312-8173-5B2A82D1830F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{329A244A-9B04-4312-8173-5B2A82D1830F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED12C30B-7203-407A-808B-62ECCE332BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED12C30B-7203-407A-808B-62ECCE332BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED12C30B-7203-407A-808B-62ECCE332BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,5 +93,17 @@ Global
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126A42B6-0C65-4CFE-8764-C9546E07C3F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EBE4470F-F1DB-4A2D-82A0-245B2DC86FD7} = {499E7989-0191-4C2A-8DD1-53801533F42F}
+		{0D2389C7-C3F0-42CC-AB06-B46160E9CBAD} = {499E7989-0191-4C2A-8DD1-53801533F42F}
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,6 @@
 using System;
-using Easel.Entities;
-using Easel.Scenes;
 
-namespace Easel.Tests.TestScenes;
+namespace Tests.Engine.TestScenes;
 
 public class TestServer : Scene
 {

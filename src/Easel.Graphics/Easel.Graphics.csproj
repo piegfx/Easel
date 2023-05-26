@@ -11,18 +11,26 @@
       <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
       <ProjectReference Include="..\..\Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
-      <ProjectReference Include="..\..\Pie\src\Pie.Utils\Pie.Utils.csproj" />
-      <ProjectReference Include="..\..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
       <ProjectReference Include="..\..\Pie\src\Pie\Pie.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="Shaders\**\*.spv" />
+      <None Remove="DEBUG.png" />
+      <EmbeddedResource Include="DEBUG.png" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Silk.NET.Assimp" Version="2.17.0" />
       <PackageReference Include="StbImageSharp" Version="2.27.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Structs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ClCompile Include="Shaders\Sprite\Sprite.hlsl" />
     </ItemGroup>
 
 </Project>

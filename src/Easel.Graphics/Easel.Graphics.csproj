@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Structs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ClCompile Include="Shaders\Sprite\Sprite.hlsl" />
     </ItemGroup>
 

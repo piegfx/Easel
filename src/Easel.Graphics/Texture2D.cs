@@ -16,23 +16,27 @@ public class Texture2D : IDisposable
     public Texture2D(Bitmap bitmap, int mipLevels = 0) : this(bitmap.Data, bitmap.Size, bitmap.Format, mipLevels) { }
 
     public Texture2D(byte[] data, Size<int> size, Format format = Format.R8G8B8A8_UNorm, int mipLevels = 0)
+        : this(TextureDescription.Texture2D(size.Width, size.Height, format, mipLevels, 1, TextureUsage.ShaderResource), data) { }
+
+    public Texture2D(in TextureDescription description, byte[] data)
     {
-        Size = size;
-
-        TextureDescription description = TextureDescription.Texture2D(size.Width, size.Height, format, mipLevels, 1,
-            TextureUsage.ShaderResource);
-
+        Size = new Size<int>(description.Width, description.Height);
+        
         GraphicsDevice device = Renderer.Instance.Device;
         PieTexture = device.CreateTexture(description, data);
         
-        if (mipLevels != 1)
+        if (data != null && description.MipLevels != 1)
             device.GenerateMipmaps(PieTexture);
     }
 
-    public Texture2D(Texture pieTexture)
+    public Texture2D(Texture pieTexture, Size<int> size)
     {
         if (pieTexture.Description.TextureType != TextureType.Texture2D)
             throw new EaselException("Texture type must be Texture2D!");
+
+        Size = size;
+
+        PieTexture = pieTexture;
     }
 
     public void SetData<T>(int x, int y, int width, int height, T[] data) where T : unmanaged
@@ -45,7 +49,7 @@ public class Texture2D : IDisposable
         Renderer.Instance.Device.GenerateMipmaps(PieTexture);
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         PieTexture.Dispose();
     }

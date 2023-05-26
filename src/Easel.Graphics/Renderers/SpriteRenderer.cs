@@ -41,6 +41,7 @@ public sealed class SpriteRenderer : IDisposable
 
     private DepthStencilState _depthStencilState;
     private RasterizerState _rasterizerState;
+    private BlendState _blendState;
 
     // TODO: Easy to use sampler states.
     private SamplerState _samplerState;
@@ -95,6 +96,7 @@ public sealed class SpriteRenderer : IDisposable
 
         _depthStencilState = device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullNone);
+        _blendState = device.CreateBlendState(BlendStateDescription.NonPremultiplied);
 
         _samplerState = device.CreateSamplerState(SamplerStateDescription.LinearClamp);
     }
@@ -179,6 +181,14 @@ public sealed class SpriteRenderer : IDisposable
                 throw new ArgumentOutOfRangeException(nameof(flip), flip, null);
         }
 
+        if (_device.Api == GraphicsApi.OpenGL && texture is RenderTarget2D)
+        {
+            // Because of the screwy behaviour that opengl render targets have, we must flip it on the Y axis if we
+            // are trying to render an OpenGL render target.
+            texY = 1 - texY;
+            texH *= -1;
+        }
+
         uint currentVertex = _currentSprite * NumVertices;
         uint currentIndex = _currentSprite * NumIndices;
 
@@ -217,6 +227,7 @@ public sealed class SpriteRenderer : IDisposable
         _device.SetShader(_shader);
         _device.SetDepthStencilState(_depthStencilState);
         _device.SetRasterizerState(_rasterizerState);
+        _device.SetBlendState(_blendState);
         _device.SetUniformBuffer(0, _spriteMatricesBuffer);
         _device.SetTexture(1, _currentTexture.PieTexture, _samplerState);
         _device.SetVertexBuffer(0, _vertexBuffer, SpriteVertex.SizeInBytes, _layout);
@@ -237,6 +248,7 @@ public sealed class SpriteRenderer : IDisposable
         
         _depthStencilState.Dispose();
         _rasterizerState.Dispose();
+        _blendState.Dispose();
         
         _samplerState.Dispose();
     }

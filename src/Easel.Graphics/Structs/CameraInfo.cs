@@ -10,10 +10,13 @@ public struct CameraInfo
     public Color? ClearColor;
     // public Skybox Skybox;
 
-    public CameraInfo(Matrix4x4 projection, Matrix4x4 view, Color? clearColor)
+    public Vector3 WorldPosition;
+
+    public CameraInfo(Matrix4x4 projection, Matrix4x4 view, Color? clearColor, Vector3 worldPosition)
     {
         Projection = projection;
         View = view;
         ClearColor = clearColor;
+        WorldPosition = worldPosition;
     }
 }

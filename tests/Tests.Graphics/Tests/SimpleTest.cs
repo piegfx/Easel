@@ -10,6 +10,7 @@ namespace Tests.Graphics.Tests;
 public class SimpleTest : TestBase
 {
     private Texture2D _texture;
+    private float _rotation;
     
     protected override void Initialize()
     {
@@ -19,17 +20,24 @@ public class SimpleTest : TestBase
             "Easel.Graphics.DEBUG.png")));
     }
 
+    protected override void Update(double dt)
+    {
+        base.Update(dt);
+
+        _rotation += 1 * (float) dt;
+    }
+
     protected override void Draw(double dt)
     {
         base.Draw(dt);
         
         Renderer.Device.ClearColorBuffer(System.Drawing.Color.CornflowerBlue);
 
-        Rectangle<int>? source = new Rectangle<int>(64, 0, 64, 64);
+        Rectangle<int>? source = null;
 
         Renderer.SpriteRenderer.Begin();
-        Renderer.SpriteRenderer.DrawSprite(_texture, new Vector2(0, 0), source, Color.White,
-            0, new Vector2(2), Vector2.Zero, SpriteRenderer.Flip.FlipX);
+        Renderer.SpriteRenderer.DrawSprite(_texture, new Vector2(200, 200), source, Color.White,
+            _rotation, new Vector2(2, 2), new Vector2(0));
         Renderer.SpriteRenderer.End();
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Easel.Core;
 using Easel.Math;
 using Pie;
@@ -85,9 +86,11 @@ public sealed class SpriteRenderer : IDisposable
 
         _layout = device.CreateInputLayout(new[]
         {
-            new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex), // position
-            new InputLayoutDescription(Format.R32G32_Float, 8, 0, InputType.PerVertex), // texCoord
-            new InputLayoutDescription(Format.R32G32B32A32_Float, 16, 0, InputType.PerVertex) // tint
+            new InputLayoutDescription(Format.R32G32_Float, 0, 0, InputType.PerVertex), // normalizedPosition
+            new InputLayoutDescription(Format.R32G32_Float, 8, 0, InputType.PerVertex), // screenPosition
+            new InputLayoutDescription(Format.R32G32_Float, 16, 0, InputType.PerVertex), // texCoord
+            new InputLayoutDescription(Format.R32G32B32A32_Float, 24, 0, InputType.PerVertex), // tint
+            new InputLayoutDescription(Format.R32_Float, 40, 0, InputType.PerVertex), // rotation
         });
 
         _depthStencilState = device.CreateDepthStencilState(DepthStencilStateDescription.Disabled);
@@ -104,9 +107,7 @@ public sealed class SpriteRenderer : IDisposable
         Rectangle<int> viewport = (Rectangle<int>) _device.Viewport;
         _spriteMatrices.Projection = projection ??
                                      Matrix4x4.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1, 1);
-
         _spriteMatrices.Transform = transform ?? Matrix4x4.Identity;
-        
         _device.UpdateBuffer(_spriteMatricesBuffer, 0, _spriteMatrices);
 
         _hasBegun = true;
@@ -136,17 +137,26 @@ public sealed class SpriteRenderer : IDisposable
 
         Rectangle<int> spriteRect = source ?? new Rectangle<int>(Vector2T<int>.Zero, texSize);
 
-        float x = position.X;
-        float y = position.Y;
+        // These are the "normalized" screen coordinates. Basically, they're the coordinates of the quad with only the
+        // origin offset applied, no `position` parameter. This allows the rotation to occur at the correct origin point.
+        float x = -origin.X * scale.X;
+        float y = -origin.Y * scale.Y;
         float w = spriteRect.Width * scale.X;
         float h = spriteRect.Height * scale.Y;
 
+        // This is the actual screen position.
+        // In the shader, the "normalized" screen coordinates are transformed via a rotation matrix, and *then* these
+        // position values are added on. This ensures they end up in the right place.
+        float scrX = position.X;
+        float scrY = position.Y;
+
+        // Texture coordinates.
         float texX = spriteRect.X / (float) texSize.Width;
         float texY = spriteRect.Y / (float) texSize.Height;
         float texW = spriteRect.Width / (float) texSize.Width;
         float texH = spriteRect.Height / (float) texSize.Height;
 
-        // TODO: I've just realized that these flip the entire image, and that can scr
+        // TODO: I've just realized that these flip the entire image, and that can screw up source rectangles
         switch (flip)
         {
             case Flip.None:
@@ -172,10 +182,10 @@ public sealed class SpriteRenderer : IDisposable
         uint currentVertex = _currentSprite * NumVertices;
         uint currentIndex = _currentSprite * NumIndices;
 
-        _vertices[currentVertex + 0] = new SpriteVertex(new Vector2T<float>(x, y), new Vector2T<float>(texX, texY), tint);
-        _vertices[currentVertex + 1] = new SpriteVertex(new Vector2T<float>(x + w, y), new Vector2T<float>(texX + texW, texY), tint);
-        _vertices[currentVertex + 2] = new SpriteVertex(new Vector2T<float>(x + w, y + h), new Vector2T<float>(texX + texW, texY + texH), tint);
-        _vertices[currentVertex + 3] = new SpriteVertex(new Vector2T<float>(x, y + h), new Vector2T<float>(texX, texY + texH), tint);
+        _vertices[currentVertex + 0] = new SpriteVertex(new Vector2T<float>(x, y), new Vector2T<float>(scrX, scrY), new Vector2T<float>(texX, texY), tint, rotation);
+        _vertices[currentVertex + 1] = new SpriteVertex(new Vector2T<float>(x + w, y), new Vector2T<float>(scrX, scrY), new Vector2T<float>(texX + texW, texY), tint, rotation);
+        _vertices[currentVertex + 2] = new SpriteVertex(new Vector2T<float>(x + w, y + h), new Vector2T<float>(scrX, scrY), new Vector2T<float>(texX + texW, texY + texH), tint, rotation);
+        _vertices[currentVertex + 3] = new SpriteVertex(new Vector2T<float>(x, y + h), new Vector2T<float>(scrX, scrY), new Vector2T<float>(texX, texY + texH), tint, rotation);
 
         _indices[currentIndex + 0] = 0 + currentVertex;
         _indices[currentIndex + 1] = 1 + currentVertex;
@@ -239,22 +249,28 @@ public sealed class SpriteRenderer : IDisposable
         FlipXY
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct SpriteVertex
     {
-        public Vector2T<float> Position;
+        public Vector2T<float> NormalizedPosition;
+        public Vector2T<float> ScreenPosition;
         public Vector2T<float> TexCoord;
         public Color Tint;
+        public float Rotation;
 
-        public SpriteVertex(Vector2T<float> position, Vector2T<float> texCoord, Color tint)
+        public SpriteVertex(Vector2T<float> normalizedPosition, Vector2T<float> screenPosition, Vector2T<float> texCoord, Color tint, float rotation)
         {
-            Position = position;
+            NormalizedPosition = normalizedPosition;
+            ScreenPosition = screenPosition;
             TexCoord = texCoord;
             Tint = tint;
+            Rotation = rotation;
         }
 
-        public const uint SizeInBytes = 32;
+        public const uint SizeInBytes = 44;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     private struct SpriteMatrices
     {
         public Matrix4x4 Projection;

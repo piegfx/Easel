@@ -10,8 +10,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Easel\Easel.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie\Pie.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie\Pie.csproj" />
     </ItemGroup>
 
     <ItemGroup>

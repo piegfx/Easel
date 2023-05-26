@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel", "Easel\Easel.csproj", "{41C71ED6-7B5C-4F42-B34A-243101998E74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel", "src\Easel\Easel.csproj", "{41C71ED6-7B5C-4F42-B34A-243101998E74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Windowing", "Pie\src\Pie.Windowing\Pie.Windowing.csproj", "{0763205F-C44B-4804-AB13-E6FC75A3D1FF}"
 EndProject
@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Utils", "Pie\src\Pie.Ut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.ShaderCompiler", "Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj", "{3C967AC6-FDD3-441D-93BE-1AD69D68BAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.ImGui", "src\Easel.ImGui\Easel.ImGui.csproj", "{256A2222-A3F2-4678-B39A-98625AE3B274}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Core", "Easel.Core\Easel.Core.csproj", "{ED12C30B-7203-407A-808B-62ECCE332BA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Core", "src\Easel.Core\Easel.Core.csproj", "{ED12C30B-7203-407A-808B-62ECCE332BA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Math", "Easel.Math\Easel.Math.csproj", "{20B8524F-1586-4AFE-864B-A7D879BB22D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Math", "src\Easel.Math\Easel.Math.csproj", "{20B8524F-1586-4AFE-864B-A7D879BB22D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Graphics", "Easel.Graphics\Easel.Graphics.csproj", "{9224D18E-6D8B-431C-B3FF-63F739197AD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easel.Graphics", "src\Easel.Graphics\Easel.Graphics.csproj", "{9224D18E-6D8B-431C-B3FF-63F739197AD6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pie.Text", "Pie\src\Pie.Text\Pie.Text.csproj", "{50307C92-84AB-409B-AE90-EE44341D3D37}"
 EndProject

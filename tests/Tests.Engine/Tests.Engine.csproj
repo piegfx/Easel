@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Easel.ImGui\Easel.ImGui.csproj" />
-      <ProjectReference Include="..\Easel\Easel.csproj" />
-      <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
+      <ProjectReference Include="..\..\src\Easel.ImGui\Easel.ImGui.csproj" />
+      <ProjectReference Include="..\..\src\Easel\Easel.csproj" />
+      <ProjectReference Include="..\..\src\Easel.Math\Easel.Math.csproj" />
     </ItemGroup>
 
     <ItemGroup>

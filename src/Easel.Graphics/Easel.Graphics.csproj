@@ -10,10 +10,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Easel.Core\Easel.Core.csproj" />
       <ProjectReference Include="..\Easel.Math\Easel.Math.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie.Utils\Pie.Utils.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
-      <ProjectReference Include="..\Pie\src\Pie\Pie.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie.ShaderCompiler\Pie.ShaderCompiler.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie.Utils\Pie.Utils.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie.Windowing\Pie.Windowing.csproj" />
+      <ProjectReference Include="..\..\Pie\src\Pie\Pie.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -122,7 +122,7 @@ public sealed class SpriteRenderer : IDisposable
         _hasBegun = false;
     }
 
-    public void DrawSprite(Texture2D texture, Vector2 position, Rectangle<int>? source, Color tint, float rotation, Vector2 scale, Vector2 origin)
+    public void DrawSprite(Texture2D texture, Vector2 position, Rectangle<int>? source, Color tint, float rotation, Vector2 scale, Vector2 origin, Flip flip = Flip.None)
     {
         if (!_hasBegun)
             throw new EaselException("No batch has begun!");
@@ -145,6 +145,29 @@ public sealed class SpriteRenderer : IDisposable
         float texY = spriteRect.Y / (float) texSize.Height;
         float texW = spriteRect.Width / (float) texSize.Width;
         float texH = spriteRect.Height / (float) texSize.Height;
+
+        // TODO: I've just realized that these flip the entire image, and that can scr
+        switch (flip)
+        {
+            case Flip.None:
+                break;
+            case Flip.FlipX:
+                texX = 1 - texX;
+                texW *= -1;
+                break;
+            case Flip.FlipY:
+                texY = 1 - texY;
+                texH *= -1;
+                break;
+            case Flip.FlipXY:
+                texX = 1 - texX;
+                texW *= -1;
+                texY = 1 - texY;
+                texH *= -1;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(flip), flip, null);
+        }
 
         uint currentVertex = _currentSprite * NumVertices;
         uint currentIndex = _currentSprite * NumIndices;
@@ -206,6 +229,14 @@ public sealed class SpriteRenderer : IDisposable
         _rasterizerState.Dispose();
         
         _samplerState.Dispose();
+    }
+
+    public enum Flip
+    {
+        None,
+        FlipX,
+        FlipY,
+        FlipXY
     }
 
     public struct SpriteVertex

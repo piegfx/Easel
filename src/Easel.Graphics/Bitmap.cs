@@ -14,9 +14,11 @@ public class Bitmap
     public Size<int> Size;
     public Format Format;
 
-    public Bitmap(string path)
+    public Bitmap(string path) : this(File.ReadAllBytes(path)) { }
+
+    public Bitmap(byte[] imageData)
     {
-        ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(path), ColorComponents.RedGreenBlueAlpha);
+        ImageResult result = ImageResult.FromMemory(imageData, ColorComponents.RedGreenBlueAlpha);
         
         Data = result.Data;
         Size = new Size<int>(result.Width, result.Height);

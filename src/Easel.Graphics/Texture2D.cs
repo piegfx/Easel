@@ -49,4 +49,14 @@ public class Texture2D : IDisposable
     {
         PieTexture.Dispose();
     }
+
+    static Texture2D()
+    {
+        White = new Texture2D(new byte[] { 255, 255, 255, 255 }, new Size<int>(1), mipLevels: 1);
+        Black = new Texture2D(new byte[] { 0, 0, 0, 255 }, new Size<int>(1), mipLevels: 1);
+    }
+    
+    public static Texture2D White { get; }
+    
+    public static Texture2D Black { get; }
 }

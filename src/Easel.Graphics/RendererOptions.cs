@@ -5,5 +5,10 @@ namespace Easel.Graphics;
 /// </summary>
 public struct RendererOptions
 {
-    
+    public VSyncMode VSyncMode;
+
+    public RendererOptions()
+    {
+        VSyncMode = VSyncMode.DoubleBuffer;
+    }
 }

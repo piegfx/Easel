@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Tests.Graphics;
+using Tests.Graphics.Tests;
+
+using TestBase test = new SimpleTest();
+test.Run();

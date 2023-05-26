@@ -1,4 +1,6 @@
 using System;
+using Easel.Graphics.Renderers;
+using Easel.Math;
 using Pie;
 
 namespace Easel.Graphics;
@@ -9,6 +11,9 @@ namespace Easel.Graphics;
 public sealed class Renderer : IDisposable
 {
     public GraphicsDevice Device;
+    public SpriteRenderer SpriteRenderer;
+
+    public VSyncMode VSyncMode;
     
     /// <summary>
     /// Create a new <see cref="Renderer"/>, for use with rendering.
@@ -20,8 +25,21 @@ public sealed class Renderer : IDisposable
     public Renderer(GraphicsDevice device, in RendererOptions options)
     {
         Instance = this;
+
+        VSyncMode = options.VSyncMode;
         
         Device = device;
+        SpriteRenderer = new SpriteRenderer(device);
+    }
+
+    public void Resize(Size<int> newSize)
+    {
+        Device.ResizeSwapchain((System.Drawing.Size) newSize);
+    }
+
+    public void Present()
+    {
+        Device.Present(VSyncMode == VSyncMode.DoubleBuffer ? 1 : 0);
     }
 
     /// <summary>
@@ -29,8 +47,11 @@ public sealed class Renderer : IDisposable
     /// </summary>
     public void Dispose()
     {
+        SpriteRenderer.Dispose();
         Device.Dispose();
     }
     
     public static Renderer Instance { get; private set; }
+
+    public const string ShaderNamespace = "Easel.Graphics.Shaders";
 }

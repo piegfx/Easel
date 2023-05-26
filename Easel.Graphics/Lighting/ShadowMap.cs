@@ -23,8 +23,8 @@ public class ShadowMap : IDisposable
         
         for (int i = 0; i < numCascades; i++)
         {
-            Textures[i] = device.CreateTexture(new TextureDescription(size.Width, size.Height, Format.D32_Float, 1, 1,
-                TextureUsage.ShaderResource | TextureUsage.Framebuffer));
+            Textures[i] = device.CreateTexture(TextureDescription.Texture2D(size.Width, size.Height, Format.D32_Float,
+                1, 1, TextureUsage.ShaderResource | TextureUsage.Framebuffer));
             Framebuffers[i] = device.CreateFramebuffer(new FramebufferAttachment(Textures[i]));
         }
 

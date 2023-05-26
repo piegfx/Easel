@@ -33,8 +33,8 @@ public class Texture2D : Texture
         
         // TODO: Better texture management for DDS.
         GraphicsDevice device = EaselGraphics.Instance.PieGraphics;
-        TextureDescription description =
-            new TextureDescription(width, height, format, compressed ? 1 : 0, 1, TextureUsage.ShaderResource);
+        TextureDescription description = TextureDescription.Texture2D(width, height, format, compressed ? 1 : 0, 1,
+            TextureUsage.ShaderResource);
         PieTexture = device.CreateTexture(description, data);
         if (!compressed)
             device.GenerateMipmaps(PieTexture);

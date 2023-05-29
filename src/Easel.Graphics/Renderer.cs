@@ -51,7 +51,7 @@ public sealed class Renderer : IDisposable
         SpriteRenderer = new SpriteRenderer(device);
         
         Logger.Debug("Creating main renderer.");
-        _renderer = new ForwardRenderer(targetSize, this);
+        _renderer = new DeferredRenderer(targetSize, this);
 
         _opaques = new List<(Renderable, Matrix4x4)>();
     }

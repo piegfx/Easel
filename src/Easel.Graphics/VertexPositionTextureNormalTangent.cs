@@ -16,4 +16,6 @@ public struct VertexPositionTextureNormalTangent
         Normal = normal;
         Tangent = tangent;
     }
+
+    public const uint SizeInBytes = 44;
 }

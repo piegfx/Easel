@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ClCompile Include="Shaders\Deferred\GBuffer.hlsl" />
       <ClCompile Include="Shaders\Sprite\Sprite.hlsl" />
     </ItemGroup>
 

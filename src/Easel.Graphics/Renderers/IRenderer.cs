@@ -1,10 +1,11 @@
+using System;
 using System.Numerics;
 using Easel.Graphics.Structs;
 using Easel.Math;
 
 namespace Easel.Graphics.Renderers;
 
-public interface IRenderer
+public interface IRenderer : IDisposable
 {
     public RenderTarget2D MainTarget { get; }
     

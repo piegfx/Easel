@@ -24,7 +24,13 @@ public sealed class Effect : IDisposable
             new ShaderAttachment(ShaderStage.Vertex, vertexSpirv),
             new ShaderAttachment(ShaderStage.Fragment, fragmentSpirv)
         }, specializationConstants);
-        
+
+        if (inputLayout == null)
+        {
+            Logger.Debug("Input layout is null - one will not be created.");
+            return;
+        }
+
         Logger.Debug("Creating input layout.");
         InputLayout = device.CreateInputLayout(inputLayout);
         Stride = stride;
@@ -42,6 +48,6 @@ public sealed class Effect : IDisposable
     public void Dispose()
     {
         PieShader.Dispose();
-        InputLayout.Dispose();
+        InputLayout?.Dispose();
     }
 }

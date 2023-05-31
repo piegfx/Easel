@@ -7,6 +7,7 @@ using Easel.Graphics.Renderers.Structs;
 using Easel.Graphics.Structs;
 using Easel.Math;
 using Pie;
+using Pie.ShaderCompiler;
 using Color = Easel.Math.Color;
 
 namespace Easel.Graphics.Renderers;
@@ -70,11 +71,11 @@ public sealed class DeferredRenderer : IRenderer
         
         Logger.Debug("Compiling Processor shader.");
 
-        InputLayoutDescription[] processorLayout = Array.Empty<InputLayoutDescription>();
-
+        // Create our processor effect, and set the specialization constant of IS_OPENGL to 1 if OpenGL is being used.
         _processorEffect = Effect.FromSpirv(Renderer.ShaderNamespace + ".Deferred.DeferredProcessor_vert.spv",
-            Renderer.ShaderNamespace + ".Deferred.DeferredProcessor_frag.spv", processorLayout, 0,
-            Assembly.GetAssembly(typeof(Effect)));
+            Renderer.ShaderNamespace + ".Deferred.DeferredProcessor_frag.spv", null, 0,
+            Assembly.GetAssembly(typeof(Effect)),
+            new[] { new SpecializationConstant(0, _device.Api == GraphicsApi.OpenGL ? 1u : 0u) });
         
         Logger.Debug("Creating G-Buffer.");
 

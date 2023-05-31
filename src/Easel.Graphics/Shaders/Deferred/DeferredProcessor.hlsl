@@ -1,5 +1,7 @@
 #include "../Common/Common.hlsli"
 
+[[vk::constant_id(0)]] const uint IS_OPENGL = 0;
+
 struct VSInput
 {
     uint vertId: SV_VertexID;
@@ -33,10 +35,10 @@ VSOutput VertexShader(const in VSInput input)
     VSOutput output;
 
     const float4 vertices[] = {
-        float4(-1.0, -1.0, 0.0, 0.0),
-        float4( 1.0, -1.0, 1.0, 0.0),
-        float4( 1.0,  1.0, 1.0, 1.0),
-        float4(-1.0,  1.0, 0.0, 1.0),
+        float4(-1.0, -1.0, 0.0, 1.0),
+        float4( 1.0, -1.0, 1.0, 1.0),
+        float4( 1.0,  1.0, 1.0, 0.0),
+        float4(-1.0,  1.0, 0.0, 0.0),
     };
 
     const uint indices[] = {
@@ -47,7 +49,17 @@ VSOutput VertexShader(const in VSInput input)
     const float4 vertex = vertices[indices[input.vertId]];
 
     output.position = float4(vertex.xy, 0.0, 1.0);
-    output.texCoord = vertex.zw;
+
+    // We must flip the texture coordinates if the graphics API is OpenGL.
+    // Thanks OpenGL!!!!!!111111!11
+    if (IS_OPENGL == 1)
+    {
+        output.texCoord = float2(vertex.z, 1.0 - vertex.w);
+    }
+    else
+    {
+        output.texCoord = vertex.zw;
+    }
     
     return output;
 }

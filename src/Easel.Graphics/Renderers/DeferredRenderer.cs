@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Reflection;
 using Easel.Core;
+using Easel.Graphics.Renderers.Structs;
 using Easel.Graphics.Structs;
 using Easel.Math;
 using Pie;
@@ -10,7 +11,7 @@ namespace Easel.Graphics.Renderers;
 public sealed class DeferredRenderer : IRenderer
 {
     private bool _inPass;
-    private Renderer _renderer;
+    private GraphicsDevice _device;
 
     private Effect _gbufferEffect;
 
@@ -20,20 +21,21 @@ public sealed class DeferredRenderer : IRenderer
     
     private Framebuffer _gbuffer;
 
+    private WorldMatrices _worldMatrices;
+    private GraphicsBuffer _worldMatricesBuffer;
+
     public RenderTarget2D MainTarget { get; private set; }
     
     public bool InPass => _inPass;
 
-    public DeferredRenderer(Size<int> size, Renderer renderer)
+    public DeferredRenderer(Size<int> size, GraphicsDevice device)
     {
         Logger.Debug("Creating deferred renderer.");
-        _renderer = renderer;
+        _device = device;
         
         Logger.Debug("Creating main target.");
         MainTarget = new RenderTarget2D(size);
 
-        GraphicsDevice device = renderer.Device;
-        
         Logger.Debug("Compiling G-Buffer shader.");
 
         InputLayoutDescription[] layout = new[]
@@ -65,6 +67,17 @@ public sealed class DeferredRenderer : IRenderer
             new FramebufferAttachment(_posTexture),
             new FramebufferAttachment(_depthTexture),
         });
+        
+        Logger.Debug("Creating matrices buffer.");
+
+        _worldMatrices = new WorldMatrices()
+        {
+            Projection = Matrix4x4.Identity,
+            View = Matrix4x4.Identity,
+            Model = Matrix4x4.Identity
+        };
+
+        _worldMatricesBuffer = device.CreateBuffer(BufferType.UniformBuffer, _worldMatrices, true);
     }
     
     public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo)
@@ -74,7 +87,10 @@ public sealed class DeferredRenderer : IRenderer
 
         _inPass = true;
         
-        _renderer.SetRenderTarget(MainTarget);
+        _device.SetFramebuffer(MainTarget.PieFramebuffer);
+
+        _worldMatrices.Projection = projection;
+        _worldMatrices.View = view;
     }
 
     public void End3DPass()
@@ -87,7 +103,9 @@ public sealed class DeferredRenderer : IRenderer
 
     public void DrawRenderable(in Renderable renderable, in Matrix4x4 world)
     {
-        
+        _worldMatrices.Model = world;
+
+        _device.UpdateBuffer(_worldMatricesBuffer, 0, _worldMatrices);
     }
 
     public void Resize(Size<int> newSize)

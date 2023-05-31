@@ -1,3 +1,5 @@
+#include "../Common/Common.hlsli"
+
 struct VSInput
 {
     uint vertId: SV_VertexID;
@@ -14,10 +16,17 @@ struct PSOutput
     float4 color: SV_Target0;
 };
 
-Texture2D albedoTexture  : register(t0);
-SamplerState albedoState : register(s0);
-Texture2D posTexture  : register(t1);
-SamplerState posState : register(s1);
+cbuffer RenderInfo : register(b0)
+{
+    float4x4 world;
+    SceneInfo scene;
+    Material material;
+}
+
+Texture2D albedoTexture  : register(t1);
+SamplerState albedoState : register(s1);
+Texture2D posTexture  : register(t2);
+SamplerState posState : register(s2);
 
 VSOutput VertexShader(const in VSInput input)
 {
@@ -48,11 +57,12 @@ PSOutput PixelShader(const in VSOutput input)
     PSOutput output;
 
     const float4 albedo = albedoTexture.Sample(albedoState, input.texCoord);
+    const float4 pos = posTexture.Sample(posState, input.texCoord);
 
     if (albedo.a < 0.9)
         discard;
 
-    output.color = albedo;
+    output.color = float4(albedo.xyz * scene.ambientMultiplier, 1.0);
     
     return output;
 }

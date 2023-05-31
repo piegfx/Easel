@@ -156,9 +156,11 @@ public sealed class DeferredRenderer : IRenderer
         
         _device.SetPrimitiveType(PrimitiveType.TriangleList);
         _device.SetShader(_processorEffect.PieShader);
+
+        _device.SetUniformBuffer(0, _renderInfoBuffer);
         
-        _device.SetTexture(0, AlbedoTexture, _samplerState);
-        _device.SetTexture(1, PosTexture, _samplerState);
+        _device.SetTexture(1, AlbedoTexture, _samplerState);
+        _device.SetTexture(2, PosTexture, _samplerState);
         
         _device.Draw(6);
     }

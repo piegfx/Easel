@@ -23,10 +23,10 @@ public class Basic3D : TestBase
 
         VertexPositionTextureNormalTangent[] vertices = new []
         {
-            new VertexPositionTextureNormalTangent(new Vector3T<float>(-0.5f, -0.5f, 0), new Vector2T<float>(0, 0), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
-            new VertexPositionTextureNormalTangent(new Vector3T<float>(0.5f, -0.5f, 0), new Vector2T<float>(1, 0), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
-            new VertexPositionTextureNormalTangent(new Vector3T<float>(0.5f, 0.5f, 0), new Vector2T<float>(1, 1), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
-            new VertexPositionTextureNormalTangent(new Vector3T<float>(-0.5f, 0.5f, 0), new Vector2T<float>(0, 1), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
+            new VertexPositionTextureNormalTangent(new Vector3T<float>(-0.5f, -0.5f, 0), new Vector2T<float>(0, 1), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
+            new VertexPositionTextureNormalTangent(new Vector3T<float>(0.5f, -0.5f, 0), new Vector2T<float>(1, 1), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
+            new VertexPositionTextureNormalTangent(new Vector3T<float>(0.5f, 0.5f, 0), new Vector2T<float>(1, 0), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
+            new VertexPositionTextureNormalTangent(new Vector3T<float>(-0.5f, 0.5f, 0), new Vector2T<float>(0, 0), Vector3T<float>.UnitZ, Vector3T<float>.Zero),
         };
 
         uint[] indices = new[]
@@ -49,14 +49,14 @@ public class Basic3D : TestBase
         
         Renderer.NewFrame();
         
-        Renderer.Draw(_renderable, Matrix4x4.CreateTranslation(0, 0, 3));
+        Renderer.Draw(_renderable, Matrix4x4.CreateTranslation(0, 0, -3));
 
         Matrix4x4 projection = Matrix4x4.CreatePerspectiveFieldOfView(EaselMath.ToRadians(75),
             Window.Size.Width / (float) Window.Size.Height, 0.1f, 1000f);
 
-        Matrix4x4 view = Matrix4x4.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
+        Matrix4x4 view = Matrix4x4.CreateLookAt(Vector3.Zero, -Vector3.UnitZ, Vector3.UnitY);
 
-        Renderer.Perform3DPass(new CameraInfo(projection, view, Color.Orange, Vector3.Zero), new SceneInfo(0.1f),
+        Renderer.Perform3DPass(new CameraInfo(projection, view, Color.Orange, Vector3.Zero), new SceneInfo(0.25f),
             new Rectangle<float>(0, 0, 1, 1));
         
         Renderer.EndFrame();

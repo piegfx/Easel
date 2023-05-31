@@ -51,7 +51,7 @@ public sealed class Renderer : IDisposable
         SpriteRenderer = new SpriteRenderer(device);
         
         Logger.Debug("Creating main renderer.");
-        _renderer = new DeferredRenderer(targetSize, this);
+        _renderer = new DeferredRenderer(targetSize, Device);
 
         _opaques = new List<(Renderable, Matrix4x4)>();
     }
@@ -103,7 +103,7 @@ public sealed class Renderer : IDisposable
             Device.ClearColorBuffer((Vector4) cameraInfo.ClearColor.Value);
         Device.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);
         
-        _renderer.Begin3DPass(cameraInfo.View, cameraInfo.Projection, cameraInfo.WorldPosition, sceneInfo);
+        _renderer.Begin3DPass(cameraInfo.Projection, cameraInfo.View, cameraInfo.WorldPosition, sceneInfo);
         
         foreach ((Renderable renderable, Matrix4x4 world) in _opaques)
             _renderer.DrawRenderable(renderable, world);

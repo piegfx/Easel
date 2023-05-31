@@ -21,15 +21,15 @@ struct PSOutput
     float4 pos:    SV_Target1;
 };
 
-cbuffer WorldMatrices : register(b0)
+cbuffer CameraMatrices : register(b0)
 {
     float4x4 projection;
     float4x4 view;
-    float4x4 model;
 }
 
 cbuffer RenderInfo : register(b1)
 {
+    float4x4 world;
     SceneInfo scene;
     Material material;
 }
@@ -41,7 +41,7 @@ VSOutput VertexShader(const in VSInput input)
 {
     VSOutput output;
 
-    const float4 fragPos = mul(model, float4(input.position, 1.0));
+    const float4 fragPos = mul(world, float4(input.position, 1.0));
 
     output.position = mul(projection, mul(view, fragPos));
     output.fragPos = fragPos.xyz;

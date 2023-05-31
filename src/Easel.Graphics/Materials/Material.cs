@@ -26,6 +26,11 @@ public class Material : IDisposable
         AlbedoColor = description.AlbedoColor;
     }
 
+    internal Renderers.Structs.Material ShaderMaterial => new Renderers.Structs.Material()
+    {
+        AlbedoMultiplier = AlbedoColor
+    };
+
     public void Dispose()
     {
         

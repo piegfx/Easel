@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Reflection;
 using Easel.Core;
@@ -5,6 +6,7 @@ using Easel.Graphics.Renderers.Structs;
 using Easel.Graphics.Structs;
 using Easel.Math;
 using Pie;
+using Color = System.Drawing.Color;
 
 namespace Easel.Graphics.Renderers;
 
@@ -21,8 +23,18 @@ public sealed class DeferredRenderer : IRenderer
     
     private Framebuffer _gbuffer;
 
-    private WorldMatrices _worldMatrices;
-    private GraphicsBuffer _worldMatricesBuffer;
+    private CameraMatrices _cameraMatrices;
+    private GraphicsBuffer _cameraMatricesBuffer;
+
+    private RenderInfo _renderInfo;
+    private GraphicsBuffer _renderInfoBuffer;
+
+    private RasterizerState _rasterizerState;
+    private DepthStencilState _depthStencilState;
+    private BlendState _blendState;
+
+    // TODO: Engine sampler states.
+    private SamplerState _samplerState;
 
     public RenderTarget2D MainTarget { get; private set; }
     
@@ -70,14 +82,24 @@ public sealed class DeferredRenderer : IRenderer
         
         Logger.Debug("Creating matrices buffer.");
 
-        _worldMatrices = new WorldMatrices()
+        _cameraMatrices = new CameraMatrices()
         {
             Projection = Matrix4x4.Identity,
             View = Matrix4x4.Identity,
-            Model = Matrix4x4.Identity
         };
 
-        _worldMatricesBuffer = device.CreateBuffer(BufferType.UniformBuffer, _worldMatrices, true);
+        _cameraMatricesBuffer = device.CreateBuffer(BufferType.UniformBuffer, _cameraMatrices, true);
+
+        Logger.Debug("Creating render info buffer.");
+        _renderInfo = new RenderInfo();
+        _renderInfoBuffer = device.CreateBuffer(BufferType.UniformBuffer, _renderInfo, true);
+        
+        Logger.Debug("Creating various device states.");
+        _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullNone);
+        _depthStencilState = device.CreateDepthStencilState(DepthStencilStateDescription.LessEqual);
+        _blendState = device.CreateBlendState(BlendStateDescription.Disabled);
+
+        _samplerState = device.CreateSamplerState(SamplerStateDescription.LinearClamp);
     }
     
     public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo)
@@ -87,10 +109,19 @@ public sealed class DeferredRenderer : IRenderer
 
         _inPass = true;
         
-        _device.SetFramebuffer(MainTarget.PieFramebuffer);
+        // TODO in pie, Framebuffer.Size returns 0.
+        
+        _device.SetFramebuffer(_gbuffer);
+        _device.Viewport = new System.Drawing.Rectangle(0, 0, _albedoTexture.Description.Width, _albedoTexture.Description.Height);
+        Console.WriteLine(_gbuffer.Size);
+        _device.ClearColorBuffer(Color.Black);
+        _device.ClearDepthStencilBuffer(ClearFlags.Depth, 1, 0);
 
-        _worldMatrices.Projection = projection;
-        _worldMatrices.View = view;
+        _cameraMatrices.Projection = projection;
+        _cameraMatrices.View = view;
+        _device.UpdateBuffer(_cameraMatricesBuffer, 0, _cameraMatrices);
+
+        _renderInfo.SceneInfo = sceneInfo;
     }
 
     public void End3DPass()
@@ -103,9 +134,27 @@ public sealed class DeferredRenderer : IRenderer
 
     public void DrawRenderable(in Renderable renderable, in Matrix4x4 world)
     {
-        _worldMatrices.Model = world;
-
-        _device.UpdateBuffer(_worldMatricesBuffer, 0, _worldMatrices);
+        _renderInfo.WorldMatrix = world;
+        _renderInfo.Material = renderable.Material.ShaderMaterial;
+        _device.UpdateBuffer(_renderInfoBuffer, 0, _renderInfo);
+        
+        _device.SetPrimitiveType(PrimitiveType.TriangleList);
+        
+        _device.SetShader(_gbufferEffect.PieShader);
+        
+        _device.SetUniformBuffer(0, _cameraMatricesBuffer);
+        _device.SetUniformBuffer(1, _renderInfoBuffer);
+        
+        _device.SetTexture(2, renderable.Material.AlbedoTexture.PieTexture, _samplerState);
+        
+        _device.SetRasterizerState(_rasterizerState);
+        _device.SetDepthStencilState(_depthStencilState);
+        _device.SetBlendState(_blendState);
+        
+        _device.SetVertexBuffer(0, renderable.VertexBuffer, _gbufferEffect.Stride, _gbufferEffect.InputLayout);
+        _device.SetIndexBuffer(renderable.IndexBuffer, IndexType.UInt);
+        
+        _device.DrawIndexed(renderable.NumIndices);
     }
 
     public void Resize(Size<int> newSize)

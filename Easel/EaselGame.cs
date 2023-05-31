@@ -154,6 +154,7 @@ public class EaselGame : IDisposable
             .Size(size.Width, size.Height)
             .Title(_settings.Title)
             .Icon(icon)
+            .Api(api)
             .GraphicsDeviceOptions(options);
 
         builder.WindowFullscreenMode = _settings.FullscreenMode;

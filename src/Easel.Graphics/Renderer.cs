@@ -59,6 +59,7 @@ public sealed class Renderer : IDisposable
     public void NewFrame()
     {
         SetRenderTarget(null);
+        Device.ClearColorBuffer(System.Drawing.Color.Black);
         _opaques.Clear();
     }
 
@@ -99,11 +100,11 @@ public sealed class Renderer : IDisposable
         
         // Every 3D pass clears the depth-stencil buffer.
         // However the user gets to choose whether they want to clear the color buffer or not.
-        if (cameraInfo.ClearColor != null)
+        /*if (cameraInfo.ClearColor != null)
             Device.ClearColorBuffer((Vector4) cameraInfo.ClearColor.Value);
-        Device.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);
+        Device.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);*/
         
-        _renderer.Begin3DPass(cameraInfo.Projection, cameraInfo.View, cameraInfo.WorldPosition, sceneInfo);
+        _renderer.Begin3DPass(cameraInfo.Projection, cameraInfo.View, cameraInfo.WorldPosition, sceneInfo, cameraInfo.ClearColor.GetValueOrDefault(Color.Black));
         
         foreach ((Renderable renderable, Matrix4x4 world) in _opaques)
             _renderer.DrawRenderable(renderable, world);

@@ -11,7 +11,7 @@ public interface IRenderer : IDisposable
     
     public bool InPass { get; }
 
-    public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo);
+    public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo, in Color clearColor);
 
     public void End3DPass();
 

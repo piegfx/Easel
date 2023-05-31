@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Numerics;
 using System.Reflection;
 using Easel.Core;
@@ -6,7 +7,7 @@ using Easel.Graphics.Renderers.Structs;
 using Easel.Graphics.Structs;
 using Easel.Math;
 using Pie;
-using Color = System.Drawing.Color;
+using Color = Easel.Math.Color;
 
 namespace Easel.Graphics.Renderers;
 
@@ -16,9 +17,10 @@ public sealed class DeferredRenderer : IRenderer
     private GraphicsDevice _device;
 
     private Effect _gbufferEffect;
+    private Effect _processorEffect;
 
-    private Texture _albedoTexture;
-    private Texture _posTexture;
+    public Texture AlbedoTexture;
+    public Texture PosTexture;
     private Texture _depthTexture;
     
     private Framebuffer _gbuffer;
@@ -33,8 +35,12 @@ public sealed class DeferredRenderer : IRenderer
     private DepthStencilState _depthStencilState;
     private BlendState _blendState;
 
+    private DepthStencilState _processState;
+
     // TODO: Engine sampler states.
     private SamplerState _samplerState;
+
+    private Color _clearColor;
 
     public RenderTarget2D MainTarget { get; private set; }
     
@@ -46,11 +52,11 @@ public sealed class DeferredRenderer : IRenderer
         _device = device;
         
         Logger.Debug("Creating main target.");
-        MainTarget = new RenderTarget2D(size);
+        MainTarget = new RenderTarget2D(size, depthFormat: null);
 
         Logger.Debug("Compiling G-Buffer shader.");
 
-        InputLayoutDescription[] layout = new[]
+        InputLayoutDescription[] gBufferlayout = new[]
         {
             new InputLayoutDescription(Format.R32G32B32_Float, 0, 0, InputType.PerVertex), // position
             new InputLayoutDescription(Format.R32G32_Float, 12, 0, InputType.PerVertex), // texCoord
@@ -59,24 +65,32 @@ public sealed class DeferredRenderer : IRenderer
         };
 
         _gbufferEffect = Effect.FromSpirv(Renderer.ShaderNamespace + ".Deferred.GBuffer_vert.spv",
-            Renderer.ShaderNamespace + ".Deferred.GBuffer_frag.spv", layout,
+            Renderer.ShaderNamespace + ".Deferred.GBuffer_frag.spv", gBufferlayout,
             VertexPositionTextureNormalTangent.SizeInBytes, Assembly.GetAssembly(typeof(Effect)));
+        
+        Logger.Debug("Compiling Processor shader.");
+
+        InputLayoutDescription[] processorLayout = Array.Empty<InputLayoutDescription>();
+
+        _processorEffect = Effect.FromSpirv(Renderer.ShaderNamespace + ".Deferred.DeferredProcessor_vert.spv",
+            Renderer.ShaderNamespace + ".Deferred.DeferredProcessor_frag.spv", processorLayout, 0,
+            Assembly.GetAssembly(typeof(Effect)));
         
         Logger.Debug("Creating G-Buffer.");
 
-        TextureDescription desc = TextureDescription.Texture2D(size.Width, size.Height, Format.R32G32B32_Float, 1, 1,
+        TextureDescription desc = TextureDescription.Texture2D(size.Width, size.Height, Format.R32G32B32A32_Float, 1, 1,
             TextureUsage.Framebuffer | TextureUsage.ShaderResource);
 
-        _albedoTexture = device.CreateTexture(desc);
-        _posTexture = device.CreateTexture(desc);
+        AlbedoTexture = device.CreateTexture(desc);
+        PosTexture = device.CreateTexture(desc);
 
         _depthTexture = device.CreateTexture(TextureDescription.Texture2D(size.Width, size.Height, Format.D32_Float, 1,
             1, TextureUsage.Framebuffer));
 
         _gbuffer = device.CreateFramebuffer(new[]
         {
-            new FramebufferAttachment(_albedoTexture),
-            new FramebufferAttachment(_posTexture),
+            new FramebufferAttachment(AlbedoTexture),
+            new FramebufferAttachment(PosTexture),
             new FramebufferAttachment(_depthTexture),
         });
         
@@ -98,23 +112,26 @@ public sealed class DeferredRenderer : IRenderer
         _rasterizerState = device.CreateRasterizerState(RasterizerStateDescription.CullNone);
         _depthStencilState = device.CreateDepthStencilState(DepthStencilStateDescription.LessEqual);
         _blendState = device.CreateBlendState(BlendStateDescription.Disabled);
+        
+        //_processState = device.CreateDepthStencilState()
 
         _samplerState = device.CreateSamplerState(SamplerStateDescription.LinearClamp);
     }
     
-    public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo)
+    public void Begin3DPass(in Matrix4x4 projection, in Matrix4x4 view, in Vector3 cameraPosition, in SceneInfo sceneInfo, in Color clearColor)
     {
         if (_inPass)
             throw new EaselException("Renderer is already in a pass!");
 
         _inPass = true;
+
+        _clearColor = clearColor;
         
         // TODO in pie, Framebuffer.Size returns 0.
         
         _device.SetFramebuffer(_gbuffer);
-        _device.Viewport = new System.Drawing.Rectangle(0, 0, _albedoTexture.Description.Width, _albedoTexture.Description.Height);
-        Console.WriteLine(_gbuffer.Size);
-        _device.ClearColorBuffer(Color.Black);
+        _device.Viewport = new System.Drawing.Rectangle(0, 0, AlbedoTexture.Description.Width, AlbedoTexture.Description.Height);
+        _device.ClearColorBuffer((Vector4) Color.Transparent);
         _device.ClearDepthStencilBuffer(ClearFlags.Depth, 1, 0);
 
         _cameraMatrices.Projection = projection;
@@ -130,6 +147,20 @@ public sealed class DeferredRenderer : IRenderer
             throw new EaselException("Renderer is not in a pass!");
 
         _inPass = false;
+        
+        // Draw the result to the main target.
+        _device.SetFramebuffer(MainTarget.PieFramebuffer);
+        _device.Viewport = new Rectangle(0, 0, MainTarget.Size.Width, MainTarget.Size.Height);
+        
+        _device.ClearColorBuffer((System.Drawing.Color) _clearColor);
+        
+        _device.SetPrimitiveType(PrimitiveType.TriangleList);
+        _device.SetShader(_processorEffect.PieShader);
+        
+        _device.SetTexture(0, AlbedoTexture, _samplerState);
+        _device.SetTexture(1, PosTexture, _samplerState);
+        
+        _device.Draw(6);
     }
 
     public void DrawRenderable(in Renderable renderable, in Matrix4x4 world)
@@ -166,8 +197,8 @@ public sealed class DeferredRenderer : IRenderer
     public void Dispose()
     {
         _gbufferEffect.Dispose();
-        _albedoTexture.Dispose();
-        _posTexture.Dispose();
+        AlbedoTexture.Dispose();
+        PosTexture.Dispose();
         _depthTexture.Dispose();
         _gbuffer.Dispose();
         MainTarget.Dispose();

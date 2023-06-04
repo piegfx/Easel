@@ -34,6 +34,9 @@ VSOutput VertexShader(const in VSInput input)
 {
     VSOutput output;
 
+    // Stores position and texture coordinates in one.
+    // XY = Position
+    // ZW = Tex coords
     const float4 vertices[] = {
         float4(-1.0, -1.0, 0.0, 1.0),
         float4( 1.0, -1.0, 1.0, 1.0),

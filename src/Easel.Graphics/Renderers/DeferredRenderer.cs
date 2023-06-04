@@ -22,6 +22,7 @@ public sealed class DeferredRenderer : IRenderer
 
     public Texture AlbedoTexture;
     public Texture PosTexture;
+    public Texture NormalTexture;
     private Texture _depthTexture;
     
     private Framebuffer _gbuffer;
@@ -84,6 +85,7 @@ public sealed class DeferredRenderer : IRenderer
 
         AlbedoTexture = device.CreateTexture(desc);
         PosTexture = device.CreateTexture(desc);
+        NormalTexture = device.CreateTexture(desc);
 
         _depthTexture = device.CreateTexture(TextureDescription.Texture2D(size.Width, size.Height, Format.D32_Float, 1,
             1, TextureUsage.Framebuffer));
@@ -92,6 +94,7 @@ public sealed class DeferredRenderer : IRenderer
         {
             new FramebufferAttachment(AlbedoTexture),
             new FramebufferAttachment(PosTexture),
+            new FramebufferAttachment(NormalTexture),
             new FramebufferAttachment(_depthTexture),
         });
         
@@ -194,7 +197,7 @@ public sealed class DeferredRenderer : IRenderer
     public void Resize(Size<int> newSize)
     {
         MainTarget.Dispose();
-        MainTarget = new RenderTarget2D(newSize);
+        MainTarget = new RenderTarget2D(newSize, depthFormat: null);
     }
 
     public void Dispose()

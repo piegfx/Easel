@@ -23,7 +23,7 @@ public sealed class Renderer : IDisposable
     
     public RenderTarget2D MainTarget { get; private set; }
 
-    private IRenderer _renderer;
+    public readonly IRenderer MainRenderer;
 
     private List<(Renderable renderable, Matrix4x4 world)> _opaques;
 
@@ -51,7 +51,7 @@ public sealed class Renderer : IDisposable
         SpriteRenderer = new SpriteRenderer(device);
         
         Logger.Debug("Creating main renderer.");
-        _renderer = new DeferredRenderer(targetSize, Device);
+        MainRenderer = new DeferredRenderer(targetSize, Device);
 
         _opaques = new List<(Renderable, Matrix4x4)>();
     }
@@ -67,13 +67,7 @@ public sealed class Renderer : IDisposable
     {
         SetRenderTarget(null);
         SpriteRenderer.Begin();
-        SpriteRenderer.DrawSprite(_renderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.One, Vector2.Zero);
-        SpriteRenderer.End();
-        
-        Device.SetFramebuffer(null);
-        
-        SpriteRenderer.Begin();
-        SpriteRenderer.DrawSprite(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.One, Vector2.Zero);
+        SpriteRenderer.DrawSprite(MainRenderer.MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.One, Vector2.Zero);
         SpriteRenderer.End();
     }
 
@@ -93,7 +87,7 @@ public sealed class Renderer : IDisposable
         // Viewport is normalized - an X value of 0 will be the left hand side of the screen, and an X value of 1 will
         // be the right hand side of the screen.
         // Since the device viewport is in screen space, we must do the conversion here.
-        Size<int> rendererSize = _renderer.MainTarget.Size;
+        Size<int> rendererSize = MainRenderer.MainTarget.Size;
         Device.Viewport = new Rectangle((int) (viewport.X / rendererSize.Width),
             (int) (viewport.Y / rendererSize.Height), (int) (viewport.Width / rendererSize.Width),
             (int) (viewport.Height / rendererSize.Height));
@@ -104,12 +98,12 @@ public sealed class Renderer : IDisposable
             Device.ClearColorBuffer((Vector4) cameraInfo.ClearColor.Value);
         Device.ClearDepthStencilBuffer(ClearFlags.Depth | ClearFlags.Stencil, 1, 0);*/
         
-        _renderer.Begin3DPass(cameraInfo.Projection, cameraInfo.View, cameraInfo.WorldPosition, sceneInfo, cameraInfo.ClearColor.GetValueOrDefault(Color.Black));
+        MainRenderer.Begin3DPass(cameraInfo.Projection, cameraInfo.View, cameraInfo.WorldPosition, sceneInfo, cameraInfo.ClearColor.GetValueOrDefault(Color.Black));
         
         foreach ((Renderable renderable, Matrix4x4 world) in _opaques)
-            _renderer.DrawRenderable(renderable, world);
+            MainRenderer.DrawRenderable(renderable, world);
 
-        _renderer.End3DPass();
+        MainRenderer.End3DPass();
     }
 
     public void SetRenderTarget(RenderTarget2D target)
@@ -128,10 +122,18 @@ public sealed class Renderer : IDisposable
         // TODO: A nullable size parameter, which, if set, will NOT resize the main target.
         MainTarget.Dispose();
         MainTarget = new RenderTarget2D(newSize, depthFormat: null);
+        
+        MainRenderer.Resize(newSize);
     }
 
     public void Present()
     {
+        Device.SetFramebuffer(null);
+        
+        SpriteRenderer.Begin();
+        SpriteRenderer.DrawSprite(MainTarget, Vector2.Zero, null, Color.White, 0, Vector2.One, Vector2.Zero);
+        SpriteRenderer.End();
+    
         Device.Present(VSyncMode == VSyncMode.DoubleBuffer ? 1 : 0);
     }
 

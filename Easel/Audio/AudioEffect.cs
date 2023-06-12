@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using Easel.Math;
 
 namespace Easel.Audio;
@@ -50,4 +50,4 @@ public static class AudioEffect
             EndTime = StartTime + time;
         }
     }
-}
+}*/

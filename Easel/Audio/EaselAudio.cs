@@ -14,11 +14,12 @@ public class EaselAudio : IDisposable
 
     public bool TryGetAvailableChannel(out ushort availableChannel)
     {
-        for (ushort c = 0; c < PieAudio.NumChannels; c++)
+        for (ushort v = 0; v < PieAudio.NumVoices; v++)
         {
-            if (!PieAudio.IsPlaying(c))
+            // Paused voices should not be overwritten either.
+            if (PieAudio.GetVoiceState(v) == PlayState.Stopped)
             {
-                availableChannel = c;
+                availableChannel = v;
                 return true;
             }
         }

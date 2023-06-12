@@ -32,7 +32,7 @@ public class ContentManager
 
         _processors = new Dictionary<Type, IContentProcessor>();
         AddContentProcessor(typeof(Texture2D), new TextureProcessor());
-        AddContentProcessor(typeof(Sound), new SoundProcessor());
+        //AddContentProcessor(typeof(Sound), new SoundProcessor());
         AddContentProcessor(typeof(Model), new ModelProcessor());
         AddContentProcessor(typeof(Font), new FontProcessor());
         AddContentProcessor(typeof(Bitmap), new BitmapProcessor());

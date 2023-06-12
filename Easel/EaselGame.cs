@@ -270,7 +270,7 @@ public class EaselGame : IDisposable
     protected virtual void Update()
     {
         SceneManager.Update();
-        AudioEffect.Update();
+        //AudioEffect.Update();
     }
 
     protected virtual void AfterUpdate()

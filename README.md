@@ -1,8 +1,6 @@
 # Easel
-A fast cross-platform 3D & 2D game engine.
 
-![SpaceBox](https://i.rollbot.net/spacebox.png)
-
-Easel is currently WIP. **Please note that currently pull requests are not accepted.**
+## Notice of archival
+Hi everyone, effective from 2023-06-24, Easel is now archived. We are moving our efforts to a new closed-source in-house engine to power the likes of SpaceBox and beyond. We hope to maybe release the engine someday, but for the forseeable it will remain closed source. Thanks for understanding!
 
 Want to discuss more? [Join the discord server.](https://discord.gg/ygUpYkUstz)
